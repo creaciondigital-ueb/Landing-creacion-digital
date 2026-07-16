@@ -31,10 +31,10 @@
   --pcd-mono:      'JetBrains Mono', ui-monospace, monospace;
 }
 
-/* ─── Page shell (composición base 1436) ─── */
+/* ─── Page shell (composición base 1436, ampliado hasta 1920) ─── */
 .pcd-page {
   width: 100%;
-  max-width: 1436px;
+  max-width: 1920px;
   margin: 0 auto;
   background: var(--pcd-paper);
   color: var(--pcd-ink);

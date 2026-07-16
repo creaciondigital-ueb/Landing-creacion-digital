@@ -7,6 +7,10 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Fix — Ancho del contenedor principal de la landing
+
+- **`.pcd-page` ampliado de 1436px a 1920px** — El contenedor raíz de la landing (`src/styles/programa.css`) heredaba el ancho exacto del frame de Figma (1436px) como `max-width` fijo, dejando franjas vacías a los lados en pantallas más anchas y dando la sensación de contenido "cortado". Se amplía el tope a 1920px para llenar pantallas comunes sin distorsionar el diseño en monitores ultra anchos.
+
 ### Landing del Programa Creación Digital v2 (handoff Claude Design)
 
 Reemplazo completo de la landing pública `/` con el diseño definitivo del
