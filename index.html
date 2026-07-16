@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Pregrado en Creación Digital. No vinimos a dictar clase: vinimos a crear. Universidad El Bosque, Bogotá." />
+
+  <meta property="og:title" content="Creación Digital · Universidad El Bosque" />
+  <meta property="og:description" content="Pregrado en Creación Digital. No vinimos a dictar clase: vinimos a crear. Universidad El Bosque, Bogotá." />
+  <meta property="og:type" content="website" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+
+  <title>Creación Digital · Universidad El Bosque</title>
+
+  <!-- ============================================================
+       Google Analytics 4 (gtag.js) — G-EMK9RDJD0G
+       Guard: solo se carga en producción (creaciondigital.online y www.).
+       Migración de dominio 2026-06-09: ceopacademia.org → creaciondigital.online.
+       En localhost / dev no se inyecta para no inflar métricas con
+       la navegación de desarrollo. El snippet de Google queda
+       envuelto pero sin modificaciones a su lógica interna.
+       ============================================================ -->
+  <script>
+    (function () {
+      var host = window.location.hostname;
+      var isProd = host === 'creaciondigital.online' || host === 'www.creaciondigital.online';
+      if (!isProd) return;
+
+      // Cargar gtag.js de forma async
+      var s = document.createElement('script');
+      s.async = true;
+      s.src = 'https://www.googletagmanager.com/gtag/js?id=G-EMK9RDJD0G';
+      document.head.appendChild(s);
+
+      // Inicialización gtag (idéntica al snippet de Google)
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){ dataLayer.push(arguments); }
+      window.gtag = gtag;
+      gtag('js', new Date());
+      gtag('config', 'G-EMK9RDJD0G');
+    })();
+  </script>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="module" src="/src/main.tsx"></script>
+</body>
+</html>

@@ -1,0 +1,33 @@
+# CODEOWNERS — Galería 3D / Carrera Creación Digital
+# https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-security/customizing-your-repository/about-code-owners
+#
+# Cualquier PR que toque estos paths requiere review explícito del owner
+# (configurado en branch protection: "Require review from Code Owners").
+#
+# Sintaxis: <pattern> <@github-username>
+
+# Default — Carlos como owner de todo
+*                              @Karlvolsung88
+
+# Backend (servidor Express + endpoints + auth + storage)
+/backend/                      @Karlvolsung88
+
+# Migraciones de DB (cualquier ALTER/CREATE en producción)
+/migrations/                   @Karlvolsung88
+
+# Workflows de GitHub Actions (cuando los agreguemos)
+/.github/workflows/            @Karlvolsung88
+
+# Este propio archivo + branch protection settings
+/.github/                      @Karlvolsung88
+
+# Configuración Claude Code (skills, commands, settings)
+/.claude/                      @Karlvolsung88
+
+# Docs sensibles (credenciales, deploy, runbooks)
+/docs/deploy.md                @Karlvolsung88
+/docs/runbooks/                @Karlvolsung88
+
+# Lockfiles (cambios en deps requieren review explícito)
+package-lock.json              @Karlvolsung88
+backend/package-lock.json      @Karlvolsung88
