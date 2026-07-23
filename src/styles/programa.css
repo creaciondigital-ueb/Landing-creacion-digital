@@ -335,6 +335,15 @@
   transform: scale(var(--hero-bottom-scale));
   opacity: 0;
   animation: pcd-hero-fade-in 0.7s ease-out 3.1s both;
+  /* En pantallas más anchas que el ancho de referencia (1486px + 168px de
+     padding del hero = 1654px) el bloque ya no se achica (scale llega a
+     1) y, al tener ancho fijo, se quedaba pegado a la izquierda con un
+     hueco vacío a la derecha. margin-left: auto empuja TODO el bloque
+     (imagen, líneas, "¿quiénes somos?", párrafo) hacia la derecha para
+     que quede pegado al margen derecho, igual que el resto del hero.
+     No afecta pantallas angostas: ahí el bloque ya ocupa todo el ancho
+     disponible y el margen automático se resuelve en 0. */
+  margin-left: auto;
 }
 .pcd-hero__brand {
   position: absolute;
