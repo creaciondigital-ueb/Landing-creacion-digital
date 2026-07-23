@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<title>Hero — editor visual (arrastrar y soltar)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Text:ital@0;1&family=Zalando+Sans:ital,wght@0,300..700;1,300..700&family=Rubik+Bubbles&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --pcd-paper:      #f6f8fb;
+    --pcd-ink:        #0d0d0d;
+    --pcd-cobalt:     #2c08ff;
+    --pcd-cobalt-alt: #1a3cff;
+
+    --pcd-serif: 'DM Serif Text', 'Times New Roman', serif;
+    --pcd-sans:  'Zalando Sans', system-ui, -apple-system, sans-serif;
+    --pcd-fun:   'Rubik Bubbles', serif;
+    --pcd-mono:  'JetBrains Mono', ui-monospace, monospace;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin:0; padding:0; }
+  body {
+    background: #dfe3ea;
+    font-family: var(--pcd-sans);
+  }
+
+  /* ===== Barra superior ===== */
+  #topbar {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background: var(--pcd-ink);
+    color: #fff;
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-family: var(--pcd-mono);
+    font-size: 12px;
+  }
+  #topbar b { color: var(--pcd-acid, #d1ff22); }
+  #topbar button {
+    background: var(--pcd-cobalt);
+    color: #fff;
+    border: 0;
+    padding: 8px 14px;
+    border-radius: 6px;
+    font-family: var(--pcd-mono);
+    font-size: 12px;
+    cursor: pointer;
+  }
+  #topbar button:hover { opacity: 0.85; }
+  #topbar .hint { opacity: 0.7; }
+
+  /* ===== Panel lateral (propiedades del elemento seleccionado) ===== */
+  #panel {
+    position: fixed;
+    top: 56px;
+    right: 16px;
+    width: 260px;
+    background: #fff;
+    border: 2px solid var(--pcd-ink);
+    border-radius: 10px;
+    padding: 14px;
+    font-size: 13px;
+    z-index: 999;
+    box-shadow: 6px 6px 0 rgba(13,13,13,0.15);
+    display: none;
+  }
+  #panel.active { display: block; }
+  #panel h3 { font-family: var(--pcd-mono); font-size: 12px; margin: 0 0 10px; word-break: break-all; }
+  #panel label { display:block; margin-top: 10px; font-family: var(--pcd-mono); font-size: 10.5px; letter-spacing: 0.03em; }
+  #panel input[type=number] {
+    width: 100%; margin-top: 3px; padding: 5px 6px;
+    border: 1px solid #ccc; border-radius: 4px; font-family: var(--pcd-mono); font-size: 12px;
+  }
+  #panel .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+  /* ===== Overlay de ayuda ===== */
+  #welcome {
+    position: fixed; inset: 0; background: rgba(13,13,13,0.6); z-index: 2000;
+    display: flex; align-items: center; justify-content: center;
+  }
+  #welcome .card {
+    background: #fff; border-radius: 12px; padding: 28px; max-width: 420px;
+    font-size: 14px; line-height: 1.5;
+  }
+  #welcome h2 { font-family: var(--pcd-mono); margin: 0 0 12px; }
+  #welcome button {
+    margin-top: 16px; background: var(--pcd-ink); color: #fff; border: 0;
+    padding: 10px 18px; border-radius: 6px; cursor: pointer; font-family: var(--pcd-mono);
+  }
+
+  /* ===== Elementos editables: outline + cursor al pasar el mouse ===== */
+  .editable {
+    cursor: move;
+    outline: 1px dashed transparent;
+    transition: outline-color .15s;
+  }
+  .editable:hover { outline-color: rgba(44,8,255,0.5); }
+  .editable.selected { outline: 2px solid var(--pcd-cobalt); outline-offset: 1px; }
+  .resize-handle {
+    position: absolute;
+    width: 12px; height: 12px;
+    right: -6px; bottom: -6px;
+    background: var(--pcd-cobalt);
+    border: 2px solid #fff;
+    border-radius: 50%;
+    cursor: nwse-resize;
+    display: none;
+    z-index: 5;
+  }
+  .editable.selected .resize-handle { display: block; }
+
+  /* ===== Página / hero (copiado de programa.css) ===== */
+  .pcd-page {
+    width: 100%;
+    max-width: 1920px;
+    margin: 0 auto;
+    background: var(--pcd-paper);
+    color: var(--pcd-ink);
+    overflow: visible;
+  }
+  .pcd-hero {
+    position: relative;
+    padding: 96px 84px 400px; /* padding-bottom extra: da lugar para arrastrar cosas más abajo */
+    background: var(--pcd-paper);
+  }
+  .pcd-hero__meta {
+    display: flex;
+    gap: 24px;
+    font-family: var(--pcd-mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    width: 1100px;
+  }
+  .pcd-hero__meta b { font-weight: 500; }
+
+  .pcd-hero__title {
+    font-family: var(--pcd-serif);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 160px;
+    line-height: 0.88;
+    letter-spacing: -0.03em;
+    margin: 0;
+    width: 900px;
+  }
+  .pcd-hero__title .row { display: block; }
+  .pcd-hero__title .blob {
+    font-family: var(--pcd-fun);
+    font-style: normal;
+    color: var(--pcd-cobalt-alt);
+    display: inline-block;
+  }
+
+  .pcd-hero__brand { display: flex; align-items: flex-end; gap: 16px; }
+  .pcd-hero__brand-logo { height: 80px; width: auto; object-fit: contain; pointer-events: none; }
+
+  .pcd-hero__floor-line {
+    width: 600px;
+    height: 3px;
+    background: var(--pcd-ink);
+  }
+  .pcd-hero__floor-line--right {
+    width: 421px;
+    height: 3px;
+    background: var(--pcd-ink);
+  }
+
+  .pcd-hero__quienes-label {
+    font-family: var(--pcd-mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    width: 90px;
+  }
+  .pcd-hero__quienes-body {
+    font-family: var(--pcd-sans);
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 1.45;
+    width: 500px;
+  }
+
+  .pcd-hero__photo {
+    width: 510px;
+    height: 667px;
+    background-image: url('./proyecto-1.webp');
+    background-size: contain;
+    background-position: right bottom;
+    background-repeat: no-repeat;
+  }
+</style>
+</head>
+<body>
+
+<div id="welcome">
+  <div class="card">
+    <h2>🎛️ Editor del hero</h2>
+    <p>Cada elemento (título, texto, logo, foto, línea) se puede <b>arrastrar</b> haciendo clic y moviendo el mouse. Al seleccionar uno, aparece un punto azul en la esquina para <b>redimensionarlo</b>, y un panel a la derecha con los valores exactos.</p>
+    <p>Cuando quede como tu diseño, tocá <b>"Exportar posiciones"</b> arriba y pegame el resultado.</p>
+    <button id="close-welcome">Entendido, ¡a mover cosas!</button>
+  </div>
+</div>
+
+<div id="topbar">
+  <b>🎛️ Editor del hero</b>
+  <span class="hint">clic + arrastrar para mover · punto azul para redimensionar</span>
+  <button id="reset-btn">Reset</button>
+  <button id="export-btn">Exportar posiciones</button>
+</div>
+
+<div id="panel">
+  <h3 id="panel-title">—</h3>
+  <div class="row2">
+    <label>X (left)<input type="number" id="p-left"></label>
+    <label>Y (top)<input type="number" id="p-top"></label>
+  </div>
+  <div class="row2">
+    <label>Ancho<input type="number" id="p-width"></label>
+    <label>Alto<input type="number" id="p-height"></label>
+  </div>
+  <label id="p-fontsize-wrap" style="display:none">Tamaño de letra<input type="number" id="p-fontsize"></label>
+</div>
+
+<div class="pcd-page">
+  <section class="pcd-hero" id="canvas">
+    <div class="pcd-hero__meta editable" data-type="text">
+      <span><b>Pregrado</b> · 8 semestres</span>
+      <span class="center">Bogotá · Universidad El Bosque</span>
+      <span class="right"><b>SNIES</b> · 116265</span>
+      <div class="resize-handle"></div>
+    </div>
+
+    <h1 class="pcd-hero__title editable" data-type="text">
+      <span class="row">no vinimos</span>
+      <span class="row row--shift1">a dictar</span>
+      <span class="row row--shift2">clase<span class="blob">.</span></span>
+      <div class="resize-handle"></div>
+    </h1>
+
+    <div class="pcd-hero__brand editable" data-type="box">
+      <img class="pcd-hero__brand-logo" src="./LogoUEB_CreacionDigital.png" alt="" />
+      <div class="resize-handle"></div>
+    </div>
+
+    <div class="pcd-hero__floor-line editable" data-type="box">
+      <div class="resize-handle"></div>
+    </div>
+    <div class="pcd-hero__floor-line--right editable" data-type="box">
+      <div class="resize-handle"></div>
+    </div>
+
+    <div class="pcd-hero__quienes-label editable" data-type="text">¿quiénes<br>somos?
+      <div class="resize-handle"></div>
+    </div>
+    <div class="pcd-hero__quienes-body editable" data-type="text">
+      Creamos en medio del ruido, la velocidad y el cambio. En un mundo donde las ideas evolucionan todos los días y las formas de crear ya no caben en una sola disciplina. Como Creadores Digitales, aprendemos a pensar críticamente, experimentar sin miedo y convertir la curiosidad en acción.
+      <div class="resize-handle"></div>
+    </div>
+
+    <div class="pcd-hero__photo editable" data-type="box">
+      <div class="resize-handle"></div>
+    </div>
+  </section>
+</div>
+
+<script>
+  const canvas = document.getElementById('canvas');
+  const panel = document.getElementById('panel');
+  const editables = Array.from(document.querySelectorAll('.editable'));
+  let selected = null;
+  let initialStyles = new Map();
+
+  // Convierte cada elemento a position:absolute conservando su posición visual actual.
+  function freeze(el) {
+    const canvasRect = canvas.getBoundingClientRect();
+    const rect = el.getBoundingClientRect();
+    const left = rect.left - canvasRect.left;
+    const top = rect.top - canvasRect.top;
+    el.style.position = 'absolute';
+    el.style.left = Math.round(left) + 'px';
+    el.style.top = Math.round(top) + 'px';
+    el.style.width = Math.round(rect.width) + 'px';
+    el.style.height = Math.round(rect.height) + 'px';
+    el.style.margin = '0';
+  }
+
+  editables.forEach(el => {
+    freeze(el);
+    initialStyles.set(el, el.getAttribute('style'));
+  });
+  canvas.style.minHeight = '1400px';
+
+  function select(el) {
+    if (selected) selected.classList.remove('selected');
+    selected = el;
+    el.classList.add('selected');
+    panel.classList.add('active');
+    document.getElementById('panel-title').textContent = el.className.split(' ')[0];
+    syncPanelFromElement();
+  }
+
+  function syncPanelFromElement() {
+    if (!selected) return;
+    document.getElementById('p-left').value = parseInt(selected.style.left);
+    document.getElementById('p-top').value = parseInt(selected.style.top);
+    document.getElementById('p-width').value = parseInt(selected.style.width);
+    document.getElementById('p-height').value = parseInt(selected.style.height);
+    const fsWrap = document.getElementById('p-fontsize-wrap');
+    if (selected.dataset.type === 'text') {
+      fsWrap.style.display = 'block';
+      const fs = window.getComputedStyle(selected).fontSize;
+      document.getElementById('p-fontsize').value = parseInt(fs);
+    } else {
+      fsWrap.style.display = 'none';
+    }
+  }
+
+  ['p-left','p-top','p-width','p-height'].forEach(id => {
+    document.getElementById(id).addEventListener('input', (e) => {
+      if (!selected) return;
+      const prop = { 'p-left':'left', 'p-top':'top', 'p-width':'width', 'p-height':'height' }[id];
+      selected.style[prop] = e.target.value + 'px';
+    });
+  });
+  document.getElementById('p-fontsize').addEventListener('input', (e) => {
+    if (!selected) return;
+    selected.style.fontSize = e.target.value + 'px';
+  });
+
+  // Drag
+  editables.forEach(el => {
+    el.addEventListener('mousedown', (e) => {
+      if (e.target.classList.contains('resize-handle')) return;
+      e.preventDefault();
+      select(el);
+      const startX = e.clientX, startY = e.clientY;
+      const startLeft = parseInt(el.style.left);
+      const startTop = parseInt(el.style.top);
+      function onMove(ev) {
+        el.style.left = (startLeft + ev.clientX - startX) + 'px';
+        el.style.top = (startTop + ev.clientY - startY) + 'px';
+        if (selected === el) syncPanelFromElement();
+      }
+      function onUp() {
+        document.removeEventListener('mousemove', onMove);
+        document.removeEventListener('mouseup', onUp);
+      }
+      document.addEventListener('mousemove', onMove);
+      document.addEventListener('mouseup', onUp);
+    });
+
+    const handle = el.querySelector('.resize-handle');
+    handle.addEventListener('mousedown', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      select(el);
+      const startX = e.clientX, startY = e.clientY;
+      const startW = parseInt(el.style.width);
+      const startH = parseInt(el.style.height);
+      function onMove(ev) {
+        el.style.width = Math.max(10, startW + ev.clientX - startX) + 'px';
+        el.style.height = Math.max(10, startH + ev.clientY - startY) + 'px';
+        if (selected === el) syncPanelFromElement();
+      }
+      function onUp() {
+        document.removeEventListener('mousemove', onMove);
+        document.removeEventListener('mouseup', onUp);
+      }
+      document.addEventListener('mousemove', onMove);
+      document.addEventListener('mouseup', onUp);
+    });
+  });
+
+  document.getElementById('close-welcome').addEventListener('click', () => {
+    document.getElementById('welcome').remove();
+  });
+
+  document.getElementById('reset-btn').addEventListener('click', () => {
+    editables.forEach(el => el.setAttribute('style', initialStyles.get(el)));
+    panel.classList.remove('active');
+    if (selected) selected.classList.remove('selected');
+    selected = null;
+  });
+
+  document.getElementById('export-btn').addEventListener('click', () => {
+    let text = '';
+    editables.forEach(el => {
+      const cls = el.className.split(' ')[0];
+      const fs = el.dataset.type === 'text' ? `font-size: ${window.getComputedStyle(el).fontSize};\n  ` : '';
+      text += `.${cls} {\n  left: ${el.style.left};\n  top: ${el.style.top};\n  width: ${el.style.width};\n  height: ${el.style.height};\n  ${fs}}\n\n`;
+    });
+    const w = window.open('', '_blank');
+    w.document.write('<pre style="font-family:monospace;font-size:13px;white-space:pre-wrap;padding:20px;">' + text.replace(/</g,'&lt;') + '</pre>');
+  });
+</script>
+
+</body>
+</html>

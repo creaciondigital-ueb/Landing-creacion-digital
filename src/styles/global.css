@@ -119,6 +119,7 @@ html, body {
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  scroll-behavior: smooth;
 }
 
 /* NOISE OVERLAY — grano editorial sutil sobre paper (alineado al design system) */

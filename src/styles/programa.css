@@ -41,7 +41,10 @@
   font-family: var(--pcd-sans);
   font-weight: 400;
   line-height: 1.4;
-  overflow-x: clip;  /* `clip` permite que .pcd-header sticky funcione; `hidden` no */
+  /* El header es position:fixed (ver .pcd-header) y por lo tanto no ocupa
+     espacio en el flujo; este padding-top compensa esa altura (68px) para
+     que el hero no quede tapado debajo. */
+  padding-top: 68px;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
@@ -53,14 +56,23 @@
    HEADER
    ──────────────────────────────────────────────────────────── */
 .pcd-header {
-  position: sticky;
+  /* position:fixed en vez de sticky: sticky depende de que ningún
+     ancestro (.pcd-page, body, etc.) tenga su propio contenedor de
+     scroll — algo frágil de garantizar — mientras que fixed siempre se
+     ancla a la ventana real. Como fixed saca el header del flujo, se
+     compensa con padding-top en .pcd-page (ver abajo). */
+  position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
+  max-width: 1920px;
+  margin: 0 auto;
   z-index: 100;
   display: grid;
-  grid-template-columns: auto 1fr auto;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
   height: 68px;
-  padding: 0 72px;
+  padding: 0 84px;
   background: var(--pcd-gray-l);
   border-bottom: 1px solid rgba(13,13,13,0.08);
 }
@@ -68,9 +80,10 @@
   display: flex;
   align-items: center;
   gap: 14px;
+  justify-self: start;
 }
 .pcd-brand__logo {
-  height: 34px;
+  height: 28px;
   width: auto;
   color: var(--pcd-ink);
 }
@@ -93,6 +106,7 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
+  justify-self: end;
   background: var(--pcd-ink);
   color: var(--pcd-paper);
   font-family: var(--pcd-mono);
@@ -132,14 +146,14 @@
 /* CTA móvil del hero — oculto en desktop (en desktop el pill vive en el header) */
 .pcd-hero__cta-mobile { display: none; }
 
-@media (max-width: 880px) {
+@media (max-width: 1050px) {
   /* Logo proporcional (height fijo, width auto, sin deformar) */
   .pcd-header {
     grid-template-columns: auto auto;
     justify-content: space-between;
     padding: 0 20px;
   }
-  .pcd-brand__logo { height: 30px; width: auto; object-fit: contain; }
+  .pcd-brand__logo { height: 26px; width: auto; object-fit: contain; }
 
   /* El pill grande del header se oculta en móvil; APLICA vive bajo el título */
   .pcd-cta-pill { display: none; }
@@ -147,18 +161,21 @@
   /* Hamburguer visible */
   .pcd-hamburger { display: flex; }
 
-  /* Nav → dropdown desplegable controlado por el hamburguer */
+  /* Nav → dropdown desplegable controlado por el hamburguer, anclado a la
+     derecha (debajo del ícono) en vez de ocupar todo el ancho */
   .pcd-nav {
     display: none;
     position: absolute;
     top: 68px;
-    left: 0;
-    right: 0;
+    left: auto;
+    right: 20px;
+    transform: none;
     flex-direction: column;
     align-items: stretch;
     gap: 0;
+    min-width: 180px;
     background: var(--pcd-gray-l);
-    border-bottom: 1px solid rgba(13,13,13,0.12);
+    border: 1px solid rgba(13,13,13,0.12);
     padding: 8px 20px 16px;
   }
   .pcd-nav.is-open { display: flex; }
@@ -167,6 +184,7 @@
     border-bottom: 1px solid rgba(13,13,13,0.08);
     font-size: 13px;
   }
+  .pcd-nav__link:last-child { border-bottom: none; }
 }
 
 /* ────────────────────────────────────────────────────────────
@@ -174,7 +192,7 @@
    ──────────────────────────────────────────────────────────── */
 .pcd-hero {
   position: relative;
-  padding: 96px 72px 80px;
+  padding: 96px 84px 10px;
   background: var(--pcd-paper);
   overflow: hidden;
 }
@@ -188,14 +206,22 @@
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--pcd-ink);
+  opacity: 0;
+  animation: pcd-hero-fade-up 0.6s ease-out both;
 }
 .pcd-hero__meta span b { font-weight: 500; }
 .pcd-hero__meta .right { text-align: right; }
 .pcd-hero__meta .center { text-align: center; }
+/* "Universidad El Bosque" completo en desktop; en móvil se acorta a
+   "U. El Bosque" (ver media query) para que no ocupe tanto espacio. */
+.pcd-hero__meta-short { display: none; }
 
 .pcd-hero__title {
   font-family: var(--pcd-serif);
   font-style: italic;
+  font-weight: 400; /* el <h1> hereda bold del user-agent stylesheet; DM Serif Text
+                        solo tiene peso 400, así que sin esto el navegador sintetiza
+                        un bold falso y la letra se ve más gruesa que en el diseño. */
   font-size: clamp(80px, 17vw, 245px);
   line-height: 0.88;
   letter-spacing: -0.03em;
@@ -211,64 +237,185 @@
   color: var(--pcd-cobalt-alt);
   display: inline-block;
   letter-spacing: -0.02em;
-  transform: translateY(0.04em);
+  transform: translate(10px, 0.04em);
   margin-left: -0.03em;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.pcd-hero__title .blob.is-visible { opacity: 1; }
+
+/* "dictar" se tacha con una línea que se dibuja de izq. a der. una vez
+   termina de escribirse todo el título (ver heroStrikeActive en el TSX). */
+.pcd-hero__dictar {
+  position: relative;
+  display: inline-block;
+}
+.pcd-hero__dictar::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  height: 0.06em;
+  width: 0;
+  background: var(--pcd-ink);
+  transform: translateY(calc(-50% + 20px));
+  transition: width 0.5s ease-out;
+}
+.pcd-hero__dictar.is-struck::after { width: 100%; }
+
+/* Cursor parpadeante del efecto typewriter, solo mientras se escribe */
+.pcd-hero__cursor {
+  display: inline-block;
+  width: 0.05em;
+  height: 0.78em;
+  background: var(--pcd-ink);
+  margin-left: 0.02em;
+  vertical-align: -0.05em;
+  animation: pcd-hero-cursor-blink 0.9s steps(1, start) infinite;
+}
+@keyframes pcd-hero-cursor-blink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
 }
 
+/* Entrada del hero: la fila meta y el CTA móvil aparecen con fade+slide-up
+   al mismo tiempo que arranca el typewriter del título; el bloque inferior
+   (logo, líneas, "¿quiénes somos?", párrafo y foto) aparece junto, con un
+   fundido simple, una vez termina la animación del título + tachado
+   (23 letras · 100ms/letra = 2.3s + 0.3s pausa + 0.5s tachado ≈ 3.1s). */
+@keyframes pcd-hero-fade-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes pcd-hero-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Animación de entrada para el resto de la página (ejes, docentes,
+   proyectos, estudia, footer). Activada por IntersectionObserver en el
+   TSX, que agrega .is-visible una sola vez al entrar en pantalla. */
+.pcd-reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+}
+.pcd-reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .pcd-reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* Layout de escritorio pasado a posicionamiento libre (absolute) — el
+   usuario acomodó cada pieza a mano con un editor visual propio (arrastrar
+   + redimensionar) y pasó las coordenadas resultantes tal cual. Referencia:
+   origen (0,0) = esquina superior-izquierda de `.pcd-hero__bottom`.
+
+   Como las posiciones son en px fijos (no fluidas), en una ventana más
+   angosta que la que se usó para armar esto la foto/línea derecha se
+   saldrían del área visible. `--hero-bottom-scale` reduce TODO el bloque
+   en conjunto (proporciones intactas) cuando el ancho disponible es menor
+   a 1486px (el ancho de referencia = borde derecho de `.pcd-hero__photo`).
+   Por encima de eso, min(1, ...) deja todo en tamaño normal, igual que
+   antes. `--hero-bottom-h` escala también el alto en flujo normal para
+   que no quede un hueco vacío debajo cuando se achica. */
 .pcd-hero__bottom {
   margin-top: 96px;
-  display: grid;
-  grid-template-columns: minmax(280px, 1fr) minmax(0, 2fr);
-  gap: 40px;
-  align-items: start;
   position: relative;
+  --hero-bottom-scale: min(1, calc((100vw - 168px) / 1486px));
+  width: 1486px;
+  min-height: calc(270px * var(--hero-bottom-scale));
+  transform-origin: top left;
+  transform: scale(var(--hero-bottom-scale));
+  opacity: 0;
+  animation: pcd-hero-fade-in 0.7s ease-out 3.1s both;
 }
 .pcd-hero__brand {
+  position: absolute;
+  left: 0px;
+  top: 102px;
+  width: 406px;
+  height: 60px;
   display: flex;
   align-items: flex-end;
   gap: 16px;
-  position: relative;
   z-index: 3;
-  align-self: end;
 }
 .pcd-hero__brand-logo {
-  height: 80px;
+  height: 55px;
   width: auto;
   object-fit: contain;
 }
-.pcd-hero__quienes {
-  border-top: 3px solid var(--pcd-ink);
-  padding-top: 12px;
-  display: grid;
-  grid-template-columns: 84px 1fr;
-  gap: 24px;
-  position: relative;
-  z-index: 3;
+/* Línea "piso" partida en 2 segmentos con un hueco fijo donde la silueta
+   real de la chica la cruza — así se hizo en el diseño original (Group
+   33.svg). Posición final ajustada a mano por el usuario. */
+.pcd-hero__floor-line {
+  position: absolute;
+  left: 611px;
+  top: 26px;
+  width: 488px;
+  height: 3px;
+  background: var(--pcd-ink);
 }
+.pcd-hero__floor-line--right {
+  position: absolute;
+  left: 1127px;
+  top: 28px;
+  width: 280px;
+  height: 3px;
+  background: var(--pcd-ink);
+}
+/* Wrapper de "¿quiénes somos?" + CTA móvil — en desktop no debe alterar
+   el posicionamiento absoluto existente de sus hijos (display:contents lo
+   saca del árbol de cajas); en móvil se activa como fila flex (ver media). */
+.pcd-hero__quienes-row { display: contents; }
+/* Wrapper de logo + CTA móvil — mismo criterio: en desktop no debe alterar
+   el posicionamiento absoluto de sus hijos. */
+.pcd-hero__logos-row { display: contents; }
 .pcd-hero__quienes-label {
+  position: absolute;
+  left: 622px;
+  top: 49px;
+  width: 90px;
+  height: 26px;
   font-family: var(--pcd-mono);
   font-size: 11px;
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--pcd-ink);
+  z-index: 3;
 }
+/* Dos versiones del párrafo "Creamos en medio del ruido...": la de desktop
+   conserva los espacios (nbsp) que el diseño usa para que la ilustración
+   "encaje" en huecos del texto — eso es SOLO para desktop, nunca tocarlo.
+   La de móvil es el texto corrido, sin esos huecos. */
+.pcd-hero__quienes-body-mobile { display: none; }
 .pcd-hero__quienes-body {
+  position: absolute;
+  left: 709px;
+  top: 44px;
+  width: 635px;
+  height: 118px;
   font-family: var(--pcd-sans);
   font-weight: 400;
   font-size: 18px;
   line-height: 1.45;
   color: var(--pcd-ink);
-  position: relative;
   z-index: 3;
-  margin-top: 60px;
 }
 
 .pcd-hero__photo {
   position: absolute;
-  right: -120px;
-  top: -454px;
-  width: 486px;
-  height: 635px;
+  left: 882px;
+  top: -580px;
+  width: 664px;
+  height: 848px;
   background-image: url('/programa/img/proyecto-1.webp');
   background-size: contain;
   background-position: right bottom;
@@ -279,18 +426,26 @@
   pointer-events: none;
 }
 
-@media (max-width: 980px) {
+@media (max-width: 1050px) {
   .pcd-hero { padding: 48px 24px; }
   /* Título centrado en móvil — sin los shifts escalonados */
-  .pcd-hero__title { font-size: clamp(56px, 14vw, 140px); text-align: center; }
+  .pcd-hero__title { font-size: clamp(64px, 16.5vw, 158px); text-align: center; }
   .pcd-hero__title .row--shift1,
   .pcd-hero__title .row--shift2 { padding-left: 0; }
-  /* CTA APLICA AHORA — pequeño, centrado, justo debajo del título */
+  /* Tachado de "dictar" un poco más arriba en móvil */
+  .pcd-hero__dictar::after { transform: translateY(calc(-50% + 8px)); }
+  /* Aspectos (Pregrado/Bogotá/SNIES) más pequeños en móvil, cada uno en
+     2 líneas: "Label ·" arriba y el valor abajo. */
+  .pcd-hero__meta { font-size: 9px; gap: 12px; }
+  .pcd-hero__meta-value { display: block; margin-top: 2px; }
+  .pcd-hero__meta-full { display: none; }
+  .pcd-hero__meta-short { display: inline; }
+  /* CTA APLICA AHORA — pequeño, alineado con "¿quiénes somos?" */
   .pcd-hero__cta-mobile {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    margin: 28px auto 0;
+    margin: 0;
     background: var(--pcd-ink);
     color: var(--pcd-paper);
     font-family: var(--pcd-mono);
@@ -302,12 +457,65 @@
     transition: background .15s;
   }
   .pcd-hero__cta-mobile:hover { background: var(--pcd-cobalt); }
-  .pcd-hero__bottom { grid-template-columns: 1fr; gap: 24px; }
+  /* En escritorio todo el bloque usa position:absolute (ver arriba); en
+     móvil se resetea a flujo normal apilado: línea → quiénes somos → texto → logo. */
+  .pcd-hero__bottom { width: auto; min-height: auto; transform: none; margin-top: 40px; }
   .pcd-hero__photo { display: none; }
-  /* ¿quiénes somos? — texto "Creamos…" centrado en móvil */
-  .pcd-hero__quienes { grid-template-columns: 1fr; gap: 12px; text-align: center; }
-  .pcd-hero__quienes-body { margin-top: 16px; text-align: center; }
+  .pcd-hero__brand {
+    position: static;
+    width: auto;
+    height: auto;
+    justify-content: flex-start;
+  }
+  .pcd-hero__brand-logo { height: 40px; }
+  .pcd-hero__floor-line {
+    position: static;
+    width: 100%;
+    height: 3px;
+  }
+  .pcd-hero__floor-line--right { display: none; } /* sin foto en móvil, no hace falta el 2do segmento */
+  /* "¿quiénes somos?" centrado */
+  .pcd-hero__quienes-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 30px;
+  }
+  .pcd-hero__quienes-label {
+    position: static;
+    display: block;
+    width: auto;
+    height: auto;
+    margin-top: 0;
+    text-align: center;
+  }
+  /* Logos a la izquierda y APLICA AHORA alineado con ellos, misma fila */
+  .pcd-hero__logos-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-top: 56px;
+  }
+  .pcd-hero__quienes-label br { display: none; }
+  .pcd-hero__quienes-body {
+    position: static;
+    width: auto;
+    height: auto;
+    margin-top: 28px;
+    font-size: 15px;
+    text-align: center;
+  }
+  .pcd-hero__quienes-body-desktop { display: none; }
+  .pcd-hero__quienes-body-mobile { display: block; }
+}
+
+/* Pantallas muy angostas (≤512px): logos arriba, botón ocupando todo el
+   ancho debajo (en vez de la fila lado a lado de arriba). */
+@media (max-width: 512px) {
+  .pcd-hero__logos-row { flex-direction: column; align-items: stretch; gap: 20px; }
   .pcd-hero__brand { justify-content: center; }
+  .pcd-hero__cta-mobile { justify-content: center; width: 100%; }
 }
 
 /* ────────────────────────────────────────────────────────────
@@ -371,10 +579,15 @@
 }
 .pcd-axis__left {
   position: relative;
-  padding: 87px 72px;
+  padding: 87px 84px;
   /* overflow hidden SOLO en el bloque izquierdo: recorta las imágenes que
      desbordan con los % negativos, sin afectar el flujo del texto derecho. */
   overflow: hidden;
+}
+#programa,
+#docentes,
+#proyectos {
+  scroll-margin-top: 68px; /* alto de .pcd-header fijo, para que no tape la sección al llegar por scroll suave */
 }
 .pcd-axis__tag {
   display: inline-flex;
@@ -391,9 +604,13 @@
   margin-bottom: 32px;
   width: max-content;
 }
+.pcd-axis__word-mobile { display: none; } /* solo se muestra en móvil, ver media query */
 .pcd-axis__word {
   font-family: var(--pcd-serif);
   font-style: italic;
+  font-weight: 400; /* DM Serif Text solo tiene peso 400; sin esto el <h2>
+                        hereda bold del user-agent y el navegador sintetiza
+                        un bold falso (se ve más grueso de lo debido). */
   font-size: 165px;
   line-height: 0.82;
   letter-spacing: -0.07em;
@@ -405,7 +622,7 @@
   bottom: 60px;
   font-family: var(--pcd-serif);
   font-style: italic;
-  font-size: 25px;
+  font-size: 23px;
   line-height: 1.18;
   letter-spacing: -0.03em;
   max-width: 280px;
@@ -432,35 +649,31 @@
 .pcd-axis--contenido .pcd-axis__image {
   right: -30%;
   bottom: -25.2%;
-  width: 115%;
-  height: 123%;
+  width: 110%;
+  height: 118%;
   background-size: contain;
   background-position: right bottom;
-  transform: rotate(-2deg);
+  transform: rotate(-2deg) translateY(15px);
 }
 
 /* Eje 2 — mundo 3d (acid) */
 .pcd-axis--mundo .pcd-axis__left { background: var(--pcd-acid); color: var(--pcd-ink); }
-.pcd-axis--mundo .pcd-axis__word { text-align: right; color: var(--pcd-ink); }
+.pcd-axis--mundo .pcd-axis__word { text-align: right; color: var(--pcd-ink); transform: translateX(-120px); }
 .pcd-axis--mundo .pcd-axis__caption {
   left: 20.4%;
   right: auto;
   bottom: auto;
   top: 38.8%;
-  text-align: left;
-  max-width: 51.7%;
-  font-size: 32px;
+  text-align: right;
+  max-width: 34%;
   line-height: 1.25;
-  text-decoration: underline;
-  text-decoration-color: var(--pcd-cobalt);
-  text-decoration-thickness: 2px;
-  text-underline-offset: 6px;
   color: var(--pcd-ink);
+  transform: translateX(-10px);
   z-index: 3;
 }
 .pcd-axis--mundo .pcd-axis__image {
   left: 50%;
-  transform: translateX(-50%);
+  transform: translateX(-50%) translateY(10px);
   bottom: -24.5%;
   width: 163%;
   height: 90.4%;
@@ -478,14 +691,16 @@
   top: auto;
   text-align: right;
   color: var(--pcd-paper);
-  max-width: 38%;
+  max-width: 30%;
+  transform: translateY(30px);
   z-index: 3;
 }
 .pcd-axis--producto .pcd-axis__image {
   left: -23.8%;
   bottom: -14.2%;
-  width: 115.6%;
-  height: 142.1%;
+  transform: translateY(45px);
+  width: 110.6%;
+  height: 137.1%;
   background-size: contain;
   background-position: left bottom;
   z-index: 1;
@@ -494,7 +709,7 @@
 /* Right column — "En vez de X; Y" list */
 .pcd-axis__right {
   background: var(--pcd-paper-2);
-  padding: 130px 72px;
+  padding: 130px 84px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -522,6 +737,7 @@
 .pcd-vs__title {
   font-family: var(--pcd-serif);
   font-style: italic;
+  font-weight: 400; /* ver nota en .pcd-axis__word: evita el bold falso sintetizado */
   font-size: 32px;
   line-height: 1.05;
   letter-spacing: -0.015em;
@@ -555,14 +771,31 @@
   .pcd-axis__word { font-size: 132px; }
 }
 
-@media (max-width: 980px) {
+/* En este rango (justo antes de colapsar a 1 columna, hasta el ancho de
+   referencia del diseño desktop = 1486px) "mundo 3d" quedaba montado sobre
+   su caption con el layout desktop de posiciones fijas; lo corremos para
+   que no se encimen. */
+@media (min-width: 1051px) and (max-width: 1486px) {
+  .pcd-axis--mundo .pcd-axis__word { transform: translateX(-45px); }
+  .pcd-axis--mundo .pcd-axis__caption { max-width: 44%; transform: translate(-50px, -30px); }
+  .pcd-axis--producto .pcd-axis__caption { max-width: 38%; }
+}
+/* De 1200 en adelante (hasta 1486), el caption de mundo 3d otros 10px más
+   a la izquierda que en el tramo 1051-1200. */
+@media (min-width: 1201px) and (max-width: 1486px) {
+  .pcd-axis--mundo .pcd-axis__caption { transform: translate(-60px, -30px); }
+}
+
+@media (max-width: 1050px) {
   .pcd-axis { grid-template-columns: 1fr; min-height: 0; }
   /* En móvil las imágenes están ocultas, así que overflow:hidden ya no recorta
      imágenes — solo arriesga cortar el texto del caption. Lo liberamos y dejamos
      que el bloque crezca con su contenido. min-height: auto = nunca cap. */
   .pcd-axis__left { padding: 56px 24px; min-height: auto; overflow: visible; }
   .pcd-axis__right { padding: 56px 24px; }
-  .pcd-axis__word { font-size: 96px; }
+  .pcd-axis__word { font-size: 56px; }
+  .pcd-axis__word-desktop { display: none; }
+  .pcd-axis__word-mobile { display: inline; white-space: nowrap; }
   /* Reset del caption en móvil — scoped por eje para igualar la especificidad
      (0,2,0) de las reglas .pcd-axis--X .pcd-axis__caption y poder anular sus
      top/left/max-width posicionados. Sin esto, mundo 3d quedaba desplazado y
@@ -577,13 +810,21 @@
     text-align: left;
   }
   .pcd-axis__image { display: none; }
+  /* Mundo 3D: palabra + caption centrados en móvil */
+  .pcd-axis--mundo .pcd-axis__tag { display: flex; margin-left: auto; margin-right: auto; }
+  .pcd-axis--mundo .pcd-axis__word { text-align: center; transform: none; margin-right: 0; }
+  .pcd-axis--mundo .pcd-axis__caption { text-align: center; transform: none; margin-right: 0; max-width: 100%; }
+  /* Producto: palabra + caption alineados a la derecha en móvil */
+  .pcd-axis--producto .pcd-axis__tag { display: flex; margin-left: auto; }
+  .pcd-axis--producto .pcd-axis__word { text-align: right; margin-right: 0; }
+  .pcd-axis--producto .pcd-axis__caption { text-align: right; transform: none; }
 }
 
 /* ────────────────────────────────────────────────────────────
    DOCENTES
    ──────────────────────────────────────────────────────────── */
 .pcd-docentes {
-  padding: 88px 76px 96px;
+  padding: 88px 88px 28px;
   background: var(--pcd-paper);
 }
 .pcd-docentes__head {
@@ -596,13 +837,14 @@
 .pcd-docentes__title {
   font-family: var(--pcd-serif);
   font-style: italic;
+  font-weight: 400; /* ver nota en .pcd-axis__word: evita el bold falso sintetizado */
   font-size: 100px;
   line-height: 0.92;
   letter-spacing: -0.025em;
   color: var(--pcd-ink);
   margin: 0;
-  max-width: 12ch;
 }
+.pcd-docentes__sub-break { display: none; } /* solo se muestra en móvil, ver media query */
 .pcd-docentes__sub {
   align-self: end;
   font-family: var(--pcd-mono);
@@ -621,17 +863,25 @@
   overflow-y: hidden;
   scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch;
-  scrollbar-width: thin;
-  scrollbar-color: var(--pcd-ink) transparent;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  padding-top: 8px; /* evita que el translateY(-3px) del hover recorte la card contra overflow-y:hidden */
+  padding-left: 8px; /* evita que el translateX(-3px) del hover corte el borde izquierdo de la 1ª card contra overflow-x:auto */
+  margin-left: -8px; /* cancela el corrimiento visual del padding-left, para no desalinear el carrusel con el título de arriba */
   padding-bottom: 16px;
-  margin-right: -76px;
-  padding-right: 76px;
+  margin-right: -88px;
+  padding-right: 88px;
+  cursor: grab;
+  user-select: none;
 }
-.pcd-docentes__grid::-webkit-scrollbar { height: 8px; }
-.pcd-docentes__grid::-webkit-scrollbar-thumb { background: var(--pcd-ink); border-radius: 999px; }
-.pcd-docentes__grid::-webkit-scrollbar-track { background: transparent; }
+.pcd-docentes__grid::-webkit-scrollbar { display: none; }
+.pcd-docentes__grid.is-dragging {
+  cursor: grabbing;
+  scroll-snap-type: none;
+}
 .pcd-docente {
   position: relative;
+  z-index: 1;
   flex: 0 0 calc((100% - 40px) / 3 - 10px);
   scroll-snap-align: start;
   background: var(--pcd-paper);
@@ -643,9 +893,37 @@
   min-height: 692px;
   overflow: visible;
   cursor: pointer;
-  transition: background 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+  transition: background 0.4s ease-out, box-shadow 0.4s ease-out, transform 0.4s ease-out;
 }
+/* El sticker (Like/idea/love) sobresale por la derecha de cada card, invadiendo
+   la siguiente. Sin esto, la card posterior en el HTML se pinta encima y lo
+   corta incluso sin hover. z-index descendente hace que cada card quede por
+   encima de la que sigue. */
+.pcd-docente:nth-child(1) { z-index: 20; }
+.pcd-docente:nth-child(2) { z-index: 19; }
+.pcd-docente:nth-child(3) { z-index: 18; }
+.pcd-docente:nth-child(4) { z-index: 17; }
+.pcd-docente:nth-child(5) { z-index: 16; }
+.pcd-docente:nth-child(6) { z-index: 15; }
+.pcd-docente:nth-child(7) { z-index: 14; }
+.pcd-docente:nth-child(8) { z-index: 13; }
+.pcd-docente:nth-child(9) { z-index: 12; }
+.pcd-docente:nth-child(10) { z-index: 11; }
+.pcd-docente:nth-child(11) { z-index: 10; }
+.pcd-docente:nth-child(12) { z-index: 9; }
+.pcd-docente:nth-child(13) { z-index: 8; }
+.pcd-docente:nth-child(14) { z-index: 7; }
+.pcd-docente:nth-child(15) { z-index: 6; }
+.pcd-docente:nth-child(16) { z-index: 5; }
+.pcd-docente:nth-child(17) { z-index: 4; }
+.pcd-docente:nth-child(18) { z-index: 3; }
+.pcd-docente:nth-child(19) { z-index: 2; }
+.pcd-docente:nth-child(20) { z-index: 1; }
 .pcd-docente:hover {
+  /* Sin z-index propio: el orden descendente por :nth-child ya garantiza
+     que cada card quede por encima de la siguiente en todo momento; subir
+     el z-index aquí la ponía también por encima de las cards ANTERIORES,
+     tapando sus stickers. */
   background: var(--pcd-gray-l);
   box-shadow: 10px 10px 0 var(--pcd-ink);
   transform: translate(-3px, -3px);
@@ -658,10 +936,17 @@
   z-index: 5;
   pointer-events: none;
   filter: drop-shadow(0 4px 8px rgba(13, 13, 13, 0.12));
+  transform-origin: center;
+  animation: pcd-sticker-sway 2.6s ease-in-out infinite;
 }
-.pcd-sticker--like { top: 110px; }
-.pcd-sticker--idea { top: 290px; }
-.pcd-sticker--love { top: 80px; }
+@keyframes pcd-sticker-sway {
+  0%, 100% { transform: rotate(-8deg); }
+  50% { transform: rotate(8deg); }
+}
+.pcd-sticker--like { top: 110px; animation-delay: -0.4s; }
+.pcd-sticker--idea { top: 290px; animation-delay: -1.1s; }
+.pcd-sticker--love { top: 80px; animation-delay: -1.9s; }
+.pcd-sticker--star { top: 110px; animation-delay: -2.6s; } /* posición provisional hasta ver el asset real */
 .pcd-docente__blob {
   position: relative;
   height: 331px;
@@ -674,7 +959,7 @@
   content: '';
   position: absolute;
   inset: 0;
-  background-size: cover;
+  background-size: contain; /* muestra el retrato completo sin recortarlo contra la altura fija del marco */
   background-position: center center;
   background-repeat: no-repeat;
   transition: opacity 0.35s ease;
@@ -687,12 +972,53 @@
 .pcd-docente__blob::after {
   background-image: var(--docente-end);
   opacity: 0;
+  /* El dibujo "end" (hover) está ilustrado ~6% más grande dentro de su
+     lienzo que el "init" en las 4 parejas de arte (medido: ~0.94 de
+     factor consistente) — sin esto, el personaje se ve "crecer" al
+     pasar el mouse. */
+  transform: scale(0.94);
+  transform-origin: center center;
+}
+/* Ilustración de Juan David un poco más grande a pedido, en ambos estados */
+.pcd-docente--juandavid .pcd-docente__blob::before {
+  transform: scale(1.15);
+  transform-origin: center center;
+}
+.pcd-docente--juandavid .pcd-docente__blob::after {
+  transform: scale(calc(1.15 * 0.94));
+  transform-origin: center center;
+  /* El personaje en el dibujo "end" está ~3% más abajo dentro de su
+     lienzo que en "init" (medido), lo que se ve como un salto vertical
+     al hacer crossfade. Se sube el encuadre para alinearlo. */
+  background-position: center calc(50% - 10px);
+}
+/* Camilo: el dibujo "end" es más largo (más contenido hacia abajo) que el
+   "init". Mismo achique que el resto de las cards (0.94, iguala el tamaño)
+   anclado arriba, más un clip-path que corta unos px extra de la parte de
+   abajo (recorte real, sin volver a achicar el dibujo). */
+.pcd-docente--camilo .pcd-docente__blob::after {
+  transform: translate(-4px, -4px) scale(0.98);
+  transform-origin: center center;
+  background-position: top center;
+  clip-path: inset(0 0 28px 0);
+}
+/* Vanessa: el personaje del dibujo "end" está ligeramente más abajo y a la
+   derecha que en "init" (medido), causando un salto de encuadre al cruzar
+   entre ambos. Se reubica para alinearlo con el "init". */
+.pcd-docente--vanessa .pcd-docente__blob::after {
+  background-position: calc(50% - 5px) calc(50% - 8px);
+}
+/* Paula: imagen de hover un poco más grande a pedido */
+.pcd-docente--paula .pcd-docente__blob::after {
+  transform: scale(1.01);
+  transform-origin: center center;
 }
 .pcd-docente:hover .pcd-docente__blob::before { opacity: 0; }
 .pcd-docente:hover .pcd-docente__blob::after  { opacity: 1; }
 .pcd-docente__name {
   font-family: var(--pcd-serif);
   font-style: italic;
+  font-weight: 400; /* ver nota en .pcd-axis__word: evita el bold falso sintetizado */
   font-size: 50px;
   line-height: 0.9;
   letter-spacing: -0.025em;
@@ -727,11 +1053,41 @@
   .pcd-docente { flex: 0 0 calc((100% - 20px) / 2); }
 }
 @media (max-width: 640px) {
-  .pcd-docentes { padding: 56px 24px; }
-  .pcd-docentes__title { font-size: 56px; }
+  .pcd-docentes { padding: 56px 24px 24px; }
   .pcd-docentes__grid { margin-right: -24px; padding-right: 24px; }
   .pcd-docente { flex: 0 0 85%; }
 }
+
+@media (max-width: 980px) {
+  /* "Experiencia real convertida en aprendizaje" pasa a ser la ceja: arriba,
+     centrada, y el título centrado debajo (en desktop es el sub a la derecha). */
+  .pcd-docentes__head {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 12px;
+  }
+  .pcd-docentes__head { margin-bottom: 40px; }
+  .pcd-docentes__sub {
+    order: -1;
+    align-self: center;
+    text-align: center;
+    max-width: none;
+  }
+  .pcd-docentes__sub-break { display: inline; }
+  .pcd-docentes__title {
+    /* Tamaño fluido: se va adaptando al ancho de pantalla en vez de saltar
+       entre valores fijos por breakpoint. */
+    font-size: clamp(40px, 8vw, 72px);
+    text-align: center;
+    align-self: stretch;
+    flex: 0 0 auto;
+    width: 100%;
+    max-width: 100%;
+  }
+}
+
 
 /* ────────────────────────────────────────────────────────────
    MODAL DOCENTE — popup detalle
@@ -808,24 +1164,70 @@ body:has(.pcd-docente-modal[open]) {
   min-height: 0;
 }
 .pcd-docente-modal__portrait {
+  position: relative;
   flex: 1;
   min-height: 280px;
+  overflow: hidden;
+}
+.pcd-docente-modal__portrait-layer {
+  position: absolute;
+  inset: 0;
   background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
+  transition: opacity 0.5s ease;
+}
+.pcd-docente-modal__portrait-layer--init {
+  transform: scale(1.08); /* un poco más grande a pedido */
+}
+.pcd-docente-modal__portrait-layer--end {
+  /* El dibujo "end" (hover) está ilustrado ~6% más grande dentro de su
+     lienzo que el "init" en las 4 parejas de arte (mismo hallazgo que en
+     las cards del carrusel) — sin esto, el personaje "crece" al alternar. */
+  transform: scale(calc(1.08 * 0.94));
+}
+/* Encuadre de imagen por docente (lo único que varía entre cards).
+   Juan David: ajuste fino ya aprobado, no tocar sin que lo pidan puntualmente. */
+.pcd-docente-modal--juandavid .pcd-docente-modal__portrait-layer--end {
+  transform: translate(-5px, -10px) scale(calc(1.08 * 0.94));
+}
+/* Vanessa: imágenes (default y hover) un poco más pequeñas a pedido */
+.pcd-docente-modal--vanessa .pcd-docente-modal__portrait-layer--init {
+  transform: translateY(10px) scale(0.98);
+}
+.pcd-docente-modal--vanessa .pcd-docente-modal__portrait-layer--end {
+  transform: scale(calc(0.98 * 0.94));
+}
+/* Camilo: el dibujo "end" es más largo que el "init" (mismo caso que en
+   las cards del carrusel). Se recorta (clip-path), no se achica. */
+.pcd-docente-modal--camilo .pcd-docente-modal__portrait-layer--init {
+  transform: scale(0.98);
+}
+.pcd-docente-modal--camilo .pcd-docente-modal__portrait-layer--end {
+  transform: translateX(-3px) scale(0.98);
+  clip-path: inset(0 0 33px 0);
+}
+/* Paula: imagen default un poco más pequeña a pedido */
+.pcd-docente-modal--paula .pcd-docente-modal__portrait-layer--init {
+  transform: scale(1.01);
 }
 .pcd-docente-modal__name {
   font-family: var(--pcd-serif);
   font-style: italic;
+  font-weight: 400; /* ver nota en .pcd-axis__word: evita el bold falso sintetizado */
   font-size: 60px;
   line-height: 0.95;
   letter-spacing: -0.025em;
   color: var(--pcd-ink);
   margin: 0;
+  transform: translateY(-30px);
+  text-align: center;
 }
 .pcd-docente-modal__tags {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
+  transform: translateY(-10px);
   gap: 7px;
 }
 .pcd-docente-modal__content {
@@ -837,6 +1239,7 @@ body:has(.pcd-docente-modal[open]) {
 .pcd-docente-modal__heading {
   font-family: var(--pcd-fun);
   font-style: normal;
+  font-weight: 400; /* ver nota en .pcd-axis__word: evita el bold falso sintetizado (es <h3>) */
   font-size: 40px;
   line-height: 1;
   letter-spacing: -0.01em;
@@ -880,7 +1283,11 @@ body:has(.pcd-docente-modal[open]) {
   font-size: 18px;
   color: var(--pcd-ink);
 }
-.pcd-docente-modal__list li strong {
+/* Solo el <strong> que es hijo directo de <li> actúa como "título" de la
+   línea (patrón "Caída libre" + párrafo debajo). Los <strong> anidados
+   dentro de .pcd-docente-modal__detail-plain (como "ADL Digital Lab" en
+   medio de una oración corrida) deben quedarse inline, no en su propia línea. */
+.pcd-docente-modal__list li > strong {
   display: block;
   font-weight: 700;
   margin-bottom: 4px;
@@ -947,7 +1354,7 @@ body:has(.pcd-docente-modal[open]) {
    PROYECTOS
    ──────────────────────────────────────────────────────────── */
 .pcd-projects {
-  padding: 96px 72px;
+  padding: 28px 84px 96px;
   background: var(--pcd-paper);
 }
 .pcd-projects__head {
@@ -960,7 +1367,8 @@ body:has(.pcd-docente-modal[open]) {
 .pcd-projects__title {
   font-family: var(--pcd-serif);
   font-style: italic;
-  font-size: clamp(64px, 9.5vw, 130px);
+  font-weight: 400; /* ver nota en .pcd-axis__word: evita el bold falso sintetizado */
+  font-size: 100px; /* igualado a .pcd-docentes__title */
   line-height: 0.94;
   letter-spacing: -0.03em;
   color: var(--pcd-ink);
@@ -1007,6 +1415,12 @@ body:has(.pcd-docente-modal[open]) {
 }
 .pcd-project--wide .pcd-project__media { aspect-ratio: 853 / 529; }
 .pcd-project--tall .pcd-project__media { aspect-ratio: 417 / 514; }
+/* Zoom puntual para la foto de la campaña del Mundial: la card mantiene su
+   tamaño, solo se agranda el encuadre de la imagen dentro de ella. */
+.pcd-project__media--zoom {
+  background-size: 160%;
+  background-position: calc(50% + 22px) calc(50% - 25px);
+}
 .pcd-project__meta {
   display: flex;
   justify-content: space-between;
@@ -1027,9 +1441,485 @@ body:has(.pcd-docente-modal[open]) {
 }
 
 @media (max-width: 980px) {
-  .pcd-projects { padding: 56px 24px; }
+  .pcd-projects { padding: 24px 24px 56px; }
   .pcd-projects__head { grid-template-columns: 1fr; }
+  .pcd-projects__title { font-size: 56px; }
   .pcd-projects__grid { grid-template-columns: 1fr; }
+}
+
+/* ────────────────────────────────────────────────────────────
+   /proyectos — hero
+   ──────────────────────────────────────────────────────────── */
+.pcd-projects-hero {
+  background: var(--pcd-paper);
+  color: var(--pcd-ink);
+  padding: 96px 84px 0;
+  text-align: left;
+  position: relative;
+  z-index: 0;
+  overflow: visible;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 32px;
+}
+.pcd-projects-hero__content {
+  position: relative;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.pcd-projects-hero__eyebrow-row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 28px;
+}
+.pcd-projects-hero__back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--pcd-mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--pcd-ink);
+  border: 1.5px solid rgba(13, 13, 13, 0.18);
+  border-radius: 999px;
+  padding: 6px 14px;
+  transition: background .15s, color .15s, border-color .15s;
+}
+.pcd-projects-hero__back:hover {
+  background: var(--pcd-ink);
+  color: var(--pcd-paper);
+  border-color: var(--pcd-ink);
+}
+.pcd-projects-hero__eyebrow {
+  position: relative;
+  display: block;
+  font-family: var(--pcd-mono);
+  font-size: 12px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--pcd-ink);
+}
+.pcd-projects-hero__title {
+  position: relative;
+  font-family: var(--pcd-serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(42px, 5.8vw, 88px);
+  line-height: 1.04;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+/* Salto de línea extra, oculto por defecto: en mobile el título ya cae
+   naturalmente en 4 líneas, y en desktop (>1030px) cabe en 2. Solo se
+   activa entre 641px y 1030px para forzar las mismas 4 líneas ahí
+   también (ver media query correspondiente). */
+.pcd-projects-hero__title-break { display: none; }
+.pcd-projects-hero__title .pop {
+  font-family: var(--pcd-fun);
+  font-style: normal;
+  color: var(--pcd-tomato);
+  letter-spacing: -0.02em;
+  display: inline-block;
+  transform: translateY(0.05em) rotate(-2deg);
+  margin: 0 0.04em;
+}
+
+.pcd-projects-hero__illustration {
+  position: relative;
+  flex: 0 0 auto;
+  width: clamp(240px, 30vw, 400px);
+  margin-top: clamp(24px, 4vw, 48px);
+  transform: translate(-65px, 25px);
+}
+.pcd-projects-hero__people {
+  display: block;
+  width: 100%;
+  height: auto;
+  opacity: 0;
+  animation: pcd-projects-people-in 0.6s ease-out both;
+}
+
+/* El wrapper posiciona el globo (top/left/ajustes finos en px);
+   la animación de entrada + flotación vive en la <img> de adentro,
+   así los dos "transform" (posición vs. animación) no se pisan. */
+.pcd-projects-hero__globo-wrap {
+  position: absolute;
+  width: clamp(40px, 5.5vw, 76px);
+  z-index: 1;
+}
+.pcd-projects-hero__globo-wrap--izq {
+  top: -6%;
+  left: -14%;
+  width: clamp(42px, 6vw, 80px);
+  transform: translate(95px, -45px);
+}
+.pcd-projects-hero__globo-wrap--cen {
+  top: -22%;
+  left: 36%;
+  width: clamp(46px, 6.5vw, 90px);
+  z-index: 2;
+  transform: translateY(-25px);
+}
+.pcd-projects-hero__globo-wrap--der {
+  top: -2%;
+  right: -12%;
+  width: clamp(38px, 5.5vw, 70px);
+  transform: translate(-130px, -50px);
+}
+
+.pcd-projects-hero__globo {
+  display: block;
+  width: 100%;
+  height: auto;
+  opacity: 0;
+  transform-origin: center;
+}
+/* Orden de entrada: imagen (arriba) → centro → izquierda → derecha.
+   Cada globo, al terminar de aparecer, pasa a flotar suavemente en loop;
+   duración/retraso del flote ligeramente distintos entre sí para que
+   no se muevan todos en fase (mismo truco que .pcd-sticker-sway). */
+.pcd-projects-hero__globo--cen {
+  animation:
+    pcd-projects-globo-in 0.5s ease-out 0.6s both,
+    pcd-projects-globo-float 3s ease-in-out 1.3s infinite;
+}
+.pcd-projects-hero__globo--izq {
+  animation:
+    pcd-projects-globo-in 0.5s ease-out 0.8s both,
+    pcd-projects-globo-float 3.4s ease-in-out 1.5s infinite;
+}
+.pcd-projects-hero__globo--der {
+  animation:
+    pcd-projects-globo-in 0.5s ease-out 1s both,
+    pcd-projects-globo-float 3.2s ease-in-out 1.7s infinite;
+}
+
+@keyframes pcd-projects-people-in {
+  from { opacity: 0; transform: translateY(16px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes pcd-projects-globo-in {
+  from { opacity: 0; transform: translateY(10px) scale(0.6); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes pcd-projects-globo-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pcd-projects-hero__people,
+  .pcd-projects-hero__globo {
+    opacity: 1;
+    animation: none;
+    transform: none;
+  }
+}
+
+/* Página /proyectos: el hero oscuro ya da el "arranque" visual, la sección
+   de filtros/grid solo necesita su propio aire arriba. */
+.pcd-projects--page { padding-top: 0; position: relative; z-index: 2; }
+
+/* ────────────────────────────────────────────────────────────
+   /proyectos — filtros
+   ──────────────────────────────────────────────────────────── */
+.pcd-projects__filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  background: var(--pcd-paper-2);
+  border: 1.5px solid rgba(13,13,13,0.1);
+  border-radius: 999px;
+  padding: 12px 16px;
+  margin-bottom: 40px;
+}
+.pcd-projects__filter-dropdown { position: relative; }
+.pcd-projects__filters .pcd-projects__filter-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--pcd-ink);
+  color: var(--pcd-paper);
+  font-family: var(--pcd-mono);
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 9px 16px;
+  border: 1.5px solid var(--pcd-ink);
+  border-radius: 999px;
+  transition: background .15s, color .15s;
+}
+.pcd-projects__filter-btn:hover { background: var(--pcd-acid); color: var(--pcd-ink); border-color: var(--pcd-ink); }
+.pcd-projects__filter-btn.is-active { background: var(--pcd-ink); color: var(--pcd-paper); }
+.pcd-projects__filter-btn svg { flex: none; }
+.pcd-projects__filter-btn--year:hover,
+.pcd-projects__filter-btn--year.is-active { background: var(--pcd-cobalt); color: var(--pcd-paper); border-color: var(--pcd-cobalt); }
+.pcd-projects__filter-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 220px;
+  max-height: 280px;
+  overflow-y: auto;
+  background: var(--pcd-paper);
+  border: 1.5px solid var(--pcd-ink);
+  border-radius: 16px;
+  padding: 8px;
+  box-shadow: 4px 4px 0 var(--pcd-ink);
+}
+.pcd-projects__filter-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-align: left;
+  font-family: var(--pcd-sans);
+  font-size: 14px;
+  color: var(--pcd-ink);
+  padding: 8px 10px;
+  border-radius: 10px;
+}
+.pcd-projects__filter-option:hover { background: var(--pcd-paper-2); }
+.pcd-projects__filter-option.is-selected { background: var(--pcd-paper-2); font-weight: 600; }
+.pcd-projects__filter-checkbox {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 18px;
+  height: 18px;
+  border: 1.5px solid var(--pcd-ink);
+  border-radius: 5px;
+  color: var(--pcd-ink);
+  transition: background .15s, border-color .15s;
+}
+.pcd-projects__filter-option.is-selected .pcd-projects__filter-checkbox {
+  background: var(--pcd-acid);
+}
+.pcd-projects__filter-option--year.is-selected .pcd-projects__filter-checkbox {
+  background: var(--pcd-cobalt);
+  border-color: var(--pcd-cobalt);
+  color: var(--pcd-paper);
+}
+.pcd-projects__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  flex: 1;
+}
+.pcd-projects__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--pcd-acid);
+  color: var(--pcd-ink);
+  font-family: var(--pcd-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 7px 8px 7px 14px;
+  border-radius: 999px;
+}
+.pcd-projects__chip--year { background: var(--pcd-cobalt); color: var(--pcd-paper); }
+.pcd-projects__chip--year button { background: rgba(246,248,251,0.25); color: var(--pcd-paper); }
+.pcd-projects__chip--year button:hover { background: var(--pcd-paper); color: var(--pcd-ink); }
+.pcd-projects__chip button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: rgba(13,13,13,0.12);
+  font-size: 13px;
+  line-height: 1;
+}
+.pcd-projects__chip button:hover { background: var(--pcd-ink); color: var(--pcd-paper); }
+.pcd-projects__filter-clear {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 36px;
+  height: 36px;
+  color: var(--pcd-ink);
+  background: var(--pcd-paper);
+  border: 1.5px solid var(--pcd-ink);
+  border-radius: 50%;
+  transition: background .15s, color .15s;
+}
+.pcd-projects__filter-clear:hover { background: var(--pcd-tomato); color: var(--pcd-paper); border-color: var(--pcd-tomato); }
+.pcd-projects__empty {
+  font-family: var(--pcd-sans);
+  font-size: 16px;
+  color: var(--pcd-ink);
+  opacity: 0.7;
+  padding: 64px 0;
+  text-align: center;
+}
+
+/* Grid de /proyectos (galería completa) — tarjetas uniformes, a diferencia
+   del grid ancho/alto de las 2 previews del home. */
+.pcd-projects-page__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 40px;
+  margin-top: 24px;
+}
+.pcd-projects-page__grid .pcd-project__media { aspect-ratio: 4 / 3; }
+.pcd-project__description {
+  font-family: var(--pcd-sans);
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--pcd-ink);
+  opacity: 0.75;
+}
+.pcd-project__file {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--pcd-mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--pcd-ink);
+  width: max-content;
+  border-bottom: 1px solid var(--pcd-ink);
+}
+
+/* ────────────────────────────────────────────────────────────
+   /proyectos — paginación
+   ──────────────────────────────────────────────────────────── */
+.pcd-projects__pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin-top: 64px;
+}
+.pcd-projects__pagination button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  height: 40px;
+  padding: 0 6px;
+  font-family: var(--pcd-mono);
+  font-size: 13px;
+  color: var(--pcd-ink);
+  border: 1.5px solid var(--pcd-ink);
+  border-radius: 999px;
+  background: var(--pcd-paper);
+  transition: background .15s, color .15s;
+}
+.pcd-projects__pagination button:hover:not(:disabled) { background: var(--pcd-ink); color: var(--pcd-paper); }
+.pcd-projects__pagination button.is-active { background: var(--pcd-ink); color: var(--pcd-paper); }
+.pcd-projects__pagination button:disabled { opacity: 0.3; }
+
+@media (max-width: 640px) {
+  .pcd-projects-page__grid { grid-template-columns: 1fr; gap: 32px; }
+  .pcd-projects__filters { border-radius: 20px; }
+  /* Año/Asignatura quedan lado a lado como antes; solo el grupo de chips
+     fuerza su propia fila completa abajo (si no, se amontonaban en una
+     columna angosta al lado de los botones). El "flex: 1" de la regla
+     base fija flex-basis: 0%, que ignora "width" — hay que pisar el
+     flex-basis directamente para que ocupe toda la fila y baje sola. */
+  .pcd-projects__chips { flex: 1 1 100%; order: 2; }
+  /* Con los chips forzados a su propia fila (order:2), la papelera
+     (order por defecto: 0) vuelve a quedar arriba, en la fila de
+     Año/Asignatura, en vez de caer sola debajo de los chips. */
+  .pcd-projects__filter-clear { order: 1; margin-left: auto; }
+  .pcd-projects-hero {
+    padding: 88px 20px 40px;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  .pcd-projects-hero__content { max-width: none; }
+  .pcd-projects-hero__eyebrow-row {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+  }
+  .pcd-projects-hero__illustration {
+    width: clamp(180px, 60vw, 260px);
+    margin: 32px auto 0;
+    /* En mobile se resetea el corrimiento fino que se hizo a mano para
+       desktop: la composición completa queda centrada tal cual. */
+    transform: none;
+  }
+  /* Los offsets en px de cada globo (afinados para desktop) tampoco
+     aplican aquí; solo queda el top/left/right en % de cada variante,
+     que ya ubica centro-arriba, izquierda y derecha correctamente.
+     Izq/der reciben un empujón horizontal leve para separarse del
+     centro; el centro queda tal cual (sin offset). */
+  .pcd-projects-hero__globo-wrap--cen {
+    transform: translate(10px, -15px);
+  }
+  .pcd-projects-hero__globo-wrap--izq {
+    transform: translate(50px, -15px);
+  }
+  .pcd-projects-hero__globo-wrap--der {
+    transform: translate(-60px, -15px);
+  }
+}
+
+/* Entre 398px y 640px el título queda muy pegado a la composición de
+   abajo; se le da un poco más de aire. */
+@media (min-width: 398px) and (max-width: 640px) {
+  .pcd-projects-hero__illustration { margin-top: 85px; }
+}
+
+/* De 641px a 1250px el título queda muy pegado a los filtros de abajo;
+   se baja un poco la fila de filtros para dar más aire. */
+@media (min-width: 641px) and (max-width: 1250px) {
+  .pcd-projects--page { padding-top: 48px; }
+}
+
+/* De 641px a 1250px, igual que en mobile: Año/Asignatura quedan lado a
+   lado, pero los chips seleccionados bajan a su propia fila completa
+   en vez de amontonarse al lado de los botones (mismo pisado de
+   flex-basis que en la media query de mobile, ver ahí el porqué). */
+@media (min-width: 641px) and (max-width: 1250px) {
+  /* Con dos filas adentro, el border-radius: 999px de la regla base
+     queda como una píldora rara; se pasa al mismo rectángulo con
+     esquinas redondeadas que ya se usa en mobile. */
+  .pcd-projects__filters { border-radius: 20px; }
+  .pcd-projects__chips { flex: 1 1 100%; order: 2; }
+  .pcd-projects__filter-clear { order: 1; margin-left: auto; }
+}
+
+/* De 641px a 1250px el título se fuerza a 4 líneas (Proyectos que /
+   crean / nuestros / estudiantes.), igual que en mobile. */
+@media (min-width: 641px) and (max-width: 1250px) {
+  .pcd-projects-hero__title-break { display: block; }
+}
+
+/* De 641px a 972px la composición (imagen + globos) se corre 65px más
+   a la derecha que en desktop (-65px + 65px = 0px) y 20px más abajo
+   (25px + 20px = 45px). Los globos izq/der también se separan un poco
+   más del centro en este rango. */
+@media (min-width: 641px) and (max-width: 972px) {
+  .pcd-projects-hero__illustration { transform: translate(0px, 45px); }
+  .pcd-projects-hero__globo-wrap--cen { transform: translate(5px, -25px); }
+  .pcd-projects-hero__globo-wrap--izq { transform: translate(65px, -40px); }
+  .pcd-projects-hero__globo-wrap--der { transform: translate(-75px, -45px); }
+}
+
+/* De 721px a 980px el botón "ver proyectos" vuelve a ir a la derecha del
+   título (como desktop) en vez de abajo; de 720px para abajo se mantiene
+   apilado. */
+@media (min-width: 721px) and (max-width: 980px) {
+  .pcd-projects__head { grid-template-columns: 1fr auto; }
 }
 
 /* ────────────────────────────────────────────────────────────
@@ -1046,7 +1936,7 @@ body:has(.pcd-docente-modal[open]) {
 }
 .pcd-estudia__copy {
   background: var(--pcd-ink);
-  padding: 106px 72px;
+  padding: 106px 84px;
   display: flex;
   flex-direction: column;
   gap: 36px;
@@ -1062,12 +1952,15 @@ body:has(.pcd-docente-modal[open]) {
 .pcd-estudia__title {
   font-family: var(--pcd-serif);
   font-style: italic;
+  font-weight: 400; /* ver nota en .pcd-axis__word: evita el bold falso sintetizado */
   font-size: 86.4px;
   line-height: 0.95;
   letter-spacing: -0.025em;
   color: var(--pcd-paper);
 }
 .pcd-estudia__title .neon {
+  font-family: var(--pcd-fun);
+  font-style: normal;
   color: var(--pcd-acid);
   display: block;
 }
@@ -1121,15 +2014,61 @@ body:has(.pcd-docente-modal[open]) {
   z-index: 5;
 }
 /* Posiciones relativas a .pcd-estudia__photo (los 3 sobre la foto) */
-.pcd-bullet--1 { top: 40px; right: 40px; transform: rotate(-3deg); background: var(--pcd-cobalt); color: var(--pcd-paper); }
-.pcd-bullet--2 { top: 50%; left: 24px; transform: translateY(-50%) rotate(2deg); }
-.pcd-bullet--3 { bottom: 48px; right: 48px; transform: rotate(-1deg); background: var(--pcd-tomato); color: var(--pcd-paper); }
+.pcd-bullet--1 { top: 50%; left: 80px; transform: translateY(-50%) rotate(2deg); }
+.pcd-bullet--2 { top: 90px; right: 90px; transform: rotate(-3deg); background: var(--pcd-cobalt); color: var(--pcd-paper); }
+.pcd-bullet--3 { bottom: 78px; right: 48px; transform: rotate(-1deg); background: var(--pcd-tomato); color: var(--pcd-paper); }
+.pcd-bullet {
+  animation: pcd-bullet-pulse 2.4s ease-in-out infinite;
+}
+.pcd-bullet--1 { animation-delay: -0.5s; }
+.pcd-bullet--2 { animation-delay: -1.3s; }
+.pcd-bullet--3 { animation-delay: -2s; }
+@keyframes pcd-bullet-pulse {
+  0%, 100% { scale: 1; }
+  50% { scale: 1.06; }
+}
 
 @media (max-width: 980px) {
   .pcd-estudia { grid-template-columns: 1fr; height: auto; }
   .pcd-estudia__copy { padding: 48px 24px; }
-  .pcd-estudia__photo { min-height: 360px; }
+  /* "cover" recortaba la foto al achicar el ancho; "contain" la muestra
+     completa siempre (con el fondo paper de relleno si sobra espacio). */
+  /* Escala por el ALTO del contenedor (no por ancho) para que crezca sin
+     tocar el min-height: la ilustración es casi cuadrada y el contenedor es
+     muy ancho y bajo, así que agrandar por alto la acerca a llenar el ancho
+     con un recorte mínimo arriba/abajo, en vez de dejarla chica con
+     márgenes laterales enormes (contain) o cortada feo (cover). */
+  .pcd-estudia__photo { min-height: 440px; background-size: auto 130%; }
   .pcd-estudia__title { font-size: 56px; }
+}
+
+/* Por debajo de 400px, 130% se ve demasiado grande — un poco más chica. */
+@media (max-width: 400px) {
+  .pcd-estudia__photo { background-size: auto 115%; }
+}
+
+/* Por debajo de 360px, tamaño real (100%). */
+@media (max-width: 360px) {
+  .pcd-estudia__photo { background-size: auto 100%; }
+}
+
+/* 981-1130px: ya está en el grid de 2 columnas de desktop, pero la columna
+   queda angosta y "cover" recorta feo la ilustración. La achicamos un poco
+   para que se vea completa/menos cortada. */
+@media (min-width: 981px) and (max-width: 1130px) {
+  .pcd-estudia__photo { background-size: auto 85%; }
+}
+
+/* De 730px para abajo el badge "tecnología" tapa el dibujo — lo bajamos. */
+@media (max-width: 730px) {
+  .pcd-bullet--2 { top: 140px; }
+}
+
+/* 800-980px: reacomodo de los 3 badges sobre la ilustración. */
+@media (min-width: 800px) and (max-width: 980px) {
+  .pcd-bullet--1 { left: 110px; }
+  .pcd-bullet--2 { right: 130px; }
+  .pcd-bullet--3 { right: 88px; }
 }
 
 /* ────────────────────────────────────────────────────────────
@@ -1142,7 +2081,7 @@ body:has(.pcd-docente-modal[open]) {
   display: block;
   border-top: none;
   background: var(--pcd-paper);
-  padding: 80px 72px 32px;
+  padding: 80px 84px 32px;
   position: relative;
 }
 .pcd-footer__columns {
@@ -1182,6 +2121,15 @@ body:has(.pcd-docente-modal[open]) {
   text-transform: none;  /* anula el uppercase filtrado de `footer p` de global.css */
   color: var(--pcd-ink);
 }
+
+/* Modificador — footer oscuro, usado solo en /proyectos (el del home se
+   queda como está). */
+.pcd-footer--dark { background: var(--pcd-ink); }
+.pcd-footer--dark .pcd-footer__title,
+.pcd-footer--dark .pcd-footer__link,
+.pcd-footer--dark .pcd-footer__legal { color: var(--pcd-paper); }
+.pcd-footer--dark .pcd-footer__link:hover { color: var(--pcd-acid); }
+.pcd-footer--dark .pcd-footer__legal { border-top-color: rgba(246,248,251,0.25); }
 
 @media (max-width: 880px) {
   .pcd-footer { padding: 56px 24px 24px; }

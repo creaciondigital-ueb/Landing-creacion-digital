@@ -7,6 +7,116 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Rediseñado — Página /proyectos: hero oscuro, filtros por chips y paginación
+
+- **Hero** (`.pcd-projects-hero`) — nueva sección de fondo oscuro (`var(--pcd-ink)`) con textura de puntos sutil, ceja mono uppercase en acid y título serif itálico centrado (con la palabra "crean" en el mismo tratamiento `.pop` que usa el home). Reemplaza el header plano blanco que tenía antes.
+- **Filtros** — barra de pills "+ Año" y "+ Asignatura" (`.pcd-projects__filters`) que abren un menú desplegable; las opciones seleccionadas aparecen como chips removibles (`.pcd-projects__chip`, fondo acid) junto a un botón "Limpiar" que aparece solo si hay filtros activos. Los valores de año/asignatura se derivan automáticamente de `PROYECTOS` (no hay que mantener listas aparte).
+- **Datos** — `Proyecto.course` (string combinado) se separó en `subject` (asignatura, usado para filtrar) y `professor`; el meta de cada card se sigue viendo igual ("ASIGNATURA | PROFESOR") pero ahora es filtrable. Actualizado también el preview del home que usa el mismo array.
+- **Paginación** — grid de hasta 9 proyectos por página (`PAGE_SIZE = 9`); si hay más, aparecen controles ← 1 2 3 → debajo del grid (se ocultan si todo cabe en una página, como pasa hoy con solo 2 proyectos cargados).
+- Archivos: `src/pages/ProyectosPage.tsx`, `src/data/proyectos.ts`, `src/pages/ProgramaCreacionDigital.tsx`, `src/styles/programa.css`.
+
+### Eliminado — Galería 3D completa (login, paneles, base de datos de modelos)
+
+- Se eliminó todo el producto interno "Galería 3D": login/registro (`AuthModal`), paneles de Admin/Profesor/Estudiante (`AdminPanel`, `TeacherPanel`, `EstudiantesPage`, `ProfilePage`, `ResetPasswordPage`), la galería de modelos 3D y su viewer (`Gallery`, `ModelCard`, `ModelModal`, `Model3D`, `ModelScene`, `MarmosetViewer`, `ShowcaseCarousel`, `ShowcaseUploadForm`, `EditModelForm`, `UploadForm`, `SortableModelCard`, `ThumbnailCapture`, `ThumbnailGenerator`), sus modales auxiliares (`ChangePasswordModal`, `TempPasswordModal`), `UserMenu`, `Layout.tsx` (topbar del producto interno) y `src/lib/api.ts` completo (todos los endpoints de auth/models/likes/comments/profiles/skills/admin).
+- **Motivo**: los estudiantes ya no van a subir proyectos vía panel; la galería pasa a ser contenido estático que se actualiza a mano.
+- **`backend/server.js`** (Express + PostgreSQL en el droplet) **NO se tocó** — queda desplegado pero sin uso desde el frontend. Pendiente decidir si se limpia en otra sesión.
+- **`package.json`** — se quitaron las dependencias que solo usaba este sistema: `@dnd-kit/core`, `@dnd-kit/sortable`, `@dnd-kit/utilities`, `@mediapipe/tasks-vision`, `@react-three/drei`, `@react-three/fiber`, `hls.js`, `three`, `@types/three`. Falta correr `npm install` localmente para que `node_modules` y `package-lock.json` reflejen el cambio.
+- **`src/App.tsx`** — reducido a 2 rutas: `/` (landing) y `/proyectos` (nueva galería estática), ambas lazy-loaded, ninguna usa `Layout`.
+- **`ProgramaCreacionDigital.tsx`** — se quitó toda dependencia de auth (import de `lib/api`, estado `user`/`mustChange`, el modal "Plan C" de cambio de contraseña forzado).
+
+### Agregado — Nueva galería de proyectos estática (`/proyectos`)
+
+- **`src/data/proyectos.ts`** (nuevo) — array `PROYECTOS` con la info de cada proyecto (imagen, curso/profesor, año, caption, y campos opcionales `description`/`student`/`fileUrl`/`fileLabel` para cuando se necesiten). Sin base de datos: para agregar un proyecto nuevo se edita este archivo a mano y se suben sus imágenes/archivos a `public/`.
+- **`src/pages/ProyectosPage.tsx`** (nuevo) — página en `/proyectos` que reutiliza el header/footer del landing (mismas clases `pcd-header`/`pcd-footer`, sin el navbar del producto viejo) y muestra **todos** los proyectos de `PROYECTOS` en un grid uniforme (`.pcd-projects-page__grid`, nuevo en `programa.css`).
+- **Home** — la sección "Proyectos que crean nuestros estudiantes" ahora renderiza sus 2 previews leyendo `PROYECTOS.slice(0, 2)` del mismo archivo de datos (antes estaba hardcodeado con contenido duplicado). El botón "VER PROYECTOS" ahora enlaza a `/proyectos` en vez de `/galeria`.
+- Archivos: `src/data/proyectos.ts`, `src/pages/ProyectosPage.tsx`, `src/pages/ProgramaCreacionDigital.tsx`, `src/App.tsx`, `src/styles/programa.css`, `package.json`.
+
+### Ajustado — `.pcd-hero__bottom` min-height recortado (sobraba espacio abajo)
+
+- `min-height` 350→270px — con el bloque ya subido, la foto (el elemento más bajo, bottom≈268px) dejaba 82px de aire vacío de más antes del marquee siguiente.
+
+### Ajustado — Logo alineado abajo con el párrafo + padding-bottom del hero reducido
+
+- **Logo** — `.pcd-hero__brand` top 77→102px, para que su borde inferior (top+height=162px) coincida con el del párrafo (`.pcd-hero__quienes-body`, top:44px + height:118px = 162px).
+- **`.pcd-hero`** — `padding` 96px 84px 80px → 96px 84px 10px (70px menos de aire debajo del bloque).
+- Además, sesión de micro-ajustes previos sobre `.pcd-hero__bottom`: subido 30px adicionales (brand, floor-line, floor-line--right, quienes-label, quienes-body, photo), párrafo subido 3px, y varios huecos de espacios non-breaking en el texto ("Como" +17) para el efecto de "pies asomando".
+- Archivos: `src/styles/programa.css`, `src/pages/ProgramaCreacionDigital.tsx`.
+
+
+### Agregado — Espacios "duros" en el párrafo para dejar hueco a los pies de la chica
+
+- **`ProgramaCreacionDigital.tsx`** — Después de "la velocidad" se insertaron espacios non-breaking (` `, no espacios normales — HTML colapsa espacios normales consecutivos a uno solo, así que no se hubieran visto) antes de "y el cambio." (probado con 50, ajustado a 10, luego a 15, 18 y 17 por pedidos del usuario; se agregaron dos huecos más: 10 espacios después de "y" y 17 después de "días"). Esto empuja el resto del párrafo, dejando un hueco manual en esa línea para que la foto de la chica (detrás, `z-index:1`) se vea a través en vez de quedar tapada por el texto.
+
+### Ajustado — Párrafo subido 5px
+
+- `.pcd-hero__quienes-body` top 82→77px. Archivo: `src/styles/programa.css`.
+
+### Ajustado — Segmento izquierdo de la línea, estirado 70px
+
+- `.pcd-hero__floor-line` left 621→551px, width 418→488px (el extremo derecho queda fijo, solo se alarga hacia la izquierda). Archivo: `src/styles/programa.css`.
+
+### Ajustado — "¿quiénes somos?" + párrafo, 20px a la izquierda
+
+- `.pcd-hero__quienes-label` left 632→562px, `.pcd-hero__quienes-body` left 719→649px (20px + 50px extra pedidos después). Archivo: `src/styles/programa.css`.
+
+### Ajustado — Bloque inferior del hero subido 500px (quedaba muy separado del título)
+
+- **Causa** — Las coordenadas del editor visual se calcularon con un título estático de referencia (160px fijo), pero el título real es fluido y mucho más alto (hasta 245px con `clamp()`), así que el `margin-top: 96px` de `.pcd-hero__bottom` + el offset interno del grupo (600px+) dejaban un hueco enorme entre "clase." y el logo/foto/texto.
+- **Fix** — Se subieron TODOS los elementos del grupo (brand, floor-line, floor-line--right, quienes-label, quienes-body, photo) 550px en total (500px + 50px extra pedidos después) en conjunto, manteniendo las posiciones relativas entre sí intactas. La foto ahora vuelve a superponerse con el título (`top: -550px`, como en el diseño original antes del editor). `.pcd-hero__bottom` baja su `min-height` de 848px a 350px acorde al nuevo rango de alturas. Archivo: `src/styles/programa.css`.
+
+### Ajustado — Logo del bloque inferior del hero, más chico
+
+- **`.pcd-hero__brand-logo`** — 80px → 55px de alto (ajuste final pedido por el usuario). Caja `.pcd-hero__brand` reescalada a 406×60px. Ancla (esquina superior-izquierda) sin cambios. Archivo: `src/styles/programa.css`.
+
+### Mejorado — Posicionamiento final de `.pcd-hero__bottom` (editor visual del usuario)
+
+Se armó un editor HTML standalone (arrastrar/redimensionar con el mouse) para que el usuario acomodara a mano la posición y tamaño exactos del logo, la línea partida, el label "¿quiénes somos?", el párrafo y la foto — sin depender de que yo viera su localhost. El usuario exportó las coordenadas finales y se aplicaron tal cual.
+
+- **Layout de escritorio de `.pcd-hero__bottom` pasado de CSS Grid a `position:absolute` libre** — `.pcd-hero__brand`, `.pcd-hero__floor-line`, `.pcd-hero__floor-line--right`, `.pcd-hero__quienes-label`, `.pcd-hero__quienes-body` y `.pcd-hero__photo` ahora tienen `left`/`top`/`width`/`height` fijos (origen en la esquina superior-izquierda de `.pcd-hero__bottom`, que pasa a `min-height: 848px`). El título y el bloque `¿quiénes/8 semestres` NO se tocaron (el usuario pidió ignorarlos).
+- **Wrapper `.pcd-hero__quienes` eliminado** — Ya no hace falta el grid `84px 1fr` que agrupaba label+párrafo; ahora son elementos independientes, cada uno con su propia posición.
+- **Móvil re-adaptado** — Nuevo bloque `@media (max-width: 980px)` resetea todo a `position:static` en flujo apilado normal (logo → línea → label → párrafo), ya que el posicionamiento absoluto es solo para escritorio.
+- **Archivos** — `src/pages/ProgramaCreacionDigital.tsx`, `src/styles/programa.css`. Herramienta de apoyo (no se commitea al repo del proyecto): `hero-editor/hero-editor.html` + imágenes, en la raíz del proyecto — se puede borrar cuando ya no se necesite.
+
+### Mejorado — Hero: foto de la chica, línea "piso" y texto ¿quiénes somos?
+
+Reproduce 3 detalles del diseño original de Figma que no estaban implementados. Un 4to intento (shape-outside) se revirtió por verse roto — ver nota abajo.
+
+- **Foto +5%, ancla corregida** — `.pcd-hero__photo` de 486×635px a 510×667px. Primer intento cambió también `right` (-120→-144px), lo cual desplazaba el anclaje inferior-derecho 24px hacia afuera (por eso "se movió de posición"). Corregido: `right` se mantiene en `-120px` sin tocar — la propiedad `right` ya fija el borde derecho de forma independiente del `width`, así que solo cambiar `width`/`top` crece la imagen hacia arriba-izquierda sin mover el punto donde están los pies.
+- **Línea "piso" partida en 2 segmentos (medida del diseño real)** — El usuario compartió `Hero.svg` y `Group 33.svg` (exports de Figma con texto vectorizado), lo que permitió extraer coordenadas exactas: en un lienzo de 1436×1159, la chica ocupa x:1025-1329/y:639-1036, y la línea original NO es continua — son 2 segmentos (x:579-1089 y x:1115-1366) con un hueco de 26px justo donde su silueta real cruza la línea a esa altura, en vez de un truco de z-index. Se recalcularon esas proporciones sobre `.pcd-hero__photo` (510×667px, `top:-486px`, `right:-120px`): `.pcd-hero__floor-line` (segmento izquierdo, ahora estático — ya no necesita `z-index` porque un elemento posicionado como `.pcd-hero__photo` siempre pinta por encima de uno no posicionado) más un segmento nuevo `.pcd-hero__floor-line--right` (`position:absolute; right:-182px; width:421px`). El texto (`z-index: 3`) se mantiene siempre al frente.
+- **Texto alineado arriba con "¿quiénes somos?"** — Se quitó `margin-top: 60px` de `.pcd-hero__quienes-body` que empujaba el párrafo hacia abajo respecto al label.
+- **Revertido: shape-outside para que el texto "abrace" los pies** — Se probó un `float` invisible con `shape-outside` apuntando a un recorte de los pies (`public/programa/img/proyecto-1-pies.png`), pero el ancho estimado (390px) era demasiado grande para la columna de texto real y dejó un hueco vacío enorme en el párrafo en vez de un recorte sutil. Se revirtió el wrapper/float en `ProgramaCreacionDigital.tsx` y `programa.css`. El archivo `proyecto-1-pies.png` quedó sin usar (no se pudo borrar por permisos del entorno de esta sesión; borrarlo manualmente si se retoma esto más adelante con valores mejor calibrados).
+- **Archivos** — `src/pages/ProgramaCreacionDigital.tsx`, `src/styles/programa.css`.
+
+### Ajustado — Punto azul (blob) del hero, 5px a la derecha
+
+- **`.pcd-hero__title .blob`** — `transform: translateY(0.04em)` → `translate(10px, 0.04em)` (5px + 5px más). Archivo: `src/styles/programa.css`.
+
+### Fix — Bold sintético en el título del hero
+
+- **`.pcd-hero__title` con `font-weight: 400` explícito** — El título es un `<h1>`, que el user-agent stylesheet del navegador pone en bold por defecto. DM Serif Text solo tiene el peso 400 cargado, así que el navegador sintetizaba un bold falso (letras más gruesas que en el diseño de Figma). Archivo: `src/styles/programa.css`.
+
+### Mejorado — Navbar: logo, centrado y auto-hide en scroll
+
+- **Logo más pequeño** — `.pcd-brand__logo` de 34px a 28px de alto.
+- **Nav centrado de verdad** — Intento inicial con `position: absolute` sacó al nav del flujo del grid y descuadró el CTA (ocupó el espacio vacío). Fix definitivo: `.pcd-header` pasa de `grid-template-columns: auto 1fr auto` a `1fr auto 1fr` (columnas laterales simétricas), con `.pcd-brand { justify-self: start }` y `.pcd-cta-pill { justify-self: end }`. Así el nav queda en la columna central, que ahora sí es el centro real del header sin importar el ancho del logo o el CTA.
+- **Auto-hide en scroll** — Nuevo estado `headerHidden` en `ProgramaCreacionDigital.tsx`: listener de `scroll` compara la posición actual contra la anterior; oculta el header (`.pcd-header--hidden`, `transform: translateY(-100%)` con transición) al bajar, lo muestra al subir, y siempre lo muestra en los primeros 80px de scroll para evitar parpadeo. `.pcd-header` gana `position: sticky` + `transition: transform`.
+- **Archivos** — `src/pages/ProgramaCreacionDigital.tsx`, `src/styles/programa.css`.
+
+### Mejorado — Márgenes laterales de la landing (escritorio)
+
+- **Padding lateral 72px → 84px** — Header, hero, los 3 ejes de color, proyectos, CTA Estudia y footer. Docentes pasa de 76px a 88px (mantiene la proporción del bleed del carrusel con `margin-right`/`padding-right`). Solo escritorio; los breakpoints de tablet/móvil (24px, 20px, 56px) no se tocaron. Archivo: `src/styles/programa.css`.
+
+### Fix — Dependencias opcionales de `@react-three/drei` faltantes en dev
+
+- **`hls.js` y `@mediapipe/tasks-vision` agregados a `package.json`** — `npm run dev` fallaba al pre-bundlear con esbuild (`Failed to resolve entry for package "hls.js"` / `"@mediapipe/tasks-vision"`). Causa: el barrel `@react-three/drei` re-exporta `VideoTexture` y `FaceLandmarker`, que importan estos paquetes de forma estática aunque el proyecto solo usa `useGLTF`, `Environment`, `ContactShadows`, `OrbitControls`, `Html`. Vite necesita poder resolver *todos* los imports del barrel al arrancar, aunque no se usen. No afecta el bundle de producción (no se importan en ningún componente propio).
+- **Nota:** si el error persiste, borrar `node_modules` + `package-lock.json` y reinstalar limpio — un `@dnd-kit/core/dist/core.esm.js.map` corrupto (instalación local interrumpida) causaba un segundo error de build no relacionado.
+
+### Mejorado — Carrusel de docentes: drag en lugar de scroll horizontal
+
+- **`.pcd-docentes__grid` ahora se arrastra con el mouse** — Se agregaron handlers `onMouseDown/onMouseMove/onMouseUp/onMouseLeave` en `ProgramaCreacionDigital.tsx` que mueven `scrollLeft` según el desplazamiento del cursor (cursor `grab`/`grabbing`). La scrollbar nativa se oculta (`scrollbar-width: none` + `::-webkit-scrollbar{display:none}` en `programa.css`); `scroll-snap-type` se desactiva durante el drag y se reactiva al soltar para que la tarjeta más cercana quede alineada. El swipe táctil en móvil no cambia (ya funcionaba nativo).
+- **Evita abrir el modal al arrastrar** — Si el mouse se movió más de 4px durante el drag, el `onClick` de la tarjeta (que abre el modal de perfil del docente) se ignora una vez.
+- **Archivos** — `src/pages/ProgramaCreacionDigital.tsx`, `src/styles/programa.css`.
+
 ### Fix — Ancho del contenedor principal de la landing
 
 - **`.pcd-page` ampliado de 1436px a 1920px** — El contenedor raíz de la landing (`src/styles/programa.css`) heredaba el ancho exacto del frame de Figma (1436px) como `max-width` fijo, dejando franjas vacías a los lados en pantallas más anchas y dando la sensación de contenido "cortado". Se amplía el tope a 1920px para llenar pantallas comunes sin distorsionar el diseño en monitores ultra anchos.
