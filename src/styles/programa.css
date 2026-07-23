@@ -329,6 +329,13 @@
   margin-top: 96px;
   position: relative;
   --hero-bottom-scale: min(1, calc((100vw - 168px) / 1486px));
+  /* Espacio libre a la derecha del bloque (1486px) cuando ya no se
+     achica más: ancho real del contenido del hero (el viewport, topado
+     en 1920px por .pcd-page, menos los 168px de padding del hero)
+     menos el ancho fijo del bloque. Se guarda en una variable (en vez
+     de usar margin-left:auto) para poder restarle lo mismo al logo de
+     abajo y que ese no se mueva (ver .pcd-hero__brand). */
+  --hero-bottom-shift: max(0px, calc(min(100vw, 1920px) - 168px - 1486px));
   width: 1486px;
   min-height: calc(270px * var(--hero-bottom-scale));
   transform-origin: top left;
@@ -338,12 +345,11 @@
   /* En pantallas más anchas que el ancho de referencia (1486px + 168px de
      padding del hero = 1654px) el bloque ya no se achica (scale llega a
      1) y, al tener ancho fijo, se quedaba pegado a la izquierda con un
-     hueco vacío a la derecha. margin-left: auto empuja TODO el bloque
-     (imagen, líneas, "¿quiénes somos?", párrafo) hacia la derecha para
-     que quede pegado al margen derecho, igual que el resto del hero.
-     No afecta pantallas angostas: ahí el bloque ya ocupa todo el ancho
-     disponible y el margen automático se resuelve en 0. */
-  margin-left: auto;
+     hueco vacío a la derecha. Este margen empuja TODO el bloque (imagen,
+     líneas, "¿quiénes somos?", párrafo) hacia la derecha para que quede
+     pegado al margen derecho, igual que el resto del hero. No afecta
+     pantallas angostas: ahí --hero-bottom-shift da 0. */
+  margin-left: var(--hero-bottom-shift);
 }
 .pcd-hero__brand {
   position: absolute;
@@ -355,6 +361,11 @@
   align-items: flex-end;
   gap: 16px;
   z-index: 3;
+  /* El logo es lo único de este bloque que debe quedarse anclado al
+     margen izquierdo real de la página (igual que el header/nav), en
+     vez de moverse con el resto de la composición — se resta el mismo
+     corrimiento que se le sumó al bloque completo. */
+  transform: translateX(calc(-1 * var(--hero-bottom-shift)));
 }
 .pcd-hero__brand-logo {
   height: 55px;
