@@ -123,6 +123,11 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 - Velocidad subida de 32 a 40px/s.
 - Archivos: `src/pages/ProgramaCreacionDigital.tsx`.
 
+### Agregado — Pausar el autoavance de docentes al pasar el mouse encima
+
+- El carrusel de docentes se detiene mientras el mouse está sobre las cards, y retoma al quitarlo. Se agregó recién ahora (y no antes) porque una versión anterior de la pausa por hover enmascaraba el bug real del autoavance congelado durante el diagnóstico; con esa causa raíz ya resuelta, se puede agregar la pausa con confianza.
+- Archivos: `src/pages/ProgramaCreacionDigital.tsx`.
+
 ## [3.4.0] — 2026-08-18
 
 ### Agregado — Foto real de Sofía Jiménez (card + modal)
