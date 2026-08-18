@@ -426,6 +426,9 @@ export default function ProgramaCreacionDigital() {
                 <div>
                   <h3 className="pcd-vs__title">{t.axis01.cn1title} <span className="pcd-vs__accent">{t.axis01.cn1accent}</span></h3>
                   <p className="pcd-vs__body">{t.axis01.cn1body}</p>
+                  <div className="pcd-vs__tags">
+                    {t.axis01.cn1tags.map((tag) => <span className="pcd-vs__tag" key={tag}>{tag}</span>)}
+                  </div>
                 </div>
               </article>
               <hr className="pcd-axis__divider" />
@@ -434,6 +437,9 @@ export default function ProgramaCreacionDigital() {
                 <div>
                   <h3 className="pcd-vs__title">{t.axis01.cn2title} <span className="pcd-vs__accent">{t.axis01.cn2accent}</span></h3>
                   <p className="pcd-vs__body">{t.axis01.cn2body}</p>
+                  <div className="pcd-vs__tags">
+                    {t.axis01.cn2tags.map((tag) => <span className="pcd-vs__tag" key={tag}>{tag}</span>)}
+                  </div>
                 </div>
               </article>
               <hr className="pcd-axis__divider" />
@@ -442,6 +448,9 @@ export default function ProgramaCreacionDigital() {
                 <div>
                   <h3 className="pcd-vs__title">{t.axis01.cn3title} <span className="pcd-vs__accent">{t.axis01.cn3accent}</span></h3>
                   <p className="pcd-vs__body">{t.axis01.cn3body}</p>
+                  <div className="pcd-vs__tags">
+                    {t.axis01.cn3tags.map((tag) => <span className="pcd-vs__tag" key={tag}>{tag}</span>)}
+                  </div>
                 </div>
               </article>
               <div className="pcd-content-dock">

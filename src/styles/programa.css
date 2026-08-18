@@ -903,6 +903,32 @@
   color: var(--pcd-ink);
 }
 
+/* Chips de skills bajo el body — modo "Contenido": convierten el párrafo
+   en algo escaneable de un vistazo en vez de un bloque denso de texto. */
+.pcd-vs__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 12px;
+}
+.pcd-vs__tag {
+  font-family: var(--pcd-mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--pcd-ink);
+  background: var(--pcd-paper);
+  border: 1px solid rgba(13, 13, 13, 0.12);
+  padding: 5px 10px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+.pcd-axis--contenido .pcd-vs__tag {
+  background: #ffffff;
+  border-color: rgba(44, 8, 255, 0.18);
+  color: var(--pcd-cobalt);
+}
+
 /* Acento en el segundo clauso de "En vez de X; Y" */
 .pcd-vs__accent { font-style: italic; }
 .pcd-axis--contenido .pcd-vs__accent { color: var(--pcd-cobalt); }
