@@ -16,6 +16,13 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 - Nuevos estilos `.pcd-axis__toggle`, `.pcd-axis__toggle-btn`, `.pcd-content-dock*` en `programa.css`.
 - Archivos: `src/pages/ProgramaCreacionDigital.tsx`, `src/i18n/translations.ts`, `src/styles/programa.css`, `public/programa/img/dock/*.png` (nuevos).
 
+### Cambiado — Bloque "Contenido" del eje 01 vuelve a párrafo único (sin título poético ni chips)
+
+- Se probaron dos formatos intermedios (3 bloques con título "En vez de X; es Y" + texto corto, y luego chips de skills) que el usuario no sintió naturales para este contenido — pidió volver a un párrafo cercano al texto original que redactó, pero con las frases clave resaltadas en negrita/color.
+- Nuevo helper `renderAccented()` en el componente: convierte `**frase**` dentro del string de traducción en `<strong className="pcd-accent-text">`, para poder resaltar palabras clave sin partir el párrafo en múltiples keys de i18n.
+- Traducción `axis01.contenidoBody` (ES/EN) reemplaza a `cn1-3title/accent/body/tags`.
+- Archivos: `src/pages/ProgramaCreacionDigital.tsx`, `src/i18n/translations.ts`, `src/styles/programa.css`.
+
 ### Cambiado — Botón único (en vez de toggle de dos pestañas) para Definición/Contenido
 
 - Reemplazado el toggle de dos pestañas del eje 01 por un solo botón pastilla que alterna el modo: dice "Ver contenido" estando en Definición, y "Ver definición" estando en Contenido.
