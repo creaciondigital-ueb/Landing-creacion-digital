@@ -1120,11 +1120,11 @@
 }
 /* Nicolás: imagen de la card (default y hover) un poco más grande a pedido */
 .pcd-docente--nicolas .pcd-docente__blob::before {
-  transform: scale(1.04);
+  transform: scale(1.15);
   transform-origin: center center;
 }
 .pcd-docente--nicolas .pcd-docente__blob::after {
-  transform: scale(calc(1.04 * 0.94));
+  transform: scale(calc(1.15 * 0.94));
   transform-origin: center center;
 }
 .pcd-docente:hover .pcd-docente__blob::before { opacity: 0; }
