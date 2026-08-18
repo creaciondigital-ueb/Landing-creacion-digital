@@ -1118,13 +1118,14 @@
   transform: scale(1.01);
   transform-origin: center center;
 }
-/* Nicolás: imagen de la card (default y hover) un poco más grande a pedido */
+/* Nicolás: imagen de la card, default y hover al MISMO tamaño (sin el
+   achique 0.94 del resto) para que la animación no salte de tamaño. */
 .pcd-docente--nicolas .pcd-docente__blob::before {
-  transform: scale(1.15);
+  transform: scale(1.1);
   transform-origin: center center;
 }
 .pcd-docente--nicolas .pcd-docente__blob::after {
-  transform: scale(calc(1.15 * 0.94));
+  transform: scale(1.1);
   transform-origin: center center;
 }
 .pcd-docente:hover .pcd-docente__blob::before { opacity: 0; }
@@ -1331,6 +1332,15 @@ body:has(.pcd-docente-modal[open]) {
 /* Paula: imagen default un poco más pequeña a pedido */
 .pcd-docente-modal--paula .pcd-docente-modal__portrait-layer--init {
   transform: scale(1.01);
+}
+
+/* Nicolás: default y hover al MISMO tamaño en el modal (sin el 1.08*0.94
+   del resto) para que ambas ilustraciones coincidan exactamente. */
+.pcd-docente-modal--nicolas .pcd-docente-modal__portrait-layer--init {
+  transform: scale(1.1);
+}
+.pcd-docente-modal--nicolas .pcd-docente-modal__portrait-layer--end {
+  transform: scale(1.1);
 }
 .pcd-docente-modal__name {
   font-family: var(--pcd-serif);

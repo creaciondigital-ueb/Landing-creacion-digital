@@ -12,7 +12,8 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 - Reemplazadas las iniciales/placeholder de Nicolás Bartolo por su foto real: `Nicolas_Init.webp` (default) y `Nicolas_End.webp` (hover), procesadas a partir de las ilustraciones enviadas por el usuario.
 - Quitada la clase `pcd-docente--no-photo` de su card; conectadas las variables `--docente-init` / `--docente-end`.
 - Modal de detalle actualizado con `portrait` / `portraitEnd` apuntando a las nuevas imágenes (antes vacíos).
-- CSS override `.pcd-docente--nicolas`: `scale(1.15)` en la card (default y hover, manteniendo la proporción 0.94 entre ambos) — subido de 1.04 a pedido del usuario tras verlo poco notorio.
+- CSS override final `.pcd-docente--nicolas`: `scale(1.1)` en la card, **igual en default y hover** (sin el achique 0.94 del resto de docentes) — para que la animación init→end no se note un salto de tamaño.
+- Mismo criterio en el modal: `.pcd-docente-modal--nicolas` fija `scale(1.1)` en ambas capas (`--init` y `--end`), en vez del 1.08 / 1.08*0.94 por defecto.
 - Archivos: `public/programa/img/Nicolas_Init.webp`, `Nicolas_End.webp`, `src/pages/ProgramaCreacionDigital.tsx`, `src/styles/programa.css`.
 
 ### Agregado — Nuevos proyectos de estudiantes en /proyectos (ChocoSapiens, Rappi, La Guarida)
