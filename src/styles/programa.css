@@ -1131,11 +1131,11 @@
 
 /* Sofía: mismo criterio que Nicolás — default y hover al MISMO tamaño. */
 .pcd-docente--sofia .pcd-docente__blob::before {
-  transform: scale(1.1);
+  transform: scale(1.2);
   transform-origin: center center;
 }
 .pcd-docente--sofia .pcd-docente__blob::after {
-  transform: scale(1.1);
+  transform: scale(1.2);
   transform-origin: center center;
 }
 .pcd-docente:hover .pcd-docente__blob::before { opacity: 0; }
@@ -1355,10 +1355,10 @@ body:has(.pcd-docente-modal[open]) {
 
 /* Sofía: mismo criterio que Nicolás en el modal. */
 .pcd-docente-modal--sofia .pcd-docente-modal__portrait-layer--init {
-  transform: scale(1.1);
+  transform: scale(1.2);
 }
 .pcd-docente-modal--sofia .pcd-docente-modal__portrait-layer--end {
-  transform: scale(1.1);
+  transform: scale(1.2);
 }
 .pcd-docente-modal__name {
   font-family: var(--pcd-serif);
