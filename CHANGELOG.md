@@ -66,6 +66,13 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 - Regenerado `figma.png` preservando el aspecto real del glifo en todo el pipeline (sin el resize forzado a cuadrado, con padding proporcional en vez de forzar un lado igual al mayor), para que encaje sin distorsión en el contenedor de 48×48px del dock.
 - Archivos: `public/programa/img/dock/figma.png`.
 
+### Cambiado — Copy de "Contenido" en los 3 ejes, tamaño del ícono de Figma y color del botón toggle
+
+- Reescrito el párrafo del modo Contenido en los 3 ejes (Contenido, Mundo 3D, Producto) con el texto que redactó el usuario; en Producto ahora se menciona JavaScript en lugar de Java como lenguaje de ejemplo para frontend. Traducciones ES/EN actualizadas en `axis01/02/03.contenidoBody`.
+- El botón toggle "Ver contenido / Ver definición" tenía el texto en azul (`--pcd-cobalt`) por defecto; ahora es negro (`--pcd-ink`), igual en los 3 ejes.
+- El ícono de Figma en el dock se veía un poco más grande que el resto; se aumentó el padding proporcional en su render para que el trazo visible ocupe una fracción similar a los demás íconos.
+- Archivos: `src/i18n/translations.ts`, `src/styles/programa.css`, `public/programa/img/dock/figma.png`.
+
 ## [3.4.0] — 2026-08-18
 
 ### Agregado — Foto real de Sofía Jiménez (card + modal)
