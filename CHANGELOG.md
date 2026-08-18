@@ -16,6 +16,12 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 - Nuevos estilos `.pcd-axis__toggle`, `.pcd-axis__toggle-btn`, `.pcd-content-dock*` en `programa.css`.
 - Archivos: `src/pages/ProgramaCreacionDigital.tsx`, `src/i18n/translations.ts`, `src/styles/programa.css`, `public/programa/img/dock/*.png` (nuevos).
 
+### Corregido — Íconos del dock (ChatGPT, Runway, CapCut) no coincidían con el logo real
+
+- El script de extracción de íconos determinaba el color de fondo a partir del color mayoritario dentro del bounding box del logo. En logos con trazo grueso que cubre más de la mitad de su propio bounding box (como el moño de CapCut), ese color mayoritario terminaba siendo la tinta negra del logo, no el fondo real — invirtiendo la máscara (solo quedaban el contorno delgado y los huecos, se perdía el relleno sólido y la línea diagonal).
+- Agregado un chequeo de seguridad: si el color de fondo detectado sale casi negro (lo cual nunca es válido, ya que el color de tinta objetivo ya es negro), se usa en su lugar el color real del fondo exterior de la imagen. Corrige CapCut (ahora conserva ambos huecos trapezoidales y la línea diagonal) y refina levemente ChatGPT y Runway; Higgsfield, DaVinci Resolve, Adobe y Affinity no cambiaron (no estaban afectados).
+- Archivos: `public/programa/img/dock/capcut.png`, `chatgpt.png`, `runway.png`.
+
 ### Corregido — Portada de ChocoSapiens recortada en el home
 
 - La card ancha de proyectos del home usaba `background-size: cover`, y como `chocosapiens.webp` (910×510) es más ancho que el marco de la tarjeta (853:529), el texto y los nombres quedaban recortados en ambos bordes.
