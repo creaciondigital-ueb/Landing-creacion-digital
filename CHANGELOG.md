@@ -73,6 +73,11 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 - El ícono de Figma en el dock se veía un poco más grande que el resto; se aumentó el padding proporcional en su render para que el trazo visible ocupe una fracción similar a los demás íconos.
 - Archivos: `src/i18n/translations.ts`, `src/styles/programa.css`, `public/programa/img/dock/figma.png`.
 
+### Cambiado — Más espacio entre el párrafo de Contenido y el dock de herramientas
+
+- `.pcd-content-dock` (selector compartido por los 3 ejes) tenía `margin-top: 8px`; se subió a `43px` (+35px) para separar más el final del párrafo del inicio de la etiqueta "Herramientas que usarás".
+- Archivos: `src/styles/programa.css`.
+
 ## [3.4.0] — 2026-08-18
 
 ### Agregado — Foto real de Sofía Jiménez (card + modal)
