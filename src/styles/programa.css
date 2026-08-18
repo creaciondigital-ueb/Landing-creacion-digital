@@ -1035,8 +1035,20 @@
   .pcd-axis { grid-template-columns: 1fr; min-height: 0; }
   /* En móvil las imágenes están ocultas, así que overflow:hidden ya no recorta
      imágenes — solo arriesga cortar el texto del caption. Lo liberamos y dejamos
-     que el bloque crezca con su contenido. min-height: auto = nunca cap. */
-  .pcd-axis__left { padding: 56px 24px; min-height: auto; overflow: visible; }
+     que el bloque crezca con su contenido. min-height: auto = nunca cap.
+     display:flex column + align-items:center centra el botón, el título y el
+     subtítulo como un solo bloque, sin importar el ancho natural de cada uno
+     (antes quedaban en 3 alineaciones distintas: botón siempre a la izquierda,
+     título/subtítulo variando por eje). */
+  .pcd-axis__left {
+    padding: 56px 24px;
+    min-height: auto;
+    overflow: visible;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
   .pcd-axis__right { padding: 56px 24px; }
   .pcd-axis__word { font-size: 56px; }
   .pcd-axis__word-desktop { display: none; }
@@ -1052,17 +1064,16 @@
     top: auto; bottom: auto; left: auto; right: auto;
     max-width: 100%;
     margin-top: 32px;
-    text-align: left;
+    text-align: center;
   }
   .pcd-axis__image { display: none; }
-  /* Mundo 3D: palabra + caption centrados en móvil */
+  /* Los 3 ejes quedan centrados en móvil (botón, título y subtítulo). */
   .pcd-axis--mundo .pcd-axis__tag { display: flex; margin-left: auto; margin-right: auto; }
   .pcd-axis--mundo .pcd-axis__word { text-align: center; transform: none; margin-right: 0; }
   .pcd-axis--mundo .pcd-axis__caption { text-align: center; transform: none; margin-right: 0; max-width: 100%; }
-  /* Producto: palabra + caption alineados a la derecha en móvil */
-  .pcd-axis--producto .pcd-axis__tag { display: flex; margin-left: auto; }
-  .pcd-axis--producto .pcd-axis__word { text-align: right; margin-right: 0; }
-  .pcd-axis--producto .pcd-axis__caption { text-align: right; transform: none; }
+  .pcd-axis--producto .pcd-axis__tag { display: flex; margin-left: auto; margin-right: auto; }
+  .pcd-axis--producto .pcd-axis__word { text-align: center; margin-right: 0; }
+  .pcd-axis--producto .pcd-axis__caption { text-align: center; transform: none; }
 }
 
 /* ────────────────────────────────────────────────────────────
