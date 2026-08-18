@@ -1,5 +1,8 @@
 # build output
 dist/
+dist_prev_*/
+*.lock.old*
+*.new_tmp*
 
 # dependencies
 node_modules/
