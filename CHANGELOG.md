@@ -90,6 +90,13 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 - Implementado duplicando una vez el set de 8 cards en el DOM (los clones llevan `aria-hidden="true"` y `tabIndex={-1}` para no afectar el orden de tabulación ni lectores de pantalla, pero conservan el `onClick` así que abren el modal correcto igual que el original). Un handler en `onScroll` mide con `getBoundingClientRect()` la distancia real entre la primera card original y su clon, y al cruzarla salta `scrollLeft` hacia atrás exactamente ese ancho — como el clon es pixel-idéntico, el salto es imperceptible. También ajusta `dragState.startScroll` para no romper un arrastre en curso.
 - Archivos: `src/pages/ProgramaCreacionDigital.tsx`.
 
+### Agregado — Autoavance continuo del carrusel de docentes
+
+- El carrusel de docentes ahora avanza solo hacia la izquierda a ritmo constante (32px/s vía `requestAnimationFrame`, usando el delta real entre frames para que la velocidad no dependa del framerate).
+- Se detiene mientras se arrastra, mientras el mouse está encima de la fila o el dedo apoyado en móvil, y respeta `prefers-reduced-motion` (no arranca si el usuario tiene esa preferencia activada). Al soltar/quitar el cursor, retoma.
+- Se apoya en el loop infinito agregado antes: al llegar al final del set salta de vuelta a Paula sin transición visible, así que el autoavance nunca se detiene ni muestra un corte.
+- Archivos: `src/pages/ProgramaCreacionDigital.tsx`.
+
 ## [3.4.0] — 2026-08-18
 
 ### Agregado — Foto real de Sofía Jiménez (card + modal)
