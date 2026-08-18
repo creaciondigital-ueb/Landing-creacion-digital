@@ -1358,7 +1358,7 @@ body:has(.pcd-docente-modal[open]) {
   transform: scale(1.2);
 }
 .pcd-docente-modal--sofia .pcd-docente-modal__portrait-layer--end {
-  transform: scale(1.21);
+  transform: scale(1.2);
 }
 .pcd-docente-modal__name {
   font-family: var(--pcd-serif);
