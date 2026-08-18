@@ -262,6 +262,7 @@ export default function ProgramaCreacionDigital() {
   const docentesFirstCardRef = useRef<HTMLElement>(null);
   const docentesFirstCloneRef = useRef<HTMLElement>(null);
   const docentesScrollRef = useRef(0);
+  const docentesHoverPausedRef = useRef(false);
   const dragState = useRef({ isDown: false, startX: 0, startOffset: 0, moved: false });
 
   const setDocentesScroll = (value: number) => {
@@ -313,6 +314,11 @@ export default function ProgramaCreacionDigital() {
     if (dragState.current.moved) { dragState.current.moved = false; return; }
     openDocente(id);
   };
+  const onDocentesMouseEnter = () => { docentesHoverPausedRef.current = true; };
+  const onDocentesMouseLeaveWrap = () => {
+    docentesHoverPausedRef.current = false;
+    endDocentesDrag();
+  };
 
   // Autoavance continuo hacia la izquierda. Solo se detiene mientras se
   // arrastra activamente. Al cambiar de ventana/pestaña, requestAnimationFrame
@@ -334,7 +340,7 @@ export default function ProgramaCreacionDigital() {
       if (lastTime === null) lastTime = time;
       const dt = Math.min((time - lastTime) / 1000, MAX_DT);
       lastTime = time;
-      if (!dragState.current.isDown) {
+      if (!dragState.current.isDown && !docentesHoverPausedRef.current) {
         setDocentesScroll(docentesScrollRef.current + SPEED_PX_PER_SEC * dt);
       }
       rafId = requestAnimationFrame(step);
@@ -719,7 +725,8 @@ export default function ProgramaCreacionDigital() {
           onMouseDown={onDocentesMouseDown}
           onMouseMove={onDocentesMouseMove}
           onMouseUp={endDocentesDrag}
-          onMouseLeave={endDocentesDrag}
+          onMouseEnter={onDocentesMouseEnter}
+          onMouseLeave={onDocentesMouseLeaveWrap}
           onScroll={onDocentesScroll}
         >
           {/* Paula */}
