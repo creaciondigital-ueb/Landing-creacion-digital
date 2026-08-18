@@ -296,25 +296,41 @@ export default function ProgramaCreacionDigital() {
   // detiene mientras se arrastra activamente; el loop infinito de
   // onDocentesScroll ya se encarga de que, al llegar al final, vuelva a
   // Paula sin salto visible, así que nunca deja de moverse.
+  //
+  // Al cambiar de ventana/pestaña, requestAnimationFrame se pausa (el
+  // navegador no gasta ciclos en una pestaña oculta); al volver, el próximo
+  // frame llega con un "time" que saltó varios segundos hacia adelante. Sin
+  // límite, ese dt gigante se traduce en un salto brusco de scrollLeft (se
+  // veía como un "brinco" al volver). Dos salvaguardas: se limita el dt
+  // máximo por frame (nunca avanza de más aunque haya habido un frame lento
+  // o una pausa), y además se resetea lastTime cada vez que la pestaña
+  // vuelve a estar visible, para que ese primer frame de vuelta no cuente
+  // tiempo "de más" en absoluto.
   useEffect(() => {
     const grid = docentesGridRef.current;
     if (!grid) return;
 
     const SPEED_PX_PER_SEC = 32;
+    const MAX_DT = 1 / 30; // nunca avanza más de lo que avanzaría en ~2 frames a 60fps
     let rafId = 0;
     let lastTime: number | null = null;
 
     const step = (time: number) => {
       if (lastTime === null) lastTime = time;
-      const dt = (time - lastTime) / 1000;
+      const dt = Math.min((time - lastTime) / 1000, MAX_DT);
       lastTime = time;
       if (!dragState.current.isDown) {
         grid.scrollLeft += SPEED_PX_PER_SEC * dt;
       }
       rafId = requestAnimationFrame(step);
     };
+    const onVisibilityChange = () => { lastTime = null; };
+    document.addEventListener('visibilitychange', onVisibilityChange);
     rafId = requestAnimationFrame(step);
-    return () => cancelAnimationFrame(rafId);
+    return () => {
+      cancelAnimationFrame(rafId);
+      document.removeEventListener('visibilitychange', onVisibilityChange);
+    };
   }, []);
 
   /** Toggle visual ES | EN */
