@@ -867,7 +867,7 @@
   justify-content: center;
   gap: 19px;
 }
-.pcd-axis--contenido .pcd-axis__right { background: var(--pcd-paper-2); }
+.pcd-axis--contenido .pcd-axis__right { background: var(--pcd-paper); }
 .pcd-axis--mundo .pcd-axis__right { background: var(--pcd-ink); color: var(--pcd-paper); }
 .pcd-axis--mundo .pcd-axis__right .pcd-vs__idx { color: var(--pcd-paper); }
 .pcd-axis--mundo .pcd-axis__right .pcd-vs__title { color: var(--pcd-paper); }
