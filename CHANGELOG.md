@@ -131,7 +131,8 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 ### Corregido — Card del carrusel de docentes se veía "cortada" en seco contra el borde izquierdo
 
 - Con el autoavance continuo (y ahora que el hover lo puede dejar pausado a mitad de camino), una card entrando o saliendo por el borde izquierdo quedaba recortada en seco justo contra el padding de la sección, sin ningún margen ni transición — se notaba más ahora que el hover puede detener el scroll en cualquier punto intermedio.
-- Fix con `mask-image`/`-webkit-mask-image` en `.pcd-docentes__grid`: la card se desvanece suavemente sobre ~72px (32px en mobile) al acercarse al borde izquierdo, en vez de cortarse abruptamente. No toca la lógica de scroll/loop/autoavance.
+- Primer intento: fundido con `mask-image` en el borde izquierdo. El usuario lo rechazó — no quería un desvanecido, quería que la card literalmente siguiera hasta el borde real de la pantalla.
+- Fix definitivo: el lado izquierdo de `.pcd-docentes__grid` ahora hace *bleed* hasta el borde real del viewport, igual que ya hacía el lado derecho (`margin-right: -88px; padding-right: 88px;`) — se cambia `padding-left: 8px; margin-left: -8px;` (que solo daba unos pocos px de holgura, pensados para el hover) por `padding-left: 88px; margin-left: -88px;` (24px en mobile). En reposo (scroll 0) el contenido queda alineado con el título de arriba igual que antes, porque padding y margin se siguen cancelando; pero al hacer scroll la card ya no se corta cerca del padding — puede seguir hasta el borde real de la pantalla.
 - Archivos: `src/styles/programa.css`.
 
 ## [3.4.0] — 2026-08-18
