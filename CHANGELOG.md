@@ -116,6 +116,13 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 - Dos salvaguardas: se limita el `dt` máximo considerado por frame (nunca avanza de más aunque haya habido un frame lento o una pausa), y se resetea el `lastTime` de referencia en el evento `visibilitychange`, para que el primer frame tras recuperar el foco no cuente tiempo de más en absoluto.
 - Archivos: `src/pages/ProgramaCreacionDigital.tsx`.
 
+### Corregido — Causa real de que el autoavance de docentes nunca avanzara
+
+- Causa definitiva: el autoavance hacía `grid.scrollLeft += delta` en cada frame, un patrón read-modify-write. Los navegadores redondean `scrollLeft` a píxeles enteros al leerlo; con incrementos menores a 1px por frame (a la velocidad anterior, ~0.5px/frame a 60fps), cada lectura descartaba la parte fraccionaria antes de que pudiera acumularse entre frames — el carrusel quedaba congelado en la práctica casi todo el tiempo (el "salto de unos píxeles" ocasional era, presumiblemente, el único caso en que un frame con más tiempo transcurrido cruzaba 1px de una sola vez).
+- Fix: nueva `docentesScrollRef`, única fuente de verdad de la posición en punto flotante, mantenida enteramente en JS — ya no se vuelve a leer `grid.scrollLeft` para acumular sobre él. Tanto el drag como el autoavance escriben a través de `setDocentesScroll()`, que también aplica el loop infinito directamente (en vez de depender del evento `scroll`). Se conserva un handler de `scroll` solo como salvavidas para el drag nativo por touch en móvil (que mueve `scrollLeft` sin pasar por JS), sincronizando el ref después.
+- Velocidad subida de 32 a 40px/s.
+- Archivos: `src/pages/ProgramaCreacionDigital.tsx`.
+
 ## [3.4.0] — 2026-08-18
 
 ### Agregado — Foto real de Sofía Jiménez (card + modal)
