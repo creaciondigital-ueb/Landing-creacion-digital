@@ -97,12 +97,11 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 - Se apoya en el loop infinito agregado antes: al llegar al final del set salta de vuelta a Paula sin transición visible, así que el autoavance nunca se detiene ni muestra un corte.
 - Archivos: `src/pages/ProgramaCreacionDigital.tsx`.
 
-### Corregido — El autoavance del carrusel de docentes no se veía en el navegador
+### Corregido — El autoavance del carrusel de docentes no se veía, y luego el intento de arreglo rompió el diseño de las cards
 
-- Causa real: `.pcd-docentes__grid` tenía `scroll-snap-type: x mandatory`, y cada microincremento de `scrollLeft` que hacía el `requestAnimationFrame` del autoavance (fracciones de píxel por frame) el navegador lo revertía de inmediato al punto de snap más cercano — el movimiento quedaba anulado en la práctica en cada frame, aunque el código "funcionaba".
-- Reescrito el carrusel para moverse igual que el track del marquee de arriba (`.pcd-marquee__track`): un `div` interno `.pcd-docentes__track` que se mueve con `transform: translateX()`, sin scroll nativo ni scroll-snap de por medio; el contenedor exterior ahora solo recorta (`overflow: hidden`).
-- El drag con mouse se adaptó al mismo mecanismo (escribe un offset + transform en vez de `scrollLeft`). Se agregó también drag por touch explícito (`touchstart`/`touchmove`/`touchend`), ya que antes el arrastre en móvil dependía del scroll nativo del navegador, que dejó de existir al quitar el overflow scrollable.
-- El loop infinito se mantiene con la misma técnica (medir con `getBoundingClientRect` la distancia entre la primera card original y su clon, y normalizar el offset al cruzarla).
+- Causa real de que no se viera avanzar: `.pcd-docentes__grid` tenía `scroll-snap-type: x mandatory`, y cada microincremento de `scrollLeft` que hacía el `requestAnimationFrame` del autoavance (fracciones de píxel por frame) el navegador lo revertía de inmediato al punto de snap más cercano — el movimiento quedaba anulado en la práctica en cada frame.
+- Primer intento de fix (revertido): reescribir el carrusel para moverse con `transform: translateX()` sobre un `div` interno nuevo (`.pcd-docentes__track`), igual que el marquee de arriba. Este cambio rompió el diseño visual de las cards (confirmado con capturas del usuario) y fue revertido por completo.
+- Fix real y mínimo, aplicado sobre la versión de cards ya confirmada correcta: se quita `scroll-snap-type: x mandatory` de `.pcd-docentes__grid` (y el `scroll-snap-type: none` de `.is-dragging`/`scroll-snap-align` en `.pcd-docente`, que quedan sin efecto sin él). Sin tocar la estructura del DOM ni ninguna otra propiedad de las cards.
 - Archivos: `src/pages/ProgramaCreacionDigital.tsx`, `src/styles/programa.css`.
 
 ## [3.4.0] — 2026-08-18
