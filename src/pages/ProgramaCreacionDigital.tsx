@@ -7,6 +7,17 @@ import '../styles/programa.css';
 const IMG = '/programa/img';
 const APLICA_URL = 'https://www.unbosque.edu.co/inscripciones/pregrado';
 
+/** Herramientas del dock — modo "Contenido" del eje 01. */
+const CONTENIDO_DOCK = [
+  { name: 'Higgsfield', icon: `${IMG}/dock/higgsfield.png` },
+  { name: 'ChatGPT', icon: `${IMG}/dock/chatgpt.png` },
+  { name: 'Runway', icon: `${IMG}/dock/runway.png` },
+  { name: 'CapCut', icon: `${IMG}/dock/capcut.png` },
+  { name: 'DaVinci Resolve', icon: `${IMG}/dock/davinci-resolve.png` },
+  { name: 'Adobe', icon: `${IMG}/dock/adobe.png` },
+  { name: 'Affinity', icon: `${IMG}/dock/affinity.png` },
+];
+
 /**
  * Landing pública del Programa Creación Digital (Universidad El Bosque).
  * Soporta ES / EN mediante el contexto LanguageContext + hook useLang().
@@ -126,6 +137,9 @@ export default function ProgramaCreacionDigital() {
 
   // Menú hamburguer
   const [menuOpen, setMenuOpen] = useState(false);
+
+  // Toggle Definición / Contenido — eje 01 (sección "contenido")
+  const [axis01Mode, setAxis01Mode] = useState<'definicion' | 'contenido'>('definicion');
 
   // ── Hero typewriter ──────────────────────────────────────────
   const [heroTypedChars, setHeroTypedChars] = useState(0);
@@ -360,7 +374,26 @@ export default function ProgramaCreacionDigital() {
       {/* ===== AXIS 01 · CONTENIDO ===== */}
       <section className="pcd-axis pcd-axis--contenido">
         <div className="pcd-axis__left">
-          <div className="pcd-axis__tag pcd-reveal">{t.axis01.tag}</div>
+          <div className="pcd-axis__toggle pcd-reveal" role="tablist" aria-label={`${t.axis01.toggleDefinicion} / ${t.axis01.toggleContenido}`}>
+            <button
+              type="button"
+              role="tab"
+              aria-selected={axis01Mode === 'definicion'}
+              className={`pcd-axis__toggle-btn${axis01Mode === 'definicion' ? ' is-active' : ''}`}
+              onClick={() => setAxis01Mode('definicion')}
+            >
+              {t.axis01.toggleDefinicion}
+            </button>
+            <button
+              type="button"
+              role="tab"
+              aria-selected={axis01Mode === 'contenido'}
+              className={`pcd-axis__toggle-btn${axis01Mode === 'contenido' ? ' is-active' : ''}`}
+              onClick={() => setAxis01Mode('contenido')}
+            >
+              {t.axis01.toggleContenido}
+            </button>
+          </div>
           <h2 className="pcd-axis__word pcd-reveal">
             <span className="pcd-axis__word-desktop">
               {t.axis01.wordLine1}
@@ -372,29 +405,70 @@ export default function ProgramaCreacionDigital() {
           <div className="pcd-axis__image pcd-reveal" style={{ backgroundImage: `url('${IMG}/proyecto-3.webp')` }} aria-hidden="true" />
         </div>
         <div className="pcd-axis__right">
-          <article className="pcd-vs pcd-reveal">
-            <span className="pcd-vs__idx">1.1</span>
-            <div>
-              <h3 className="pcd-vs__title">{t.axis01.vs11title} <span className="pcd-vs__accent">{t.axis01.vs11accent}</span></h3>
-              <p className="pcd-vs__body">{t.axis01.vs11body}</p>
-            </div>
-          </article>
-          <hr className="pcd-axis__divider" />
-          <article className="pcd-vs pcd-reveal">
-            <span className="pcd-vs__idx">1.2</span>
-            <div>
-              <h3 className="pcd-vs__title">{t.axis01.vs12title} <span className="pcd-vs__accent">{t.axis01.vs12accent}</span></h3>
-              <p className="pcd-vs__body">{t.axis01.vs12body}</p>
-            </div>
-          </article>
-          <hr className="pcd-axis__divider" />
-          <article className="pcd-vs pcd-reveal">
-            <span className="pcd-vs__idx">1.3</span>
-            <div>
-              <h3 className="pcd-vs__title">{t.axis01.vs13title} <span className="pcd-vs__accent">{t.axis01.vs13accent}</span></h3>
-              <p className="pcd-vs__body">{t.axis01.vs13body}</p>
-            </div>
-          </article>
+          {axis01Mode === 'definicion' ? (
+            <>
+              <article className="pcd-vs pcd-reveal">
+                <span className="pcd-vs__idx">1.1</span>
+                <div>
+                  <h3 className="pcd-vs__title">{t.axis01.vs11title} <span className="pcd-vs__accent">{t.axis01.vs11accent}</span></h3>
+                  <p className="pcd-vs__body">{t.axis01.vs11body}</p>
+                </div>
+              </article>
+              <hr className="pcd-axis__divider" />
+              <article className="pcd-vs pcd-reveal">
+                <span className="pcd-vs__idx">1.2</span>
+                <div>
+                  <h3 className="pcd-vs__title">{t.axis01.vs12title} <span className="pcd-vs__accent">{t.axis01.vs12accent}</span></h3>
+                  <p className="pcd-vs__body">{t.axis01.vs12body}</p>
+                </div>
+              </article>
+              <hr className="pcd-axis__divider" />
+              <article className="pcd-vs pcd-reveal">
+                <span className="pcd-vs__idx">1.3</span>
+                <div>
+                  <h3 className="pcd-vs__title">{t.axis01.vs13title} <span className="pcd-vs__accent">{t.axis01.vs13accent}</span></h3>
+                  <p className="pcd-vs__body">{t.axis01.vs13body}</p>
+                </div>
+              </article>
+            </>
+          ) : (
+            <>
+              <article className="pcd-vs">
+                <span className="pcd-vs__idx">2.1</span>
+                <div>
+                  <h3 className="pcd-vs__title">{t.axis01.cn1title} <span className="pcd-vs__accent">{t.axis01.cn1accent}</span></h3>
+                  <p className="pcd-vs__body">{t.axis01.cn1body}</p>
+                </div>
+              </article>
+              <hr className="pcd-axis__divider" />
+              <article className="pcd-vs">
+                <span className="pcd-vs__idx">2.2</span>
+                <div>
+                  <h3 className="pcd-vs__title">{t.axis01.cn2title} <span className="pcd-vs__accent">{t.axis01.cn2accent}</span></h3>
+                  <p className="pcd-vs__body">{t.axis01.cn2body}</p>
+                </div>
+              </article>
+              <hr className="pcd-axis__divider" />
+              <article className="pcd-vs">
+                <span className="pcd-vs__idx">2.3</span>
+                <div>
+                  <h3 className="pcd-vs__title">{t.axis01.cn3title} <span className="pcd-vs__accent">{t.axis01.cn3accent}</span></h3>
+                  <p className="pcd-vs__body">{t.axis01.cn3body}</p>
+                </div>
+              </article>
+              <div className="pcd-content-dock">
+                <span className="pcd-content-dock__label">{t.axis01.dockLabel}</span>
+                <div className="pcd-content-dock__row">
+                  {CONTENIDO_DOCK.map((tool) => (
+                    <div className="pcd-content-dock__item" key={tool.name} title={tool.name}>
+                      <div className="pcd-content-dock__icon" style={{ backgroundImage: `url('${tool.icon}')` }} aria-hidden="true" />
+                      <span className="pcd-content-dock__name">{tool.name}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </>
+          )}
         </div>
       </section>
 
@@ -856,7 +930,7 @@ export default function ProgramaCreacionDigital() {
             const inner = (
               <>
                 <div
-                  className="pcd-project__media"
+                  className={`pcd-project__media${p.id === 'chocosapiens-humanismo-digital' ? ' pcd-project__media--contain' : ''}`}
                   style={{ backgroundImage: `url('${imgSrc}')` }}
                   aria-hidden="true"
                 />

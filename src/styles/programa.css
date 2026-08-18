@@ -701,6 +701,40 @@
   margin-bottom: 32px;
   width: max-content;
 }
+
+/* Toggle Definición / Contenido — mismo look de píldora que .pcd-axis__tag,
+   pero con dos botones reales en vez de texto estático. */
+.pcd-axis__toggle {
+  display: inline-flex;
+  align-items: center;
+  background: var(--pcd-paper);
+  border-radius: 999px;
+  padding: 3px;
+  margin-bottom: 32px;
+  width: max-content;
+  gap: 2px;
+}
+.pcd-axis__toggle-btn {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: var(--pcd-ink);
+  opacity: 0.55;
+  font-family: var(--pcd-mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 5px 14px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background .15s, color .15s, opacity .15s;
+}
+.pcd-axis__toggle-btn:hover { opacity: 0.85; }
+.pcd-axis__toggle-btn.is-active {
+  background: var(--pcd-cobalt);
+  color: var(--pcd-paper);
+  opacity: 1;
+}
 .pcd-axis__word-mobile { display: none; } /* solo se muestra en móvil, ver media query */
 .pcd-axis__word {
   font-family: var(--pcd-serif);
@@ -861,6 +895,61 @@
   background: var(--pcd-ink);
   border: 0;
   width: 100%;
+}
+
+/* Dock de software — modo "Contenido" del eje 01 */
+.pcd-content-dock {
+  margin-top: 8px;
+}
+.pcd-content-dock__label {
+  display: block;
+  font-family: var(--pcd-mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--pcd-ink);
+  opacity: 0.6;
+  margin-bottom: 14px;
+}
+.pcd-content-dock__row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  background: var(--pcd-paper);
+  border: 1.5px solid rgba(13,13,13,0.08);
+  border-radius: 20px;
+  padding: 14px;
+}
+.pcd-content-dock__item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  width: 64px;
+}
+.pcd-content-dock__icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background-color: var(--pcd-paper-2);
+  background-size: 62%;
+  background-position: center;
+  background-repeat: no-repeat;
+  border: 1.5px solid rgba(13,13,13,0.08);
+  transition: transform .15s;
+}
+.pcd-content-dock__item:hover .pcd-content-dock__icon { transform: translateY(-3px); }
+.pcd-content-dock__name {
+  font-family: var(--pcd-mono);
+  font-size: 9px;
+  letter-spacing: 0.04em;
+  text-align: center;
+  line-height: 1.2;
+  color: var(--pcd-ink);
+  opacity: 0.7;
+}
+@media (max-width: 640px) {
+  .pcd-content-dock__row { justify-content: center; }
 }
 
 /* Breakpoint intermedio — antes de colapsar a 1 columna, damos aire a la
