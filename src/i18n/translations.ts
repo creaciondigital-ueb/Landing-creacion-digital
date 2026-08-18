@@ -56,6 +56,11 @@ const translations = {
     },
     axis02: {
       tag: "02 · programa",
+      toggleToContenido: "Ver contenido",
+      toggleToDefinicion: "Ver definición",
+      contenidoTitle: "¿Qué aprenderás?",
+      contenidoBody: "Te sumergirás en el mundo **tridimensional**: aprenderás a **modelar**, **esculpir**, **renderizar** y **animar** productos 3D. Crearás **videojuegos** completos, con sus **assets** y todo lo que eso implica. Además, explorarás la **realidad virtual** y la **realidad aumentada**.",
+      dockLabel: "Herramientas que usarás",
       wordLine1: "mundo",
       wordLine2: "3d",
       wordFull: "mundo 3d",
@@ -291,6 +296,11 @@ const translations = {
     },
     axis02: {
       tag: "02 · program",
+      toggleToContenido: "View content",
+      toggleToDefinicion: "View definition",
+      contenidoTitle: "What will you learn?",
+      contenidoBody: "You'll dive into the **three-dimensional** world: you'll learn to **model**, **sculpt**, **render** and **animate** 3D products. You'll build full **video games**, with their **assets** and everything that involves. You'll also explore **virtual reality** and **augmented reality**.",
+      dockLabel: "Tools you will use",
       wordLine1: "3d",
       wordLine2: "world",
       wordFull: "3d world",

@@ -703,7 +703,8 @@
 }
 
 /* Botón único que alterna Definición / Contenido — pastilla sólida con
-   un pulso sutil para invitar al clic sin ser intrusivo.
+   un pulso sutil para invitar al clic sin ser intrusivo. Reutilizado por
+   los ejes 01 (contenido) y 02 (mundo 3d).
    Nota: el selector va calificado con .pcd-axis__left para ganarle en
    especificidad al reset global ".pcd-page button" (línea ~53), que si no
    pisaba el background/color de este botón dejándolo transparente. */
@@ -903,9 +904,9 @@
   color: var(--pcd-ink);
 }
 
-/* Título "¿Qué aprenderás?" — modo "Contenido" del eje 01, en Rubik Bubbles
-   (misma fuente "fun" usada en .pcd-docente-modal__heading y otros acentos
-   del sitio) para diferenciarlo del resto de la tipografía serif/sans. */
+/* Título "¿Qué aprenderás?" — modo "Contenido" de los ejes 01 y 02, en Rubik
+   Bubbles (misma fuente "fun" usada en .pcd-docente-modal__heading y otros
+   acentos del sitio) para diferenciarlo del resto de la tipografía serif/sans. */
 .pcd-content-title {
   font-family: var(--pcd-fun);
   font-style: normal;
@@ -916,10 +917,11 @@
   color: var(--pcd-ink);
   margin: 0 0 14px;
 }
+.pcd-axis--mundo .pcd-axis__right .pcd-content-title { color: var(--pcd-paper); }
 
-/* Párrafo único — modo "Contenido" del eje 01. En vez de partir el texto
-   en 3 bloques con título poético, se muestra como un párrafo corrido con
-   las frases clave resaltadas (ver renderAccented() / .pcd-accent-text),
+/* Párrafo único — modo "Contenido" de los ejes 01 y 02. En vez de partir el
+   texto en 3 bloques con título poético, se muestra como un párrafo corrido
+   con las frases clave resaltadas (ver renderAccented() / .pcd-accent-text),
    más fiel al texto que redactó el usuario. */
 .pcd-content-copy {
   font-family: var(--pcd-sans);
@@ -929,12 +931,14 @@
   color: var(--pcd-ink);
   max-width: 46ch;
 }
+.pcd-axis--mundo .pcd-axis__right .pcd-content-copy { color: var(--pcd-paper); }
 .pcd-accent-text {
   font-weight: 700;
   font-style: normal;
   color: var(--pcd-ink);
 }
 .pcd-axis--contenido .pcd-accent-text { color: var(--pcd-cobalt); }
+.pcd-axis--mundo .pcd-accent-text { color: var(--pcd-acid); }
 
 /* Acento en el segundo clauso de "En vez de X; Y" */
 .pcd-vs__accent { font-style: italic; }
@@ -948,7 +952,7 @@
   width: 100%;
 }
 
-/* Dock de software — modo "Contenido" del eje 01 */
+/* Dock de software — modo "Contenido" de los ejes 01 y 02 */
 .pcd-content-dock {
   margin-top: 8px;
 }
@@ -962,6 +966,7 @@
   opacity: 0.6;
   margin-bottom: 14px;
 }
+.pcd-axis--mundo .pcd-axis__right .pcd-content-dock__label { color: var(--pcd-paper); opacity: 0.7; }
 .pcd-content-dock__row {
   display: flex;
   flex-wrap: wrap;
