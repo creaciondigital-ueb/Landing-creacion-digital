@@ -11,7 +11,7 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 - El chip "01 · programa" del eje "contenido" ahora es un toggle real de dos pestañas (Definición / Contenido) que controla el contenido de la columna derecha; antes era solo texto estático. Definición mantiene los 3 bloques "en vez de X; Y" que ya existían.
 - Nuevo copy para el modo Contenido (ES/EN): 3 bloques sobre fotografía/producción audiovisual en estudio, marketing/publicidad/métricas y pauta, e IA generativa.
-- Nuevo dock de software al final del modo Contenido: Higgsfield, ChatGPT, Runway, CapCut, DaVinci Resolve, Adobe y Affinity. Los 7 íconos son reinterpretaciones dibujadas a mano (trazo de tinta, igual al resto de ilustraciones de la página) de los logos reales que envió el usuario como referencia — no son los archivos vectoriales oficiales de cada marca.
+- Nuevo dock de software al final del modo Contenido: Higgsfield, ChatGPT, Runway, CapCut, DaVinci Resolve, Adobe y Affinity. Los 7 íconos son los logos reales que envió el usuario como referencia, recortados (fondo eliminado) y recoloreados a negro plano para calzar con la paleta editorial — sin reinterpretar la forma.
 - Nuevas traducciones en `translations.ts`: `axis01.toggleDefinicion/toggleContenido`, `axis01.cn1-3title/accent/body`, `axis01.dockLabel` (ES/EN).
 - Nuevos estilos `.pcd-axis__toggle`, `.pcd-axis__toggle-btn`, `.pcd-content-dock*` en `programa.css`.
 - Archivos: `src/pages/ProgramaCreacionDigital.tsx`, `src/i18n/translations.ts`, `src/styles/programa.css`, `public/programa/img/dock/*.png` (nuevos).
