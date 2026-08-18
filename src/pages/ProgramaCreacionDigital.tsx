@@ -535,11 +535,11 @@ export default function ProgramaCreacionDigital() {
 
           {/* Sofía */}
           <article
-            className="pcd-docente pcd-docente--sofia pcd-docente--no-photo pcd-reveal" tabIndex={0} role="button"
+            className="pcd-docente pcd-docente--sofia pcd-reveal" tabIndex={0} role="button"
             aria-label={t.docentes.sofia.ariaLabel}
             onClick={() => onDocenteCardClick('sofia')}
             onKeyDown={(e) => onCardKey(e, 'sofia')}
-            style={{} as CSSProperties}
+            style={{ '--docente-init': `url('${IMG}/Sofia_Init.webp')`, '--docente-end': `url('${IMG}/Sofia_End.webp')` } as CSSProperties}
           >
             <div className="pcd-docente__blob" aria-hidden="true" />
             <img className="pcd-sticker pcd-sticker--love" src={`${IMG}/Love.webp`} alt="" aria-hidden="true" />
@@ -679,7 +679,8 @@ export default function ProgramaCreacionDigital() {
 
       <DocenteModal
         id="sofia" active={activeDocente === 'sofia'} onClose={closeDocente} onSwipe={onSwipeDocente}
-        portrait="" portraitEnd=""
+        portrait={`${IMG}/Sofia_Init.webp`}
+        portraitEnd={`${IMG}/Sofia_End.webp`}
         name={<>Sofía<br />Jiménez</>}
         tags={t.docentes.sofia.modalTags}
       >

@@ -7,6 +7,13 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Agregado — Foto real de Sofía Jiménez (card + modal)
+
+- Reemplazado el placeholder sin foto de Sofía Jiménez por su foto real: `Sofia_Init.webp` (default) y `Sofia_End.webp` (hover).
+- Quitada la clase `pcd-docente--no-photo` de su card; conectadas `--docente-init` / `--docente-end`; modal con `portrait` / `portraitEnd` apuntando a las nuevas imágenes.
+- CSS override `.pcd-docente--sofia` y `.pcd-docente-modal--sofia`: default y hover al MISMO tamaño (`scale(1.1)` en ambos, sin el achique 0.94 del resto) — mismo criterio aplicado antes a Nicolás, para que la animación no salte de tamaño.
+- Archivos: `public/programa/img/Sofia_Init.webp`, `Sofia_End.webp`, `src/pages/ProgramaCreacionDigital.tsx`, `src/styles/programa.css`.
+
 ### Agregado — Foto real de Nicolás Bartolo (card + modal)
 
 - Reemplazadas las iniciales/placeholder de Nicolás Bartolo por su foto real: `Nicolas_Init.webp` (default) y `Nicolas_End.webp` (hover), procesadas a partir de las ilustraciones enviadas por el usuario.
