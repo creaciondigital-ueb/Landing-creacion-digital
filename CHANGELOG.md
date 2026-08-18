@@ -60,6 +60,12 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 - 4 íconos nuevos recortados de los logos reales que envió el usuario.
 - Archivos: `src/pages/ProgramaCreacionDigital.tsx`, `src/i18n/translations.ts`, `src/styles/programa.css`, `public/programa/img/dock/claude.png`, `figma.png`, `github.png`, `vscode.png` (nuevos).
 
+### Corregido — Ícono de Figma en el dock se veía "aplastado"
+
+- El pipeline de extracción forzaba cada ícono a un canvas cuadrado: primero un resize a 800x800 sin preservar el aspecto original de la imagen fuente, y luego un padding a cuadrado basado en el lado mayor del glifo. Para logos casi cuadrados esto no se notaba, pero el logo real de Figma es naturalmente más alto que ancho (~442×664), así que terminaba comprimido horizontalmente antes de exportarse — se veía "aplastado" dentro del dock (que usa `background-size: 62%` de ancho con alto automático, heredando el aspecto del PNG).
+- Regenerado `figma.png` preservando el aspecto real del glifo en todo el pipeline (sin el resize forzado a cuadrado, con padding proporcional en vez de forzar un lado igual al mayor), para que encaje sin distorsión en el contenedor de 48×48px del dock.
+- Archivos: `public/programa/img/dock/figma.png`.
+
 ## [3.4.0] — 2026-08-18
 
 ### Agregado — Foto real de Sofía Jiménez (card + modal)
