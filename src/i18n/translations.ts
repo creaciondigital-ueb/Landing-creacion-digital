@@ -50,7 +50,8 @@ const translations = {
       vs13title: "En vez de consumir internet;",
       vs13accent: "construirlo.",
       vs13body: "Las marcas y las comunidades digitales no aparecen solas. Aprendemos a crear contenidos, identidades y experiencias para el ecosistema digital actual.",
-      contenidoBody: "En el mundo del contenido aprenderás **fotografía** y **producción audiovisual**, usando cámaras en nuestro estudio de fotografía. Aprenderás a crear un **guion** y a **contar historias** desde un lente, además de **contenido ligero para redes sociales** y todos los trucos de **edición** para lograr piezas digitales llamativas. También aprenderás **marketing**, **publicidad** y **composición**, y sabrás qué es una **métrica**, qué es una **pauta** y cómo gestionarlas. Te sumergirás en el mundo de la **IA generativa** y aprenderás a crear **imágenes y video profesionales** con inteligencia artificial.",
+      contenidoTitle: "¿Qué aprenderás?",
+      contenidoBody: "En el mundo del contenido aprenderás **fotografía** y **producción audiovisual** usando cámaras en nuestro estudio. Crearás un **guion** y aprenderás a **contar historias** desde un lente, además de **contenido ligero para redes sociales** y los trucos de **edición** detrás de las piezas digitales más llamativas. También aprenderás **marketing**, **publicidad** y **composición**, y sabrás leer una **métrica** y gestionar una **pauta**. Te sumergirás en la **IA generativa** para crear **imágenes y video profesionales**.",
       dockLabel: "Herramientas que usarás",
     },
     axis02: {
@@ -284,7 +285,8 @@ const translations = {
       vs13title: "Instead of consuming the internet;",
       vs13accent: "building it.",
       vs13body: "Brands and digital communities do not appear on their own. We learn to create content, identities and experiences for the digital ecosystem of today.",
-      contenidoBody: "In the world of content you'll learn **photography** and **audiovisual production**, using cameras in our photography studio. You'll learn to write a **script** and **tell stories** through a lens, plus **light content for social media** and every **editing** trick to make eye-catching digital pieces. You'll also learn **marketing**, **advertising** and **composition**, and you'll know what a **metric** is, what an **ad campaign** is, and how to manage them. You'll dive into the world of **generative AI** and learn to create professional-grade **images and video** with artificial intelligence.",
+      contenidoTitle: "What will you learn?",
+      contenidoBody: "In the world of content you'll learn **photography** and **audiovisual production** using cameras in our studio. You'll write a **script** and learn to **tell stories** through a lens, along with **light content for social media** and the **editing** tricks behind the most eye-catching digital pieces. You'll also learn **marketing**, **advertising** and **composition**, and how to read a **metric** and manage an **ad campaign**. You'll dive into **generative AI** to create professional-grade **images and video**.",
       dockLabel: "Tools you will use",
     },
     axis02: {

@@ -433,6 +433,7 @@ export default function ProgramaCreacionDigital() {
             </>
           ) : (
             <>
+              <h3 className="pcd-content-title">{t.axis01.contenidoTitle}</h3>
               <p className="pcd-content-copy">{renderAccented(t.axis01.contenidoBody)}</p>
               <div className="pcd-content-dock">
                 <span className="pcd-content-dock__label">{t.axis01.dockLabel}</span>

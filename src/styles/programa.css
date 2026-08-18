@@ -903,6 +903,20 @@
   color: var(--pcd-ink);
 }
 
+/* Título "¿Qué aprenderás?" — modo "Contenido" del eje 01, en Rubik Bubbles
+   (misma fuente "fun" usada en .pcd-docente-modal__heading y otros acentos
+   del sitio) para diferenciarlo del resto de la tipografía serif/sans. */
+.pcd-content-title {
+  font-family: var(--pcd-fun);
+  font-style: normal;
+  font-weight: 400; /* Rubik Bubbles solo trae peso 400; ver nota en .pcd-axis__word */
+  font-size: 32px;
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  color: var(--pcd-ink);
+  margin: 0 0 14px;
+}
+
 /* Párrafo único — modo "Contenido" del eje 01. En vez de partir el texto
    en 3 bloques con título poético, se muestra como un párrafo corrido con
    las frases clave resaltadas (ver renderAccented() / .pcd-accent-text),
