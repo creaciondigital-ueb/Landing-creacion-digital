@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { PROYECTOS } from '../data/proyectos';
+import { useLang } from '../i18n/LanguageContext';
 import '../styles/programa.css';
 
 const IMG = '/programa/img';
@@ -12,22 +13,19 @@ interface Chip { kind: FilterKind; value: string; }
 
 /**
  * Galería de proyectos de estudiantes — /proyectos.
- *
- * Reemplaza a la antigua "Galería 3D" (con login, paneles y base de datos):
- * esta página es contenido 100% estático, tomado de `src/data/proyectos.ts`.
- * Usa el mismo header/footer del landing (`pcd-header`/`pcd-footer`) para
- * que se sienta parte del mismo sitio, sin el navbar del producto viejo.
+ * Soporta ES / EN mediante el contexto LanguageContext + hook useLang().
  */
 export default function ProyectosPage() {
-  const [menuOpen, setMenuOpen] = useState(false);
+  const { lang, setLang, t } = useLang();
+  const tp = t.proyectosPage;
 
+  const [menuOpen, setMenuOpen] = useState(false);
   const [yearOpen, setYearOpen] = useState(false);
   const [subjectOpen, setSubjectOpen] = useState(false);
   const [selectedYears, setSelectedYears] = useState<string[]>([]);
   const [selectedSubjects, setSelectedSubjects] = useState<string[]>([]);
   const [page, setPage] = useState(1);
 
-  // Cierra los dropdowns de filtro al hacer clic fuera de ellos.
   const filtersRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (!yearOpen && !subjectOpen) return;
@@ -49,6 +47,12 @@ export default function ProyectosPage() {
     () => Array.from(new Set(PROYECTOS.map((p) => p.subject))).sort((a, b) => a.localeCompare(b)),
     []
   );
+  // Mapeo ES subject → EN label para mostrar en filtros y chips
+  const subjectLabel = (subject: string) => {
+    if (lang !== 'en') return subject;
+    const p = PROYECTOS.find((p) => p.subject === subject);
+    return p?.subjectEn ?? subject;
+  };
 
   const toggleYear = (year: string) => {
     setSelectedYears((prev) => (prev.includes(year) ? prev.filter((y) => y !== year) : [...prev, year]));
@@ -77,13 +81,6 @@ export default function ProyectosPage() {
   const currentPage = Math.min(page, totalPages);
   const pageItems = filtered.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
 
-  // Animación de entrada (fade + slide-up) para el título, filtros, cards
-  // y footer — mismo patrón que ProgramaCreacionDigital.tsx: cada elemento
-  // con clase .pcd-reveal se anima una sola vez al entrar en pantalla.
-  // Se re-observa cada vez que cambian los filtros/página: una card que
-  // estaba oculta por un filtro y vuelve a aparecer es un elemento nuevo
-  // en el DOM que el observer todavía no vio, así que sin esto se quedaba
-  // invisible (opacity:0) para siempre.
   useEffect(() => {
     const els = document.querySelectorAll('.pcd-reveal');
     if (!els.length) return;
@@ -102,6 +99,20 @@ export default function ProyectosPage() {
     return () => observer.disconnect();
   }, [selectedYears, selectedSubjects, currentPage]);
 
+  /** Toggle visual ES | EN */
+  const LangToggle = () => (
+    <button
+      type="button"
+      className="pcd-lang-toggle"
+      aria-label={t.nav.langLabel}
+      onClick={() => setLang(lang === 'es' ? 'en' : 'es')}
+    >
+      <span className={`pcd-lang-toggle__opt${lang === 'es' ? ' pcd-lang-toggle__opt--active' : ''}`}>ES</span>
+      <span className="pcd-lang-toggle__sep">|</span>
+      <span className={`pcd-lang-toggle__opt${lang === 'en' ? ' pcd-lang-toggle__opt--active' : ''}`}>EN</span>
+    </button>
+  );
+
   return (
     <div className="pcd-page">
       <header className="pcd-header">
@@ -109,18 +120,19 @@ export default function ProyectosPage() {
           <img className="pcd-brand__logo" src={`${IMG}/Label_UEB_CreacionDigital_Horizontal.png`} alt="Universidad El Bosque · Creación Digital" />
         </Link>
         <nav className={`pcd-nav${menuOpen ? ' is-open' : ''}`} aria-label="Principal">
-          <Link className="pcd-nav__link" to="/#programa" onClick={() => setMenuOpen(false)}>PROGRAMA</Link>
-          <Link className="pcd-nav__link" to="/#docentes" onClick={() => setMenuOpen(false)}>docentes</Link>
-          <Link className="pcd-nav__link" to="/proyectos" onClick={() => setMenuOpen(false)}>PROYECTOS</Link>
+          <Link className="pcd-nav__link" to="/#programa" onClick={() => setMenuOpen(false)}>{t.nav.programa}</Link>
+          <Link className="pcd-nav__link" to="/#docentes" onClick={() => setMenuOpen(false)}>{t.nav.docentes}</Link>
+          <Link className="pcd-nav__link" to="/proyectos" onClick={() => setMenuOpen(false)}>{t.nav.proyectos}</Link>
+          <LangToggle />
         </nav>
         <a className="pcd-cta-pill" href={APLICA_URL} target="_blank" rel="noopener">
-          <span>APLICA AHORA</span>
+          <span>{t.nav.aplicaAhora}</span>
           <span className="pcd-cta-pill__arrow" aria-hidden="true">→</span>
         </a>
         <button
           type="button"
           className={`pcd-hamburger${menuOpen ? ' is-open' : ''}`}
-          aria-label="Menú"
+          aria-label={t.nav.menu}
           aria-expanded={menuOpen}
           onClick={() => setMenuOpen((v) => !v)}
         >
@@ -133,13 +145,14 @@ export default function ProyectosPage() {
         <div className="pcd-projects-hero__content pcd-reveal">
           <div className="pcd-projects-hero__eyebrow-row">
             <Link to="/" className="pcd-projects-hero__back">
-              <span aria-hidden="true">←</span> Volver al inicio
+              {tp.back}
             </Link>
-            <span className="pcd-projects-hero__eyebrow">Portafolio estudiantil</span>
+            <span className="pcd-projects-hero__eyebrow">{tp.eyebrow}</span>
           </div>
           <h1 className="pcd-projects-hero__title">
-            Proyectos que<br className="pcd-projects-hero__title-break" /> <span className="pop">crean</span><br />
-            nuestros<br className="pcd-projects-hero__title-break" /> estudiantes.
+            {tp.titleL1}<br className="pcd-projects-hero__title-break" /> <span className="pop">{tp.titlePop}</span><br />
+            {tp.titleL2}
+            {tp.titleL3 && <><br className="pcd-projects-hero__title-break" />{tp.titleL3}</>}
           </h1>
         </div>
         <div className="pcd-projects-hero__illustration">
@@ -170,7 +183,7 @@ export default function ProyectosPage() {
                 <rect x="3" y="5" width="18" height="16" rx="2" />
                 <path d="M3 10h18M8 3v4M16 3v4" />
               </svg>
-              Año
+              {tp.filterYear}
             </button>
             {yearOpen && (
               <div className="pcd-projects__filter-menu">
@@ -206,7 +219,7 @@ export default function ProyectosPage() {
                 <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
                 <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
               </svg>
-              Asignatura
+              {tp.filterSubject}
             </button>
             {subjectOpen && (
               <div className="pcd-projects__filter-menu">
@@ -224,7 +237,7 @@ export default function ProyectosPage() {
                         </svg>
                       )}
                     </span>
-                    {subject}
+                    {subjectLabel(subject)}
                   </button>
                 ))}
               </div>
@@ -236,12 +249,12 @@ export default function ProyectosPage() {
               <div className="pcd-projects__chips">
                 {chips.map((chip) => (
                   <span className={`pcd-projects__chip pcd-projects__chip--${chip.kind}`} key={`${chip.kind}-${chip.value}`}>
-                    {chip.value}
-                    <button type="button" aria-label={`Quitar filtro ${chip.value}`} onClick={() => removeChip(chip)}>×</button>
+                    {chip.kind === 'subject' ? subjectLabel(chip.value) : chip.value}
+                    <button type="button" aria-label={`${tp.removeFilter} ${chip.value}`} onClick={() => removeChip(chip)}>×</button>
                   </span>
                 ))}
               </div>
-              <button type="button" className="pcd-projects__filter-clear" onClick={clearAll} aria-label="Limpiar todos los filtros">
+              <button type="button" className="pcd-projects__filter-clear" onClick={clearAll} aria-label={tp.clearAll}>
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                   <path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0-1 14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2L4 6" />
                   <path d="M10 11v6M14 11v6" />
@@ -254,40 +267,47 @@ export default function ProyectosPage() {
         {/* ===== GRID ===== */}
         {pageItems.length > 0 ? (
           <div className="pcd-projects-page__grid">
-            {pageItems.map((p) => (
-              <article className="pcd-project pcd-reveal" key={p.id}>
-                <div
-                  className={`pcd-project__media${p.id === 'campana-mundial' ? ' pcd-project__media--zoom' : ''}`}
-                  style={{ backgroundImage: `url('${p.image}')` }}
-                  aria-hidden="true"
-                />
-                <div className="pcd-project__meta">
-                  <span>{p.subject.toUpperCase()}</span>
-                  <span>{p.year}</span>
-                </div>
-                <p className="pcd-project__caption">{p.caption}</p>
-                {p.description && <p className="pcd-project__description">{p.description}</p>}
-                {p.fileUrl && (
-                  <a className="pcd-project__file" href={p.fileUrl} target="_blank" rel="noopener">
-                    {p.fileLabel ?? 'Ver archivo'} <span aria-hidden="true">→</span>
-                  </a>
-                )}
-              </article>
-            ))}
+            {pageItems.map((p) => {
+              const inner = (
+                <>
+                  <div
+                    className={`pcd-project__media${p.id === 'chocosapiens-humanismo-digital' ? ' pcd-project__media--contain' : ''}`}
+                    style={{ backgroundImage: `url('${p.image}')` }}
+                    aria-hidden="true"
+                  />
+                  <div className="pcd-project__meta">
+                    <span>{(lang === 'en' ? (p.subjectEn ?? p.subject) : p.subject).toUpperCase()}</span>
+                    <span>{p.year}</span>
+                  </div>
+                  <p className="pcd-project__caption">{lang === 'en' ? (p.captionEn ?? p.caption) : p.caption}</p>
+                  {p.fileUrl && (
+                    <a className="pcd-project__file" href={p.fileUrl} target="_blank" rel="noopener">
+                      {p.fileLabel ?? tp.fileLabel} <span aria-hidden="true">→</span>
+                    </a>
+                  )}
+                </>
+              );
+              return p.modal ? (
+                <Link key={p.id} to={`/proyectos/${p.id}`} className="pcd-project pcd-project--clickable pcd-reveal" style={{ textDecoration: 'none' }}>
+                  {inner}
+                </Link>
+              ) : (
+                <article key={p.id} className="pcd-project pcd-reveal">{inner}</article>
+              );
+            })}
           </div>
         ) : (
-          <p className="pcd-projects__empty">No hay proyectos con esos filtros todavía.</p>
+          <p className="pcd-projects__empty">{tp.empty}</p>
         )}
 
         {/* ===== PAGINACIÓN ===== */}
-        {/* TODO: volver a "totalPages > 1" cuando haya más de 1 página real; se fuerza a true para previsualizar el estilo. */}
         {(totalPages >= 1) && (
-          <nav className="pcd-projects__pagination pcd-reveal" aria-label="Paginación de proyectos">
+          <nav className="pcd-projects__pagination pcd-reveal" aria-label={tp.paginationLabel}>
             <button
               type="button"
               disabled={currentPage === 1}
               onClick={() => setPage((p) => Math.max(1, p - 1))}
-              aria-label="Página anterior"
+              aria-label={tp.prevPage}
             >
               ←
             </button>
@@ -306,7 +326,7 @@ export default function ProyectosPage() {
               type="button"
               disabled={currentPage === totalPages}
               onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-              aria-label="Página siguiente"
+              aria-label={tp.nextPage}
             >
               →
             </button>
@@ -317,22 +337,22 @@ export default function ProyectosPage() {
       <footer className="pcd-footer pcd-footer--dark" id="contacto">
         <div className="pcd-footer__columns">
           <div className="pcd-footer__col pcd-reveal">
-            <span className="pcd-footer__title">Programa</span>
-            <a className="pcd-footer__link" href="https://www.unbosque.edu.co/programas-academicos/facultad-creacion-comunicacion/creacion-digital" target="_blank" rel="noopener">Información</a>
-            <a className="pcd-footer__link" href="/programa/pdf/Manifiesto-CREADIG.pdf" target="_blank" rel="noopener">Manifiesto</a>
+            <span className="pcd-footer__title">{t.footer.colPrograma}</span>
+            <a className="pcd-footer__link" href="https://www.unbosque.edu.co/programas-academicos/facultad-creacion-comunicacion/creacion-digital" target="_blank" rel="noopener">{t.footer.info}</a>
+            <a className="pcd-footer__link" href="/programa/pdf/Manifiesto-CREADIG.pdf" target="_blank" rel="noopener">{t.footer.manifiesto}</a>
           </div>
           <div className="pcd-footer__col pcd-reveal">
-            <span className="pcd-footer__title">Comunidad</span>
+            <span className="pcd-footer__title">{t.footer.colComunidad}</span>
             <a className="pcd-footer__link" href="https://www.instagram.com/creaciondigital.ueb/" target="_blank" rel="noopener">Instagram</a>
             <a className="pcd-footer__link" href="https://www.tiktok.com/@creaciondigital.ueb" target="_blank" rel="noopener">TikTok</a>
           </div>
           <div className="pcd-footer__col pcd-reveal">
-            <span className="pcd-footer__title">Universidad</span>
+            <span className="pcd-footer__title">{t.footer.colUniversidad}</span>
             <a className="pcd-footer__link" href="https://www.unbosque.edu.co/" target="_blank" rel="noopener">Universidad El Bosque</a>
             <a className="pcd-footer__link" href="https://www.unbosque.edu.co/programas-academicos/facultad-creacion-comunicacion" target="_blank" rel="noopener">FACyC</a>
           </div>
         </div>
-        <p className="pcd-footer__legal">© Universidad El Bosque · Pregrado de Creación Digital · 2026</p>
+        <p className="pcd-footer__legal">{t.footer.legal}</p>
       </footer>
     </div>
   );
