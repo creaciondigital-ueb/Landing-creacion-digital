@@ -253,9 +253,6 @@ export default function ProgramaCreacionDigital() {
   const docentesFirstCardRef = useRef<HTMLElement>(null);
   const docentesFirstCloneRef = useRef<HTMLElement>(null);
   const dragState = useRef({ isDown: false, startX: 0, startScroll: 0, moved: false });
-  // true mientras el usuario interactúa (drag activo, mouse encima o dedo
-  // apoyado) — el autoavance se detiene en ese momento y retoma al soltar.
-  const docentesPausedRef = useRef(false);
 
   const onDocentesScroll = () => {
     const grid = docentesGridRef.current;
@@ -294,17 +291,14 @@ export default function ProgramaCreacionDigital() {
     if (dragState.current.moved) { dragState.current.moved = false; return; }
     openDocente(id);
   };
-  const pauseDocentesAuto = () => { docentesPausedRef.current = true; };
-  const resumeDocentesAuto = () => { docentesPausedRef.current = false; };
 
-  // Autoavance continuo hacia la izquierda (scrollLeft creciente). Se detiene
-  // mientras se arrastra o el puntero está encima/apoyado, y respeta
-  // prefers-reduced-motion. El loop infinito de onDocentesScroll ya se
-  // encarga de que, al llegar al final, vuelva a Paula sin salto visible.
+  // Autoavance continuo hacia la izquierda (scrollLeft creciente). Solo se
+  // detiene mientras se arrastra activamente; el loop infinito de
+  // onDocentesScroll ya se encarga de que, al llegar al final, vuelva a
+  // Paula sin salto visible, así que nunca deja de moverse.
   useEffect(() => {
     const grid = docentesGridRef.current;
     if (!grid) return;
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
     const SPEED_PX_PER_SEC = 32;
     let rafId = 0;
@@ -314,7 +308,7 @@ export default function ProgramaCreacionDigital() {
       if (lastTime === null) lastTime = time;
       const dt = (time - lastTime) / 1000;
       lastTime = time;
-      if (!docentesPausedRef.current && !dragState.current.isDown) {
+      if (!dragState.current.isDown) {
         grid.scrollLeft += SPEED_PX_PER_SEC * dt;
       }
       rafId = requestAnimationFrame(step);
@@ -694,11 +688,7 @@ export default function ProgramaCreacionDigital() {
           onMouseDown={onDocentesMouseDown}
           onMouseMove={onDocentesMouseMove}
           onMouseUp={endDocentesDrag}
-          onMouseLeave={() => { endDocentesDrag(); resumeDocentesAuto(); }}
-          onMouseEnter={pauseDocentesAuto}
-          onTouchStart={pauseDocentesAuto}
-          onTouchEnd={resumeDocentesAuto}
-          onTouchCancel={resumeDocentesAuto}
+          onMouseLeave={endDocentesDrag}
           onScroll={onDocentesScroll}
         >
           {/* Paula */}
