@@ -110,6 +110,12 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 - Se quita el gate de `prefers-reduced-motion` y la pausa por hover/touch; el autoavance ahora solo se detiene durante un arrastre activo.
 - Archivos: `src/pages/ProgramaCreacionDigital.tsx`.
 
+### Corregido — Salto brusco del autoavance de docentes al volver de otra ventana/pestaña
+
+- `requestAnimationFrame` se pausa cuando la pestaña/ventana pierde el foco; al volver, el primer frame llegaba con un `time` que había saltado varios segundos, y ese `dt` gigante se traducía en un brinco visible del carrusel ("se veía bugueado").
+- Dos salvaguardas: se limita el `dt` máximo considerado por frame (nunca avanza de más aunque haya habido un frame lento o una pausa), y se resetea el `lastTime` de referencia en el evento `visibilitychange`, para que el primer frame tras recuperar el foco no cuente tiempo de más en absoluto.
+- Archivos: `src/pages/ProgramaCreacionDigital.tsx`.
+
 ## [3.4.0] — 2026-08-18
 
 ### Agregado — Foto real de Sofía Jiménez (card + modal)
