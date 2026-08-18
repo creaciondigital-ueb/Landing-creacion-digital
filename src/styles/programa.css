@@ -955,7 +955,7 @@
 
 /* Dock de software — modo "Contenido" de los ejes 01, 02 y 03 */
 .pcd-content-dock {
-  margin-top: 8px;
+  margin-top: 43px;
 }
 .pcd-content-dock__label {
   display: block;
