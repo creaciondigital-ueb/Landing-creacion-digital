@@ -7,6 +7,8 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+## [3.4.0] — 2026-08-18
+
 ### Agregado — Foto real de Sofía Jiménez (card + modal)
 
 - Reemplazado el placeholder sin foto de Sofía Jiménez por su foto real: `Sofia_Init.webp` (default) y `Sofia_End.webp` (hover).
