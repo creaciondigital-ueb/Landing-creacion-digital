@@ -84,6 +84,12 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 - `.pcd-axis__left` ahora es `display:flex; flex-direction:column; align-items:center;` en móvil, y las reglas de `.pcd-axis__word`/`.pcd-axis__caption` por eje se unificaron a `text-align:center`, así botón, título y subtítulo quedan alineados entre sí en los 3 ejes.
 - Archivos: `src/styles/programa.css`.
 
+### Agregado — Loop infinito en el carrusel de docentes
+
+- El carrusel de docentes (`.pcd-docentes__grid`) mantiene su drag-to-pan manual existente (arrastrar con el mouse mueve `scrollLeft`); además ahora es infinito: al llegar a la última card (Vanessa) vuelve a aparecer la primera (Paula), y así indefinidamente.
+- Implementado duplicando una vez el set de 8 cards en el DOM (los clones llevan `aria-hidden="true"` y `tabIndex={-1}` para no afectar el orden de tabulación ni lectores de pantalla, pero conservan el `onClick` así que abren el modal correcto igual que el original). Un handler en `onScroll` mide con `getBoundingClientRect()` la distancia real entre la primera card original y su clon, y al cruzarla salta `scrollLeft` hacia atrás exactamente ese ancho — como el clon es pixel-idéntico, el salto es imperceptible. También ajusta `dragState.startScroll` para no romper un arrastre en curso.
+- Archivos: `src/pages/ProgramaCreacionDigital.tsx`.
+
 ## [3.4.0] — 2026-08-18
 
 ### Agregado — Foto real de Sofía Jiménez (card + modal)
