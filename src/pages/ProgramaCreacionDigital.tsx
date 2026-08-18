@@ -244,9 +244,31 @@ export default function ProgramaCreacionDigital() {
     return () => observer.disconnect();
   }, []);
 
-  // Drag-to-pan carrusel docentes
+  // Drag-to-pan carrusel docentes (+ loop infinito: el set de cards se
+  // duplica una vez en el DOM; al cruzar el borde entre el set original y
+  // el duplicado, saltamos el scrollLeft hacia atrás en exactamente ese
+  // mismo ancho — visualmente idéntico, así que el salto es imperceptible
+  // y el carrusel puede seguir arrastrándose/scrolleando para siempre.
   const docentesGridRef = useRef<HTMLDivElement>(null);
+  const docentesFirstCardRef = useRef<HTMLElement>(null);
+  const docentesFirstCloneRef = useRef<HTMLElement>(null);
   const dragState = useRef({ isDown: false, startX: 0, startScroll: 0, moved: false });
+
+  const onDocentesScroll = () => {
+    const grid = docentesGridRef.current;
+    const a = docentesFirstCardRef.current;
+    const b = docentesFirstCloneRef.current;
+    if (!grid || !a || !b) return;
+    const period = b.getBoundingClientRect().left - a.getBoundingClientRect().left;
+    if (period <= 0) return;
+    if (grid.scrollLeft >= period) {
+      grid.scrollLeft -= period;
+      dragState.current.startScroll -= period;
+    } else if (grid.scrollLeft < 0) {
+      grid.scrollLeft += period;
+      dragState.current.startScroll += period;
+    }
+  };
 
   const onDocentesMouseDown = (e: React.MouseEvent) => {
     const grid = docentesGridRef.current;
@@ -642,9 +664,11 @@ export default function ProgramaCreacionDigital() {
           onMouseMove={onDocentesMouseMove}
           onMouseUp={endDocentesDrag}
           onMouseLeave={endDocentesDrag}
+          onScroll={onDocentesScroll}
         >
           {/* Paula */}
           <article
+            ref={docentesFirstCardRef}
             className="pcd-docente pcd-docente--paula pcd-reveal" tabIndex={0} role="button"
             aria-label={t.docentes.paula.ariaLabel}
             onClick={() => onDocenteCardClick('paula')}
@@ -765,6 +789,144 @@ export default function ProgramaCreacionDigital() {
           {/* Vanessa */}
           <article
             className="pcd-docente pcd-docente--vanessa pcd-reveal" tabIndex={0} role="button"
+            aria-label={t.docentes.vanessa.ariaLabel}
+            onClick={() => onDocenteCardClick('vanessa')}
+            onKeyDown={(e) => onCardKey(e, 'vanessa')}
+            style={{ '--docente-init': `url('${IMG}/Vanessa_Init.webp')`, '--docente-end': `url('${IMG}/Vanessa_End.webp')` } as CSSProperties}
+          >
+            <div className="pcd-docente__blob" aria-hidden="true" />
+            <img className="pcd-sticker pcd-sticker--idea" src={`${IMG}/Idea.webp`} alt="" aria-hidden="true" />
+            <h3 className="pcd-docente__name">Vanessa<br />Tovar</h3>
+            <p className="pcd-docente__bio">{t.docentes.vanessa.bio}</p>
+            <div className="pcd-docente__tags">
+              {t.docentes.vanessa.tags.map((tag) => <span key={tag} className="pcd-docente__tag">{tag}</span>)}
+            </div>
+          </article>
+
+          {/* ── set duplicado: permite el loop infinito del carrusel ── */}
+          {/* Paula (clon para loop infinito) */}
+          <article
+            ref={docentesFirstCloneRef}
+            className="pcd-docente pcd-docente--paula pcd-reveal" tabIndex={-1} role="button" aria-hidden="true"
+            aria-label={t.docentes.paula.ariaLabel}
+            onClick={() => onDocenteCardClick('paula')}
+            onKeyDown={(e) => onCardKey(e, 'paula')}
+            style={{ '--docente-init': `url('${IMG}/Paula_Init.webp')`, '--docente-end': `url('${IMG}/Paula_End.webp')` } as CSSProperties}
+          >
+            <div className="pcd-docente__blob" aria-hidden="true" />
+            <img className="pcd-sticker pcd-sticker--star" src={`${IMG}/Star.webp`} alt="" aria-hidden="true" />
+            <h3 className="pcd-docente__name">Paula<br />Lenis</h3>
+            <p className="pcd-docente__bio">{t.docentes.paula.bio}</p>
+            <div className="pcd-docente__tags">
+              {t.docentes.paula.tags.map((tag) => <span key={tag} className="pcd-docente__tag">{tag}</span>)}
+            </div>
+          </article>
+
+          {/* Sofía (clon para loop infinito) */}
+          <article
+            className="pcd-docente pcd-docente--sofia pcd-reveal" tabIndex={-1} role="button" aria-hidden="true"
+            aria-label={t.docentes.sofia.ariaLabel}
+            onClick={() => onDocenteCardClick('sofia')}
+            onKeyDown={(e) => onCardKey(e, 'sofia')}
+            style={{ '--docente-init': `url('${IMG}/Sofia_Init.webp')`, '--docente-end': `url('${IMG}/Sofia_End.webp')` } as CSSProperties}
+          >
+            <div className="pcd-docente__blob" aria-hidden="true" />
+            <img className="pcd-sticker pcd-sticker--idea" src={`${IMG}/Idea.webp`} alt="" aria-hidden="true" />
+            <h3 className="pcd-docente__name">Sofía<br />Jiménez</h3>
+            <p className="pcd-docente__bio">{t.docentes.sofia.bio}</p>
+            <div className="pcd-docente__tags">
+              {t.docentes.sofia.tags.map((tag) => <span key={tag} className="pcd-docente__tag">{tag}</span>)}
+            </div>
+          </article>
+
+          {/* Nicolás (clon para loop infinito) */}
+          <article
+            className="pcd-docente pcd-docente--nicolas pcd-reveal" tabIndex={-1} role="button" aria-hidden="true"
+            aria-label={t.docentes.nicolas.ariaLabel}
+            onClick={() => onDocenteCardClick('nicolas')}
+            onKeyDown={(e) => onCardKey(e, 'nicolas')}
+            style={{ '--docente-init': `url('${IMG}/Nicolas_Init.webp')`, '--docente-end': `url('${IMG}/Nicolas_End.webp')` } as CSSProperties}
+          >
+            <div className="pcd-docente__blob" aria-hidden="true" />
+            <img className="pcd-sticker pcd-sticker--love" src={`${IMG}/Love.webp`} alt="" aria-hidden="true" />
+            <h3 className="pcd-docente__name">Nicolás<br />Bartolo</h3>
+            <p className="pcd-docente__bio">{t.docentes.nicolas.bio}</p>
+            <div className="pcd-docente__tags">
+              {t.docentes.nicolas.tags.map((tag) => <span key={tag} className="pcd-docente__tag">{tag}</span>)}
+            </div>
+          </article>
+
+          {/* Ximena (clon para loop infinito) */}
+          <article
+            className="pcd-docente pcd-docente--ximena pcd-reveal" tabIndex={-1} role="button" aria-hidden="true"
+            aria-label={t.docentes.ximena.ariaLabel}
+            onClick={() => onDocenteCardClick('ximena')}
+            onKeyDown={(e) => onCardKey(e, 'ximena')}
+            style={{ '--docente-init': `url('${IMG}/Ximena_Init.webp')`, '--docente-end': `url('${IMG}/Ximena_End.webp')` } as CSSProperties}
+          >
+            <div className="pcd-docente__blob" aria-hidden="true" />
+            <img className="pcd-sticker pcd-sticker--star" src={`${IMG}/Star.webp`} alt="" aria-hidden="true" />
+            <h3 className="pcd-docente__name">Ximena<br />Tovar</h3>
+            <p className="pcd-docente__bio">{t.docentes.ximena.bio}</p>
+            <div className="pcd-docente__tags">
+              {t.docentes.ximena.tags.map((tag) => <span key={tag} className="pcd-docente__tag">{tag}</span>)}
+            </div>
+          </article>
+
+          {/* Camilo (clon para loop infinito) */}
+          <article
+            className="pcd-docente pcd-docente--camilo pcd-reveal" tabIndex={-1} role="button" aria-hidden="true"
+            aria-label={t.docentes.camilo.ariaLabel}
+            onClick={() => onDocenteCardClick('camilo')}
+            onKeyDown={(e) => onCardKey(e, 'camilo')}
+            style={{ '--docente-init': `url('${IMG}/Camilo_Init.webp')`, '--docente-end': `url('${IMG}/Camilo_End.webp')` } as CSSProperties}
+          >
+            <div className="pcd-docente__blob" aria-hidden="true" />
+            <img className="pcd-sticker pcd-sticker--idea" src={`${IMG}/Idea.webp`} alt="" aria-hidden="true" />
+            <h3 className="pcd-docente__name">Camilo<br />Cardozo</h3>
+            <p className="pcd-docente__bio">{t.docentes.camilo.bio}</p>
+            <div className="pcd-docente__tags">
+              {t.docentes.camilo.tags.map((tag) => <span key={tag} className="pcd-docente__tag">{tag}</span>)}
+            </div>
+          </article>
+
+          {/* Daniela (clon para loop infinito) */}
+          <article
+            className="pcd-docente pcd-docente--daniela pcd-docente--no-photo pcd-reveal" tabIndex={-1} role="button" aria-hidden="true"
+            aria-label={t.docentes.daniela.ariaLabel}
+            onClick={() => onDocenteCardClick('daniela')}
+            onKeyDown={(e) => onCardKey(e, 'daniela')}
+            style={{} as CSSProperties}
+          >
+            <div className="pcd-docente__blob" aria-hidden="true" />
+            <img className="pcd-sticker pcd-sticker--love" src={`${IMG}/Love.webp`} alt="" aria-hidden="true" />
+            <h3 className="pcd-docente__name">Daniela<br />Meza</h3>
+            <p className="pcd-docente__bio">{t.docentes.daniela.bio}</p>
+            <div className="pcd-docente__tags">
+              {t.docentes.daniela.tags.map((tag) => <span key={tag} className="pcd-docente__tag">{tag}</span>)}
+            </div>
+          </article>
+
+          {/* Juan David (clon para loop infinito) */}
+          <article
+            className="pcd-docente pcd-docente--juandavid pcd-reveal" tabIndex={-1} role="button" aria-hidden="true"
+            aria-label={t.docentes.juandavid.ariaLabel}
+            onClick={() => onDocenteCardClick('juandavid')}
+            onKeyDown={(e) => onCardKey(e, 'juandavid')}
+            style={{ '--docente-init': `url('${IMG}/JuanDavid_Init.webp')`, '--docente-end': `url('${IMG}/JuanDavid_End.webp')` } as CSSProperties}
+          >
+            <div className="pcd-docente__blob" aria-hidden="true" />
+            <img className="pcd-sticker pcd-sticker--star" src={`${IMG}/Star.webp`} alt="" aria-hidden="true" />
+            <h3 className="pcd-docente__name">Juan David<br />Aristizabal</h3>
+            <p className="pcd-docente__bio">{t.docentes.juandavid.bio}</p>
+            <div className="pcd-docente__tags">
+              {t.docentes.juandavid.tags.map((tag) => <span key={tag} className="pcd-docente__tag">{tag}</span>)}
+            </div>
+          </article>
+
+          {/* Vanessa (clon para loop infinito) */}
+          <article
+            className="pcd-docente pcd-docente--vanessa pcd-reveal" tabIndex={-1} role="button" aria-hidden="true"
             aria-label={t.docentes.vanessa.ariaLabel}
             onClick={() => onDocenteCardClick('vanessa')}
             onKeyDown={(e) => onCardKey(e, 'vanessa')}
