@@ -244,44 +244,66 @@ export default function ProgramaCreacionDigital() {
     return () => observer.disconnect();
   }, []);
 
-  // Drag-to-pan carrusel docentes (+ loop infinito: el set de cards se
+  // Carrusel de docentes: drag-to-pan + loop infinito (el set de cards se
   // duplica una vez en el DOM; al cruzar el borde entre el set original y
-  // el duplicado, saltamos el scrollLeft hacia atrás en exactamente ese
-  // mismo ancho — visualmente idéntico, así que el salto es imperceptible
-  // y el carrusel puede seguir arrastrándose/scrolleando para siempre.
+  // el duplicado, restamos ese mismo ancho — visualmente idéntico, así que
+  // el salto es imperceptible) + autoavance continuo hacia la izquierda.
+  //
+  // docentesScrollRef es la ÚNICA fuente de verdad de la posición: nunca se
+  // vuelve a leer grid.scrollLeft para acumular sobre él. Esto es clave —
+  // `grid.scrollLeft += x` es un read-modify-write, y los navegadores
+  // redondean scrollLeft a píxeles enteros al leerlo; con incrementos
+  // menores a 1px por frame (32px/s a 60fps ≈ 0.5px/frame) cada lectura
+  // descartaba la parte fraccionaria antes de que pudiera acumularse, así
+  // que el carrusel quedaba efectivamente congelado para siempre (por eso
+  // "no avanza nunca continuo"). Acumulando en una variable de JS en punto
+  // flotante y solo escribiendo hacia el DOM, nada se pierde entre frames.
   const docentesGridRef = useRef<HTMLDivElement>(null);
   const docentesFirstCardRef = useRef<HTMLElement>(null);
   const docentesFirstCloneRef = useRef<HTMLElement>(null);
-  const dragState = useRef({ isDown: false, startX: 0, startScroll: 0, moved: false });
+  const docentesScrollRef = useRef(0);
+  const dragState = useRef({ isDown: false, startX: 0, startOffset: 0, moved: false });
 
+  const setDocentesScroll = (value: number) => {
+    const grid = docentesGridRef.current;
+    if (!grid) return;
+    let v = value;
+    const a = docentesFirstCardRef.current;
+    const b = docentesFirstCloneRef.current;
+    if (a && b) {
+      const period = b.getBoundingClientRect().left - a.getBoundingClientRect().left;
+      if (period > 0) v = ((v % period) + period) % period; // siempre en [0, period)
+    }
+    docentesScrollRef.current = v;
+    grid.scrollLeft = v;
+  };
+
+  // Salvavidas para el drag NATIVO por touch en móvil (el navegador mueve
+  // scrollLeft directamente vía swipe, sin pasar por setDocentesScroll):
+  // aplica el mismo loop infinito y mantiene docentesScrollRef sincronizado
+  // para que el autoavance retome desde ahí al soltar.
   const onDocentesScroll = () => {
     const grid = docentesGridRef.current;
     const a = docentesFirstCardRef.current;
     const b = docentesFirstCloneRef.current;
     if (!grid || !a || !b) return;
     const period = b.getBoundingClientRect().left - a.getBoundingClientRect().left;
-    if (period <= 0) return;
-    if (grid.scrollLeft >= period) {
-      grid.scrollLeft -= period;
-      dragState.current.startScroll -= period;
-    } else if (grid.scrollLeft < 0) {
-      grid.scrollLeft += period;
-      dragState.current.startScroll += period;
+    if (period > 0) {
+      if (grid.scrollLeft >= period) grid.scrollLeft -= period;
+      else if (grid.scrollLeft < 0) grid.scrollLeft += period;
     }
+    docentesScrollRef.current = grid.scrollLeft;
   };
 
   const onDocentesMouseDown = (e: React.MouseEvent) => {
-    const grid = docentesGridRef.current;
-    if (!grid) return;
-    dragState.current = { isDown: true, startX: e.pageX, startScroll: grid.scrollLeft, moved: false };
-    grid.classList.add('is-dragging');
+    dragState.current = { isDown: true, startX: e.pageX, startOffset: docentesScrollRef.current, moved: false };
+    docentesGridRef.current?.classList.add('is-dragging');
   };
   const onDocentesMouseMove = (e: React.MouseEvent) => {
-    const grid = docentesGridRef.current;
-    if (!grid || !dragState.current.isDown) return;
+    if (!dragState.current.isDown) return;
     const dx = e.pageX - dragState.current.startX;
     if (Math.abs(dx) > 4) dragState.current.moved = true;
-    grid.scrollLeft = dragState.current.startScroll - dx;
+    setDocentesScroll(dragState.current.startOffset - dx);
   };
   const endDocentesDrag = () => {
     docentesGridRef.current?.classList.remove('is-dragging');
@@ -292,26 +314,19 @@ export default function ProgramaCreacionDigital() {
     openDocente(id);
   };
 
-  // Autoavance continuo hacia la izquierda (scrollLeft creciente). Solo se
-  // detiene mientras se arrastra activamente; el loop infinito de
-  // onDocentesScroll ya se encarga de que, al llegar al final, vuelva a
-  // Paula sin salto visible, así que nunca deja de moverse.
-  //
-  // Al cambiar de ventana/pestaña, requestAnimationFrame se pausa (el
-  // navegador no gasta ciclos en una pestaña oculta); al volver, el próximo
-  // frame llega con un "time" que saltó varios segundos hacia adelante. Sin
-  // límite, ese dt gigante se traduce en un salto brusco de scrollLeft (se
-  // veía como un "brinco" al volver). Dos salvaguardas: se limita el dt
-  // máximo por frame (nunca avanza de más aunque haya habido un frame lento
-  // o una pausa), y además se resetea lastTime cada vez que la pestaña
-  // vuelve a estar visible, para que ese primer frame de vuelta no cuente
-  // tiempo "de más" en absoluto.
+  // Autoavance continuo hacia la izquierda. Solo se detiene mientras se
+  // arrastra activamente. Al cambiar de ventana/pestaña, requestAnimationFrame
+  // se pausa; al volver, el próximo frame llega con un "time" que saltó
+  // varios segundos — se limita el dt máximo por frame y se resetea
+  // lastTime en 'visibilitychange' para que ese primer frame de vuelta no
+  // cuente tiempo de más.
   useEffect(() => {
     const grid = docentesGridRef.current;
     if (!grid) return;
+    docentesScrollRef.current = grid.scrollLeft;
 
-    const SPEED_PX_PER_SEC = 32;
-    const MAX_DT = 1 / 30; // nunca avanza más de lo que avanzaría en ~2 frames a 60fps
+    const SPEED_PX_PER_SEC = 40;
+    const MAX_DT = 1 / 30;
     let rafId = 0;
     let lastTime: number | null = null;
 
@@ -320,7 +335,7 @@ export default function ProgramaCreacionDigital() {
       const dt = Math.min((time - lastTime) / 1000, MAX_DT);
       lastTime = time;
       if (!dragState.current.isDown) {
-        grid.scrollLeft += SPEED_PX_PER_SEC * dt;
+        setDocentesScroll(docentesScrollRef.current + SPEED_PX_PER_SEC * dt);
       }
       rafId = requestAnimationFrame(step);
     };
