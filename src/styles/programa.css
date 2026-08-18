@@ -1112,34 +1112,33 @@
   text-align: right;
   max-width: 132px;
 }
+/* Viewport del carrusel: ya no es un contenedor con scroll nativo (antes
+   overflow-x:auto + scroll-snap-type competían con el auto-avance por
+   requestAnimationFrame, que terminaba revertido por el snap en cada frame
+   y no se veía). Ahora solo recorta lo que sobra; el que realmente se mueve
+   es .pcd-docentes__track, vía transform — igual que .pcd-marquee__track. */
 .pcd-docentes__grid {
-  display: flex;
-  gap: 20px;
-  overflow-x: auto;
-  overflow-y: hidden;
-  scroll-snap-type: x mandatory;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-  padding-top: 8px; /* evita que el translateY(-3px) del hover recorte la card contra overflow-y:hidden */
-  padding-left: 8px; /* evita que el translateX(-3px) del hover corte el borde izquierdo de la 1ª card contra overflow-x:auto */
+  overflow: hidden;
+  padding-top: 8px; /* evita que el translateY(-3px) del hover recorte la card contra overflow:hidden */
+  padding-left: 8px; /* evita que el translateX(-3px) del hover corte el borde izquierdo de la 1ª card */
   margin-left: -8px; /* cancela el corrimiento visual del padding-left, para no desalinear el carrusel con el título de arriba */
   padding-bottom: 16px;
   margin-right: -88px;
   padding-right: 88px;
   cursor: grab;
   user-select: none;
+  touch-action: pan-y; /* deja scroll vertical de la página, el arrastre horizontal lo manejamos a mano */
 }
-.pcd-docentes__grid::-webkit-scrollbar { display: none; }
-.pcd-docentes__grid.is-dragging {
-  cursor: grabbing;
-  scroll-snap-type: none;
+.pcd-docentes__grid.is-dragging { cursor: grabbing; }
+.pcd-docentes__track {
+  display: flex;
+  gap: 20px;
+  will-change: transform;
 }
 .pcd-docente {
   position: relative;
   z-index: 1;
   flex: 0 0 calc((100% - 40px) / 3 - 10px);
-  scroll-snap-align: start;
   background: var(--pcd-paper);
   border: 2.5px solid var(--pcd-ink);
   padding: 46px 35px 34px;

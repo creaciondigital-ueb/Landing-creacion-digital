@@ -244,52 +244,73 @@ export default function ProgramaCreacionDigital() {
     return () => observer.disconnect();
   }, []);
 
-  // Drag-to-pan carrusel docentes (+ loop infinito: el set de cards se
-  // duplica una vez en el DOM; al cruzar el borde entre el set original y
-  // el duplicado, saltamos el scrollLeft hacia atrás en exactamente ese
-  // mismo ancho — visualmente idéntico, así que el salto es imperceptible
-  // y el carrusel puede seguir arrastrándose/scrolleando para siempre.
+  // Carrusel de docentes: igual que el track del marquee de arriba (una
+  // franja que se mueve con transform: translateX, no con scrollLeft nativo).
+  // Antes usaba scrollLeft + scroll-snap, pero el auto-avance por
+  // requestAnimationFrame no se veía: scroll-snap-type:mandatory hacía que
+  // el navegador revirtiera cada micro-incremento de scrollLeft al punto de
+  // snap más cercano en cada frame, cancelando el movimiento en la práctica.
+  // Con transform no hay scroll nativo de por medio, así que nada puede
+  // "revertirlo" — el set de cards se duplica una vez (igual que antes) y el
+  // offset se resetea en el punto exacto donde el duplicado calza con el
+  // original, dando el mismo loop infinito sin salto visible.
   const docentesGridRef = useRef<HTMLDivElement>(null);
+  const docentesTrackRef = useRef<HTMLDivElement>(null);
   const docentesFirstCardRef = useRef<HTMLElement>(null);
   const docentesFirstCloneRef = useRef<HTMLElement>(null);
-  const dragState = useRef({ isDown: false, startX: 0, startScroll: 0, moved: false });
+  const docentesOffsetRef = useRef(0);
+  const dragState = useRef({ isDown: false, startX: 0, startOffset: 0, moved: false });
   // true mientras el usuario interactúa (drag activo, mouse encima o dedo
   // apoyado) — el autoavance se detiene en ese momento y retoma al soltar.
   const docentesPausedRef = useRef(false);
 
-  const onDocentesScroll = () => {
-    const grid = docentesGridRef.current;
+  const applyDocentesTransform = () => {
+    const track = docentesTrackRef.current;
+    if (track) track.style.transform = `translateX(${-docentesOffsetRef.current}px)`;
+  };
+  const normalizeDocentesOffset = () => {
     const a = docentesFirstCardRef.current;
     const b = docentesFirstCloneRef.current;
-    if (!grid || !a || !b) return;
+    if (!a || !b) return;
     const period = b.getBoundingClientRect().left - a.getBoundingClientRect().left;
     if (period <= 0) return;
-    if (grid.scrollLeft >= period) {
-      grid.scrollLeft -= period;
-      dragState.current.startScroll -= period;
-    } else if (grid.scrollLeft < 0) {
-      grid.scrollLeft += period;
-      dragState.current.startScroll += period;
+    if (docentesOffsetRef.current >= period) {
+      docentesOffsetRef.current -= period;
+      dragState.current.startOffset -= period;
+    } else if (docentesOffsetRef.current < 0) {
+      docentesOffsetRef.current += period;
+      dragState.current.startOffset += period;
     }
   };
 
-  const onDocentesMouseDown = (e: React.MouseEvent) => {
-    const grid = docentesGridRef.current;
-    if (!grid) return;
-    dragState.current = { isDown: true, startX: e.pageX, startScroll: grid.scrollLeft, moved: false };
-    grid.classList.add('is-dragging');
+  const beginDocentesDrag = (startX: number) => {
+    dragState.current = { isDown: true, startX, startOffset: docentesOffsetRef.current, moved: false };
+    docentesGridRef.current?.classList.add('is-dragging');
   };
-  const onDocentesMouseMove = (e: React.MouseEvent) => {
-    const grid = docentesGridRef.current;
-    if (!grid || !dragState.current.isDown) return;
-    const dx = e.pageX - dragState.current.startX;
+  const moveDocentesDrag = (x: number) => {
+    if (!dragState.current.isDown) return;
+    const dx = x - dragState.current.startX;
     if (Math.abs(dx) > 4) dragState.current.moved = true;
-    grid.scrollLeft = dragState.current.startScroll - dx;
+    docentesOffsetRef.current = dragState.current.startOffset - dx;
+    normalizeDocentesOffset();
+    applyDocentesTransform();
   };
   const endDocentesDrag = () => {
     docentesGridRef.current?.classList.remove('is-dragging');
     dragState.current.isDown = false;
   };
+  const onDocentesMouseDown = (e: React.MouseEvent) => beginDocentesDrag(e.pageX);
+  const onDocentesMouseMove = (e: React.MouseEvent) => moveDocentesDrag(e.pageX);
+  const onDocentesTouchStart = (e: React.TouchEvent) => {
+    pauseDocentesAuto();
+    const touch = e.touches[0];
+    if (touch) beginDocentesDrag(touch.pageX);
+  };
+  const onDocentesTouchMove = (e: React.TouchEvent) => {
+    const touch = e.touches[0];
+    if (touch) moveDocentesDrag(touch.pageX);
+  };
+  const onDocentesTouchEnd = () => { endDocentesDrag(); resumeDocentesAuto(); };
   const onDocenteCardClick = (id: string) => {
     if (dragState.current.moved) { dragState.current.moved = false; return; }
     openDocente(id);
@@ -297,13 +318,9 @@ export default function ProgramaCreacionDigital() {
   const pauseDocentesAuto = () => { docentesPausedRef.current = true; };
   const resumeDocentesAuto = () => { docentesPausedRef.current = false; };
 
-  // Autoavance continuo hacia la izquierda (scrollLeft creciente). Se detiene
-  // mientras se arrastra o el puntero está encima/apoyado, y respeta
-  // prefers-reduced-motion. El loop infinito de onDocentesScroll ya se
-  // encarga de que, al llegar al final, vuelva a Paula sin salto visible.
+  // Autoavance continuo hacia la izquierda. Se detiene mientras se arrastra
+  // o el puntero está encima/apoyado, y respeta prefers-reduced-motion.
   useEffect(() => {
-    const grid = docentesGridRef.current;
-    if (!grid) return;
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
     const SPEED_PX_PER_SEC = 32;
@@ -315,7 +332,9 @@ export default function ProgramaCreacionDigital() {
       const dt = (time - lastTime) / 1000;
       lastTime = time;
       if (!docentesPausedRef.current && !dragState.current.isDown) {
-        grid.scrollLeft += SPEED_PX_PER_SEC * dt;
+        docentesOffsetRef.current += SPEED_PX_PER_SEC * dt;
+        normalizeDocentesOffset();
+        applyDocentesTransform();
       }
       rafId = requestAnimationFrame(step);
     };
@@ -696,11 +715,12 @@ export default function ProgramaCreacionDigital() {
           onMouseUp={endDocentesDrag}
           onMouseLeave={() => { endDocentesDrag(); resumeDocentesAuto(); }}
           onMouseEnter={pauseDocentesAuto}
-          onTouchStart={pauseDocentesAuto}
-          onTouchEnd={resumeDocentesAuto}
-          onTouchCancel={resumeDocentesAuto}
-          onScroll={onDocentesScroll}
+          onTouchStart={onDocentesTouchStart}
+          onTouchMove={onDocentesTouchMove}
+          onTouchEnd={onDocentesTouchEnd}
+          onTouchCancel={onDocentesTouchEnd}
         >
+        <div className="pcd-docentes__track" ref={docentesTrackRef}>
           {/* Paula */}
           <article
             ref={docentesFirstCardRef}
@@ -975,6 +995,7 @@ export default function ProgramaCreacionDigital() {
               {t.docentes.vanessa.tags.map((tag) => <span key={tag} className="pcd-docente__tag">{tag}</span>)}
             </div>
           </article>
+        </div>
         </div>
       </section>
 
