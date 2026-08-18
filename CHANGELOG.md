@@ -104,6 +104,12 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 - Fix real y mínimo, aplicado sobre la versión de cards ya confirmada correcta: se quita `scroll-snap-type: x mandatory` de `.pcd-docentes__grid` (y el `scroll-snap-type: none` de `.is-dragging`/`scroll-snap-align` en `.pcd-docente`, que quedan sin efecto sin él). Sin tocar la estructura del DOM ni ninguna otra propiedad de las cards.
 - Archivos: `src/pages/ProgramaCreacionDigital.tsx`, `src/styles/programa.css`.
 
+### Corregido — El autoavance de docentes seguía sin verse tras quitar scroll-snap
+
+- Quitar `scroll-snap-type` arregló el diseño (volvió a verse bien) pero el autoavance seguía sin notarse. Causa más probable: el efecto solo arrancaba el `requestAnimationFrame` si `window.matchMedia('(prefers-reduced-motion: reduce)').matches` era `false` — un chequeo de accesibilidad agregado por iniciativa propia (no pedido), que puede estar activo en el sistema/navegador del usuario y desactiva el autoavance por completo y en silencio. Además, la pausa en `onMouseEnter` (mouse encima del carrusel) es exactamente lo que ocurre mientras alguien lo está mirando para revisarlo.
+- Se quita el gate de `prefers-reduced-motion` y la pausa por hover/touch; el autoavance ahora solo se detiene durante un arrastre activo.
+- Archivos: `src/pages/ProgramaCreacionDigital.tsx`.
+
 ## [3.4.0] — 2026-08-18
 
 ### Agregado — Foto real de Sofía Jiménez (card + modal)
