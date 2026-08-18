@@ -903,31 +903,24 @@
   color: var(--pcd-ink);
 }
 
-/* Chips de skills bajo el body — modo "Contenido": convierten el párrafo
-   en algo escaneable de un vistazo en vez de un bloque denso de texto. */
-.pcd-vs__tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-top: 12px;
-}
-.pcd-vs__tag {
-  font-family: var(--pcd-mono);
-  font-size: 10px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+/* Párrafo único — modo "Contenido" del eje 01. En vez de partir el texto
+   en 3 bloques con título poético, se muestra como un párrafo corrido con
+   las frases clave resaltadas (ver renderAccented() / .pcd-accent-text),
+   más fiel al texto que redactó el usuario. */
+.pcd-content-copy {
+  font-family: var(--pcd-sans);
+  font-weight: 400;
+  font-size: 19px;
+  line-height: 1.65;
   color: var(--pcd-ink);
-  background: var(--pcd-paper);
-  border: 1px solid rgba(13, 13, 13, 0.12);
-  padding: 5px 10px;
-  border-radius: 999px;
-  white-space: nowrap;
+  max-width: 46ch;
 }
-.pcd-axis--contenido .pcd-vs__tag {
-  background: #ffffff;
-  border-color: rgba(44, 8, 255, 0.18);
-  color: var(--pcd-cobalt);
+.pcd-accent-text {
+  font-weight: 700;
+  font-style: normal;
+  color: var(--pcd-ink);
 }
+.pcd-axis--contenido .pcd-accent-text { color: var(--pcd-cobalt); }
 
 /* Acento en el segundo clauso de "En vez de X; Y" */
 .pcd-vs__accent { font-style: italic; }

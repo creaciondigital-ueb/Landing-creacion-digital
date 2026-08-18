@@ -19,6 +19,18 @@ const CONTENIDO_DOCK = [
 ];
 
 /**
+ * Convierte un string con **frases resaltadas** (marcadas entre doble
+ * asterisco, estilo markdown liviano) en nodos React con <strong> en vez
+ * de texto plano — para poder resaltar palabras clave dentro de un párrafo
+ * de traducción sin partirlo en múltiples keys de i18n.
+ */
+function renderAccented(text: string): ReactNode[] {
+  return text.split(/\*\*(.+?)\*\*/g).map((chunk, i) =>
+    i % 2 === 1 ? <strong className="pcd-accent-text" key={i}>{chunk}</strong> : chunk
+  );
+}
+
+/**
  * Landing pública del Programa Creación Digital (Universidad El Bosque).
  * Soporta ES / EN mediante el contexto LanguageContext + hook useLang().
  */
@@ -421,38 +433,7 @@ export default function ProgramaCreacionDigital() {
             </>
           ) : (
             <>
-              <article className="pcd-vs">
-                <span className="pcd-vs__idx">2.1</span>
-                <div>
-                  <h3 className="pcd-vs__title">{t.axis01.cn1title} <span className="pcd-vs__accent">{t.axis01.cn1accent}</span></h3>
-                  <p className="pcd-vs__body">{t.axis01.cn1body}</p>
-                  <div className="pcd-vs__tags">
-                    {t.axis01.cn1tags.map((tag) => <span className="pcd-vs__tag" key={tag}>{tag}</span>)}
-                  </div>
-                </div>
-              </article>
-              <hr className="pcd-axis__divider" />
-              <article className="pcd-vs">
-                <span className="pcd-vs__idx">2.2</span>
-                <div>
-                  <h3 className="pcd-vs__title">{t.axis01.cn2title} <span className="pcd-vs__accent">{t.axis01.cn2accent}</span></h3>
-                  <p className="pcd-vs__body">{t.axis01.cn2body}</p>
-                  <div className="pcd-vs__tags">
-                    {t.axis01.cn2tags.map((tag) => <span className="pcd-vs__tag" key={tag}>{tag}</span>)}
-                  </div>
-                </div>
-              </article>
-              <hr className="pcd-axis__divider" />
-              <article className="pcd-vs">
-                <span className="pcd-vs__idx">2.3</span>
-                <div>
-                  <h3 className="pcd-vs__title">{t.axis01.cn3title} <span className="pcd-vs__accent">{t.axis01.cn3accent}</span></h3>
-                  <p className="pcd-vs__body">{t.axis01.cn3body}</p>
-                  <div className="pcd-vs__tags">
-                    {t.axis01.cn3tags.map((tag) => <span className="pcd-vs__tag" key={tag}>{tag}</span>)}
-                  </div>
-                </div>
-              </article>
+              <p className="pcd-content-copy">{renderAccented(t.axis01.contenidoBody)}</p>
               <div className="pcd-content-dock">
                 <span className="pcd-content-dock__label">{t.axis01.dockLabel}</span>
                 <div className="pcd-content-dock__row">
