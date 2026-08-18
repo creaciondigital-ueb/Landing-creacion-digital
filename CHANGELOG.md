@@ -128,6 +128,12 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 - El carrusel de docentes se detiene mientras el mouse está sobre las cards, y retoma al quitarlo. Se agregó recién ahora (y no antes) porque una versión anterior de la pausa por hover enmascaraba el bug real del autoavance congelado durante el diagnóstico; con esa causa raíz ya resuelta, se puede agregar la pausa con confianza.
 - Archivos: `src/pages/ProgramaCreacionDigital.tsx`.
 
+### Corregido — Card del carrusel de docentes se veía "cortada" en seco contra el borde izquierdo
+
+- Con el autoavance continuo (y ahora que el hover lo puede dejar pausado a mitad de camino), una card entrando o saliendo por el borde izquierdo quedaba recortada en seco justo contra el padding de la sección, sin ningún margen ni transición — se notaba más ahora que el hover puede detener el scroll en cualquier punto intermedio.
+- Fix con `mask-image`/`-webkit-mask-image` en `.pcd-docentes__grid`: la card se desvanece suavemente sobre ~72px (32px en mobile) al acercarse al borde izquierdo, en vez de cortarse abruptamente. No toca la lógica de scroll/loop/autoavance.
+- Archivos: `src/styles/programa.css`.
+
 ## [3.4.0] — 2026-08-18
 
 ### Agregado — Foto real de Sofía Jiménez (card + modal)

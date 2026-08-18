@@ -1132,6 +1132,14 @@
   padding-right: 88px;
   cursor: grab;
   user-select: none;
+  /* Con el autoavance continuo (y ahora que el hover lo puede dejar pausado
+     a mitad de camino), una card que está entrando o saliendo por el borde
+     izquierdo puede quedar "cortada" justo contra el padding de la sección,
+     pegada al borde sin ningún respiro. Un fundido con mask-image resuelve
+     esto sin tocar la lógica de scroll: la card se desvanece suavemente en
+     vez de recortarse en seco. */
+  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 72px, #000 100%);
+  mask-image: linear-gradient(to right, transparent 0, #000 72px, #000 100%);
 }
 .pcd-docentes__grid::-webkit-scrollbar { display: none; }
 .pcd-docentes__grid.is-dragging { cursor: grabbing; }
@@ -1335,7 +1343,12 @@
 }
 @media (max-width: 640px) {
   .pcd-docentes { padding: 56px 24px 24px; }
-  .pcd-docentes__grid { margin-right: -24px; padding-right: 24px; }
+  .pcd-docentes__grid {
+    margin-right: -24px;
+    padding-right: 24px;
+    -webkit-mask-image: linear-gradient(to right, transparent 0, #000 32px, #000 100%);
+    mask-image: linear-gradient(to right, transparent 0, #000 32px, #000 100%);
+  }
   .pcd-docente { flex: 0 0 85%; }
 }
 
