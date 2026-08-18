@@ -702,38 +702,46 @@
   width: max-content;
 }
 
-/* Toggle Definición / Contenido — mismo look de píldora que .pcd-axis__tag,
-   pero con dos botones reales en vez de texto estático. */
-.pcd-axis__toggle {
+/* Botón único que alterna Definición / Contenido — pastilla sólida con
+   un pulso sutil para invitar al clic sin ser intrusivo. */
+.pcd-axis__switch {
+  appearance: none;
   display: inline-flex;
   align-items: center;
-  background: var(--pcd-paper);
-  border-radius: 999px;
-  padding: 3px;
-  margin-bottom: 32px;
-  width: max-content;
-  gap: 2px;
-}
-.pcd-axis__toggle-btn {
-  appearance: none;
+  gap: 8px;
+  background: var(--pcd-cobalt);
+  color: var(--pcd-paper);
   border: 0;
-  background: transparent;
-  color: var(--pcd-ink);
-  opacity: 0.55;
   font-family: var(--pcd-mono);
   font-size: 11px;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  padding: 5px 14px;
+  padding: 9px 18px;
   border-radius: 999px;
+  margin-bottom: 32px;
+  width: max-content;
   cursor: pointer;
-  transition: background .15s, color .15s, opacity .15s;
+  transition: transform .15s ease, opacity .15s ease;
+  animation: pcd-switch-pulse 2.6s ease-in-out infinite;
 }
-.pcd-axis__toggle-btn:hover { opacity: 0.85; }
-.pcd-axis__toggle-btn.is-active {
-  background: var(--pcd-cobalt);
-  color: var(--pcd-paper);
-  opacity: 1;
+.pcd-axis__switch::after {
+  content: "→";
+  display: inline-block;
+  transition: transform .15s ease;
+}
+.pcd-axis__switch:hover {
+  opacity: 0.88;
+  transform: translateY(-1px);
+}
+.pcd-axis__switch:hover::after { transform: translateX(2px); }
+.pcd-axis__switch:active { transform: translateY(0); }
+
+@keyframes pcd-switch-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(44, 8, 255, 0.35); }
+  50% { box-shadow: 0 0 0 9px rgba(44, 8, 255, 0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pcd-axis__switch { animation: none; }
 }
 .pcd-axis__word-mobile { display: none; } /* solo se muestra en móvil, ver media query */
 .pcd-axis__word {

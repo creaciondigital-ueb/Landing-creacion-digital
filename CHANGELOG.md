@@ -16,6 +16,19 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 - Nuevos estilos `.pcd-axis__toggle`, `.pcd-axis__toggle-btn`, `.pcd-content-dock*` en `programa.css`.
 - Archivos: `src/pages/ProgramaCreacionDigital.tsx`, `src/i18n/translations.ts`, `src/styles/programa.css`, `public/programa/img/dock/*.png` (nuevos).
 
+### Cambiado — Botón único (en vez de toggle de dos pestañas) para Definición/Contenido
+
+- Reemplazado el toggle de dos pestañas del eje 01 por un solo botón pastilla que alterna el modo: dice "Ver contenido" estando en Definición, y "Ver definición" estando en Contenido.
+- El botón tiene una animación de pulso sutil (box-shadow expandiéndose y desvaneciéndose) para invitar al clic sin ser intrusiva; respeta `prefers-reduced-motion`.
+- Nuevas traducciones `axis01.toggleToContenido` / `axis01.toggleToDefinicion` (ES/EN).
+- Archivos: `src/pages/ProgramaCreacionDigital.tsx`, `src/i18n/translations.ts`, `src/styles/programa.css`.
+
+### Corregido — Volver a "Definición" después de ver "Contenido" dejaba la columna derecha en blanco
+
+- Los 3 bloques de Definición tenían la clase `pcd-reveal` (animación de aparición al hacer scroll, controlada por un `IntersectionObserver` que solo observa los elementos presentes en el montaje inicial de la página). Al alternar a Contenido y volver a Definición, React desmonta y vuelve a montar esos bloques como nodos DOM nuevos, que nunca son observados de nuevo — quedaban con opacidad 0 para siempre.
+- Quitada la clase `pcd-reveal` de los 3 bloques de Definición, igual que ya se había hecho para los de Contenido por la misma razón.
+- Archivos: `src/pages/ProgramaCreacionDigital.tsx`.
+
 ### Corregido — Íconos del dock (ChatGPT, Runway, CapCut) no coincidían con el logo real
 
 - El script de extracción de íconos determinaba el color de fondo a partir del color mayoritario dentro del bounding box del logo. En logos con trazo grueso que cubre más de la mitad de su propio bounding box (como el moño de CapCut), ese color mayoritario terminaba siendo la tinta negra del logo, no el fondo real — invirtiendo la máscara (solo quedaban el contorno delgado y los huecos, se perdía el relleno sólido y la línea diagonal).

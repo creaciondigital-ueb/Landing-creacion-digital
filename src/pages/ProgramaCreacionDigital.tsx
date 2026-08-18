@@ -374,26 +374,14 @@ export default function ProgramaCreacionDigital() {
       {/* ===== AXIS 01 · CONTENIDO ===== */}
       <section className="pcd-axis pcd-axis--contenido">
         <div className="pcd-axis__left">
-          <div className="pcd-axis__toggle pcd-reveal" role="tablist" aria-label={`${t.axis01.toggleDefinicion} / ${t.axis01.toggleContenido}`}>
-            <button
-              type="button"
-              role="tab"
-              aria-selected={axis01Mode === 'definicion'}
-              className={`pcd-axis__toggle-btn${axis01Mode === 'definicion' ? ' is-active' : ''}`}
-              onClick={() => setAxis01Mode('definicion')}
-            >
-              {t.axis01.toggleDefinicion}
-            </button>
-            <button
-              type="button"
-              role="tab"
-              aria-selected={axis01Mode === 'contenido'}
-              className={`pcd-axis__toggle-btn${axis01Mode === 'contenido' ? ' is-active' : ''}`}
-              onClick={() => setAxis01Mode('contenido')}
-            >
-              {t.axis01.toggleContenido}
-            </button>
-          </div>
+          <button
+            type="button"
+            className="pcd-axis__switch pcd-reveal"
+            aria-label={axis01Mode === 'definicion' ? t.axis01.toggleToContenido : t.axis01.toggleToDefinicion}
+            onClick={() => setAxis01Mode(axis01Mode === 'definicion' ? 'contenido' : 'definicion')}
+          >
+            {axis01Mode === 'definicion' ? t.axis01.toggleToContenido : t.axis01.toggleToDefinicion}
+          </button>
           <h2 className="pcd-axis__word pcd-reveal">
             <span className="pcd-axis__word-desktop">
               {t.axis01.wordLine1}
@@ -407,7 +395,7 @@ export default function ProgramaCreacionDigital() {
         <div className="pcd-axis__right">
           {axis01Mode === 'definicion' ? (
             <>
-              <article className="pcd-vs pcd-reveal">
+              <article className="pcd-vs">
                 <span className="pcd-vs__idx">1.1</span>
                 <div>
                   <h3 className="pcd-vs__title">{t.axis01.vs11title} <span className="pcd-vs__accent">{t.axis01.vs11accent}</span></h3>
@@ -415,7 +403,7 @@ export default function ProgramaCreacionDigital() {
                 </div>
               </article>
               <hr className="pcd-axis__divider" />
-              <article className="pcd-vs pcd-reveal">
+              <article className="pcd-vs">
                 <span className="pcd-vs__idx">1.2</span>
                 <div>
                   <h3 className="pcd-vs__title">{t.axis01.vs12title} <span className="pcd-vs__accent">{t.axis01.vs12accent}</span></h3>
@@ -423,7 +411,7 @@ export default function ProgramaCreacionDigital() {
                 </div>
               </article>
               <hr className="pcd-axis__divider" />
-              <article className="pcd-vs pcd-reveal">
+              <article className="pcd-vs">
                 <span className="pcd-vs__idx">1.3</span>
                 <div>
                   <h3 className="pcd-vs__title">{t.axis01.vs13title} <span className="pcd-vs__accent">{t.axis01.vs13accent}</span></h3>
