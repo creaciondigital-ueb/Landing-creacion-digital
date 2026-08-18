@@ -703,8 +703,11 @@
 }
 
 /* Botón único que alterna Definición / Contenido — pastilla sólida con
-   un pulso sutil para invitar al clic sin ser intrusivo. */
-.pcd-axis__switch {
+   un pulso sutil para invitar al clic sin ser intrusivo.
+   Nota: el selector va calificado con .pcd-axis__left para ganarle en
+   especificidad al reset global ".pcd-page button" (línea ~53), que si no
+   pisaba el background/color de este botón dejándolo transparente. */
+.pcd-axis__left .pcd-axis__switch {
   appearance: none;
   display: inline-flex;
   align-items: center;
@@ -726,19 +729,19 @@
   transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
   animation: pcd-switch-pulse 2.8s ease-out infinite;
 }
-.pcd-axis__switch::after {
+.pcd-axis__left .pcd-axis__switch::after {
   content: "→";
   display: inline-block;
   transition: transform .15s ease;
 }
-.pcd-axis__switch:hover {
+.pcd-axis__left .pcd-axis__switch:hover {
   background: var(--pcd-ink);
   color: var(--pcd-paper);
   transform: translateY(-1px);
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.22);
 }
-.pcd-axis__switch:hover::after { transform: translateX(2px); }
-.pcd-axis__switch:active { transform: translateY(0); }
+.pcd-axis__left .pcd-axis__switch:hover::after { transform: translateX(2px); }
+.pcd-axis__left .pcd-axis__switch:active { transform: translateY(0); }
 
 /* Anillo que nace pegado al botón y se expande hacia afuera desvaneciéndose
    (de adentro hacia afuera, sin "regresar") — como un eco, no una respiración. */
@@ -748,7 +751,7 @@
   100% { box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18), 0 0 0 7px rgba(255, 255, 255, 0); }
 }
 @media (prefers-reduced-motion: reduce) {
-  .pcd-axis__switch { animation: none; }
+  .pcd-axis__left .pcd-axis__switch { animation: none; }
 }
 .pcd-axis__word-mobile { display: none; } /* solo se muestra en móvil, ver media query */
 .pcd-axis__word {
