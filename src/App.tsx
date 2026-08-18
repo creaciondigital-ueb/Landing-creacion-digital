@@ -6,6 +6,7 @@ import { Routes, Route, useLocation } from 'react-router-dom';
 // para repartir el bundle en dos chunks.
 const ProgramaCreacionDigital = lazy(() => import('./pages/ProgramaCreacionDigital'));
 const ProyectosPage = lazy(() => import('./pages/ProyectosPage'));
+const ProyectoDetallePage = lazy(() => import('./pages/ProyectoDetallePage'));
 
 /**
  * React Router no resetea el scroll al navegar entre rutas (a diferencia de
@@ -41,6 +42,14 @@ export default function App() {
           element={
             <Suspense fallback={<div className="pcd-loading">Cargando…</div>}>
               <ProyectosPage />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/proyectos/:id"
+          element={
+            <Suspense fallback={<div className="pcd-loading">Cargando…</div>}>
+              <ProyectoDetallePage />
             </Suspense>
           }
         />

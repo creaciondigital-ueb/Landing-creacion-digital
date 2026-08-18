@@ -102,11 +102,20 @@
   transition: color .15s;
 }
 .pcd-nav__link:hover { color: var(--pcd-cobalt); }
+/* Contenedor derecho: toggle + CTA — ocupa la 3ª columna del grid del header */
+.pcd-header__actions {
+  justify-self: end;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+/* En desktop, el toggle del nav queda oculto (vive en pcd-header__actions) */
+.pcd-nav .pcd-lang-toggle { display: none; }
+
 .pcd-cta-pill {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  justify-self: end;
   background: var(--pcd-ink);
   color: var(--pcd-paper);
   font-family: var(--pcd-mono);
@@ -155,6 +164,10 @@
   }
   .pcd-brand__logo { height: 26px; width: auto; object-fit: contain; }
 
+  /* En móvil: actions div oculto; el toggle vive en el dropdown del nav */
+  .pcd-header__actions { display: none; }
+  .pcd-nav .pcd-lang-toggle { display: inline-flex; }
+
   /* El pill grande del header se oculta en móvil; APLICA vive bajo el título */
   .pcd-cta-pill { display: none; }
 
@@ -185,6 +198,64 @@
     font-size: 13px;
   }
   .pcd-nav__link:last-child { border-bottom: none; }
+}
+
+/* ────────────────────────────────────────────────────────────
+   LANG TOGGLE  (ES | EN — dentro del nav)
+   ──────────────────────────────────────────────────────────── */
+.pcd-lang-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-family: var(--pcd-mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  background: none;
+  border: 1px solid rgba(13,13,13,0.25);
+  border-radius: 999px;
+  padding: 3px 10px;
+  cursor: pointer;
+  color: var(--pcd-ink);
+  transition: border-color .15s, background .15s;
+  white-space: nowrap;
+  line-height: 1;
+  align-self: center;
+}
+.pcd-lang-toggle:hover {
+  border-color: var(--pcd-ink);
+  background: rgba(13,13,13,0.04);
+}
+.pcd-lang-toggle__opt {
+  opacity: 0.4;
+  transition: opacity .15s;
+}
+.pcd-lang-toggle__opt--active {
+  opacity: 1;
+  font-weight: 700;
+}
+.pcd-lang-toggle__sep {
+  opacity: 0.3;
+  font-weight: 400;
+  margin: 0 1px;
+}
+
+@media (max-width: 1050px) {
+  /* En móvil aparece dentro del dropdown de nav */
+  .pcd-lang-toggle {
+    padding: 12px 0;
+    border: none;
+    border-radius: 0;
+    font-size: 13px;
+    letter-spacing: 0.14em;
+    border-top: 1px solid rgba(13,13,13,0.08);
+    width: 100%;
+    justify-content: flex-start;
+  }
+  .pcd-lang-toggle:hover {
+    background: none;
+    border-color: transparent;
+    border-top-color: rgba(13,13,13,0.08);
+  }
 }
 
 /* ────────────────────────────────────────────────────────────
@@ -371,8 +442,7 @@
   height: 55px;
   width: auto;
   object-fit: contain;
-}
-/* Línea "piso" partida en 2 segmentos con un hueco fijo donde la silueta
+}/* Línea "piso" partida en 2 segmentos con un hueco fijo donde la silueta
    real de la chica la cruza — así se hizo en el diseño original (Group
    33.svg). Posición final ajustada a mano por el usuario. */
 .pcd-hero__floor-line {
@@ -416,6 +486,13 @@
    "encaje" en huecos del texto — eso es SOLO para desktop, nunca tocarlo.
    La de móvil es el texto corrido, sin esos huecos. */
 .pcd-hero__quienes-body-mobile { display: none; }
+
+/* Overrides exclusivos para versión EN — no afectan el español */
+.pcd-hero--en .pcd-hero__quienes-label { left: 642px; }
+.pcd-hero--en .pcd-hero__quienes-body  { left: 729px; }
+.pcd-hero--en .pcd-hero__photo         { left: 872px; }
+.pcd-hero--en .pcd-hero__floor-line    { left: 642px; }
+.pcd-hero--en .pcd-hero__floor-line--right { left: 1117px; }
 .pcd-hero__quienes-body {
   position: absolute;
   left: 709px;
@@ -678,7 +755,9 @@
 
 /* Eje 2 — mundo 3d (acid) */
 .pcd-axis--mundo .pcd-axis__left { background: var(--pcd-acid); color: var(--pcd-ink); }
-.pcd-axis--mundo .pcd-axis__word { text-align: right; color: var(--pcd-ink); transform: translateX(-120px); }
+.pcd-axis--mundo .pcd-axis__word { text-align: right; color: var(--pcd-ink); transform: translateX(-220px); }
+.pcd-axis--mundo.pcd-axis--mundo-en .pcd-axis__word { transform: translateX(-250px); }
+.pcd-axis--mundo.pcd-axis--mundo-en .pcd-axis__caption { top: 180px; transform: translateX(55px); max-width: 22%; }
 .pcd-axis--mundo .pcd-axis__caption {
   left: 20.4%;
   right: auto;
@@ -718,7 +797,7 @@
 .pcd-axis--producto .pcd-axis__image {
   left: -23.8%;
   bottom: -14.2%;
-  transform: translateY(45px);
+  transform: translateY(115px);
   width: 110.6%;
   height: 137.1%;
   background-size: contain;
@@ -999,6 +1078,12 @@
   transform: scale(0.94);
   transform-origin: center center;
 }
+.pcd-docente--ximena .pcd-docente__blob::after {
+  transform: scale(0.97);
+}
+.pcd-docente--no-photo .pcd-docente__blob {
+  background: rgba(13,13,13,0.06);
+}
 /* Ilustración de Juan David un poco más grande a pedido, en ambos estados */
 .pcd-docente--juandavid .pcd-docente__blob::before {
   transform: scale(1.15);
@@ -1031,6 +1116,15 @@
 /* Paula: imagen de hover un poco más grande a pedido */
 .pcd-docente--paula .pcd-docente__blob::after {
   transform: scale(1.01);
+  transform-origin: center center;
+}
+/* Nicolás: imagen de la card (default y hover) un poco más grande a pedido */
+.pcd-docente--nicolas .pcd-docente__blob::before {
+  transform: scale(1.04);
+  transform-origin: center center;
+}
+.pcd-docente--nicolas .pcd-docente__blob::after {
+  transform: scale(calc(1.04 * 0.94));
   transform-origin: center center;
 }
 .pcd-docente:hover .pcd-docente__blob::before { opacity: 0; }
@@ -1210,6 +1304,13 @@ body:has(.pcd-docente-modal[open]) {
    Juan David: ajuste fino ya aprobado, no tocar sin que lo pidan puntualmente. */
 .pcd-docente-modal--juandavid .pcd-docente-modal__portrait-layer--end {
   transform: translate(-5px, -10px) scale(calc(1.08 * 0.94));
+}
+/* Ximena: retrato un poco más pequeño en el modal */
+.pcd-docente-modal--ximena .pcd-docente-modal__portrait-layer--init {
+  transform: scale(0.92);
+}
+.pcd-docente-modal--ximena .pcd-docente-modal__portrait-layer--end {
+  transform: scale(calc(0.92 * 0.97));
 }
 /* Vanessa: imágenes (default y hover) un poco más pequeñas a pedido */
 .pcd-docente-modal--vanessa .pcd-docente-modal__portrait-layer--init {
@@ -1440,6 +1541,12 @@ body:has(.pcd-docente-modal[open]) {
 .pcd-project__media--zoom {
   background-size: 160%;
   background-position: calc(50% + 22px) calc(50% - 25px);
+}
+.pcd-project__media--contain {
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-color: #e9e7e3;
+  background-position: center;
 }
 .pcd-project__meta {
   display: flex;
@@ -2178,4 +2285,292 @@ body:has(.pcd-docente-modal[open]) {
   font-size: 12px;
   letter-spacing: 0.18em;
   text-transform: uppercase;
+}
+
+/* ────────────────────────────────────────────────────────────
+   MODAL DE PROYECTO — estilo editorial (igual que modal docente)
+   ──────────────────────────────────────────────────────────── */
+
+/* Card clickeable — hover editorial solo sobre la imagen */
+.pcd-project--clickable {
+  cursor: pointer;
+  position: relative;
+  text-decoration: none;
+  color: inherit;
+}
+.pcd-project--clickable .pcd-project__media {
+  transition: box-shadow 0.25s ease, transform 0.25s ease;
+}
+.pcd-project--clickable:hover .pcd-project__media {
+  box-shadow: 6px 6px 0 var(--pcd-ink);
+  transform: translate(-2px, -2px);
+}
+
+/* Overlay */
+.proy-modal__overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(13, 13, 13, 0.55);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  z-index: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+/* Panel */
+.proy-modal__panel {
+  background: var(--pcd-paper);
+  border: 2.5px solid var(--pcd-ink);
+  border-radius: 0;
+  box-shadow: 8px 8px 0 var(--pcd-ink);
+  width: 90vw;
+  max-width: 900px;
+  max-height: 90vh;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Botón cerrar */
+.proy-modal__close {
+  position: absolute;
+  top: 20px;
+  right: 26px;
+  z-index: 10;
+  background: transparent;
+  border: 0;
+  font-family: var(--pcd-sans);
+  font-size: 28px;
+  font-weight: 500;
+  color: var(--pcd-paper);
+  cursor: pointer;
+  line-height: 1;
+  padding: 4px 8px;
+  transition: color 0.15s;
+}
+.proy-modal__close:hover { color: var(--pcd-acid); }
+
+/* Layout vertical */
+.proy-modal__inner {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+}
+
+/* Fila superior — carrusel */
+.proy-modal__left {
+  position: relative;
+  background: #0d0d0d;
+  flex-shrink: 0;
+  aspect-ratio: 16 / 7;
+  overflow: hidden;
+}
+.proy-modal__carousel {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+.proy-modal__slide {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  opacity: 0;
+  transition: opacity 0.45s ease;
+}
+.proy-modal__slide--active {
+  opacity: 1;
+}
+
+/* Flechas nav */
+.proy-modal__nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(246,248,251,0.15);
+  border: 1.5px solid rgba(246,248,251,0.4);
+  color: var(--pcd-paper);
+  width: 38px;
+  height: 38px;
+  font-size: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.15s;
+  z-index: 5;
+  border-radius: 0;
+}
+.proy-modal__nav:hover { background: rgba(246,248,251,0.3); }
+.proy-modal__nav--prev { left: 14px; }
+.proy-modal__nav--next { right: 14px; }
+
+/* Separador entre carrusel e info */
+.proy-modal__divider {
+  height: 2px;
+  background: var(--pcd-ink);
+  flex-shrink: 0;
+}
+
+/* Dots */
+.proy-modal__dots {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 7px;
+  z-index: 5;
+}
+.proy-modal__dot {
+  width: 7px;
+  height: 7px;
+  background: rgba(246,248,251,0.35);
+  border: 1px solid rgba(246,248,251,0.6);
+  border-radius: 0;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.15s;
+  padding: 0;
+}
+.proy-modal__dot--active {
+  background: var(--pcd-paper);
+  transform: scale(1.25);
+}
+
+/* Fila inferior — info (dos columnas internas) */
+.proy-modal__right {
+  padding: 24px 40px 28px;
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 1fr 1.6fr;
+  grid-template-rows: auto auto 1fr;
+  column-gap: 40px;
+  align-content: start;
+}
+
+/* Título — ocupa ambas columnas */
+.proy-modal__title {
+  grid-column: 1 / -1;
+}
+
+/* Divider — ocupa ambas columnas */
+.proy-modal__rule {
+  grid-column: 1 / -1;
+}
+
+/* Ficha técnica — columna izquierda */
+.proy-modal__sheet {
+  grid-column: 1;
+  grid-row: 3;
+}
+
+/* Descripción y skills — columna derecha */
+.proy-modal__body-col {
+  grid-column: 2;
+  grid-row: 3;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Título */
+.proy-modal__title {
+  font-family: var(--pcd-serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(24px, 3vw, 38px);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: var(--pcd-ink);
+  margin: 0 0 20px;
+}
+
+/* Divisor */
+.proy-modal__rule {
+  border: 0;
+  border-top: 1.5px solid var(--pcd-ink);
+  margin: 0 0 20px;
+}
+
+/* Ficha técnica */
+.proy-modal__sheet {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 8px 16px;
+  margin: 0 0 20px;
+}
+.proy-modal__sheet-row {
+  display: contents;
+}
+.proy-modal__sheet dt {
+  font-family: var(--pcd-mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--pcd-ink);
+  opacity: 0.5;
+  padding-top: 2px;
+  white-space: nowrap;
+}
+.proy-modal__sheet dd {
+  font-family: var(--pcd-sans);
+  font-size: 14px;
+  line-height: 1.4;
+  color: var(--pcd-ink);
+  margin: 0;
+}
+
+/* Descripción */
+.proy-modal__desc {
+  font-family: var(--pcd-sans);
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--pcd-ink);
+  margin: 0 0 14px;
+}
+.proy-modal__desc:last-of-type { margin-bottom: 20px; }
+
+/* Skills */
+.proy-modal__skills-label {
+  font-family: var(--pcd-mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--pcd-ink);
+  opacity: 0.5;
+  margin: 0 0 10px;
+}
+.proy-modal__skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-top: auto;
+  padding-top: 4px;
+}
+.proy-modal__skill {
+  font-family: var(--pcd-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  background: var(--pcd-ink);
+  color: var(--pcd-paper);
+  padding: 5px 11px;
+  border-radius: 0;
+}
+
+/* ── Responsive ── */
+@media (max-width: 640px) {
+  .proy-modal__panel { max-width: 98vw; }
+  .proy-modal__left { aspect-ratio: 16 / 9; }
+  .proy-modal__right { padding: 20px 20px 24px; }
+  .proy-modal__title { font-size: 20px; }
+  .proy-modal__close { color: var(--pcd-paper); }
 }

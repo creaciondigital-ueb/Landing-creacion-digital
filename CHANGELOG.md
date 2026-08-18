@@ -7,6 +7,63 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Agregado — Foto real de Nicolás Bartolo (card + modal)
+
+- Reemplazadas las iniciales/placeholder de Nicolás Bartolo por su foto real: `Nicolas_Init.webp` (default) y `Nicolas_End.webp` (hover), procesadas a partir de las ilustraciones enviadas por el usuario.
+- Quitada la clase `pcd-docente--no-photo` de su card; conectadas las variables `--docente-init` / `--docente-end`.
+- Modal de detalle actualizado con `portrait` / `portraitEnd` apuntando a las nuevas imágenes (antes vacíos).
+- CSS override `.pcd-docente--nicolas`: `scale(1.04)` en la card (default y hover, manteniendo la proporción 0.94 entre ambos) a pedido, para que la ilustración se vea un poco más grande.
+- Archivos: `public/programa/img/Nicolas_Init.webp`, `Nicolas_End.webp`, `src/pages/ProgramaCreacionDigital.tsx`, `src/styles/programa.css`.
+
+### Agregado — Nuevos proyectos de estudiantes en /proyectos (ChocoSapiens, Rappi, La Guarida)
+
+- Tres proyectos nuevos con modal de detalle expandido (`ProyectoModal`): investigación de mercado y estrategia de marca para **ChocoSapiens**, investigación UX y auditoría de usabilidad de **Rappi Colombia**, e identidad visual y campaña para la miniserie **La Guarida**.
+- Cada proyecto incluye galería de imágenes, descripción larga bilingüe (ES/EN), lista de habilidades desarrolladas (`skillsEs` / `skillsEn`) y ficha técnica (materia, profesor, año, estudiantes).
+- Nuevo modelo de datos en `src/data/proyectos.ts`: interfaz `ProyectoModal` (images, títulos, descripciones, skills) anidada en `Proyecto`; agregados `imageVertical`, `subjectEn`, `captionEn`.
+- Archivos: `src/data/proyectos.ts`, `src/i18n/translations.ts`, `public/programa/img/chocosapiens.webp`, `rappi.webp`, `la-guarida.webp`, `public/programa/img/proyectos/*.webp`.
+
+### Agregado — Página de detalle de proyecto (/proyectos/:id) y componente ProyectoModal
+
+- Nueva ruta `/proyectos/:id` (lazy-loaded) servida por `src/pages/ProyectoDetallePage.tsx`.
+- Nuevo componente reutilizable `src/components/ProyectoModal.tsx`: carrusel de imágenes con puntos de navegación, panel de descripción/skills, y estados `--clickable` para las cards que abren el modal (`pcd-project--clickable`).
+- Nuevos estilos `src/styles/proyecto-detalle.css` y clases `.proy-modal__*` en `src/styles/programa.css` (overlay, carrusel, ficha técnica, skills).
+- Archivos: `src/App.tsx`, `src/pages/ProyectoDetallePage.tsx`, `src/components/ProyectoModal.tsx`, `src/styles/proyecto-detalle.css`, `src/styles/programa.css`.
+
+### Agregado — Ajustes de layout para versión en inglés (EN) del hero y labels
+
+- Reposicionamiento fino de elementos del hero (`.pcd-hero__photo`, `.pcd-hero__floor-line`, `.pcd-hero__quienes-*`) cuando el sitio está en inglés (`.pcd-hero--en`), para compensar textos más largos/cortos que en español.
+- Nuevos labels institucionales en inglés: `Label_UEB_CreacionDigital_EN.png`, `Label_UEB_CreacionDigital_Horizontal_EN.png`.
+- Archivos: `src/styles/programa.css`, `src/i18n/translations.ts`, `public/programa/img/Label_UEB_CreacionDigital_EN.png`, `Label_UEB_CreacionDigital_Horizontal_EN.png`.
+
+### Agregado — Internacionalización ES/EN (toggle en navbar)
+
+- **Toggle de idioma** (`.pcd-lang-toggle`) en el navbar: botones ES / EN con estado persistido en `localStorage` (`pcd-lang`). El idioma activo se subraya con `border-bottom`.
+- **`src/i18n/translations.ts`** (nuevo) — objeto con todas las cadenas de texto de las páginas `/` y `/proyectos` en español e inglés.
+- **`src/i18n/LanguageContext.tsx`** (nuevo) — `React.Context` + `useLanguage()` hook para consumir el idioma desde cualquier componente.
+- **`src/main.tsx`** — envuelto en `<LanguageProvider>`.
+- **`src/pages/ProgramaCreacionDigital.tsx`** y **`src/pages/ProyectosPage.tsx`** — todas las cadenas hardcodeadas reemplazadas por `t.*` vía `useLanguage()`.
+- Archivos: `src/i18n/translations.ts`, `src/i18n/LanguageContext.tsx`, `src/main.tsx`, `src/pages/ProgramaCreacionDigital.tsx`, `src/pages/ProyectosPage.tsx`, `src/styles/programa.css`.
+
+### Agregado — Docente Ximena Tovar (card + modal + fotos)
+
+- Card con hover init→end y modal de detalle para Ximena Tovar (UX Designer / Mercado Libre).
+- Imágenes `Ximena_Init.webp` y `Ximena_End.webp` procesadas con PIL: crop por bounding box del canal alfa, unión de bbox Init+End para transición imperceptible, padding 10%, 1000×1000 px.
+- CSS override `.pcd-docente--ximena`: `scale(0.97)` en hover para igualar tamaño Init/End; modal portrait con `scale(0.92)`.
+- Traducciones ES+EN: bio, tags (`UX/UI`, `Producto`, `Comunidad`), experiencia (Mercado Libre, +Voces en UX LATAM).
+- Archivos: `public/programa/img/Ximena_Init.webp`, `Ximena_End.webp`, `src/i18n/translations.ts`, `src/styles/programa.css`, `src/pages/ProgramaCreacionDigital.tsx`.
+
+### Agregado — Docentes Nicolás Bartolo y Sofía Jiménez (placeholders)
+
+- Cards sin foto (`.pcd-docente--no-photo`) con Lorem Ipsum para Nicolás Bartolo y Sofía Jiménez.
+- Orden final de docentes: Paula → Nicolás → Sofía → Ximena → Camilo → Vanessa → Juan David.
+- `DOCENTE_ORDER` actualizado para navegación en modal (swipe/flechas entre docentes).
+- Archivos: `src/pages/ProgramaCreacionDigital.tsx`, `src/i18n/translations.ts`, `src/styles/programa.css`.
+
+### Corregido — Espaciado de texto hero desktop con silueta de chica sentada
+
+- El párrafo `.pcd-hero__quienes-body-desktop` usa ` ` (non-breaking spaces, U+00A0) para crear gaps visuales que esquivan las piernas de la ilustración. Los espacios normales (ASCII 0x20) se colapsan en CSS; ` ` no.
+- Archivos: `src/pages/ProgramaCreacionDigital.tsx`.
+
 ### Rediseñado — Página /proyectos: hero oscuro, filtros por chips y paginación
 
 - **Hero** (`.pcd-projects-hero`) — nueva sección de fondo oscuro (`var(--pcd-ink)`) con textura de puntos sutil, ceja mono uppercase en acid y título serif itálico centrado (con la palabra "crean" en el mismo tratamiento `.pop` que usa el home). Reemplaza el header plano blanco que tenía antes.

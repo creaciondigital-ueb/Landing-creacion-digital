@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef, type ReactNode, type CSSProperties } from 'react';
 import { Link } from 'react-router-dom';
 import { PROYECTOS } from '../data/proyectos';
+import { useLang } from '../i18n/LanguageContext';
 import '../styles/programa.css';
 
 const IMG = '/programa/img';
@@ -8,24 +9,7 @@ const APLICA_URL = 'https://www.unbosque.edu.co/inscripciones/pregrado';
 
 /**
  * Landing pública del Programa Creación Digital (Universidad El Bosque).
- *
- * Implementación del handoff de Claude Design (chat "Identidad Visual", 2026-05):
- * diseño 1:1 desde el Figma "PW CreaDig" → frame "Página Web". Reemplaza la
- * landing editorial previa por la versión definitiva de 9 secciones.
- *
- * Estructura:
- *  1. Header sticky (logo lockup UEB + nav + APLICA AHORA)
- *  2. Hero "no vinimos a dictar clase."
- *  3. Marquee "Esto aprenderás estudiando nuestro pregrado"
- *  4-6. 3 ejes color-block: contenido (cobalt) · mundo 3d (acid) · producto (tomato)
- *  7. Marquee "Conoce a nuestro equipo docente"
- *  8. Docentes (carrusel + modales con perfil/experiencia)
- *  9. Proyectos · CTA Estudia · Footer
- *
- * Notas de implementación:
- *  - Modales de docentes: <dialog> nativo controlado por estado React.
- *  - Links internos (VER PROYECTOS) → /proyectos vía React Router.
- *  - Imágenes servidas desde public/programa/img/*.webp.
+ * Soporta ES / EN mediante el contexto LanguageContext + hook useLang().
  */
 
 interface DocenteModalProps {
@@ -40,21 +24,14 @@ interface DocenteModalProps {
   children: ReactNode;
 }
 
-// Umbral mínimo (px) de desplazamiento horizontal para considerar un swipe
-// real y no un tap o scroll vertical accidental.
 const DOCENTE_SWIPE_THRESHOLD = 50;
 
 function DocenteModal({ id, active, onClose, onSwipe, portrait, portraitEnd, name, tags, children }: DocenteModalProps) {
+  const { t } = useLang();
   const ref = useRef<HTMLDialogElement>(null);
-  // Swipe horizontal (solo móvil, vía touch) para pasar al docente
-  // siguiente/anterior sin cerrar el modal. `didSwipeRef` evita que el click
-  // "fantasma" que el navegador dispara después del touchend cierre el modal
-  // (el onClick de abajo lo usa para ignorar ese click cuando hubo swipe).
   const touchStartX = useRef<number | null>(null);
   const didSwipeRef = useRef(false);
-  const onTouchStart = (e: React.TouchEvent) => {
-    touchStartX.current = e.touches[0].clientX;
-  };
+  const onTouchStart = (e: React.TouchEvent) => { touchStartX.current = e.touches[0].clientX; };
   const onTouchEnd = (e: React.TouchEvent) => {
     if (touchStartX.current === null) return;
     const dx = e.changedTouches[0].clientX - touchStartX.current;
@@ -64,12 +41,6 @@ function DocenteModal({ id, active, onClose, onSwipe, portrait, portraitEnd, nam
     onSwipe(dx < 0 ? 1 : -1);
   };
 
-  // Cuando `active` pasa a false porque el swipe cambió al siguiente/anterior
-  // docente (o porque ya se cerró por otra vía), llamamos dlg.close()
-  // nosotros mismos. Eso dispara el evento nativo 'close' del <dialog>, que
-  // de otra forma volvería a invocar onClose() y resetearía activeDocente a
-  // null justo después de que el swipe lo haya puesto en el siguiente id.
-  // Esta bandera evita ese doble disparo.
   const skipNextCloseEvent = useRef(false);
   useEffect(() => {
     const dlg = ref.current;
@@ -87,8 +58,6 @@ function DocenteModal({ id, active, onClose, onSwipe, portrait, portraitEnd, nam
     onClose();
   };
 
-  // Retrato del modal: alterna entre la versión "default" y la "hover" del
-  // docente cada 1.5s mientras el modal está abierto.
   const [showEndPortrait, setShowEndPortrait] = useState(false);
   useEffect(() => {
     if (!active) { setShowEndPortrait(false); return; }
@@ -110,7 +79,7 @@ function DocenteModal({ id, active, onClose, onSwipe, portrait, portraitEnd, nam
       onTouchStart={onTouchStart}
       onTouchEnd={onTouchEnd}
     >
-      <button className="pcd-docente-modal__close" type="button" aria-label="Cerrar" onClick={onClose}>X</button>
+      <button className="pcd-docente-modal__close" type="button" aria-label={t.docentes.cerrar} onClick={onClose}>X</button>
       <div className="pcd-docente-modal__inner">
         <aside className="pcd-docente-modal__side">
           <div className="pcd-docente-modal__portrait" aria-hidden="true">
@@ -125,7 +94,7 @@ function DocenteModal({ id, active, onClose, onSwipe, portrait, portraitEnd, nam
           </div>
           <h2 className="pcd-docente-modal__name" id={`modal-${id}-name`}>{name}</h2>
           <div className="pcd-docente-modal__tags">
-            {tags.map((t) => <span key={t} className="pcd-docente__tag">{t}</span>)}
+            {tags.map((tag) => <span key={tag} className="pcd-docente__tag">{tag}</span>)}
           </div>
         </aside>
         <div className="pcd-docente-modal__content">
@@ -137,14 +106,14 @@ function DocenteModal({ id, active, onClose, onSwipe, portrait, portraitEnd, nam
 }
 
 export default function ProgramaCreacionDigital() {
-  // Modal de docente activo (null = ninguno).
+  const { lang, setLang, t } = useLang();
+
+  // Modal de docente activo
   const [activeDocente, setActiveDocente] = useState<string | null>(null);
   const openDocente = (id: string) => setActiveDocente(id);
   const closeDocente = () => setActiveDocente(null);
 
-  // Orden de las cards (igual al orden visual del carrusel) — usado para
-  // saber cuál es el "siguiente"/"anterior" docente al hacer swipe en el modal.
-  const DOCENTE_ORDER = ['paula', 'camilo', 'vanessa', 'juandavid'];
+  const DOCENTE_ORDER = ['paula', 'sofia', 'nicolas', 'ximena', 'camilo', 'daniela', 'juandavid', 'vanessa'];
   const onSwipeDocente = (dir: 1 | -1) => {
     setActiveDocente((current) => {
       if (!current) return current;
@@ -155,43 +124,52 @@ export default function ProgramaCreacionDigital() {
     });
   };
 
-  // Menú hamburguer (solo móvil).
+  // Menú hamburguer
   const [menuOpen, setMenuOpen] = useState(false);
 
-  // Hero: título "no vinimos a dictar clase." se escribe letra por letra al
-  // cargar; al terminar, "dictar" se tacha con una línea animada.
-  const HERO_L1 = 'no vinimos';
-  const HERO_L2_PRE = 'a ';
-  const HERO_L2_WORD = 'dictar';
-  const HERO_L3 = 'clase';
-  const heroTotalChars = HERO_L1.length + HERO_L2_PRE.length + HERO_L2_WORD.length + HERO_L3.length;
+  // ── Hero typewriter ──────────────────────────────────────────
   const [heroTypedChars, setHeroTypedChars] = useState(0);
   const [heroStrikeActive, setHeroStrikeActive] = useState(false);
+
+  // Reinicia la animación cuando cambia el idioma
   useEffect(() => {
+    const L1 = t.hero.line1;
+    const L2PRE = t.hero.line2pre;
+    const L2WORD = t.hero.line2word;
+    const L3 = t.hero.line3;
+    const total = L1.length + L2PRE.length + L2WORD.length + L3.length;
+
+    setHeroTypedChars(0);
+    setHeroStrikeActive(false);
+
     const typeInterval = setInterval(() => {
       setHeroTypedChars((prev) => {
-        if (prev >= heroTotalChars) {
-          clearInterval(typeInterval);
-          return prev;
-        }
+        if (prev >= total) { clearInterval(typeInterval); return prev; }
         return prev + 1;
       });
     }, 100);
     return () => clearInterval(typeInterval);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [lang]);
+
+  const HERO_L1 = t.hero.line1;
+  const HERO_L2_PRE = t.hero.line2pre;
+  const HERO_L2_WORD = t.hero.line2word;
+  const HERO_L3 = t.hero.line3;
+  const heroTotalChars = HERO_L1.length + HERO_L2_PRE.length + HERO_L2_WORD.length + HERO_L3.length;
+
   useEffect(() => {
     if (heroTypedChars < heroTotalChars) return;
     const strikeTimeout = setTimeout(() => setHeroStrikeActive(true), 300);
     return () => clearTimeout(strikeTimeout);
   }, [heroTypedChars, heroTotalChars]);
+
   const heroLine1Visible = HERO_L1.slice(0, Math.min(HERO_L1.length, heroTypedChars));
   const heroLine2PreVisible = HERO_L2_PRE.slice(0, Math.max(0, Math.min(HERO_L2_PRE.length, heroTypedChars - HERO_L1.length)));
   const heroLine2WordVisible = HERO_L2_WORD.slice(0, Math.max(0, Math.min(HERO_L2_WORD.length, heroTypedChars - HERO_L1.length - HERO_L2_PRE.length)));
   const heroLine3Visible = HERO_L3.slice(0, Math.max(0, Math.min(HERO_L3.length, heroTypedChars - HERO_L1.length - HERO_L2_PRE.length - HERO_L2_WORD.length)));
   const heroTypingDone = heroTypedChars >= heroTotalChars;
-  // Cursor parpadeante: solo se muestra en la línea que se está escribiendo
-  // en este momento (desaparece al terminar todo el título).
+
   const heroRow2Total = HERO_L2_PRE.length + HERO_L2_WORD.length;
   const heroRow1Active = heroTypedChars < HERO_L1.length;
   const heroRow2Active = !heroRow1Active && heroTypedChars < HERO_L1.length + heroRow2Total;
@@ -201,10 +179,7 @@ export default function ProgramaCreacionDigital() {
     if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openDocente(id); }
   };
 
-  // Animación de entrada (fade + slide-up) para el resto de la página al
-  // hacer scroll — el hero ya tiene su propia animación (typewriter), esto
-  // cubre ejes, docentes, proyectos, estudia y footer. Cada elemento con
-  // clase .pcd-reveal se anima una sola vez, al entrar en pantalla.
+  // Animaciones scroll reveal
   useEffect(() => {
     const els = document.querySelectorAll('.pcd-reveal');
     if (!els.length) return;
@@ -223,7 +198,7 @@ export default function ProgramaCreacionDigital() {
     return () => observer.disconnect();
   }, []);
 
-  // Drag-to-pan del carrusel de docentes (reemplaza el scroll horizontal nativo visible).
+  // Drag-to-pan carrusel docentes
   const docentesGridRef = useRef<HTMLDivElement>(null);
   const dragState = useRef({ isDown: false, startX: 0, startScroll: 0, moved: false });
 
@@ -244,11 +219,24 @@ export default function ProgramaCreacionDigital() {
     docentesGridRef.current?.classList.remove('is-dragging');
     dragState.current.isDown = false;
   };
-  // Evita que el click que cierra un drag abra el modal de perfil.
   const onDocenteCardClick = (id: string) => {
     if (dragState.current.moved) { dragState.current.moved = false; return; }
     openDocente(id);
   };
+
+  /** Toggle visual ES | EN */
+  const LangToggle = () => (
+    <button
+      type="button"
+      className="pcd-lang-toggle"
+      aria-label={t.nav.langLabel}
+      onClick={() => setLang(lang === 'es' ? 'en' : 'es')}
+    >
+      <span className={`pcd-lang-toggle__opt${lang === 'es' ? ' pcd-lang-toggle__opt--active' : ''}`}>ES</span>
+      <span className="pcd-lang-toggle__sep">|</span>
+      <span className={`pcd-lang-toggle__opt${lang === 'en' ? ' pcd-lang-toggle__opt--active' : ''}`}>EN</span>
+    </button>
+  );
 
   return (
     <div className="pcd-page">
@@ -259,18 +247,22 @@ export default function ProgramaCreacionDigital() {
           <img className="pcd-brand__logo" src={`${IMG}/Label_UEB_CreacionDigital_Horizontal.png`} alt="Universidad El Bosque · Creación Digital" />
         </a>
         <nav className={`pcd-nav${menuOpen ? ' is-open' : ''}`} aria-label="Principal">
-          <a className="pcd-nav__link" href="#programa" onClick={() => setMenuOpen(false)}>PROGRAMA</a>
-          <a className="pcd-nav__link" href="#docentes" onClick={() => setMenuOpen(false)}>docentes</a>
-          <a className="pcd-nav__link" href="#proyectos" onClick={() => setMenuOpen(false)}>PROYECTOS</a>
+          <a className="pcd-nav__link" href="#programa" onClick={() => setMenuOpen(false)}>{t.nav.programa}</a>
+          <a className="pcd-nav__link" href="#docentes" onClick={() => setMenuOpen(false)}>{t.nav.docentes}</a>
+          <a className="pcd-nav__link" href="#proyectos" onClick={() => setMenuOpen(false)}>{t.nav.proyectos}</a>
+          <LangToggle />
         </nav>
-        <a className="pcd-cta-pill" href={APLICA_URL} target="_blank" rel="noopener">
-          <span>APLICA AHORA</span>
-          <span className="pcd-cta-pill__arrow" aria-hidden="true">→</span>
-        </a>
+        <div className="pcd-header__actions">
+          <LangToggle />
+          <a className="pcd-cta-pill" href={APLICA_URL} target="_blank" rel="noopener">
+            <span>{t.nav.aplicaAhora}</span>
+            <span className="pcd-cta-pill__arrow" aria-hidden="true">→</span>
+          </a>
+        </div>
         <button
           type="button"
           className={`pcd-hamburger${menuOpen ? ' is-open' : ''}`}
-          aria-label="Menú"
+          aria-label={t.nav.menu}
           aria-expanded={menuOpen}
           onClick={() => setMenuOpen((v) => !v)}
         >
@@ -279,17 +271,17 @@ export default function ProgramaCreacionDigital() {
       </header>
 
       {/* ===== HERO ===== */}
-      <section id="top" className="pcd-hero">
+      <section id="top" className={`pcd-hero${lang === 'en' ? ' pcd-hero--en' : ''}`}>
         <div className="pcd-hero__meta">
-          <span><b>Pregrado</b> · <span className="pcd-hero__meta-value">8 semestres</span></span>
+          <span><b>{t.hero.meta.tipo}</b> · <span className="pcd-hero__meta-value">{t.hero.meta.duracion}</span></span>
           <span className="center">
-            Bogotá ·{' '}
+            {t.hero.meta.ciudad} ·{' '}
             <span className="pcd-hero__meta-value">
-              <span className="pcd-hero__meta-full">Universidad El Bosque</span>
-              <span className="pcd-hero__meta-short">U. El Bosque</span>
+              <span className="pcd-hero__meta-full">{t.hero.meta.uni}</span>
+              <span className="pcd-hero__meta-short">{t.hero.meta.uniShort}</span>
             </span>
           </span>
-          <span className="right"><b>SNIES</b> · <span className="pcd-hero__meta-value">116265</span></span>
+          <span className="right"><b>{t.hero.meta.snies}</b> · <span className="pcd-hero__meta-value">116265</span></span>
         </div>
 
         <h1 className="pcd-hero__title">
@@ -314,21 +306,33 @@ export default function ProgramaCreacionDigital() {
           <div className="pcd-hero__floor-line--right" aria-hidden="true" />
 
           <div className="pcd-hero__quienes-row">
-            <span className="pcd-hero__quienes-label">¿quiénes <br />somos?</span>
+            <span className="pcd-hero__quienes-label">
+              {t.hero.quienesLabel.split('\n').map((line, i) => (
+                <span key={i}>{line}{i === 0 && <br />}</span>
+              ))}
+            </span>
           </div>
           <p className="pcd-hero__quienes-body pcd-hero__quienes-body-desktop">
-            Creamos en medio del ruido, la velocidad{' '.repeat(17)}y{' '.repeat(10)} el cambio. En un mundo donde las ideas evolucionan todos los días{' '.repeat(14)} y las formas de crear ya no caben en una sola disciplina. Como{' '.repeat(17)} Creadores Digitales, aprendemos a pensar críticamente, experimentar sin miedo y convertir la curiosidad en acción.
+            {lang === 'es' ? <>Creamos en medio del ruido, la velocidad{' '.repeat(17)}y{' '.repeat(10)} el cambio. En un mundo donde las ideas evolucionan todos los días{' '.repeat(14)} y las formas de crear ya no caben en una sola disciplina. Como{' '.repeat(17)} Creadores Digitales, aprendemos a pensar críticamente, experimentar sin miedo y convertir la curiosidad en acción.</> : <>We create amid the noise, speed and{' '.repeat(32)} change. In a world where ideas evolve every day and the ways of{' '.repeat(15)} creating no longer fit within a single discipline. As Digital Creators,{' '.repeat(15)} we learn to think critically, experiment fearlessly, and turn curiosity into action.</>}
           </p>
           <p className="pcd-hero__quienes-body pcd-hero__quienes-body-mobile">
-            Creamos en medio del ruido, la velocidad y el cambio. En un mundo donde las ideas evolucionan todos los días y las formas de crear ya no caben en una sola disciplina. Como Creadores Digitales, aprendemos a pensar críticamente, experimentar sin miedo y convertir la curiosidad en acción.
+            {t.hero.quienesBody}
           </p>
 
           <div className="pcd-hero__logos-row">
             <div className="pcd-hero__brand">
-              <img className="pcd-hero__brand-logo" src={`${IMG}/LogoUEB_CreacionDigital.png`} alt="Universidad El Bosque · Creación Digital · Pregrado | 8 Semestres" />
+              <img
+                className="pcd-hero__brand-logo"
+                src={lang === 'en'
+                  ? `${IMG}/Label_UEB_CreacionDigital_EN.png`
+                  : `${IMG}/LogoUEB_CreacionDigital.png`}
+                alt={lang === 'en'
+                  ? 'Universidad El Bosque · Creación Digital · Bachelor Degree | 8 Semesters'
+                  : 'Universidad El Bosque · Creación Digital · Pregrado | 8 Semestres'}
+              />
             </div>
             <a className="pcd-hero__cta-mobile" href={APLICA_URL} target="_blank" rel="noopener">
-              <span>APLICA AHORA</span>
+              <span>{t.nav.aplicaAhora}</span>
               <span aria-hidden="true">&#8594;</span>
             </a>
           </div>
@@ -337,21 +341,18 @@ export default function ProgramaCreacionDigital() {
         </div>
       </section>
 
-      {/* ===== MARQUEE · Esto aprenderás =====
-          id="programa" vive aquí (no en la section de abajo) para que al
-          navegar desde el nav ("PROGRAMA") lo primero que se vea sea esta
-          franja animada, no que la salte directo al eje de contenido. */}
+      {/* ===== MARQUEE · aprenderás ===== */}
       <div id="programa" className="pcd-marquee" aria-hidden="true">
         <div className="pcd-marquee__track">
           <span>
-            Esto aprenderás estudiando nuestro pregrado <span className="pcd-marquee__star">✺</span>
-            Esto aprenderás estudiando nuestro pregrado <span className="pcd-marquee__star">✺</span>
-            Esto aprenderás estudiando nuestro pregrado <span className="pcd-marquee__star">✺</span>
+            {t.marquee1} <span className="pcd-marquee__star">✺</span>
+            {t.marquee1} <span className="pcd-marquee__star">✺</span>
+            {t.marquee1} <span className="pcd-marquee__star">✺</span>
           </span>
           <span>
-            Esto aprenderás estudiando nuestro pregrado <span className="pcd-marquee__star">✺</span>
-            Esto aprenderás estudiando nuestro pregrado <span className="pcd-marquee__star">✺</span>
-            Esto aprenderás estudiando nuestro pregrado <span className="pcd-marquee__star">✺</span>
+            {t.marquee1} <span className="pcd-marquee__star">✺</span>
+            {t.marquee1} <span className="pcd-marquee__star">✺</span>
+            {t.marquee1} <span className="pcd-marquee__star">✺</span>
           </span>
         </div>
       </div>
@@ -359,74 +360,80 @@ export default function ProgramaCreacionDigital() {
       {/* ===== AXIS 01 · CONTENIDO ===== */}
       <section className="pcd-axis pcd-axis--contenido">
         <div className="pcd-axis__left">
-          <div className="pcd-axis__tag pcd-reveal">01 · programa</div>
+          <div className="pcd-axis__tag pcd-reveal">{t.axis01.tag}</div>
           <h2 className="pcd-axis__word pcd-reveal">
-            <span className="pcd-axis__word-desktop">conte-<br />nido</span>
-            <span className="pcd-axis__word-mobile">contenido</span>
+            <span className="pcd-axis__word-desktop">
+              {t.axis01.wordLine1}
+              {t.axis01.wordLine2 && <><br />{t.axis01.wordLine2}</>}
+            </span>
+            <span className="pcd-axis__word-mobile">{t.axis01.wordFull}</span>
           </h2>
-          <p className="pcd-axis__caption pcd-reveal">Contenido audiovisual, animación 2D, generación de imágenes y videos con IA</p>
+          <p className="pcd-axis__caption pcd-reveal">{t.axis01.caption}</p>
           <div className="pcd-axis__image pcd-reveal" style={{ backgroundImage: `url('${IMG}/proyecto-3.webp')` }} aria-hidden="true" />
         </div>
         <div className="pcd-axis__right">
           <article className="pcd-vs pcd-reveal">
             <span className="pcd-vs__idx">1.1</span>
             <div>
-              <h3 className="pcd-vs__title">En vez de publicar; <span className="pcd-vs__accent">conectar.</span></h3>
-              <p className="pcd-vs__body">El contenido no se trata solo de subir videos o seguir tendencias. Aprendemos a crear mensajes y experiencias digitales capaces de generar comunidad e impacto real.</p>
+              <h3 className="pcd-vs__title">{t.axis01.vs11title} <span className="pcd-vs__accent">{t.axis01.vs11accent}</span></h3>
+              <p className="pcd-vs__body">{t.axis01.vs11body}</p>
             </div>
           </article>
           <hr className="pcd-axis__divider" />
           <article className="pcd-vs pcd-reveal">
             <span className="pcd-vs__idx">1.2</span>
             <div>
-              <h3 className="pcd-vs__title">En vez de perseguir algoritmos; <span className="pcd-vs__accent">entender audiencias.</span></h3>
-              <p className="pcd-vs__body">Las plataformas cambian todos los días. Por eso aprendemos a analizar comportamientos y crear estrategias que conecten con las personas más allá de una métrica.</p>
+              <h3 className="pcd-vs__title">{t.axis01.vs12title} <span className="pcd-vs__accent">{t.axis01.vs12accent}</span></h3>
+              <p className="pcd-vs__body">{t.axis01.vs12body}</p>
             </div>
           </article>
           <hr className="pcd-axis__divider" />
           <article className="pcd-vs pcd-reveal">
             <span className="pcd-vs__idx">1.3</span>
             <div>
-              <h3 className="pcd-vs__title">En vez de consumir internet; <span className="pcd-vs__accent">construirlo.</span></h3>
-              <p className="pcd-vs__body">Las marcas y las comunidades digitales no aparecen solas. Aprendemos a crear contenidos, identidades y experiencias para el ecosistema digital actual.</p>
+              <h3 className="pcd-vs__title">{t.axis01.vs13title} <span className="pcd-vs__accent">{t.axis01.vs13accent}</span></h3>
+              <p className="pcd-vs__body">{t.axis01.vs13body}</p>
             </div>
           </article>
         </div>
       </section>
 
       {/* ===== AXIS 02 · MUNDO 3D ===== */}
-      <section className="pcd-axis pcd-axis--mundo">
+      <section className={`pcd-axis pcd-axis--mundo${lang === 'en' ? ' pcd-axis--mundo-en' : ''}`}>
         <div className="pcd-axis__left">
-          <div className="pcd-axis__tag pcd-reveal">02 · programa</div>
+          <div className="pcd-axis__tag pcd-reveal">{t.axis02.tag}</div>
           <h2 className="pcd-axis__word pcd-reveal">
-            <span className="pcd-axis__word-desktop">mundo<br />3d</span>
-            <span className="pcd-axis__word-mobile">mundo 3d</span>
+            <span className="pcd-axis__word-desktop">
+              {t.axis02.wordLine1}
+              {t.axis02.wordLine2 && <><br />{t.axis02.wordLine2}</>}
+            </span>
+            <span className="pcd-axis__word-mobile">{t.axis02.wordFull}</span>
           </h2>
-          <p className="pcd-axis__caption pcd-reveal">Videojuegos, diseño de personajes, modelado, escultura y animación 3D</p>
+          <p className="pcd-axis__caption pcd-reveal">{t.axis02.caption}</p>
           <div className="pcd-axis__image pcd-reveal" style={{ backgroundImage: `url('${IMG}/proyecto-5.webp')` }} aria-hidden="true" />
         </div>
         <div className="pcd-axis__right">
           <article className="pcd-vs pcd-reveal">
             <span className="pcd-vs__idx">2.1</span>
             <div>
-              <h3 className="pcd-vs__title">En vez de imaginar mundos; <span className="pcd-vs__accent">construirlos.</span></h3>
-              <p className="pcd-vs__body">Detrás de cada videojuego, personaje o experiencia inmersiva hay personas capaces de convertir ideas en realidades digitales. Aquí aprendes a combinar narrativa, diseño y tecnología para crear experiencias memorables.</p>
+              <h3 className="pcd-vs__title">{t.axis02.vs21title} <span className="pcd-vs__accent">{t.axis02.vs21accent}</span></h3>
+              <p className="pcd-vs__body">{t.axis02.vs21body}</p>
             </div>
           </article>
           <hr className="pcd-axis__divider" />
           <article className="pcd-vs pcd-reveal">
             <span className="pcd-vs__idx">2.2</span>
             <div>
-              <h3 className="pcd-vs__title">En vez de solo jugar; <span className="pcd-vs__accent">diseñar experiencias.</span></h3>
-              <p className="pcd-vs__body">Los mundos digitales no se crean únicamente desde lo visual. Aprendemos a construir personajes, escenarios e interacciones capaces de generar emoción e inmersión.</p>
+              <h3 className="pcd-vs__title">{t.axis02.vs22title} <span className="pcd-vs__accent">{t.axis02.vs22accent}</span></h3>
+              <p className="pcd-vs__body">{t.axis02.vs22body}</p>
             </div>
           </article>
           <hr className="pcd-axis__divider" />
           <article className="pcd-vs pcd-reveal">
             <span className="pcd-vs__idx">2.3</span>
             <div>
-              <h3 className="pcd-vs__title">En vez de mirar el futuro; <span className="pcd-vs__accent">crearlo.</span></h3>
-              <p className="pcd-vs__body">La animación, el 3D y las experiencias inmersivas están transformando la forma en que vivimos lo digital. Aquí aprendes las herramientas para crear nuevas formas de explorarlo.</p>
+              <h3 className="pcd-vs__title">{t.axis02.vs23title} <span className="pcd-vs__accent">{t.axis02.vs23accent}</span></h3>
+              <p className="pcd-vs__body">{t.axis02.vs23body}</p>
             </div>
           </article>
         </div>
@@ -435,58 +442,58 @@ export default function ProgramaCreacionDigital() {
       {/* ===== AXIS 03 · PRODUCTO ===== */}
       <section className="pcd-axis pcd-axis--producto">
         <div className="pcd-axis__left">
-          <div className="pcd-axis__tag pcd-reveal">03 · programa</div>
+          <div className="pcd-axis__tag pcd-reveal">{t.axis03.tag}</div>
           <h2 className="pcd-axis__word pcd-reveal">
-            <span className="pcd-axis__word-desktop">prod-<br />ucto</span>
-            <span className="pcd-axis__word-mobile">producto</span>
+            <span className="pcd-axis__word-desktop">
+              {t.axis03.wordLine1}
+              {t.axis03.wordLine2 && <><br />{t.axis03.wordLine2}</>}
+            </span>
+            <span className="pcd-axis__word-mobile">{t.axis03.wordFull}</span>
           </h2>
-          <p className="pcd-axis__caption pcd-reveal">Código, creación de apps y páginas web, UX/UI, análisis de usuarios</p>
+          <p className="pcd-axis__caption pcd-reveal">{t.axis03.caption}</p>
           <div className="pcd-axis__image pcd-reveal" style={{ backgroundImage: `url('${IMG}/proyecto-6.webp')` }} aria-hidden="true" />
         </div>
         <div className="pcd-axis__right">
           <article className="pcd-vs pcd-reveal">
             <span className="pcd-vs__idx">3.1</span>
             <div>
-              <h3 className="pcd-vs__title">En vez de usar plataformas; <span className="pcd-vs__accent">crearlas.</span></h3>
-              <p className="pcd-vs__body">Las aplicaciones, redes sociales y productos digitales nacen de personas capaces de entender cómo interactuamos en internet. Aquí aprendes a crear experiencias digitales pensadas para conectar y generar impacto real.</p>
+              <h3 className="pcd-vs__title">{t.axis03.vs31title} <span className="pcd-vs__accent">{t.axis03.vs31accent}</span></h3>
+              <p className="pcd-vs__body">{t.axis03.vs31body}</p>
             </div>
           </article>
           <hr className="pcd-axis__divider" />
           <article className="pcd-vs pcd-reveal">
             <span className="pcd-vs__idx">3.2</span>
             <div>
-              <h3 className="pcd-vs__title">En vez de pensar en pantallas; <span className="pcd-vs__accent">pensar en personas.</span></h3>
-              <p className="pcd-vs__body">Un producto digital no funciona solo porque se vea bien. Aprendemos a entender usuarios y diseñar experiencias intuitivas, atractivas y fáciles de usar.</p>
+              <h3 className="pcd-vs__title">{t.axis03.vs32title} <span className="pcd-vs__accent">{t.axis03.vs32accent}</span></h3>
+              <p className="pcd-vs__body">{t.axis03.vs32body}</p>
             </div>
           </article>
           <hr className="pcd-axis__divider" />
           <article className="pcd-vs pcd-reveal">
             <span className="pcd-vs__idx">3.3</span>
             <div>
-              <h3 className="pcd-vs__title">En vez de seguir ideas; <span className="pcd-vs__accent">convertirlas en productos.</span></h3>
-              <p className="pcd-vs__body">Las grandes plataformas digitales comenzaron como una idea capaz de resolver una necesidad real. Aquí aprendes a combinar creatividad, tecnología y estrategia para construir experiencias digitales con potencial de crecer en el mundo real.</p>
+              <h3 className="pcd-vs__title">{t.axis03.vs33title} <span className="pcd-vs__accent">{t.axis03.vs33accent}</span></h3>
+              <p className="pcd-vs__body">{t.axis03.vs33body}</p>
             </div>
           </article>
         </div>
       </section>
 
-      {/* ===== MARQUEE · Conoce a nuestro equipo docente =====
-          id="docentes" vive aquí (no en la section de abajo), mismo motivo
-          que el marquee de "programa": que al navegar se vea primero la
-          franja animada. */}
+      {/* ===== MARQUEE · docentes ===== */}
       <div id="docentes" className="pcd-marquee" aria-hidden="true">
         <div className="pcd-marquee__track">
           <span>
-            Conoce a nuestro equipo docente <span className="pcd-marquee__star">✺</span>
-            Conoce a nuestro equipo docente <span className="pcd-marquee__star">✺</span>
-            Conoce a nuestro equipo docente <span className="pcd-marquee__star">✺</span>
-            Conoce a nuestro equipo docente <span className="pcd-marquee__star">✺</span>
+            {t.marquee2} <span className="pcd-marquee__star">✺</span>
+            {t.marquee2} <span className="pcd-marquee__star">✺</span>
+            {t.marquee2} <span className="pcd-marquee__star">✺</span>
+            {t.marquee2} <span className="pcd-marquee__star">✺</span>
           </span>
           <span>
-            Conoce a nuestro equipo docente <span className="pcd-marquee__star">✺</span>
-            Conoce a nuestro equipo docente <span className="pcd-marquee__star">✺</span>
-            Conoce a nuestro equipo docente <span className="pcd-marquee__star">✺</span>
-            Conoce a nuestro equipo docente <span className="pcd-marquee__star">✺</span>
+            {t.marquee2} <span className="pcd-marquee__star">✺</span>
+            {t.marquee2} <span className="pcd-marquee__star">✺</span>
+            {t.marquee2} <span className="pcd-marquee__star">✺</span>
+            {t.marquee2} <span className="pcd-marquee__star">✺</span>
           </span>
         </div>
       </div>
@@ -494,8 +501,12 @@ export default function ProgramaCreacionDigital() {
       {/* ===== DOCENTES ===== */}
       <section className="pcd-docentes">
         <header className="pcd-docentes__head pcd-reveal">
-          <h2 className="pcd-docentes__title">Quienes crean afuera,<br />enseñan aquí.</h2>
-          <p className="pcd-docentes__sub">Experiencia real <br className="pcd-docentes__sub-break" />convertida en aprendizaje</p>
+          <h2 className="pcd-docentes__title">
+            {t.docentes.sectionTitle.split('\n').map((line, i) => (
+              <span key={i}>{line}{i === 0 && <br />}</span>
+            ))}
+          </h2>
+          <p className="pcd-docentes__sub">{t.docentes.sectionSub}</p>
         </header>
         <div
           className="pcd-docentes__grid"
@@ -505,63 +516,112 @@ export default function ProgramaCreacionDigital() {
           onMouseUp={endDocentesDrag}
           onMouseLeave={endDocentesDrag}
         >
+          {/* Paula */}
           <article
             className="pcd-docente pcd-docente--paula pcd-reveal" tabIndex={0} role="button"
-            aria-label="Ver perfil de Paula Lenis"
+            aria-label={t.docentes.paula.ariaLabel}
             onClick={() => onDocenteCardClick('paula')}
             onKeyDown={(e) => onCardKey(e, 'paula')}
             style={{ '--docente-init': `url('${IMG}/Paula_Init.webp')`, '--docente-end': `url('${IMG}/Paula_End.webp')` } as CSSProperties}
           >
             <div className="pcd-docente__blob" aria-hidden="true" />
-            <img className="pcd-sticker pcd-sticker--like" src={`${IMG}/Like.webp`} alt="" aria-hidden="true" />
+            <img className="pcd-sticker pcd-sticker--star" src={`${IMG}/Star.webp`} alt="" aria-hidden="true" />
             <h3 className="pcd-docente__name">Paula<br />Lenis</h3>
-            <p className="pcd-docente__bio">Diseñadora Gráfica y especialista en Experiencia de Usuario (UX), con experiencia en diseño de productos digitales, estrategia UX y liderazgo de equipos en empresas como Rappi e IxDF Colombia.</p>
+            <p className="pcd-docente__bio">{t.docentes.paula.bio}</p>
             <div className="pcd-docente__tags">
-              <span className="pcd-docente__tag">UX / UI</span>
-              <span className="pcd-docente__tag">Estrategia</span>
-              <span className="pcd-docente__tag">Liderazgo</span>
+              {t.docentes.paula.tags.map((tag) => <span key={tag} className="pcd-docente__tag">{tag}</span>)}
             </div>
           </article>
 
+          {/* Sofía */}
+          <article
+            className="pcd-docente pcd-docente--sofia pcd-docente--no-photo pcd-reveal" tabIndex={0} role="button"
+            aria-label={t.docentes.sofia.ariaLabel}
+            onClick={() => onDocenteCardClick('sofia')}
+            onKeyDown={(e) => onCardKey(e, 'sofia')}
+            style={{} as CSSProperties}
+          >
+            <div className="pcd-docente__blob" aria-hidden="true" />
+            <img className="pcd-sticker pcd-sticker--love" src={`${IMG}/Love.webp`} alt="" aria-hidden="true" />
+            <h3 className="pcd-docente__name">Sofía<br />Jiménez</h3>
+            <p className="pcd-docente__bio">{t.docentes.sofia.bio}</p>
+            <div className="pcd-docente__tags">
+              {t.docentes.sofia.tags.map((tag) => <span key={tag} className="pcd-docente__tag">{tag}</span>)}
+            </div>
+          </article>
+
+          {/* Nicolás */}
+          <article
+            className="pcd-docente pcd-docente--nicolas pcd-reveal" tabIndex={0} role="button"
+            aria-label={t.docentes.nicolas.ariaLabel}
+            onClick={() => onDocenteCardClick('nicolas')}
+            onKeyDown={(e) => onCardKey(e, 'nicolas')}
+            style={{ '--docente-init': `url('${IMG}/Nicolas_Init.webp')`, '--docente-end': `url('${IMG}/Nicolas_End.webp')` } as CSSProperties}
+          >
+            <div className="pcd-docente__blob" aria-hidden="true" />
+            <img className="pcd-sticker pcd-sticker--idea" src={`${IMG}/Idea.webp`} alt="" aria-hidden="true" />
+            <h3 className="pcd-docente__name">Nicolás<br />Bartolo</h3>
+            <p className="pcd-docente__bio">{t.docentes.nicolas.bio}</p>
+            <div className="pcd-docente__tags">
+              {t.docentes.nicolas.tags.map((tag) => <span key={tag} className="pcd-docente__tag">{tag}</span>)}
+            </div>
+          </article>
+
+          {/* Ximena */}
+          <article
+            className="pcd-docente pcd-docente--ximena pcd-reveal" tabIndex={0} role="button"
+            aria-label={t.docentes.ximena.ariaLabel}
+            onClick={() => onDocenteCardClick('ximena')}
+            onKeyDown={(e) => onCardKey(e, 'ximena')}
+            style={{ '--docente-init': `url('${IMG}/Ximena_Init.webp')`, '--docente-end': `url('${IMG}/Ximena_End.webp')` } as CSSProperties}
+          >
+            <div className="pcd-docente__blob" aria-hidden="true" />
+            <img className="pcd-sticker pcd-sticker--star" src={`${IMG}/Star.webp`} alt="" aria-hidden="true" />
+            <h3 className="pcd-docente__name">Ximena<br />Tovar</h3>
+            <p className="pcd-docente__bio">{t.docentes.ximena.bio}</p>
+            <div className="pcd-docente__tags">
+              {t.docentes.ximena.tags.map((tag) => <span key={tag} className="pcd-docente__tag">{tag}</span>)}
+            </div>
+          </article>
+
+          {/* Camilo */}
           <article
             className="pcd-docente pcd-docente--camilo pcd-reveal" tabIndex={0} role="button"
-            aria-label="Ver perfil de Camilo Cardozo"
+            aria-label={t.docentes.camilo.ariaLabel}
             onClick={() => onDocenteCardClick('camilo')}
             onKeyDown={(e) => onCardKey(e, 'camilo')}
             style={{ '--docente-init': `url('${IMG}/Camilo_Init.webp')`, '--docente-end': `url('${IMG}/Camilo_End.webp')` } as CSSProperties}
           >
             <div className="pcd-docente__blob" aria-hidden="true" />
-            <img className="pcd-sticker pcd-sticker--idea" src={`${IMG}/Idea.webp`} alt="" aria-hidden="true" />
+            <img className="pcd-sticker pcd-sticker--love" src={`${IMG}/Love.webp`} alt="" aria-hidden="true" />
             <h3 className="pcd-docente__name">Camilo<br />Cardozo</h3>
-            <p className="pcd-docente__bio">Diseñador gráfico y especialista en marketing digital, con más de 15 años de experiencia en branding, UX/UI, creatividad y transformación digital para marcas y ecosistemas de alto impacto en Latinoamérica.</p>
+            <p className="pcd-docente__bio">{t.docentes.camilo.bio}</p>
             <div className="pcd-docente__tags">
-              <span className="pcd-docente__tag">Branding</span>
-              <span className="pcd-docente__tag">Storytelling</span>
-              <span className="pcd-docente__tag">UX</span>
+              {t.docentes.camilo.tags.map((tag) => <span key={tag} className="pcd-docente__tag">{tag}</span>)}
             </div>
           </article>
 
+          {/* Daniela */}
           <article
-            className="pcd-docente pcd-docente--vanessa pcd-reveal" tabIndex={0} role="button"
-            aria-label="Ver perfil de Vanessa Tovar"
-            onClick={() => onDocenteCardClick('vanessa')}
-            onKeyDown={(e) => onCardKey(e, 'vanessa')}
-            style={{ '--docente-init': `url('${IMG}/Vanessa_Init.webp')`, '--docente-end': `url('${IMG}/Vanessa_End.webp')` } as CSSProperties}
+            className="pcd-docente pcd-docente--daniela pcd-docente--no-photo pcd-reveal" tabIndex={0} role="button"
+            aria-label={t.docentes.daniela.ariaLabel}
+            onClick={() => onDocenteCardClick('daniela')}
+            onKeyDown={(e) => onCardKey(e, 'daniela')}
+            style={{} as CSSProperties}
           >
             <div className="pcd-docente__blob" aria-hidden="true" />
-            <img className="pcd-sticker pcd-sticker--love" src={`${IMG}/Love.webp`} alt="" aria-hidden="true" />
-            <h3 className="pcd-docente__name">Vanessa<br />Tovar</h3>
-            <p className="pcd-docente__bio">Diseñadora Industrial y magíster en Customer Experience (CX) con experiencia en UX/UI, estrategia digital y diseño de experiencias para plataformas como Bolsa de Valores de Colombia y Metrocuadrado, desarrollando productos digitales.</p>
+            <img className="pcd-sticker pcd-sticker--idea" src={`${IMG}/Idea.webp`} alt="" aria-hidden="true" />
+            <h3 className="pcd-docente__name">Daniela<br />Meza</h3>
+            <p className="pcd-docente__bio">{t.docentes.daniela.bio}</p>
             <div className="pcd-docente__tags">
-              <span className="pcd-docente__tag">UX / UI</span>
-              <span className="pcd-docente__tag">Estrategia</span>
-              <span className="pcd-docente__tag">Research</span>
+              {t.docentes.daniela.tags.map((tag) => <span key={tag} className="pcd-docente__tag">{tag}</span>)}
             </div>
           </article>
 
+          {/* Juan David */}
           <article
             className="pcd-docente pcd-docente--juandavid pcd-reveal" tabIndex={0} role="button"
-            aria-label="Ver perfil de Juan David Aristizabal"
+            aria-label={t.docentes.juandavid.ariaLabel}
             onClick={() => onDocenteCardClick('juandavid')}
             onKeyDown={(e) => onCardKey(e, 'juandavid')}
             style={{ '--docente-init': `url('${IMG}/JuanDavid_Init.webp')`, '--docente-end': `url('${IMG}/JuanDavid_End.webp')` } as CSSProperties}
@@ -569,11 +629,26 @@ export default function ProgramaCreacionDigital() {
             <div className="pcd-docente__blob" aria-hidden="true" />
             <img className="pcd-sticker pcd-sticker--star" src={`${IMG}/Star.webp`} alt="" aria-hidden="true" />
             <h3 className="pcd-docente__name">Juan David<br />Aristizabal</h3>
-            <p className="pcd-docente__bio">Director creativo en Meta-Carbon con experiencia en animación 2D/3D, motion graphics, videojuegos y experiencias digitales desarrolladas en WebGL. Ha trabajado en proyectos audiovisuales y de investigación-creación.</p>
+            <p className="pcd-docente__bio">{t.docentes.juandavid.bio}</p>
             <div className="pcd-docente__tags">
-              <span className="pcd-docente__tag">Animación</span>
-              <span className="pcd-docente__tag">Videojuegos</span>
-              <span className="pcd-docente__tag">3D</span>
+              {t.docentes.juandavid.tags.map((tag) => <span key={tag} className="pcd-docente__tag">{tag}</span>)}
+            </div>
+          </article>
+
+          {/* Vanessa */}
+          <article
+            className="pcd-docente pcd-docente--vanessa pcd-reveal" tabIndex={0} role="button"
+            aria-label={t.docentes.vanessa.ariaLabel}
+            onClick={() => onDocenteCardClick('vanessa')}
+            onKeyDown={(e) => onCardKey(e, 'vanessa')}
+            style={{ '--docente-init': `url('${IMG}/Vanessa_Init.webp')`, '--docente-end': `url('${IMG}/Vanessa_End.webp')` } as CSSProperties}
+          >
+            <div className="pcd-docente__blob" aria-hidden="true" />
+            <img className="pcd-sticker pcd-sticker--love" src={`${IMG}/Love.webp`} alt="" aria-hidden="true" />
+            <h3 className="pcd-docente__name">Vanessa<br />Tovar</h3>
+            <p className="pcd-docente__bio">{t.docentes.vanessa.bio}</p>
+            <div className="pcd-docente__tags">
+              {t.docentes.vanessa.tags.map((tag) => <span key={tag} className="pcd-docente__tag">{tag}</span>)}
             </div>
           </article>
         </div>
@@ -581,30 +656,66 @@ export default function ProgramaCreacionDigital() {
 
       {/* ===== MODALES DOCENTES ===== */}
       <DocenteModal
+        id="nicolas" active={activeDocente === 'nicolas'} onClose={closeDocente} onSwipe={onSwipeDocente}
+        portrait={`${IMG}/Nicolas_Init.webp`}
+        portraitEnd={`${IMG}/Nicolas_End.webp`}
+        name={<>Nicolás<br />Bartolo</>}
+        tags={t.docentes.nicolas.modalTags}
+      >
+        <h3 className="pcd-docente-modal__heading">{t.docentes.modalPerfil}</h3>
+        <p className="pcd-docente-modal__p">{t.docentes.nicolas.p1}</p>
+        <p className="pcd-docente-modal__p">{t.docentes.nicolas.p2}</p>
+        <hr className="pcd-docente-modal__rule" />
+        <h3 className="pcd-docente-modal__heading">{t.docentes.modalExp}</h3>
+        <ul className="pcd-docente-modal__list">
+          {t.docentes.nicolas.exp.map((item) => (
+            <li key={item.title}>
+              <strong>{item.title}</strong>
+              <span className="pcd-docente-modal__detail-plain">{item.body}</span>
+            </li>
+          ))}
+        </ul>
+      </DocenteModal>
+
+      <DocenteModal
+        id="sofia" active={activeDocente === 'sofia'} onClose={closeDocente} onSwipe={onSwipeDocente}
+        portrait="" portraitEnd=""
+        name={<>Sofía<br />Jiménez</>}
+        tags={t.docentes.sofia.modalTags}
+      >
+        <h3 className="pcd-docente-modal__heading">{t.docentes.modalPerfil}</h3>
+        <p className="pcd-docente-modal__p">{t.docentes.sofia.p1}</p>
+        <p className="pcd-docente-modal__p">{t.docentes.sofia.p2}</p>
+        <hr className="pcd-docente-modal__rule" />
+        <h3 className="pcd-docente-modal__heading">{t.docentes.modalExp}</h3>
+        <ul className="pcd-docente-modal__list">
+          {t.docentes.sofia.exp.map((item) => (
+            <li key={item.title}>
+              <strong>{item.title}</strong>
+              <span className="pcd-docente-modal__detail-plain">{item.body}</span>
+            </li>
+          ))}
+        </ul>
+      </DocenteModal>
+      <DocenteModal
         id="juandavid" active={activeDocente === 'juandavid'} onClose={closeDocente} onSwipe={onSwipeDocente}
         portrait={`${IMG}/JuanDavid_Init.webp`}
         portraitEnd={`${IMG}/JuanDavid_End.webp`}
         name={<>Juan David<br />Aristizabal</>}
-        tags={['Animación', 'Videojuegos', 'WebGL']}
+        tags={t.docentes.juandavid.modalTags}
       >
-        <h3 className="pcd-docente-modal__heading">Perfil</h3>
-        <p className="pcd-docente-modal__p">Soy profesional en Publicidad y Diseño Gráfico con énfasis en animación 2D y 3D, y cuento con una Maestría en Animación 3D para las Industrias del Entretenimiento.</p>
-        <p className="pcd-docente-modal__p">Actualmente me desempeño como director creativo en Meta-Carbon, donde he trabajado en proyectos audiovisuales de investigación-creación relacionados con animación, motion graphics, videojuegos y experiencias desarrolladas en WebGL.</p>
+        <h3 className="pcd-docente-modal__heading">{t.docentes.modalPerfil}</h3>
+        <p className="pcd-docente-modal__p">{t.docentes.juandavid.p1}</p>
+        <p className="pcd-docente-modal__p">{t.docentes.juandavid.p2}</p>
         <hr className="pcd-docente-modal__rule" />
-        <h3 className="pcd-docente-modal__heading">Experiencia</h3>
+        <h3 className="pcd-docente-modal__heading">{t.docentes.modalExp}</h3>
         <ul className="pcd-docente-modal__list">
-          <li>
-            <strong>Caída libre</strong>
-            <span className="pcd-docente-modal__detail-plain">Participé como modelador, rigger y animador en Caída Libre, un cortometraje animado ganador de Co-Crea desarrollado junto a Wilson Borja y Diego Ríos.</span>
-          </li>
-          <li>
-            <strong>Action Beat Club</strong>
-            <span className="pcd-docente-modal__detail-plain">Como director creativo, lideré Action Beat Club, una colección NFT desarrollada para Meta-Carbon y publicada en Crypto.com</span>
-          </li>
-          <li>
-            <strong>Wonka</strong>
-            <span className="pcd-docente-modal__detail-plain">Participé como modelador, rigger y artista VFX en una campaña comercial para Wonka, desarrollando piezas 3D y efectos visuales.</span>
-          </li>
+          {t.docentes.juandavid.exp.map((item) => (
+            <li key={item.title}>
+              <strong>{item.title}</strong>
+              <span className="pcd-docente-modal__detail-plain">{item.body}</span>
+            </li>
+          ))}
         </ul>
       </DocenteModal>
 
@@ -613,22 +724,20 @@ export default function ProgramaCreacionDigital() {
         portrait={`${IMG}/Vanessa_Init.webp`}
         portraitEnd={`${IMG}/Vanessa_End.webp`}
         name={<>Vanessa<br />Tovar</>}
-        tags={['UX | UI', 'Estrategia', 'Research']}
+        tags={t.docentes.vanessa.modalTags}
       >
-        <h3 className="pcd-docente-modal__heading">Perfil</h3>
-        <p className="pcd-docente-modal__p">Soy Diseñadora Industrial y magíster en Customer Experience (CX), con experiencia en UX/UI, estrategia digital y diseño de experiencias para sectores financieros, inmobiliarios, educativos y de servicios digitales.</p>
-        <p className="pcd-docente-modal__p">Me apasiona moverme entre la academia y la industria, desarrollando proyectos centrados en las personas, la innovación y la creación de experiencias digitales más humanas, intuitivas y conectadas con las necesidades reales de los usuarios.</p>
+        <h3 className="pcd-docente-modal__heading">{t.docentes.modalPerfil}</h3>
+        <p className="pcd-docente-modal__p">{t.docentes.vanessa.p1}</p>
+        <p className="pcd-docente-modal__p">{t.docentes.vanessa.p2}</p>
         <hr className="pcd-docente-modal__rule" />
-        <h3 className="pcd-docente-modal__heading">Experiencia</h3>
+        <h3 className="pcd-docente-modal__heading">{t.docentes.modalExp}</h3>
         <ul className="pcd-docente-modal__list">
-          <li>
-            <strong>Bolsa de Valores de Colombia</strong>
-            <span className="pcd-docente-modal__detail-plain">En la BVC trabajé en iniciativas orientadas a la optimización de experiencias digitales y estrategias UX, buscando fortalecer la relación entre los usuarios y los servicios financieros desde una perspectiva más humana, estratégica y centrada en las personas.</span>
-          </li>
-          <li>
-            <strong>Metrocuadrado</strong>
-            <span className="pcd-docente-modal__detail-plain">Participé en el diseño y mejora de experiencias de publicación, visualización y registro dentro de la plataforma, desarrollando procesos más intuitivos, claros y eficientes para los usuarios, enfocados en mejorar la interacción y facilitar la toma de decisiones.</span>
-          </li>
+          {t.docentes.vanessa.exp.map((item) => (
+            <li key={item.title}>
+              <strong>{item.title}</strong>
+              <span className="pcd-docente-modal__detail-plain">{item.body}</span>
+            </li>
+          ))}
         </ul>
       </DocenteModal>
 
@@ -637,20 +746,47 @@ export default function ProgramaCreacionDigital() {
         portrait={`${IMG}/Camilo_Init.webp`}
         portraitEnd={`${IMG}/Camilo_End.webp`}
         name={<>Camilo<br />Cardozo</>}
-        tags={['Branding', 'Storytelling', 'UX | UI']}
+        tags={t.docentes.camilo.modalTags}
       >
-        <h3 className="pcd-docente-modal__heading">Perfil</h3>
-        <p className="pcd-docente-modal__p">Soy Diseñador Gráfico de la Universidad Jorge Tadeo Lozano, especialista en Gerencia de Mercadeo, Comunicación y Artes, Máster en Marketing Digital y en Educación Superior.</p>
-        <p className="pcd-docente-modal__p">Cuento con más de 15 años de experiencia en branding, creatividad, marketing digital y transformación digital, integrando estrategia, storytelling, UX/UI y cultura digital para desarrollar experiencias y proyectos con impacto real. Actualmente, combino mi experiencia en la industria con la docencia universitaria.</p>
+        <h3 className="pcd-docente-modal__heading">{t.docentes.modalPerfil}</h3>
+        <p className="pcd-docente-modal__p">{t.docentes.camilo.p1}</p>
+        <p className="pcd-docente-modal__p">{t.docentes.camilo.p2}</p>
         <hr className="pcd-docente-modal__rule" />
-        <h3 className="pcd-docente-modal__heading">Experiencia</h3>
+        <h3 className="pcd-docente-modal__heading">{t.docentes.modalExp}</h3>
         <ul className="pcd-docente-modal__list">
-          <li>
-            <span className="pcd-docente-modal__detail-plain">He liderado proyectos de branding, marketing digital, creatividad y transformación digital para marcas de alto impacto en Latinoamérica. A lo largo de mi trayectoria he trabajado junto a organizaciones como Banco BHD, dale!, Metrocuadrado, Seguros Alfa, DDB e IPG Mediabrands, desarrollando estrategias enfocadas en construcción de marca, experiencias digitales, comunicación creativa y crecimiento de negocio.</span>
-          </li>
-          <li>
-            <span className="pcd-docente-modal__detail-plain">También hago parte de <strong>ADL Digital Lab</strong>, el laboratorio digital de <strong>Grupo Aval</strong>, participando en iniciativas de innovación, transformación digital y diseño de experiencias centradas en el usuario. Mi experiencia combina pensamiento estratégico, storytelling, UX/UI, creatividad aplicada y cultura digital para conectar marcas con personas a través de experiencias memorables.</span>
-          </li>
+          {t.docentes.camilo.exp.map((item, idx) => (
+            <li key={idx}>
+              {item.boldParts !== null ? (
+                <span className="pcd-docente-modal__detail-plain">
+                  {item.boldParts![0]}<strong>{item.boldParts![1]}</strong>
+                  {item.boldParts![2]}<strong>{item.boldParts![3]}</strong>
+                  {item.boldParts![4]}
+                </span>
+              ) : (
+                <span className="pcd-docente-modal__detail-plain">{item.body ?? ''}</span>
+              )}
+            </li>
+          ))}
+        </ul>
+      </DocenteModal>
+
+      <DocenteModal
+        id="daniela" active={activeDocente === 'daniela'} onClose={closeDocente} onSwipe={onSwipeDocente}
+        portrait="" portraitEnd=""
+        name={<>Daniela<br />Meza</>}
+        tags={t.docentes.daniela.modalTags}
+      >
+        <h3 className="pcd-docente-modal__heading">{t.docentes.modalPerfil}</h3>
+        <p className="pcd-docente-modal__p">{t.docentes.daniela.p1}</p>
+        <p className="pcd-docente-modal__p">{t.docentes.daniela.p2}</p>
+        <hr className="pcd-docente-modal__rule" />
+        <h3 className="pcd-docente-modal__heading">{t.docentes.modalExp}</h3>
+        <ul className="pcd-docente-modal__list">
+          {t.docentes.daniela.exp.map((item, idx) => (
+            <li key={idx}>
+              <span className="pcd-docente-modal__detail-plain">{item.body ?? ''}</span>
+            </li>
+          ))}
         </ul>
       </DocenteModal>
 
@@ -659,26 +795,42 @@ export default function ProgramaCreacionDigital() {
         portrait={`${IMG}/Paula_Init.webp`}
         portraitEnd={`${IMG}/Paula_End.webp`}
         name={<>Paula<br />Lenis</>}
-        tags={['UX | UI', 'Estrategia', 'Liderazgo']}
+        tags={t.docentes.paula.modalTags}
       >
-        <h3 className="pcd-docente-modal__heading">Perfil</h3>
-        <p className="pcd-docente-modal__p">Soy Diseñadora Gráfica y especialista en Experiencia de Usuario (UX), con experiencia en diseño de productos digitales, estrategia UX y liderazgo de equipos. He trabajado creando soluciones centradas en las personas para empresas de tecnología, impulsando experiencias digitales intuitivas, eficientes e innovadoras.</p>
-        <p className="pcd-docente-modal__p">Me apasiona combinar diseño, estrategia e inteligencia artificial para desarrollar productos con impacto, además de contribuir al crecimiento de la comunidad UX a través de mentorías y espacios de aprendizaje.</p>
+        <h3 className="pcd-docente-modal__heading">{t.docentes.modalPerfil}</h3>
+        <p className="pcd-docente-modal__p">{t.docentes.paula.p1}</p>
+        <p className="pcd-docente-modal__p">{t.docentes.paula.p2}</p>
         <hr className="pcd-docente-modal__rule" />
-        <h3 className="pcd-docente-modal__heading">Experiencia</h3>
+        <h3 className="pcd-docente-modal__heading">{t.docentes.modalExp}</h3>
         <ul className="pcd-docente-modal__list">
-          <li>
-            <strong>Rappi</strong>
-            <span className="pcd-docente-modal__detail-plain">He liderado el diseño de productos digitales y equipos de Product Design, creando experiencias más intuitivas y escalables para millones de usuarios. Mi trabajo ha estado enfocado en conectar las necesidades de las personas con los objetivos del negocio mediante estrategias de diseño e innovación.</span>
-          </li>
-          <li>
-            <strong>IxDF Colombia</strong>
-            <span className="pcd-docente-modal__detail-plain">Como Country Manager lidero la comunidad de Interaction Design Foundation en Colombia, promoviendo eventos, alianzas y espacios de aprendizaje para fortalecer el ecosistema de UX y Product Design en el país.</span>
-          </li>
-          <li>
-            <strong>Laboratoria, ADPList y +Mujeres en UX LATAM</strong>
-            <span className="pcd-docente-modal__detail-plain">He participado como mentora acompañando a profesionales que inician o fortalecen su carrera en UX y Product Design, compartiendo conocimientos y apoyando su desarrollo profesional.</span>
-          </li>
+          {t.docentes.paula.exp.map((item) => (
+            <li key={item.title}>
+              <strong>{item.title}</strong>
+              <span className="pcd-docente-modal__detail-plain">{item.body}</span>
+            </li>
+          ))}
+        </ul>
+      </DocenteModal>
+
+      <DocenteModal
+        id="ximena" active={activeDocente === 'ximena'} onClose={closeDocente} onSwipe={onSwipeDocente}
+        portrait={`${IMG}/Ximena_Init.webp`}
+        portraitEnd={`${IMG}/Ximena_End.webp`}
+        name={<>Ximena<br />Tovar</>}
+        tags={t.docentes.ximena.modalTags}
+      >
+        <h3 className="pcd-docente-modal__heading">{t.docentes.modalPerfil}</h3>
+        <p className="pcd-docente-modal__p">{t.docentes.ximena.p1}</p>
+        <p className="pcd-docente-modal__p">{t.docentes.ximena.p2}</p>
+        <hr className="pcd-docente-modal__rule" />
+        <h3 className="pcd-docente-modal__heading">{t.docentes.modalExp}</h3>
+        <ul className="pcd-docente-modal__list">
+          {t.docentes.ximena.exp.map((item) => (
+            <li key={item.title}>
+              <strong>{item.title}</strong>
+              <span className="pcd-docente-modal__detail-plain">{item.body}</span>
+            </li>
+          ))}
         </ul>
       </DocenteModal>
 
@@ -686,55 +838,68 @@ export default function ProgramaCreacionDigital() {
       <section id="proyectos" className="pcd-projects">
         <header className="pcd-projects__head pcd-reveal">
           <h2 className="pcd-projects__title">
-            Proyectos que<br />
-            <span className="pop">crean</span> nuestros<br />
-            estudiantes.
+            {t.projects.sectionTitleL1}<br />
+            <span className="pop">{t.projects.sectionTitlePop}</span>{t.projects.sectionTitleL2rest}
+            {t.projects.sectionTitleL3 && <><br />{t.projects.sectionTitleL3}</>}
           </h2>
           <Link className="pcd-cta-secondary" to="/proyectos">
-            <span>VER PROYECTOS</span>
+            <span>{t.projects.cta}</span>
             <span aria-hidden="true">→</span>
           </Link>
         </header>
 
         <div className="pcd-projects__grid">
-          {PROYECTOS.slice(0, 2).map((p, i) => (
-            <article key={p.id} className={`pcd-project ${i === 0 ? 'pcd-project--wide' : 'pcd-project--tall'} pcd-reveal`}>
-              <div
-                className={`pcd-project__media${p.id === 'campana-mundial' ? ' pcd-project__media--zoom' : ''}`}
-                style={{ backgroundImage: `url('${p.image}')` }}
-                aria-hidden="true"
-              />
-              <div className="pcd-project__meta">
-                <span>{p.subject.toUpperCase()}</span>
-                <span>{p.year}</span>
-              </div>
-              <p className="pcd-project__caption">{p.caption}</p>
-            </article>
-          ))}
+          {PROYECTOS.slice(0, 2).map((p, i) => {
+            const isTall = i === 1;
+            const imgSrc = isTall ? (p.imageVertical ?? p.image) : p.image;
+            const inner = (
+              <>
+                <div
+                  className="pcd-project__media"
+                  style={{ backgroundImage: `url('${imgSrc}')` }}
+                  aria-hidden="true"
+                />
+                <div className="pcd-project__meta">
+                  <span>{(lang === 'en' ? (p.subjectEn ?? p.subject) : p.subject).toUpperCase()}</span>
+                  <span>{p.year}</span>
+                </div>
+                <p className="pcd-project__caption">{lang === 'en' ? (p.captionEn ?? p.caption) : p.caption}</p>
+              </>
+            );
+            return p.modal ? (
+              <Link key={p.id} to={`/proyectos/${p.id}`}
+                className={`pcd-project ${i === 0 ? 'pcd-project--wide' : 'pcd-project--tall'} pcd-project--clickable pcd-reveal`}
+                style={{ textDecoration: 'none' }}>
+                {inner}
+              </Link>
+            ) : (
+              <article key={p.id} className={`pcd-project ${i === 0 ? 'pcd-project--wide' : 'pcd-project--tall'} pcd-reveal`}>
+                {inner}
+              </article>
+            );
+          })}
         </div>
       </section>
 
       {/* ===== ESTUDIA / CTA FINAL ===== */}
       <section id="aplica" className="pcd-estudia">
         <div className="pcd-estudia__copy">
-          <span className="pcd-estudia__eyebrow pcd-reveal">U. EL BOSQUE &gt;&gt; SNIES 116265 &gt;&gt; 8 SEMESTRES</span>
+          <span className="pcd-estudia__eyebrow pcd-reveal">{t.estudia.eyebrow}</span>
           <h2 className="pcd-estudia__title pcd-reveal">
-            Estudia<br />
-            <span className="neon">Creación</span>
-            Digital.
+            {t.estudia.title}<br />
+            <span className="neon">{t.estudia.titleNeon}</span>
+            {t.estudia.titleEnd}
           </h2>
-          <p className="pcd-estudia__body pcd-reveal">No estudias Creación Digital para encajar en el futuro, sino para ayudar a crearlo. Haz parte de una nueva generación de creadores capaces de conectar ideas, tecnología y cultura digital, e inscríbete para empezar a construir lo que viene después.</p>
+          <p className="pcd-estudia__body pcd-reveal">{t.estudia.body}</p>
           <a className="pcd-estudia__cta pcd-reveal" href={APLICA_URL} target="_blank" rel="noopener">
-            <span>APLICA AHORA</span>
+            <span>{t.estudia.cta}</span>
             <span aria-hidden="true">→</span>
           </a>
         </div>
         <div className="pcd-estudia__photo pcd-reveal">
-          {/* Bullets anclados a la foto (no a la sección) para que queden
-              sobre las 4 personas tanto en desktop como en móvil apilado. */}
-          <span className="pcd-bullet pcd-bullet--1">Estrategia</span>
-          <span className="pcd-bullet pcd-bullet--2">tecnología</span>
-          <span className="pcd-bullet pcd-bullet--3">FUTURO</span>
+          <span className="pcd-bullet pcd-bullet--1">{t.estudia.bullet1}</span>
+          <span className="pcd-bullet pcd-bullet--2">{t.estudia.bullet2}</span>
+          <span className="pcd-bullet pcd-bullet--3">{t.estudia.bullet3}</span>
         </div>
       </section>
 
@@ -742,22 +907,22 @@ export default function ProgramaCreacionDigital() {
       <footer className="pcd-footer" id="contacto">
         <div className="pcd-footer__columns">
           <div className="pcd-footer__col pcd-reveal">
-            <span className="pcd-footer__title">Programa</span>
-            <a className="pcd-footer__link" href="https://www.unbosque.edu.co/programas-academicos/facultad-creacion-comunicacion/creacion-digital" target="_blank" rel="noopener">Información</a>
-            <a className="pcd-footer__link" href="/programa/pdf/Manifiesto-CREADIG.pdf" target="_blank" rel="noopener">Manifiesto</a>
+            <span className="pcd-footer__title">{t.footer.colPrograma}</span>
+            <a className="pcd-footer__link" href="https://www.unbosque.edu.co/programas-academicos/facultad-creacion-comunicacion/creacion-digital" target="_blank" rel="noopener">{t.footer.info}</a>
+            <a className="pcd-footer__link" href="/programa/pdf/Manifiesto-CREADIG.pdf" target="_blank" rel="noopener">{t.footer.manifiesto}</a>
           </div>
           <div className="pcd-footer__col pcd-reveal">
-            <span className="pcd-footer__title">Comunidad</span>
+            <span className="pcd-footer__title">{t.footer.colComunidad}</span>
             <a className="pcd-footer__link" href="https://www.instagram.com/creaciondigital.ueb/" target="_blank" rel="noopener">Instagram</a>
             <a className="pcd-footer__link" href="https://www.tiktok.com/@creaciondigital.ueb" target="_blank" rel="noopener">TikTok</a>
           </div>
           <div className="pcd-footer__col pcd-reveal">
-            <span className="pcd-footer__title">Universidad</span>
+            <span className="pcd-footer__title">{t.footer.colUniversidad}</span>
             <a className="pcd-footer__link" href="https://www.unbosque.edu.co/" target="_blank" rel="noopener">Universidad El Bosque</a>
             <a className="pcd-footer__link" href="https://www.unbosque.edu.co/programas-academicos/facultad-creacion-comunicacion" target="_blank" rel="noopener">FACyC</a>
           </div>
         </div>
-        <p className="pcd-footer__legal">© Universidad El Bosque · Pregrado de Creación Digital · 2026</p>
+        <p className="pcd-footer__legal">{t.footer.legal}</p>
       </footer>
     </div>
   );
