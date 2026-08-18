@@ -1358,10 +1358,7 @@ body:has(.pcd-docente-modal[open]) {
   transform: scale(1.2);
 }
 .pcd-docente-modal--sofia .pcd-docente-modal__portrait-layer--end {
-  /* El dibujo "end" mide ~2-3% menos de tinta que el "init" (mismo caso
-     medido en las cards del resto de docentes) — se compensa con un
-     poco más de escala para que ambos se vean del mismo tamaño. */
-  transform: scale(1.28);
+  transform: scale(1.24);
 }
 .pcd-docente-modal__name {
   font-family: var(--pcd-serif);
