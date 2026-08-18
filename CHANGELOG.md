@@ -54,6 +54,12 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 - 4 íconos nuevos recortados de los logos reales que envió el usuario (mismo criterio que el dock del eje 01: sin reinterpretar la forma, solo fondo eliminado y recoloreado a negro plano).
 - Archivos: `src/pages/ProgramaCreacionDigital.tsx`, `src/i18n/translations.ts`, `src/styles/programa.css`, `public/programa/img/dock/blender.png`, `unity.png`, `unreal-engine.png`, `cascadeur.png` (nuevos).
 
+### Agregado — Toggle Definición/Contenido también en el eje 03 (producto)
+
+- Mismo patrón que los ejes 01 y 02: botón único que alterna, título "¿Qué aprenderás?" en Rubik Bubbles, párrafo con frases clave resaltadas y dock de herramientas (Claude, Figma, GitHub, Visual Studio Code).
+- 4 íconos nuevos recortados de los logos reales que envió el usuario.
+- Archivos: `src/pages/ProgramaCreacionDigital.tsx`, `src/i18n/translations.ts`, `src/styles/programa.css`, `public/programa/img/dock/claude.png`, `figma.png`, `github.png`, `vscode.png` (nuevos).
+
 ## [3.4.0] — 2026-08-18
 
 ### Agregado — Foto real de Sofía Jiménez (card + modal)
