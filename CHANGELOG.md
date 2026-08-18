@@ -48,6 +48,12 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 - Aplicada la misma clase `pcd-project__media--contain` que ya se usaba para este caso en `/proyectos`, para que la portada se vea completa en vez de recortada.
 - Archivos: `src/pages/ProgramaCreacionDigital.tsx`.
 
+### Agregado — Toggle Definición/Contenido también en el eje 02 (mundo 3d)
+
+- Mismo patrón que el eje 01: botón único que alterna, título "¿Qué aprenderás?" en Rubik Bubbles, párrafo con frases clave resaltadas y dock de herramientas (Blender, Unity, Unreal Engine, Cascadeur).
+- 4 íconos nuevos recortados de los logos reales que envió el usuario (mismo criterio que el dock del eje 01: sin reinterpretar la forma, solo fondo eliminado y recoloreado a negro plano).
+- Archivos: `src/pages/ProgramaCreacionDigital.tsx`, `src/i18n/translations.ts`, `src/styles/programa.css`, `public/programa/img/dock/blender.png`, `unity.png`, `unreal-engine.png`, `cascadeur.png` (nuevos).
+
 ## [3.4.0] — 2026-08-18
 
 ### Agregado — Foto real de Sofía Jiménez (card + modal)
