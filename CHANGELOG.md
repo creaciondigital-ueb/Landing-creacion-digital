@@ -78,6 +78,12 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 - `.pcd-content-dock` (selector compartido por los 3 ejes) tenía `margin-top: 8px`; se subió a `43px` (+35px) para separar más el final del párrafo del inicio de la etiqueta "Herramientas que usarás".
 - Archivos: `src/styles/programa.css`.
 
+### Corregido — Botón, título y subtítulo de cada eje en 3 alineaciones distintas en mobile
+
+- En móvil (≤1050px), el botón toggle (compartido por los 3 ejes) siempre quedaba pegado a la izquierda porque su selector no tenía override para ese breakpoint, mientras el título y el subtítulo se alineaban distinto según el eje (Contenido a la izquierda, Mundo 3D centrado, Producto a la derecha) — quedaban en 3 posiciones distintas dentro del mismo bloque.
+- `.pcd-axis__left` ahora es `display:flex; flex-direction:column; align-items:center;` en móvil, y las reglas de `.pcd-axis__word`/`.pcd-axis__caption` por eje se unificaron a `text-align:center`, así botón, título y subtítulo quedan alineados entre sí en los 3 ejes.
+- Archivos: `src/styles/programa.css`.
+
 ## [3.4.0] — 2026-08-18
 
 ### Agregado — Foto real de Sofía Jiménez (card + modal)
