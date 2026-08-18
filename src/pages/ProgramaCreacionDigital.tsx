@@ -26,6 +26,14 @@ const MUNDO_DOCK = [
   { name: 'Cascadeur', icon: `${IMG}/dock/cascadeur.png` },
 ];
 
+/** Herramientas del dock — modo "Contenido" del eje 03 (producto). */
+const PRODUCTO_DOCK = [
+  { name: 'Claude', icon: `${IMG}/dock/claude.png` },
+  { name: 'Figma', icon: `${IMG}/dock/figma.png` },
+  { name: 'GitHub', icon: `${IMG}/dock/github.png` },
+  { name: 'Visual Studio Code', icon: `${IMG}/dock/vscode.png` },
+];
+
 /**
  * Convierte un string con **frases resaltadas** (marcadas entre doble
  * asterisco, estilo markdown liviano) en nodos React con <strong> en vez
@@ -162,6 +170,8 @@ export default function ProgramaCreacionDigital() {
   const [axis01Mode, setAxis01Mode] = useState<'definicion' | 'contenido'>('definicion');
   // Toggle Definición / Contenido — eje 02 (sección "mundo 3d")
   const [axis02Mode, setAxis02Mode] = useState<'definicion' | 'contenido'>('definicion');
+  // Toggle Definición / Contenido — eje 03 (sección "producto")
+  const [axis03Mode, setAxis03Mode] = useState<'definicion' | 'contenido'>('definicion');
 
   // ── Hero typewriter ──────────────────────────────────────────
   const [heroTypedChars, setHeroTypedChars] = useState(0);
@@ -532,7 +542,14 @@ export default function ProgramaCreacionDigital() {
       {/* ===== AXIS 03 · PRODUCTO ===== */}
       <section className="pcd-axis pcd-axis--producto">
         <div className="pcd-axis__left">
-          <div className="pcd-axis__tag pcd-reveal">{t.axis03.tag}</div>
+          <button
+            type="button"
+            className="pcd-axis__switch pcd-reveal"
+            aria-label={axis03Mode === 'definicion' ? t.axis03.toggleToContenido : t.axis03.toggleToDefinicion}
+            onClick={() => setAxis03Mode(axis03Mode === 'definicion' ? 'contenido' : 'definicion')}
+          >
+            {axis03Mode === 'definicion' ? t.axis03.toggleToContenido : t.axis03.toggleToDefinicion}
+          </button>
           <h2 className="pcd-axis__word pcd-reveal">
             <span className="pcd-axis__word-desktop">
               {t.axis03.wordLine1}
@@ -544,29 +561,49 @@ export default function ProgramaCreacionDigital() {
           <div className="pcd-axis__image pcd-reveal" style={{ backgroundImage: `url('${IMG}/proyecto-6.webp')` }} aria-hidden="true" />
         </div>
         <div className="pcd-axis__right">
-          <article className="pcd-vs pcd-reveal">
-            <span className="pcd-vs__idx">3.1</span>
-            <div>
-              <h3 className="pcd-vs__title">{t.axis03.vs31title} <span className="pcd-vs__accent">{t.axis03.vs31accent}</span></h3>
-              <p className="pcd-vs__body">{t.axis03.vs31body}</p>
-            </div>
-          </article>
-          <hr className="pcd-axis__divider" />
-          <article className="pcd-vs pcd-reveal">
-            <span className="pcd-vs__idx">3.2</span>
-            <div>
-              <h3 className="pcd-vs__title">{t.axis03.vs32title} <span className="pcd-vs__accent">{t.axis03.vs32accent}</span></h3>
-              <p className="pcd-vs__body">{t.axis03.vs32body}</p>
-            </div>
-          </article>
-          <hr className="pcd-axis__divider" />
-          <article className="pcd-vs pcd-reveal">
-            <span className="pcd-vs__idx">3.3</span>
-            <div>
-              <h3 className="pcd-vs__title">{t.axis03.vs33title} <span className="pcd-vs__accent">{t.axis03.vs33accent}</span></h3>
-              <p className="pcd-vs__body">{t.axis03.vs33body}</p>
-            </div>
-          </article>
+          {axis03Mode === 'definicion' ? (
+            <>
+              <article className="pcd-vs">
+                <span className="pcd-vs__idx">3.1</span>
+                <div>
+                  <h3 className="pcd-vs__title">{t.axis03.vs31title} <span className="pcd-vs__accent">{t.axis03.vs31accent}</span></h3>
+                  <p className="pcd-vs__body">{t.axis03.vs31body}</p>
+                </div>
+              </article>
+              <hr className="pcd-axis__divider" />
+              <article className="pcd-vs">
+                <span className="pcd-vs__idx">3.2</span>
+                <div>
+                  <h3 className="pcd-vs__title">{t.axis03.vs32title} <span className="pcd-vs__accent">{t.axis03.vs32accent}</span></h3>
+                  <p className="pcd-vs__body">{t.axis03.vs32body}</p>
+                </div>
+              </article>
+              <hr className="pcd-axis__divider" />
+              <article className="pcd-vs">
+                <span className="pcd-vs__idx">3.3</span>
+                <div>
+                  <h3 className="pcd-vs__title">{t.axis03.vs33title} <span className="pcd-vs__accent">{t.axis03.vs33accent}</span></h3>
+                  <p className="pcd-vs__body">{t.axis03.vs33body}</p>
+                </div>
+              </article>
+            </>
+          ) : (
+            <>
+              <h3 className="pcd-content-title">{t.axis03.contenidoTitle}</h3>
+              <p className="pcd-content-copy">{renderAccented(t.axis03.contenidoBody)}</p>
+              <div className="pcd-content-dock">
+                <span className="pcd-content-dock__label">{t.axis03.dockLabel}</span>
+                <div className="pcd-content-dock__row">
+                  {PRODUCTO_DOCK.map((tool) => (
+                    <div className="pcd-content-dock__item" key={tool.name} title={tool.name}>
+                      <div className="pcd-content-dock__icon" style={{ backgroundImage: `url('${tool.icon}')` }} aria-hidden="true" />
+                      <span className="pcd-content-dock__name">{tool.name}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </>
+          )}
         </div>
       </section>
 

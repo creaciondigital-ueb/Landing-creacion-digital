@@ -77,6 +77,11 @@ const translations = {
     },
     axis03: {
       tag: "03 · programa",
+      toggleToContenido: "Ver contenido",
+      toggleToDefinicion: "Ver definición",
+      contenidoTitle: "¿Qué aprenderás?",
+      contenidoBody: "Aprenderás a crear **productos digitales** como aplicaciones y páginas web. Entenderás las bases de la **programación frontend** con lenguajes como **Java**, y luego complementarás con herramientas de IA como **Claude Code**. Aprenderás a usar **Figma** y a construir **prototipos de alta fidelidad** y usables, que combinen funcionalidad, estética y experiencia.",
+      dockLabel: "Herramientas que usarás",
       wordLine1: "prod-",
       wordLine2: "ucto",
       wordFull: "producto",
@@ -317,6 +322,11 @@ const translations = {
     },
     axis03: {
       tag: "03 · program",
+      toggleToContenido: "View content",
+      toggleToDefinicion: "View definition",
+      contenidoTitle: "What will you learn?",
+      contenidoBody: "You'll create **digital products** like apps and websites. You'll learn the basics of **frontend programming** with languages like **Java**, then complement it with AI tools like **Claude Code**. You'll learn to use **Figma** and build **high-fidelity**, usable **prototypes** that combine functionality, aesthetics and experience.",
+      dockLabel: "Tools you will use",
       wordLine1: "prod-",
       wordLine2: "uct",
       wordFull: "product",
