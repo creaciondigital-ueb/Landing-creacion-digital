@@ -1897,6 +1897,12 @@ body:has(.pcd-docente-modal[open]) {
    La fila (video izq, card der, foto arriba/texto abajo centrados) queda
    reservada para pantallas realmente anchas. */
 @media (min-width: 1486px) {
+  /* Menos padding lateral = más ancho disponible para .pcd-team__body =
+     el stage (aspect-ratio fijo) crece un poco más alto también, ya que
+     su alto depende de su ancho. Pedido: "aumenta un poquito el alto
+     del video y la card" — la card sigue el alto del video vía JS
+     (ResizeObserver), así que sube junto con él automáticamente. */
+  .pcd-team { padding-left: 64px; padding-right: 64px; }
   .pcd-team__body {
     flex-direction: row;
     align-items: stretch;

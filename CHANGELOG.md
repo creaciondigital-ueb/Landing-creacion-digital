@@ -7,6 +7,11 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Cambiado — Video y card de Equipo un poco más altos (≥1486px)
+
+- `.pcd-team` reduce su padding lateral de `88px` a `64px` dentro de `@media (min-width: 1486px)` — más ancho disponible para `.pcd-team__body`, así que el stage (con `aspect-ratio` fijo) crece un poco más de alto también. La card sigue automáticamente ese alto vía el `ResizeObserver` ya existente.
+- Archivos: `src/styles/programa.css`.
+
 ### Corregido — Video y card de Equipo desajustados en alto (≥1486px)
 
 - Al pasar el layout en fila a arrancar en `1486px` (en vez de `1050px`), en el extremo angosto de ese rango el contenido natural de la card (foto de hasta 380px + nombre/rol/descripción) resultó más alto que el video a ese ancho — flexbox usa el máximo entre ambos para el alto de la fila, así que la card terminaba más alta que el video, desajustados.
