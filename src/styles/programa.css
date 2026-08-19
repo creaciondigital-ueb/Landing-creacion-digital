@@ -1744,16 +1744,17 @@ body:has(.pcd-docente-modal[open]) {
   text-transform: uppercase;
   color: var(--pcd-ink);
 }
-/* flex en vez de grid: con grid, el row "auto" no calculaba bien la altura
-   intrínseca de .pcd-team__stage (que viene de aspect-ratio sobre un ancho
-   en fr) y el panel de la derecha quedaba mucho más bajo que el video en
-   vez de estirarse a la misma altura. Flexbox resuelve primero el ancho
-   (flex-basis) y de ahí la altura por aspect-ratio, así que el stretch
-   del panel contra esa altura sí funciona de forma consistente. */
+/* Apilado (video arriba, card abajo a todo el ancho) es el layout BASE,
+   no solo el de mobile: el usuario pidió explícitamente mantenerlo así
+   "hasta que llegue al ancho normal" — el ancho de referencia del diseño
+   desktop (1486px, la misma constante que usan el hero y el bloque
+   "mundo 3d" en otras secciones, ver arriba). Recién a partir de ahí se
+   activa el layout en fila (video izquierda, card derecha) dentro del
+   media query al final de este bloque. */
 .pcd-team__body {
   display: flex;
-  align-items: stretch;
-  gap: 40px;
+  flex-direction: column;
+  gap: 24px;
 }
 .pcd-team__stage {
   position: relative;
@@ -1761,16 +1762,7 @@ body:has(.pcd-docente-modal[open]) {
   border: 2.5px solid var(--pcd-ink);
   background: var(--pcd-ink);
   aspect-ratio: 1280 / 716;
-  flex: 2.2 1 0%; /* video más ancho, card más angosta (antes 1.35:1, luego 1.8:1) */
-  min-width: 0;
-  /* Sin esto, align-items:stretch del padre (.pcd-team__body) estira el
-     alto del stage para igualar el de la card cuando la card necesita
-     más alto que el que le da su propio aspect-ratio — eso rompe la
-     proporción real del video (el ancho se queda fijo, el alto crece) y
-     object-fit:cover termina recortando los lados, perdiendo gente
-     (Estefany/Fabian, los del borde). El stage SIEMPRE mantiene su
-     propio alto por aspect-ratio; es la card la que se ajusta a él. */
-  align-self: flex-start;
+  width: 100%;
 }
 .pcd-team__video {
   display: block;
@@ -1819,24 +1811,18 @@ body:has(.pcd-docente-modal[open]) {
   opacity: 1;
   transform: translateY(0);
 }
-/* Foto arriba, texto abajo, TODO centrado dentro de la card (que ya
-   ocupa la altura completa del video vía el flex del padre). Se probaron
-   antes: foto como franja del 44% (se recortaba la cabeza) y foto al
-   lado del texto con height:100% (se veía enorme y dejaba el texto sin
-   espacio). Esta versión evita ambos problemas: la foto es un cuadrado
-   con un tope de tamaño fijo (no depende de la altura de la card, así
-   que nunca se recorta ni se come el ancho del texto) y el centrado
-   vertical/horizontal reparte el espacio sobrante de la card como
-   aire alrededor, en vez de forzar a la foto a llenarlo. */
+/* Layout BASE de la card (para el rango apilado, ver comentario en
+   .pcd-team__body): foto a la izquierda, texto a la derecha — pedido
+   explícito del usuario al ver que, con el video a todo el ancho arriba,
+   una card angosta centrada verticalmente ya no tenía sentido debajo.
+   El layout centrado (foto arriba, texto abajo) se preserva solo para
+   el layout en fila de escritorio ancho, dentro del media query. */
 .pcd-team__panel {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
-  justify-content: center;
-  flex: 1 1 0%;
-  min-width: 0;
-  gap: 10px; /* texto pegado más arriba, más cerca de la foto (antes 24px) */
-  padding: 40px 32px;
+  gap: 28px;
+  padding: 28px 32px;
   border: 2.5px solid var(--pcd-ink);
   box-shadow: 8px 8px 0 var(--pcd-ink);
   background: #fefefe; /* mismo blanco de fondo que traen los 5 retratos (rgb 254,254,254), para que la foto no se note "pegada" contra un fondo distinto */
@@ -1844,20 +1830,18 @@ body:has(.pcd-docente-modal[open]) {
 }
 .pcd-team__panel-photo {
   flex: none;
-  width: min(80%, 380px);
+  width: min(30%, 220px);
   aspect-ratio: 1 / 1;
   background-size: cover;
   background-position: center top;
 }
 .pcd-team__panel-body {
-  flex: none;
-  width: 100%;
-  max-width: 420px; /* líneas de texto legibles aunque la card sea ancha */
+  flex: 1 1 0%;
   min-width: 0;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  text-align: center;
+  align-items: flex-start;
+  text-align: left;
   gap: 10px;
   overflow-y: auto;
 }
@@ -1902,26 +1886,65 @@ body:has(.pcd-docente-modal[open]) {
   box-shadow: none;
 }
 
-/* 1050px, no 980px: es el mismo breakpoint donde el resto del sitio pasa
-   a nav hamburguesa (ver .pcd-header). Con 980px el video+card en fila
-   quedaban activos en un rango de ancho que ya es "móvil" para el resto
-   de la página, y no había espacio real — el tag se cortaba contra el
-   borde del video. Apilado (video arriba, card abajo) hasta el mismo
-   punto en que el sitio entero se considera desktop. */
+/* Antes el layout en fila arrancaba en 1050px (el breakpoint de nav
+   hamburguesa del resto del sitio) pero a esos anchos el video en fila
+   quedaba muy angosto y la card no tenía aire real. Pedido explícito del
+   usuario: mantener el apilado (video arriba a todo el ancho, card abajo)
+   hasta "el ancho normal" del sitio — 1486px, la constante de referencia
+   del diseño desktop que ya usan el hero y el bloque "mundo 3d" (ver
+   arriba). Debajo de 1486px, .pcd-team__body/.pcd-team__stage/
+   .pcd-team__panel usan sus estilos base (apilados, foto-izq/texto-der).
+   La fila (video izq, card der, foto arriba/texto abajo centrados) queda
+   reservada para pantallas realmente anchas. */
+@media (min-width: 1486px) {
+  .pcd-team__body {
+    flex-direction: row;
+    align-items: stretch;
+    gap: 40px;
+  }
+  .pcd-team__stage {
+    flex: 2.2 1 0%; /* video más ancho, card más angosta (antes 1.35:1, luego 1.8:1) */
+    width: auto;
+    min-width: 0;
+    /* Sin esto, align-items:stretch del padre estira el alto del stage
+       para igualar el de la card cuando la card necesita más alto que
+       el que le da su propio aspect-ratio — eso rompe la proporción
+       real del video (el ancho se queda fijo, el alto crece) y
+       object-fit:cover termina recortando los lados, perdiendo gente
+       (Estefany/Fabian, los del borde). El stage SIEMPRE mantiene su
+       propio alto por aspect-ratio; es la card la que se ajusta a él. */
+    align-self: flex-start;
+  }
+  .pcd-team__panel {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 1 1 0%;
+    min-width: 0;
+    gap: 10px; /* texto pegado más arriba, más cerca de la foto (antes 24px) */
+    padding: 40px 32px;
+  }
+  .pcd-team__panel-photo {
+    width: min(80%, 380px);
+  }
+  .pcd-team__panel-body {
+    flex: none;
+    width: 100%;
+    max-width: 420px; /* líneas de texto legibles aunque la card sea ancha */
+    align-items: center;
+    text-align: center;
+  }
+}
 @media (max-width: 1050px) {
   .pcd-team { padding: 56px 24px 64px; }
   .pcd-team__title { font-size: clamp(36px, 8vw, 56px); }
-  .pcd-team__body {
-    flex-direction: column;
-    gap: 24px;
-  }
-  .pcd-team__stage { flex: none; }
-  .pcd-team__panel { flex: none; }
 }
 @media (max-width: 640px) {
   .pcd-team { padding: 48px 20px 56px; }
-  .pcd-team__panel { padding: 28px 20px; gap: 18px; }
-  .pcd-team__panel-photo { width: 68%; max-width: 240px; }
+  .pcd-team__panel { padding: 20px; gap: 16px; }
+  .pcd-team__panel-photo { width: 32%; max-width: 130px; }
+  .pcd-team__panel-name { font-size: 24px; }
+  .pcd-team__panel-desc { font-size: 14px; }
   .pcd-team__tag { display: none; } /* en mobile el tag flotante sobre el video no cabe/estorba; el click ya selecciona igual */
 }
 

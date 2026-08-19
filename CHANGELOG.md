@@ -7,6 +7,13 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Cambiado — Layout de Equipo apilado hasta el ancho normal del sitio (1486px) + card foto-izq/texto-der
+
+- El layout en fila (video izquierda, card derecha) de la sección Equipo ya no arranca en `1050px`: el layout BASE ahora es siempre apilado (video arriba a todo el ancho, card abajo), y la fila queda dentro de `@media (min-width: 1486px)` — la constante de "ancho de referencia del diseño desktop" que ya usan el hero y el bloque "mundo 3d" en otras secciones. Pedido explícito del usuario tras ver que la fila se veía mal en anchos intermedios.
+- Dentro del rango apilado, la card (`.pcd-team__panel`) cambia de "foto arriba centrada / texto abajo centrado" a fila horizontal: foto a la izquierda (`min(30%, 220px)`, o `32%`/máx `130px` en mobile), texto a la derecha alineado a la izquierda. El diseño centrado original (foto arriba, texto abajo) se conserva solo dentro del media query de `1486px` para el layout en fila.
+- `.pcd-team__stage` deja de tener su ancho/flex fijo en el bloque base (ahora `width: 100%`, apilado) y los valores `flex: 2.2 1 0%` + `align-self: flex-start` (el fix del recorte del video) se movieron dentro del mismo media query de `1486px`, donde sigue aplicando.
+- Archivos: `src/styles/programa.css`.
+
 ### Corregido — El video de Equipo se recortaba en desktop (align-items:stretch rompía su aspect-ratio)
 
 - `.pcd-team__body` usa `align-items: stretch` para que la card ocupe toda la altura del video, pero eso también estiraba el STAGE del video cuando la card necesitaba más alto del que el stage sacaba de su propio `aspect-ratio` — el ancho del stage se quedaba fijo, así que su proporción real (1280:716) se rompía y `object-fit: cover` recortaba los lados, perdiendo gente de los bordes (Estefany/Fabian).
