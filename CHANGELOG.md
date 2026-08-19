@@ -7,6 +7,11 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Cambiado — Otros +20px al padding superior de Proyectos
+
+- `.pcd-projects`: padding-top de `48px` a `68px` (total +40px sobre el original de `28px`).
+- Archivos: `src/styles/programa.css`.
+
 ### Cambiado — +20px de padding: arriba en Proyectos, abajo en Docentes
 
 - `.pcd-projects`: padding-top de `28px` a `48px`.
