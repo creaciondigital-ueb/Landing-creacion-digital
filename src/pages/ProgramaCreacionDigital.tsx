@@ -719,6 +719,7 @@ export default function ProgramaCreacionDigital() {
           </h2>
           <p className="pcd-docentes__sub">{t.docentes.sectionSub}</p>
         </header>
+        <div className="pcd-docentes__grid-wrap">
         <div
           className="pcd-docentes__grid"
           ref={docentesGridRef}
@@ -1003,6 +1004,7 @@ export default function ProgramaCreacionDigital() {
               {t.docentes.vanessa.tags.map((tag) => <span key={tag} className="pcd-docente__tag">{tag}</span>)}
             </div>
           </article>
+        </div>
         </div>
       </section>
 
