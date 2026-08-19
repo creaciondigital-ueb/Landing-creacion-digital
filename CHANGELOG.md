@@ -7,6 +7,11 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Cambiado — Ajuste fino: video de Equipo un poco más ancho todavía
+
+- Proporción video:card ajustada de `1.8:1` a `2.2:1` — el video pasa de ~64% a ~69% del ancho total.
+- Archivos: `src/styles/programa.css`.
+
 ### Cambiado — Card de Equipo más angosta (video más ancho) + fondo igualado al de las fotos
 
 - Proporción del video vs. la card ajustada de `1.35:1` a `1.8:1`: el video pasa de ~57% a ~64% del ancho total, la card se angosta de ~43% a ~36%.

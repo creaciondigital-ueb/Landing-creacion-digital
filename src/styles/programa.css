@@ -1737,7 +1737,7 @@ body:has(.pcd-docente-modal[open]) {
   border: 2.5px solid var(--pcd-ink);
   background: var(--pcd-ink);
   aspect-ratio: 1280 / 716;
-  flex: 1.8 1 0%; /* video más ancho, card más angosta (antes 1.35:1) */
+  flex: 2.2 1 0%; /* video más ancho, card más angosta (antes 1.35:1, luego 1.8:1) */
   min-width: 0;
 }
 .pcd-team__video {
