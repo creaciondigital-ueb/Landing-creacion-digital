@@ -7,6 +7,14 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Corregido — Título "mundo 3d" montado sobre su caption en pantallas ≥1051px (interpolación continua, no más breakpoints fijos)
+
+- El corrimiento de la palabra "mundo" y del caption ("Videojuegos, diseño de personajes...") usaba 3 valores fijos en px (uno "de diseño" para ≥1486px y dos parches para 1051-1486px), pero `.pcd-axis__left` es una columna fluida (fr del grid) — un valor fijo solo se ve bien en el ancho exacto para el que se ajustó, y se rompe (se monta sobre el caption) en cualquier otro ancho, incluyendo la pantalla "normal" del usuario tras haber ajustado el valor viendo desde una pantalla más ancha.
+- Se reemplazan los 3 valores fijos por una interpolación continua con `clamp()`/`calc()` sobre `100vw`, entre 1051px (los valores ya afinados para ese extremo) y 1920px (el ancho máximo real de `.pcd-page`). Se ve bien en cualquier punto de ese rango, no solo en el que se probó la última vez.
+- Se eliminan los dos `@media` que parchaban esto (`1051-1486px` y `1201-1486px` para `.pcd-axis--mundo`); el de `producto` se mantiene intacto.
+- No se tocó el reset de mobile (`@media (max-width: 1050px)`).
+- Archivos: `src/styles/programa.css`.
+
 ### Añadido — Copy real de las 5 descripciones de Equipo (ya no es Lorem Ipsum)
 
 - `translations.ts` (ES/EN): las 5 `descripcion` de Equipo (Estefany, Juan, Maria Paula, Tatiana, Fabian) reemplazan el Lorem Ipsum por texto real, condensado en un párrafo corto a partir del contenido que compartió el usuario ("¿En qué puedo ayudarte?").

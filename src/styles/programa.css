@@ -807,9 +807,26 @@
   transform: rotate(-2deg) translateY(15px);
 }
 
-/* Eje 2 — mundo 3d (acid) */
+/* Eje 2 — mundo 3d (acid)
+   El corrimiento de "mundo" y del caption se había resuelto antes con 3
+   valores fijos en px (uno "de diseño" ≥1486px, y dos parches para el
+   rango 1051-1486px) — pero .pcd-axis__left es una columna FLUIDA (fr
+   del grid), así que un valor fijo solo se ve bien exactamente en el
+   ancho para el que se ajustó, y se rompe (se monta sobre el caption o
+   se aleja de más) en cualquier otro ancho ≥1051px, incluida la
+   pantalla "normal" del usuario. En vez de sumar un cuarto breakpoint,
+   se reemplazan los 3 valores fijos por una interpolación continua
+   entre 1051px (los valores ya afinados para ese extremo angosto) y
+   1920px (el ancho máximo real de .pcd-page — de ahí en adelante el
+   contenedor deja de crecer, así que el valor se queda fijo también).
+   Así se ve bien en CUALQUIER ancho de ese rango, no solo en el que se
+   probó la última vez. */
 .pcd-axis--mundo .pcd-axis__left { background: var(--pcd-acid); color: var(--pcd-ink); }
-.pcd-axis--mundo .pcd-axis__word { text-align: right; color: var(--pcd-ink); transform: translateX(-220px); }
+.pcd-axis--mundo .pcd-axis__word {
+  text-align: right;
+  color: var(--pcd-ink);
+  transform: translateX(clamp(-220px, calc(-45px - (100vw - 1051px) * 0.2014), -45px));
+}
 .pcd-axis--mundo.pcd-axis--mundo-en .pcd-axis__word { transform: translateX(-250px); }
 .pcd-axis--mundo.pcd-axis--mundo-en .pcd-axis__caption { top: 180px; transform: translateX(55px); max-width: 22%; }
 .pcd-axis--mundo .pcd-axis__caption {
@@ -818,10 +835,13 @@
   bottom: auto;
   top: 38.8%;
   text-align: right;
-  max-width: 34%;
+  max-width: 38%;
   line-height: 1.25;
   color: var(--pcd-ink);
-  transform: translateX(-10px);
+  transform: translate(
+    clamp(-60px, calc(-60px + (100vw - 1051px) * 0.0575), -10px),
+    clamp(-30px, calc(-30px + (100vw - 1051px) * 0.0345), 0px)
+  );
   z-index: 3;
 }
 .pcd-axis--mundo .pcd-axis__image {
@@ -1017,19 +1037,12 @@
   .pcd-axis__word { font-size: 132px; }
 }
 
-/* En este rango (justo antes de colapsar a 1 columna, hasta el ancho de
-   referencia del diseño desktop = 1486px) "mundo 3d" quedaba montado sobre
-   su caption con el layout desktop de posiciones fijas; lo corremos para
-   que no se encimen. */
+/* "mundo 3d" (palabra + caption) ya no necesita un breakpoint propio
+   aquí — ver el comentario junto a .pcd-axis--mundo más arriba: ahora
+   se ajusta con una interpolación continua entre 1051px y 1920px, así
+   que se ve bien en todo este rango sin un parche adicional. */
 @media (min-width: 1051px) and (max-width: 1486px) {
-  .pcd-axis--mundo .pcd-axis__word { transform: translateX(-45px); }
-  .pcd-axis--mundo .pcd-axis__caption { max-width: 44%; transform: translate(-50px, -30px); }
   .pcd-axis--producto .pcd-axis__caption { max-width: 38%; }
-}
-/* De 1200 en adelante (hasta 1486), el caption de mundo 3d otros 10px más
-   a la izquierda que en el tramo 1051-1200. */
-@media (min-width: 1201px) and (max-width: 1486px) {
-  .pcd-axis--mundo .pcd-axis__caption { transform: translate(-60px, -30px); }
 }
 
 @media (max-width: 1050px) {
