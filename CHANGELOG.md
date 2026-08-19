@@ -7,6 +7,13 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Corregido — Video y card de Equipo desajustados en alto (≥1486px)
+
+- Al pasar el layout en fila a arrancar en `1486px` (en vez de `1050px`), en el extremo angosto de ese rango el contenido natural de la card (foto de hasta 380px + nombre/rol/descripción) resultó más alto que el video a ese ancho — flexbox usa el máximo entre ambos para el alto de la fila, así que la card terminaba más alta que el video, desajustados.
+- Se mide el alto real renderizado del video (`.pcd-team__stage`, vía `ResizeObserver` + listener de resize) y se aplica ese mismo alto en px directo a la card (`.pcd-team__panel`) cuando el ancho es ≥1486px — mismo alto siempre, alineados. Por debajo de 1486px (layout apilado) el alto vuelve a ser automático.
+- `.pcd-team__panel` gana `overflow-y: auto` como red de seguridad para el caso borde en que el texto no quepa en ese alto exacto.
+- Archivos: `src/pages/ProgramaCreacionDigital.tsx`, `src/styles/programa.css`.
+
 ### Cambiado — Card de Equipo vuelve a vertical por debajo de 500px
 
 - `@media (max-width: 500px)`: `.pcd-team__panel` vuelve a `flex-direction: column` (foto arriba, texto abajo, todo centrado) en vez de la fila foto-izq/texto-der — a ese ancho la fila ya no tenía aire real. El layout apilado del video (arriba, a todo el ancho) no cambia.

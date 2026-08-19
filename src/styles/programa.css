@@ -1915,14 +1915,25 @@ body:has(.pcd-docente-modal[open]) {
        propio alto por aspect-ratio; es la card la que se ajusta a él. */
     align-self: flex-start;
   }
+  /* La card ya no se estira sola contra la fila (eso era lo que la
+     desajustaba del alto real del video, ver JS): .pcd-team__panel
+     recibe su alto en px directo desde React (medido del propio video
+     vía ResizeObserver), así que aquí solo definimos su composición
+     interna. min-height:0 + overflow-y:auto son la red de seguridad
+     para el caso borde en que el contenido (foto de hasta 380px + texto)
+     no quepa en ese alto — deja hacer scroll en vez de desbordar la
+     card por fuera de su borde. */
   .pcd-team__panel {
     flex-direction: column;
     align-items: center;
     justify-content: center;
     flex: 1 1 0%;
     min-width: 0;
+    min-height: 0;
     gap: 10px; /* texto pegado más arriba, más cerca de la foto (antes 24px) */
     padding: 40px 32px;
+    overflow-y: auto;
+    overflow-x: hidden;
   }
   .pcd-team__panel-photo {
     width: min(80%, 380px);
