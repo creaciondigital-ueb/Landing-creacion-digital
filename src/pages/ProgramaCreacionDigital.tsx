@@ -182,9 +182,10 @@ export default function ProgramaCreacionDigital() {
   // Menú hamburguer
   const [menuOpen, setMenuOpen] = useState(false);
 
-  // Equipo: persona seleccionada para la ficha técnica (se muestra la
-  // primera por defecto, para que el panel nunca se vea vacío al llegar).
-  const [activeTeam, setActiveTeam] = useState<typeof TEAM[number]['id']>(TEAM[0].id);
+  // Equipo: persona seleccionada para la ficha técnica (Fabian por
+  // defecto — pedido explícito del usuario — para que el panel nunca se
+  // vea vacío al llegar).
+  const [activeTeam, setActiveTeam] = useState<typeof TEAM[number]['id']>('fabian');
   const activeTeamMember = t.equipo[activeTeam];
 
   // Toggle Definición / Contenido — eje 01 (sección "contenido")

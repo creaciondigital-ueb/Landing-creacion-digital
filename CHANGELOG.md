@@ -7,6 +7,12 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Cambiado — Fabian como persona por defecto de Equipo + foto sin marco y más grande
+
+- `activeTeam` inicial pasa de la primera del array (Estefany) a `'fabian'` literal.
+- `.pcd-team__panel-photo` pierde el borde de 2.5px, y el tope de tamaño sube de `min(60%, 300px)` a `min(80%, 380px)` (móvil: de `50%/180px` a `68%/240px`).
+- Archivos: `src/pages/ProgramaCreacionDigital.tsx`, `src/styles/programa.css`.
+
 ### Cambiado — Ajuste fino: video de Equipo un poco más ancho todavía
 
 - Proporción video:card ajustada de `1.8:1` a `2.2:1` — el video pasa de ~64% a ~69% del ancho total.
