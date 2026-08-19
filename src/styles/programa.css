@@ -1206,20 +1206,23 @@
   0%, 100% { transform: rotate(-8deg); }
   50% { transform: rotate(8deg); }
 }
-.pcd-sticker--like { top: 110px; animation-delay: -0.4s; }
-/* El ciclo de íconos por card pasa de 3 a 6 (estrella → computador →
-   corazón → cámara → bombillo → control → estrella...), pero los 6 íconos
-   forman 3 parejas por color (bombillo/computador = lima, estrella/cámara =
-   azul, corazón/control = rosa/rojo) — cada pareja comparte la MISMA
-   posición vertical y animation-delay que ya tenía su color en el set
-   original de 3, para que el ícono siempre "viva" en el mismo lugar de la
-   card sin importar cuál de los dos íconos de ese color le toque. */
+/* El ciclo de íconos por card ya tiene 8 valores distintos, uno por
+   docente, sin ningún ícono repetido (antes de esto, con solo 6 íconos
+   para 8 docentes, 2 se repetían y quedaban pegados justo en la costura
+   del loop infinito — ver CHANGELOG). Los 8 íconos siguen formando 4
+   parejas por color (bombillo/computador = lima, estrella/cámara/like =
+   azul... en realidad "like" y "phone" se suman a los grupos existentes
+   para seguir el patrón azul→amarillo→rojo pedido) — cada pareja comparte
+   la MISMA posición vertical y animation-delay, para que el ícono siempre
+   "viva" en el mismo lugar de la card sin importar cuál de ellos le toque. */
 .pcd-sticker--idea,
-.pcd-sticker--computer { top: 290px; animation-delay: -1.1s; }
+.pcd-sticker--computer,
+.pcd-sticker--phone { top: 290px; animation-delay: -1.1s; }
 .pcd-sticker--love,
 .pcd-sticker--controller { top: 80px; animation-delay: -1.9s; }
 .pcd-sticker--star,
-.pcd-sticker--camera { top: 110px; animation-delay: -2.6s; }
+.pcd-sticker--camera,
+.pcd-sticker--like { top: 110px; animation-delay: -2.6s; }
 .pcd-docente__blob {
   position: relative;
   height: 331px;

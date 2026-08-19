@@ -842,7 +842,7 @@ export default function ProgramaCreacionDigital() {
             style={{ '--docente-init': `url('${IMG}/JuanDavid_Init.webp')`, '--docente-end': `url('${IMG}/JuanDavid_End.webp')` } as CSSProperties}
           >
             <div className="pcd-docente__blob" aria-hidden="true" />
-            <img className="pcd-sticker pcd-sticker--star" src={`${IMG}/Star.webp`} alt="" aria-hidden="true" />
+            <img className="pcd-sticker pcd-sticker--like" src={`${IMG}/Like.webp`} alt="" aria-hidden="true" />
             <h3 className="pcd-docente__name">Juan David<br />Aristizabal</h3>
             <p className="pcd-docente__bio">{t.docentes.juandavid.bio}</p>
             <div className="pcd-docente__tags">
@@ -859,7 +859,7 @@ export default function ProgramaCreacionDigital() {
             style={{ '--docente-init': `url('${IMG}/Vanessa_Init.webp')`, '--docente-end': `url('${IMG}/Vanessa_End.webp')` } as CSSProperties}
           >
             <div className="pcd-docente__blob" aria-hidden="true" />
-            <img className="pcd-sticker pcd-sticker--computer" src={`${IMG}/Computer.webp`} alt="" aria-hidden="true" />
+            <img className="pcd-sticker pcd-sticker--phone" src={`${IMG}/Phone.webp`} alt="" aria-hidden="true" />
             <h3 className="pcd-docente__name">Vanessa<br />Tovar</h3>
             <p className="pcd-docente__bio">{t.docentes.vanessa.bio}</p>
             <div className="pcd-docente__tags">
@@ -980,7 +980,7 @@ export default function ProgramaCreacionDigital() {
             style={{ '--docente-init': `url('${IMG}/JuanDavid_Init.webp')`, '--docente-end': `url('${IMG}/JuanDavid_End.webp')` } as CSSProperties}
           >
             <div className="pcd-docente__blob" aria-hidden="true" />
-            <img className="pcd-sticker pcd-sticker--star" src={`${IMG}/Star.webp`} alt="" aria-hidden="true" />
+            <img className="pcd-sticker pcd-sticker--like" src={`${IMG}/Like.webp`} alt="" aria-hidden="true" />
             <h3 className="pcd-docente__name">Juan David<br />Aristizabal</h3>
             <p className="pcd-docente__bio">{t.docentes.juandavid.bio}</p>
             <div className="pcd-docente__tags">
@@ -997,7 +997,7 @@ export default function ProgramaCreacionDigital() {
             style={{ '--docente-init': `url('${IMG}/Vanessa_Init.webp')`, '--docente-end': `url('${IMG}/Vanessa_End.webp')` } as CSSProperties}
           >
             <div className="pcd-docente__blob" aria-hidden="true" />
-            <img className="pcd-sticker pcd-sticker--computer" src={`${IMG}/Computer.webp`} alt="" aria-hidden="true" />
+            <img className="pcd-sticker pcd-sticker--phone" src={`${IMG}/Phone.webp`} alt="" aria-hidden="true" />
             <h3 className="pcd-docente__name">Vanessa<br />Tovar</h3>
             <p className="pcd-docente__bio">{t.docentes.vanessa.bio}</p>
             <div className="pcd-docente__tags">

@@ -151,6 +151,15 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 - Nuevas clases `.pcd-sticker--computer`, `.pcd-sticker--camera`, `.pcd-sticker--controller` en `programa.css`. Primer intento: cada ícono con su propia posición/`animation-delay` nuevos — el usuario corrigió: los 6 íconos forman 3 parejas por color (bombillo/computador = lima, estrella/cámara = azul, corazón/control = rosa) y cada pareja debe compartir la MISMA posición vertical que ya tenía su color en el set original de 3 (ej. el lima siempre "más abajo"), sin importar cuál de los dos íconos de esa pareja le toque a la card. Corregido para agrupar por color: `.pcd-sticker--idea, .pcd-sticker--computer` comparten posición/delay, igual `--love/--controller` y `--star/--camera`.
 - Archivos: `public/programa/img/Computer.webp`, `Camera.webp`, `Controller.webp`, `src/pages/ProgramaCreacionDigital.tsx`, `src/styles/programa.css`.
 
+### Corregido — El ciclo de 6 stickers repetía 2 íconos justo en la costura del loop infinito
+
+- Con 8 docentes y un ciclo de 6 íconos, por matemática pura 2 íconos (estrella y computador, los primeros del ciclo) se repetían dentro de las 8 cards (posiciones 1/7 y 2/8). Dentro de una sola vuelta eso queda separado por 6 cards, pero como el carrusel es circular, la posición 8 queda pegada a la posición 1 de nuevo — el usuario reportó ver computador→estrella→computador en solo 3 cards seguidas, justo en la costura del loop.
+- Causa raíz explicada al usuario: el sticker tiene que ser idéntico entre la card original y su clon del loop infinito (si no, el "salto" del loop dejaría de ser imperceptible), así que el ícono depende de la IDENTIDAD del docente, no de una posición que suma para siempre — con 8 docentes y un patrón de 6, dos íconos repetir es matemáticamente inevitable.
+- El usuario eligió agregar 2 íconos más (en vez de resignarse al choque o reordenar los 6 existentes): ahora hay 8 íconos únicos, uno por docente, sin ningún repetido. Nuevos: `Like.webp` (pulgar arriba, azul — ya existía este asset en el repo sin usar, coincide pixel a pixel con el que envió el usuario) y `Phone.webp` (celular, lima — nuevo).
+- El patrón de color subyacente (azul→amarillo→rojo, repetido dos veces en los 6 íconos originales) se mantiene: Juan David (antes estrella, ícono repetido) pasa a `like` (azul) y Vanessa (antes computador, ícono repetido) pasa a `phone` (amarillo), continuando el ritmo azul→amarillo→rojo→azul→amarillo→rojo→azul→amarillo.
+- Ciclo final por docente: Paula=estrella, Sofía=computador, Nicolás=corazón, Ximena=cámara, Camilo=bombillo, Daniela=control, Juan David=like (pulgar arriba), Vanessa=celular.
+- Archivos: `public/programa/img/Phone.webp` (nuevo), `src/pages/ProgramaCreacionDigital.tsx`, `src/styles/programa.css`.
+
 ## [3.4.0] — 2026-08-18
 
 ### Agregado — Foto real de Sofía Jiménez (card + modal)
