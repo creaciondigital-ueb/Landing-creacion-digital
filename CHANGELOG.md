@@ -160,6 +160,14 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 - Ciclo final por docente: Paula=estrella, Sofía=computador, Nicolás=corazón, Ximena=cámara, Camilo=bombillo, Daniela=control, Juan David=like (pulgar arriba), Vanessa=celular.
 - Archivos: `public/programa/img/Phone.webp` (nuevo), `src/pages/ProgramaCreacionDigital.tsx`, `src/styles/programa.css`.
 
+### Corregido — El ritmo de color azul/amarillo/rojo también se rompía en la costura del loop
+
+- Mismo problema de fondo que el anterior, un nivel más abajo: los 8 íconos forman 3 grupos de color (azul=3, amarillo=3, rojo=2), y 8 tampoco es múltiplo de 3. El grupo rojo queda corto por 1, así que en algún punto del círculo el ritmo azul→amarillo→rojo se salta el rojo. El usuario lo detectó en la misma costura de antes: Juan David→Vanessa→Paula→Sofía se veía azul→amarillo→azul→amarillo (2 colores alternando 4 cards seguidas) en vez de completar el rojo.
+- Explicado al usuario: con 8 cards de identidad fija y 3 colores, un ritmo 3-3-2 nunca cierra perfecto en un círculo — SIEMPRE hay un punto donde se salta un color. No es arreglable sin agregar un 4to color (8÷4 sí cierra exacto) o sin aceptar el salto en algún lado.
+- El usuario eligió reubicar el salto en vez de agregar un 4to color (para no salirse de los 3 colores de marca del sitio: azul/amarillo/rojo son los únicos definidos en `programa.css`). Cambio mínimo: se intercambian los íconos de Daniela y Juan David (`controller` ↔ `like`) — ambos ya estaban en uso, solo se reasignan a quién le toca cada uno. Esto separa los 2 rojos (Nicolás, Juan David) a la distancia circular máxima posible (4 cards), y ningún par de cards adyacentes (incluida la costura) vuelve a compartir color.
+- Ciclo final por docente: Paula=estrella (azul), Sofía=computador (amarillo), Nicolás=corazón (rojo), Ximena=cámara (azul), Camilo=bombillo (amarillo), Daniela=like (azul), Juan David=control (rojo), Vanessa=celular (amarillo).
+- Archivos: `src/pages/ProgramaCreacionDigital.tsx`.
+
 ## [3.4.0] — 2026-08-18
 
 ### Agregado — Foto real de Sofía Jiménez (card + modal)
