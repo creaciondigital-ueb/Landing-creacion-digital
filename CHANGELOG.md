@@ -7,6 +7,13 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Cambiado — Se quita el JS/scroll de la card de Equipo; alto garantizado por CSS puro (≥1486px)
+
+- Se revierte el enfoque de medir el alto del video con `ResizeObserver` y aplicarlo a la card con scroll interno — pedido explícito del usuario ("no le pusiste un scroll?? hazla de un alto fijo entonces y ajusta el alto del video si algo").
+- Se quitan `teamStageRef`, `teamPanelHeight` y el `useEffect` de medición en `ProgramaCreacionDigital.tsx`; `.pcd-team__panel` vuelve al `align-items: stretch` normal del padre (sin alto en px por JS) y a `justify-content: center`.
+- En cambio, se ajustó el CONTENIDO de la card en `@media (min-width: 1486px)` para que su alto natural quepa siempre por debajo del alto mínimo real del video en ese rango (~507px al ancho más angosto, 1486px — el video solo crece de ahí en adelante): la foto baja su tope de `380px` a `220px` y el padding vertical de la card de `40px` a `24px`. Con eso garantizado por diseño, el centrado vertical vuelve a ser seguro (no hay overflow que ocultar ni que scrollear).
+- Archivos: `src/pages/ProgramaCreacionDigital.tsx`, `src/styles/programa.css`.
+
 ### Corregido — Texto de la card de Equipo pegado abajo cuando no cabe (≥1486px)
 
 - `.pcd-team__panel` (≥1486px): `justify-content: center` → `flex-start`. Cuando el contenido (foto + nombre/rol/descripción) no cabe exacto en el alto medido del video, `center` repartía el excedente mitad arriba/mitad abajo, pero con `overflow-y: auto` esa mitad de arriba queda fuera del scroll alcanzable — el nombre y el subtítulo quedaban pegados contra el borde inferior de la card. Con `flex-start` todo se ancla desde arriba: nombre/subtítulo siempre visibles completos, y si el texto no cabe, solo la descripción hace scroll hacia abajo.

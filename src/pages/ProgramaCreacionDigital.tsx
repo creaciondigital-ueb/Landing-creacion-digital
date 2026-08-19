@@ -195,30 +195,6 @@ export default function ProgramaCreacionDigital() {
   const [activeTeam, setActiveTeam] = useState<typeof TEAM[number]['id']>('fabian');
   const activeTeamMember = t.equipo[activeTeam];
 
-  // Equipo (≥1486px, layout en fila): el alto de la card se calculaba
-  // solo por su propio contenido (flexbox toma el máximo entre el video
-  // y la card para el alto de la fila), y ese contenido a veces es más
-  // alto que el video a ese ancho — la card quedaba más alta que el
-  // video, desalineados. Se mide el alto real del video (que sí
-  // mantiene su aspect-ratio real vía CSS) y se lo aplicamos como alto
-  // fijo a la card, con scroll interno si el texto no cabe.
-  const teamStageRef = useRef<HTMLDivElement>(null);
-  const [teamPanelHeight, setTeamPanelHeight] = useState<number | null>(null);
-  useEffect(() => {
-    const stageEl = teamStageRef.current;
-    if (!stageEl) return;
-    const updateHeight = () => {
-      setTeamPanelHeight(window.innerWidth >= 1486 ? stageEl.offsetHeight : null);
-    };
-    updateHeight();
-    const observer = new ResizeObserver(updateHeight);
-    observer.observe(stageEl);
-    window.addEventListener('resize', updateHeight);
-    return () => {
-      observer.disconnect();
-      window.removeEventListener('resize', updateHeight);
-    };
-  }, []);
 
   // Toggle Definición / Contenido — eje 01 (sección "contenido")
   const [axis01Mode, setAxis01Mode] = useState<'definicion' | 'contenido'>('definicion');
@@ -1255,7 +1231,7 @@ export default function ProgramaCreacionDigital() {
         </header>
 
         <div className="pcd-team__body pcd-reveal">
-          <div className="pcd-team__stage" ref={teamStageRef}>
+          <div className="pcd-team__stage">
             <video
               className="pcd-team__video"
               src={`${VIDEO}/equipo.mp4`}
@@ -1281,11 +1257,7 @@ export default function ProgramaCreacionDigital() {
             ))}
           </div>
 
-          <aside
-            className="pcd-team__panel"
-            style={teamPanelHeight != null ? { height: `${teamPanelHeight}px` } : undefined}
-            aria-live="polite"
-          >
+          <aside className="pcd-team__panel" aria-live="polite">
             <div
               className="pcd-team__panel-photo"
               style={{ backgroundImage: `url('${TEAM.find((p) => p.id === activeTeam)!.photo}')` }}

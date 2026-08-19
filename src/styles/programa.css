@@ -1899,9 +1899,7 @@ body:has(.pcd-docente-modal[open]) {
 @media (min-width: 1486px) {
   /* Menos padding lateral = más ancho disponible para .pcd-team__body =
      el stage (aspect-ratio fijo) crece un poco más alto también, ya que
-     su alto depende de su ancho. Pedido: "aumenta un poquito el alto
-     del video y la card" — la card sigue el alto del video vía JS
-     (ResizeObserver), así que sube junto con él automáticamente. */
+     su alto depende de su ancho. */
   .pcd-team { padding-left: 64px; padding-right: 64px; }
   .pcd-team__body {
     flex-direction: row;
@@ -1921,37 +1919,26 @@ body:has(.pcd-docente-modal[open]) {
        propio alto por aspect-ratio; es la card la que se ajusta a él. */
     align-self: flex-start;
   }
-  /* La card ya no se estira sola contra la fila (eso era lo que la
-     desajustaba del alto real del video, ver JS): .pcd-team__panel
-     recibe su alto en px directo desde React (medido del propio video
-     vía ResizeObserver), así que aquí solo definimos su composición
-     interna. min-height:0 + overflow-y:auto son la red de seguridad
-     para el caso borde en que el contenido (foto de hasta 380px + texto)
-     no quepa en ese alto — deja hacer scroll en vez de desbordar la
-     card por fuera de su borde. */
+  /* SIN JS ni scroll: la card usa el stretch normal del padre (vuelve
+     a estirarse para llenar el alto que termine teniendo la fila, como
+     al principio) y su CONTENIDO se dimensionó a propósito (foto tope
+     220px, padding vertical 24px) para que, sumado, quepa siempre por
+     debajo del alto mínimo real que puede tener el video en este rango
+     (~507px a 1486px de ancho, el punto más angosto — el video solo
+     crece de ahí para arriba). Con eso garantizado, el centrado
+     vertical (justify-content:center) vuelve a ser seguro: nunca hay
+     contenido "de más" que quede fuera de vista ni haga falta scroll. */
   .pcd-team__panel {
     flex-direction: column;
     align-items: center;
-    /* flex-start, no center: con justify-content:center, cuando el
-       contenido (foto + texto) no cabe exacto en el alto medido del
-       video, el exceso se reparte mitad arriba/mitad abajo — con
-       overflow:auto esa mitad de arriba queda fuera del scroll
-       alcanzable (el famoso problema de "unsafe centering"), y el
-       nombre/subtítulo/texto terminaban pegados contra el borde de
-       abajo. flex-start ancla todo desde arriba: siempre se ve el
-       nombre y el subtítulo completos, y si el texto no cabe, solo la
-       descripción hace scroll hacia abajo. */
-    justify-content: flex-start;
+    justify-content: center;
     flex: 1 1 0%;
     min-width: 0;
-    min-height: 0;
-    gap: 10px; /* texto pegado más arriba, más cerca de la foto (antes 24px) */
-    padding: 40px 32px;
-    overflow-y: auto;
-    overflow-x: hidden;
+    gap: 10px;
+    padding: 24px 32px;
   }
   .pcd-team__panel-photo {
-    width: min(80%, 380px);
+    width: min(80%, 220px);
   }
   .pcd-team__panel-body {
     flex: none;
