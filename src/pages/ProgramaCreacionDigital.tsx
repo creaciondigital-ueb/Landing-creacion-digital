@@ -1213,7 +1213,7 @@ export default function ProgramaCreacionDigital() {
       </DocenteModal>
 
       {/* ===== EQUIPO ===== */}
-      <section id="equipo" className="pcd-team">
+      <section id="equipo" className="pcd-team pcd-team--dark">
         <header className="pcd-team__head pcd-reveal">
           <h2 className="pcd-team__title">
             {t.equipo.sectionTitleL1Pre}<span className="pcd-team__title-pop">{t.equipo.sectionTitleL1Pop}</span><br />

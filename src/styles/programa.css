@@ -1878,6 +1878,21 @@ body:has(.pcd-docente-modal[open]) {
   margin: 4px 0 0;
 }
 
+/* Variante oscura, a modo de prueba — pidió "verla en negro" antes de
+   decidir si se queda. Para revertir: quitar la clase pcd-team--dark del
+   <section> en el TSX, no hace falta tocar este bloque. La card (panel)
+   sigue en blanco (matchea las fotos), pero el borde/sombra de marca
+   (ink) se invierte a paper para que siga leyéndose contra el fondo
+   negro — con ink puro se perdería, es casi el mismo color que el fondo. */
+.pcd-team--dark { background: var(--pcd-ink); }
+.pcd-team--dark .pcd-team__title,
+.pcd-team--dark .pcd-team__sub { color: var(--pcd-paper); }
+.pcd-team--dark .pcd-team__stage { border-color: var(--pcd-paper); }
+.pcd-team--dark .pcd-team__panel {
+  border-color: var(--pcd-paper);
+  box-shadow: 8px 8px 0 var(--pcd-paper);
+}
+
 @media (max-width: 980px) {
   .pcd-team { padding: 56px 24px 64px; }
   .pcd-team__title { font-size: clamp(36px, 8vw, 56px); }

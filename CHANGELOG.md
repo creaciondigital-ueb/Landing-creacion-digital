@@ -7,6 +7,12 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Agregado — Prueba: variante de fondo negro para la sección Equipo
+
+- Nueva clase modificadora `.pcd-team--dark` (agregada al `<section>` de Equipo en el TSX) en vez de reescribir `.pcd-team` directamente, para poder revertir con un solo cambio si no convence.
+- Fondo de la sección a `var(--pcd-ink)`, título/subtítulo a `var(--pcd-paper)`. El borde del video y el borde+sombra de la card (originalmente `ink`) se invierten a `paper` porque con `ink` puro se perderían contra el fondo negro.
+- Archivos: `src/pages/ProgramaCreacionDigital.tsx`, `src/styles/programa.css`.
+
 ### Cambiado — "enseñan" a rojo, "equipo" girado al otro lado
 
 - `.pcd-docentes__title-pop` ("enseñan"/"teach"): de amarillo (`--pcd-acid`) a rojo (`--pcd-tomato`).
