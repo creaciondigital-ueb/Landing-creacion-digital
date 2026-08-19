@@ -1723,7 +1723,7 @@ body:has(.pcd-docente-modal[open]) {
   line-height: 0.96;
   letter-spacing: -0.025em;
   color: var(--pcd-ink);
-  margin: 0 0 12px;
+  margin: 0 0 28px; /* más aire entre el título y el subtítulo (antes 12px) */
 }
 /* "equipo"/"team" en Rubik Bubbles + amarillo (acid), mismo tratamiento
    que .pop en Proyectos (fuente "fun", ligera rotación) pero en el color

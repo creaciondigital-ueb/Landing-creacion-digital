@@ -12,15 +12,22 @@ const APLICA_URL = 'https://www.unbosque.edu.co/inscripciones/pregrado';
  * Equipo — 5 personas en el video loop, en el mismo orden en que aparecen
  * caminando de izquierda a derecha en el video (Estefany > Juan > Paula >
  * Tatiana > Fabian). `left`/`width` son porcentajes del ancho del frame
- * (1280px) que delimitan la zona "clicable" de cada persona — medidos
- * analizando la oscuridad por columna de un frame del video.
+ * que delimitan la zona "clicable" de cada persona.
+ *
+ * Al principio se midieron a partir de la oscuridad por columna de un
+ * frame real del video, pero eso dejaba a Estefany con una zona (25.8%)
+ * notoriamente más ancha que las demás (~15-18%) — pedido explícito del
+ * usuario: "la card de estefany es un poco más grande, déjala del mismo
+ * tamaño que las otras". Ahora las 5 zonas son parejas (20% cada una),
+ * a costa de perder algo de precisión contra los bordes reales de cada
+ * figura en el video.
  */
 const TEAM = [
-  { id: 'estefany', photo: `${IMG}/equipo/estefany.webp`, left: 0, width: 25.8 },
-  { id: 'juan', photo: `${IMG}/equipo/juan.webp`, left: 25.8, width: 17.65 },
-  { id: 'paulav', photo: `${IMG}/equipo/paula-v.webp`, left: 43.45, width: 16.95 },
-  { id: 'tatiana', photo: `${IMG}/equipo/tatiana.webp`, left: 60.4, width: 15.4 },
-  { id: 'fabian', photo: `${IMG}/equipo/fabian.webp`, left: 75.8, width: 24.2 },
+  { id: 'estefany', photo: `${IMG}/equipo/estefany.webp`, left: 0, width: 20 },
+  { id: 'juan', photo: `${IMG}/equipo/juan.webp`, left: 20, width: 20 },
+  { id: 'paulav', photo: `${IMG}/equipo/paula-v.webp`, left: 40, width: 20 },
+  { id: 'tatiana', photo: `${IMG}/equipo/tatiana.webp`, left: 60, width: 20 },
+  { id: 'fabian', photo: `${IMG}/equipo/fabian.webp`, left: 80, width: 20 },
 ] as const;
 
 /** Herramientas del dock — modo "Contenido" del eje 01. */

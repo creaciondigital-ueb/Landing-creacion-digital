@@ -7,6 +7,12 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Cambiado — Más espacio título/subtítulo de Equipo + zonas clicables del video parejas
+
+- `.pcd-team__title`: `margin` de `0 0 12px` a `0 0 28px`, más aire antes del subtítulo.
+- Las 5 zonas clicables de `TEAM` (video) pasan de anchos medidos por persona (Estefany quedaba con 25.8%, notoriamente más ancha que las ~15-18% del medio) a un ancho parejo de `20%` cada una.
+- Archivos: `src/pages/ProgramaCreacionDigital.tsx`, `src/styles/programa.css`.
+
 ### Cambiado — Colores de "equipo"/"enseñan" intercambiados + sin drop shadow en la card oscura
 
 - `.pcd-team__title-pop` ("equipo"/"team"): azul → amarillo (`--pcd-acid`).
