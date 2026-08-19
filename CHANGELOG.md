@@ -7,6 +7,12 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Cambiado — +20px de padding: arriba en Proyectos, abajo en Docentes
+
+- `.pcd-projects`: padding-top de `28px` a `48px`.
+- `.pcd-docentes`: padding-bottom de `28px` a `48px`.
+- Archivos: `src/styles/programa.css`.
+
 ### Cambiado — Más espacio título/subtítulo de Equipo + zonas clicables del video parejas
 
 - `.pcd-team__title`: `margin` de `0 0 12px` a `0 0 28px`, más aire antes del subtítulo.

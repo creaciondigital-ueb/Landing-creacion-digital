@@ -1081,7 +1081,7 @@
    DOCENTES
    ──────────────────────────────────────────────────────────── */
 .pcd-docentes {
-  padding: 88px 88px 28px;
+  padding: 88px 88px 48px; /* +20px abajo (antes 28px) */
   background: var(--pcd-paper);
 }
 .pcd-docentes__head {
@@ -1914,7 +1914,7 @@ body:has(.pcd-docente-modal[open]) {
    PROYECTOS
    ──────────────────────────────────────────────────────────── */
 .pcd-projects {
-  padding: 28px 84px 96px;
+  padding: 48px 84px 96px; /* +20px arriba (antes 28px) */
   background: var(--pcd-paper);
 }
 .pcd-projects__head {
