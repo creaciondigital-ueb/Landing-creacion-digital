@@ -1101,12 +1101,12 @@
   color: var(--pcd-ink);
   margin: 0;
 }
-/* "enseñan"/"teach" en Rubik Bubbles + amarillo (acid), mismo tratamiento
+/* "enseñan"/"teach" en Rubik Bubbles + rojo (tomato), mismo tratamiento
    que .pcd-team__title-pop pero con el color de marca de Docentes. */
 .pcd-docentes__title-pop {
   font-family: var(--pcd-fun);
   font-style: normal;
-  color: var(--pcd-acid);
+  color: var(--pcd-tomato);
   letter-spacing: -0.02em;
   display: inline-block;
   transform: translateY(0.05em) rotate(-2deg);
@@ -1734,7 +1734,7 @@ body:has(.pcd-docente-modal[open]) {
   color: var(--pcd-cobalt);
   letter-spacing: -0.02em;
   display: inline-block;
-  transform: translateY(0.05em) rotate(-2deg);
+  transform: translateY(0.05em) rotate(2deg);
   margin: 0 0.04em;
 }
 .pcd-team__sub {

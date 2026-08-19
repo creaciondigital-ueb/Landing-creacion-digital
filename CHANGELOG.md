@@ -7,6 +7,12 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Cambiado — "enseñan" a rojo, "equipo" girado al otro lado
+
+- `.pcd-docentes__title-pop` ("enseñan"/"teach"): de amarillo (`--pcd-acid`) a rojo (`--pcd-tomato`).
+- `.pcd-team__title-pop` ("equipo"/"team"): rotación invertida (`rotate(-2deg)` → `rotate(2deg)`).
+- Archivos: `src/styles/programa.css`.
+
 ### Cambiado — Título/subtítulo de Equipo centrados + palabras destacadas en Rubik Bubbles
 
 - `.pcd-team__head` centrado (`text-align: center`).
