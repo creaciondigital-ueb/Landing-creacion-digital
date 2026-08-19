@@ -825,7 +825,9 @@
 .pcd-axis--mundo .pcd-axis__word {
   text-align: right;
   color: var(--pcd-ink);
-  transform: translateX(clamp(-220px, calc(-45px - (100vw - 1051px) * 0.2014), -45px));
+  /* Misma curva que antes, corrida +40px a la derecha en los dos
+     extremos (pedido: "córrelo un poco más a la derecha"). */
+  transform: translateX(clamp(-180px, calc(-5px - (100vw - 1051px) * 0.2014), -5px));
 }
 .pcd-axis--mundo.pcd-axis--mundo-en .pcd-axis__word { transform: translateX(-250px); }
 .pcd-axis--mundo.pcd-axis--mundo-en .pcd-axis__caption { top: 180px; transform: translateX(55px); max-width: 22%; }

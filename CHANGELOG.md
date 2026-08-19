@@ -7,6 +7,11 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Cambiado — Título "mundo 3d" un poco más a la derecha
+
+- `.pcd-axis--mundo .pcd-axis__word`: la curva de `translateX` (ver entrada anterior) se corre +40px a la derecha en sus dos extremos (`-45px → -5px` en el extremo angosto, `-220px → -180px` en el ancho); mantiene la misma pendiente/interpolación continua.
+- Archivos: `src/styles/programa.css`.
+
 ### Corregido — Título "mundo 3d" montado sobre su caption en pantallas ≥1051px (interpolación continua, no más breakpoints fijos)
 
 - El corrimiento de la palabra "mundo" y del caption ("Videojuegos, diseño de personajes...") usaba 3 valores fijos en px (uno "de diseño" para ≥1486px y dos parches para 1051-1486px), pero `.pcd-axis__left` es una columna fluida (fr del grid) — un valor fijo solo se ve bien en el ancho exacto para el que se ajustó, y se rompe (se monta sobre el caption) en cualquier otro ancho, incluyendo la pantalla "normal" del usuario tras haber ajustado el valor viendo desde una pantalla más ancha.
