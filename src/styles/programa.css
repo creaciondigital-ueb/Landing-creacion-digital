@@ -840,9 +840,10 @@
   max-width: 38%;
   line-height: 1.25;
   color: var(--pcd-ink);
+  /* +20px en Y (pedido: "baja el subtítulo unos 20px"), misma curva. */
   transform: translate(
     clamp(-60px, calc(-60px + (100vw - 1051px) * 0.0575), -10px),
-    clamp(-30px, calc(-30px + (100vw - 1051px) * 0.0345), 0px)
+    clamp(-10px, calc(-10px + (100vw - 1051px) * 0.0345), 20px)
   );
   z-index: 3;
 }

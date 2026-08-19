@@ -7,6 +7,11 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Cambiado — Subtítulo de "mundo 3d" ~20px más abajo
+
+- `.pcd-axis--mundo .pcd-axis__caption`: el componente Y de la curva de `translate` (interpolación continua) se corre +20px hacia abajo en ambos extremos: `-30px → -10px` en 1051px, `0px → 20px` en 1920px. Misma pendiente, mismo componente X (sin cambios).
+- Archivos: `src/styles/programa.css`.
+
 ### Cambiado — Título "mundo 3d" un poco más a la derecha
 
 - `.pcd-axis--mundo .pcd-axis__word`: la curva de `translateX` (ver entrada anterior) se corre +40px a la derecha en sus dos extremos (`-45px → -5px` en el extremo angosto, `-220px → -180px` en el ancho); mantiene la misma pendiente/interpolación continua.
