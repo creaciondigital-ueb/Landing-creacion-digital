@@ -108,8 +108,8 @@ const translations = {
       nicolas: {
         ariaLabel: "Ver perfil de Nicolás Bartolo",
         bio: "UX Designer especializado en productos digitales centrados en las personas, el negocio y la tecnología. Local Leader de IxDF Bogotá y referente en Product Thinking en la comunidad de diseño.",
-        tags: ["UX / UI", "Product Thinking", "Comunidad"],
-        modalTags: ["UX / UI", "Product Thinking", "Comunidad"],
+        tags: ["UX / UI", "Producto", "Comunidad"],
+        modalTags: ["UX / UI", "Producto", "Comunidad"],
         p1: "Soy UX Designer especializado en el diseño de productos digitales centrados en las personas, el negocio y la tecnología. Cuento con experiencia liderando procesos de diseño end-to-end, desde la investigación y el descubrimiento hasta la implementación y evolución de soluciones digitales.",
         p2: "Me apasiona combinar UX estratégico, Product Thinking e inteligencia artificial para desarrollar experiencias intuitivas y de alto impacto. Además, promuevo el crecimiento de la comunidad de diseño como Local Leader de IxDF Bogotá, creando espacios de aprendizaje y colaboración para profesionales del sector.",
         exp: [
@@ -392,8 +392,8 @@ const translations = {
       nicolas: {
         ariaLabel: "View Nicolas Bartolo profile",
         bio: "UX Designer specialized in digital products centered on people, business and technology. Local Leader of IxDF Bogotá and Product Thinking advocate in the design community.",
-        tags: ["UX / UI", "Product Thinking", "Community"],
-        modalTags: ["UX / UI", "Product Thinking", "Community"],
+        tags: ["UX / UI", "Product", "Community"],
+        modalTags: ["UX / UI", "Product", "Community"],
         p1: "I am a UX Designer specialized in designing digital products centered on people, business and technology. I have experience leading end-to-end design processes, from research and discovery to the implementation and evolution of digital solutions.",
         p2: "I am passionate about combining strategic UX, Product Thinking and artificial intelligence to develop intuitive, high-impact experiences. I also promote the growth of the design community as Local Leader of IxDF Bogotá, creating spaces for learning and collaboration for professionals in the field.",
         exp: [

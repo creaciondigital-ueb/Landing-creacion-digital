@@ -7,6 +7,16 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Cambiado — Tag "Product Thinking" de Nicolás acortado a "Producto"/"Product"
+
+- Las pills/tags de Nicolás Bartolo (docentes) pasaban a 2 filas porque "Product Thinking" era demasiado largo. Se acortó a "Producto" (ES) / "Product" (EN), igual que el resto de docentes que ya usan ese tag corto.
+- Archivos: `src/i18n/translations.ts` (`docentes.nicolas.tags`, `docentes.nicolas.modalTags`, ES y EN).
+
+### Cambiado — Subtítulo de "producto" (sección Programa) ~20px más abajo
+
+- `.pcd-axis--producto .pcd-axis__caption`: `transform: translateY(30px)` → `translateY(50px)`.
+- Archivos: `src/styles/programa.css`.
+
 ### Cambiado — Subtítulo de "mundo 3d" ~20px más abajo
 
 - `.pcd-axis--mundo .pcd-axis__caption`: el componente Y de la curva de `translate` (interpolación continua) se corre +20px hacia abajo en ambos extremos: `-30px → -10px` en 1051px, `0px → 20px` en 1920px. Misma pendiente, mismo componente X (sin cambios).
