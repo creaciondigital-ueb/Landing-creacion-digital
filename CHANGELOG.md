@@ -7,6 +7,12 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Añadido — Copy real de las 5 descripciones de Equipo (ya no es Lorem Ipsum)
+
+- `translations.ts` (ES/EN): las 5 `descripcion` de Equipo (Estefany, Juan, Maria Paula, Tatiana, Fabian) reemplazan el Lorem Ipsum por texto real, condensado en un párrafo corto a partir del contenido que compartió el usuario ("¿En qué puedo ayudarte?").
+- Como el copy real es bastante más largo que el Lorem Ipsum usado para calibrar el alto fijo de la card (≥1486px, ver sesiones anteriores), se reajustaron los tamaños de esa card para que siga cabiendo sin scroll: `.pcd-team` baja su padding lateral de `64px` a `40px` (más alto de sobra para el video), `.pcd-team__panel-photo` de `260px` a `200px`, el padding de la card de `20px 32px` a `16px 24px`, y `.pcd-team__panel-desc` gana `font-size: 14px; line-height: 1.45` solo en ese rango.
+- Archivos: `src/i18n/translations.ts`, `src/styles/programa.css`.
+
 ### Cambiado — Foto de la card de Equipo un poco más grande (≥1486px)
 
 - `.pcd-team__panel-photo`: tope de `220px` a `260px`. `.pcd-team__panel`: padding vertical de `24px` a `20px` (compensa el espacio extra para mantener margen de seguridad contra el alto mínimo del video en este rango).

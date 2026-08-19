@@ -1899,8 +1899,11 @@ body:has(.pcd-docente-modal[open]) {
 @media (min-width: 1486px) {
   /* Menos padding lateral = más ancho disponible para .pcd-team__body =
      el stage (aspect-ratio fijo) crece un poco más alto también, ya que
-     su alto depende de su ancho. */
-  .pcd-team { padding-left: 64px; padding-right: 64px; }
+     su alto depende de su ancho. Con el copy real (más largo que el
+     Lorem Ipsum usado antes para calcular el margen) hizo falta bajar
+     esto de 64px a 40px para darle al video un poco más de alto de
+     sobra en el punto más angosto del rango (1486px). */
+  .pcd-team { padding-left: 40px; padding-right: 40px; }
   .pcd-team__body {
     flex-direction: row;
     align-items: stretch;
@@ -1921,13 +1924,13 @@ body:has(.pcd-docente-modal[open]) {
   }
   /* SIN JS ni scroll: la card usa el stretch normal del padre (vuelve
      a estirarse para llenar el alto que termine teniendo la fila, como
-     al principio) y su CONTENIDO se dimensionó a propósito (foto tope
-     260px, padding vertical 20px) para que, sumado, quepa siempre por
-     debajo del alto mínimo real que puede tener el video en este rango
-     (~507px a 1486px de ancho, el punto más angosto — el video solo
-     crece de ahí para arriba). Con eso garantizado, el centrado
-     vertical (justify-content:center) vuelve a ser seguro: nunca hay
-     contenido "de más" que quede fuera de vista ni haga falta scroll. */
+     al principio) y su CONTENIDO (foto, paddings, tamaño de la
+     descripción) se dimensionó a propósito con el copy REAL de las 5
+     personas (no el Lorem Ipsum genérico) para que, sumado, quepa
+     siempre por debajo del alto mínimo real que puede tener el video
+     en este rango (~525px a 1486px de ancho, el punto más angosto —
+     el video solo crece de ahí para arriba). Con eso garantizado, el
+     centrado vertical (justify-content:center) vuelve a ser seguro. */
   .pcd-team__panel {
     flex-direction: column;
     align-items: center;
@@ -1935,10 +1938,10 @@ body:has(.pcd-docente-modal[open]) {
     flex: 1 1 0%;
     min-width: 0;
     gap: 10px;
-    padding: 20px 32px;
+    padding: 16px 24px;
   }
   .pcd-team__panel-photo {
-    width: min(80%, 260px);
+    width: min(80%, 200px);
   }
   .pcd-team__panel-body {
     flex: none;
@@ -1946,6 +1949,13 @@ body:has(.pcd-docente-modal[open]) {
     max-width: 420px; /* líneas de texto legibles aunque la card sea ancha */
     align-items: center;
     text-align: center;
+  }
+  /* La descripción real (hasta ~50 palabras) es bastante más larga que
+     el Lorem Ipsum de antes — la achicamos un poco solo en este rango
+     para que las ~7 líneas que necesita quepan sin desbordar la card. */
+  .pcd-team__panel-desc {
+    font-size: 14px;
+    line-height: 1.45;
   }
 }
 @media (max-width: 1050px) {
