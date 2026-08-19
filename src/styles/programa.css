@@ -1125,14 +1125,8 @@
   scrollbar-width: none;
   -ms-overflow-style: none;
   padding-top: 8px; /* evita que el translateY(-3px) del hover recorte la card contra overflow-y:hidden */
-  /* Igual que el lado derecho (margin-right/padding-right -88px/88px): el
-     grid se extiende (bleed) hasta el borde real de la pantalla en vez de
-     recortarse contra el padding de la sección. Al estar en reposo (scroll
-     0) el contenido queda igual de alineado con el título de arriba, porque
-     margin y padding se cancelan; pero al hacer scroll, una card ya no se
-     corta en seco cerca del borde — puede seguir hasta el borde real. */
-  padding-left: 88px;
-  margin-left: -88px;
+  padding-left: 8px; /* evita que el translateX(-3px) del hover corte el borde izquierdo de la 1ª card contra overflow-x:auto */
+  margin-left: -8px; /* cancela el corrimiento visual del padding-left, para no desalinear el carrusel con el título de arriba */
   padding-bottom: 16px;
   margin-right: -88px;
   padding-right: 88px;
@@ -1341,12 +1335,7 @@
 }
 @media (max-width: 640px) {
   .pcd-docentes { padding: 56px 24px 24px; }
-  .pcd-docentes__grid {
-    padding-left: 24px;
-    margin-left: -24px;
-    margin-right: -24px;
-    padding-right: 24px;
-  }
+  .pcd-docentes__grid { margin-right: -24px; padding-right: 24px; }
   .pcd-docente { flex: 0 0 85%; }
 }
 
