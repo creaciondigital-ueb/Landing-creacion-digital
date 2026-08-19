@@ -1737,7 +1737,7 @@ body:has(.pcd-docente-modal[open]) {
   border: 2.5px solid var(--pcd-ink);
   background: var(--pcd-ink);
   aspect-ratio: 1280 / 716;
-  flex: 1.35 1 0%;
+  flex: 1.8 1 0%; /* video más ancho, card más angosta (antes 1.35:1) */
   min-width: 0;
 }
 .pcd-team__video {
@@ -1807,7 +1807,7 @@ body:has(.pcd-docente-modal[open]) {
   padding: 40px 32px;
   border: 2.5px solid var(--pcd-ink);
   box-shadow: 8px 8px 0 var(--pcd-ink);
-  background: var(--pcd-paper);
+  background: #fefefe; /* mismo blanco de fondo que traen los 5 retratos (rgb 254,254,254), para que la foto no se note "pegada" contra un fondo distinto */
   overflow: hidden;
 }
 .pcd-team__panel-photo {

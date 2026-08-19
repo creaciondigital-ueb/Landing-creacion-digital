@@ -7,6 +7,12 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Cambiado — Card de Equipo más angosta (video más ancho) + fondo igualado al de las fotos
+
+- Proporción del video vs. la card ajustada de `1.35:1` a `1.8:1`: el video pasa de ~57% a ~64% del ancho total, la card se angosta de ~43% a ~36%.
+- El fondo de la card pasa de `var(--pcd-paper)` a `#fefefe`, el mismo blanco real de fondo de los 5 retratos (verificado con PIL: los 5 comparten `rgb(254,254,254)`), para que no haya salto de color entre la foto y el fondo del panel.
+- Archivos: `src/styles/programa.css`.
+
 ### Cambiado — Tercer rediseño de la card de Equipo: foto arriba centrada con tope de tamaño, texto abajo
 
 - La versión "foto ocupa toda la altura" se comía casi todo el ancho del panel y dejaba el texto reducido a una columna donde cada palabra caía en su propia línea. La proporción del panel (más angosto que alto) hace que cualquier cuadrado dimensionado desde la altura completa termine siendo más ancho que la mitad del panel.
