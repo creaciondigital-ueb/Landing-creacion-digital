@@ -7,6 +7,11 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Corregido — Panel de la ficha técnica de Equipo no llenaba la altura del video
+
+- `.pcd-team__body` pasó de `display: grid` a `display: flex`: con grid, la altura del row "auto" no se calculaba bien a partir del `aspect-ratio` del video (definido sobre un ancho en `fr`), y el panel de la derecha quedaba mucho más bajo que el video en vez de estirarse a su misma altura. En flexbox el ancho se resuelve primero y la altura por aspect-ratio se calcula sobre ese ancho ya resuelto, así que el `stretch` del panel sí funciona.
+- Archivos: `src/styles/programa.css`.
+
 ### Agregado — Nueva sección "Equipo" con video loop interactivo
 
 - Nueva sección `#equipo` entre Docentes y Proyectos: video loop (5 personas caminando, en orden Estefany > Juan > Paula V. > Tatiana > Fabian) con 5 zonas invisibles ("hotspots") superpuestas, una por persona.

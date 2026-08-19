@@ -1720,11 +1720,16 @@ body:has(.pcd-docente-modal[open]) {
   text-transform: uppercase;
   color: var(--pcd-ink);
 }
+/* flex en vez de grid: con grid, el row "auto" no calculaba bien la altura
+   intrínseca de .pcd-team__stage (que viene de aspect-ratio sobre un ancho
+   en fr) y el panel de la derecha quedaba mucho más bajo que el video en
+   vez de estirarse a la misma altura. Flexbox resuelve primero el ancho
+   (flex-basis) y de ahí la altura por aspect-ratio, así que el stretch
+   del panel contra esa altura sí funciona de forma consistente. */
 .pcd-team__body {
-  display: grid;
-  grid-template-columns: 1.35fr 1fr;
-  gap: 40px;
+  display: flex;
   align-items: stretch;
+  gap: 40px;
 }
 .pcd-team__stage {
   position: relative;
@@ -1732,6 +1737,8 @@ body:has(.pcd-docente-modal[open]) {
   border: 2.5px solid var(--pcd-ink);
   background: var(--pcd-ink);
   aspect-ratio: 1280 / 716;
+  flex: 1.35 1 0%;
+  min-width: 0;
 }
 .pcd-team__video {
   display: block;
@@ -1783,24 +1790,29 @@ body:has(.pcd-docente-modal[open]) {
 .pcd-team__panel {
   display: flex;
   flex-direction: column;
+  flex: 1 1 0%;
+  min-width: 0;
   border: 2.5px solid var(--pcd-ink);
   box-shadow: 8px 8px 0 var(--pcd-ink);
   background: var(--pcd-paper);
   overflow: hidden;
 }
 .pcd-team__panel-photo {
-  height: 44%;
+  flex: 0 0 44%;
   min-height: 180px;
   background-size: cover;
   background-position: center top;
   border-bottom: 2.5px solid var(--pcd-ink);
 }
 .pcd-team__panel-body {
+  flex: 1 1 auto;
   padding: 28px 32px 32px;
   display: flex;
   flex-direction: column;
+  justify-content: center;
   gap: 10px;
   overflow-y: auto;
+  min-height: 0;
 }
 .pcd-team__panel-name {
   font-family: var(--pcd-serif);
@@ -1831,10 +1843,12 @@ body:has(.pcd-docente-modal[open]) {
   .pcd-team { padding: 56px 24px 64px; }
   .pcd-team__title { font-size: clamp(36px, 8vw, 56px); }
   .pcd-team__body {
-    grid-template-columns: 1fr;
+    flex-direction: column;
     gap: 24px;
   }
-  .pcd-team__panel-photo { min-height: 220px; }
+  .pcd-team__stage { flex: none; }
+  .pcd-team__panel { flex: none; }
+  .pcd-team__panel-photo { flex: none; min-height: 220px; }
 }
 @media (max-width: 640px) {
   .pcd-team { padding: 48px 20px 56px; }
