@@ -7,6 +7,11 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Cambiado — Texto de la ficha técnica de Equipo más pegado a la foto
+
+- `.pcd-team__panel` — `gap` entre la foto y el bloque de texto de `24px` a `10px`.
+- Archivos: `src/styles/programa.css`.
+
 ### Cambiado — Fabian como persona por defecto de Equipo + foto sin marco y más grande
 
 - `activeTeam` inicial pasa de la primera del array (Estefany) a `'fabian'` literal.

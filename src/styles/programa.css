@@ -1803,7 +1803,7 @@ body:has(.pcd-docente-modal[open]) {
   justify-content: center;
   flex: 1 1 0%;
   min-width: 0;
-  gap: 24px;
+  gap: 10px; /* texto pegado más arriba, más cerca de la foto (antes 24px) */
   padding: 40px 32px;
   border: 2.5px solid var(--pcd-ink);
   box-shadow: 8px 8px 0 var(--pcd-ink);
