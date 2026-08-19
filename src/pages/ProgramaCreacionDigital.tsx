@@ -818,11 +818,11 @@ export default function ProgramaCreacionDigital() {
 
           {/* Daniela */}
           <article
-            className="pcd-docente pcd-docente--daniela pcd-docente--no-photo pcd-reveal" tabIndex={0} role="button"
+            className="pcd-docente pcd-docente--daniela pcd-reveal" tabIndex={0} role="button"
             aria-label={t.docentes.daniela.ariaLabel}
             onClick={() => onDocenteCardClick('daniela')}
             onKeyDown={(e) => onCardKey(e, 'daniela')}
-            style={{} as CSSProperties}
+            style={{ '--docente-init': `url('${IMG}/Daniela_Init.webp')`, '--docente-end': `url('${IMG}/Daniela_End.webp')` } as CSSProperties}
           >
             <div className="pcd-docente__blob" aria-hidden="true" />
             <img className="pcd-sticker pcd-sticker--love" src={`${IMG}/Love.webp`} alt="" aria-hidden="true" />
@@ -956,11 +956,11 @@ export default function ProgramaCreacionDigital() {
 
           {/* Daniela (clon para loop infinito) */}
           <article
-            className="pcd-docente pcd-docente--daniela pcd-docente--no-photo pcd-reveal" tabIndex={-1} role="button" aria-hidden="true"
+            className="pcd-docente pcd-docente--daniela pcd-reveal" tabIndex={-1} role="button" aria-hidden="true"
             aria-label={t.docentes.daniela.ariaLabel}
             onClick={() => onDocenteCardClick('daniela')}
             onKeyDown={(e) => onCardKey(e, 'daniela')}
-            style={{} as CSSProperties}
+            style={{ '--docente-init': `url('${IMG}/Daniela_Init.webp')`, '--docente-end': `url('${IMG}/Daniela_End.webp')` } as CSSProperties}
           >
             <div className="pcd-docente__blob" aria-hidden="true" />
             <img className="pcd-sticker pcd-sticker--love" src={`${IMG}/Love.webp`} alt="" aria-hidden="true" />
@@ -1127,7 +1127,8 @@ export default function ProgramaCreacionDigital() {
 
       <DocenteModal
         id="daniela" active={activeDocente === 'daniela'} onClose={closeDocente} onSwipe={onSwipeDocente}
-        portrait="" portraitEnd=""
+        portrait={`${IMG}/Daniela_Init.webp`}
+        portraitEnd={`${IMG}/Daniela_End.webp`}
         name={<>Daniela<br />Meza</>}
         tags={t.docentes.daniela.modalTags}
       >

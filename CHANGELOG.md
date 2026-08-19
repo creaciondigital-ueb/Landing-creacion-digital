@@ -136,6 +136,13 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 - Fix definitivo: se separa el bleed geométrico del scroll. Nuevo wrapper `.pcd-docentes__grid-wrap` (div simple, sin `overflow`/`display:flex` propios) que lleva el `margin-left: -88px; margin-right: -88px;` (24px en mobile); `.pcd-docentes__grid` (el contenedor con `overflow-x:auto` + `display:flex`, el que hace scroll) ya no lleva ningún margen negativo, solo `padding-left: 88px; padding-right: 88px;` (24px en mobile). El ancho de contenido resultante es el mismo de siempre, pero ahora el margen negativo grande vive en un bloque simple en vez de en el propio contenedor con overflow — evita el bug del intento anterior sin sacrificar el resultado visual pedido.
 - Archivos: `src/pages/ProgramaCreacionDigital.tsx`, `src/styles/programa.css`.
 
+### Agregado — Foto real de Daniela Meza (card + modal)
+
+- Reemplazado el placeholder sin foto de Daniela Meza por su foto real: `Daniela_Init.webp` (default) y `Daniela_End.webp` (hover, seña de OK con la mano).
+- Quitada la clase `pcd-docente--no-photo` de su card (original y clon del loop); conectadas `--docente-init` / `--docente-end`; modal con `portrait` / `portraitEnd` apuntando a las nuevas imágenes.
+- A diferencia de Nicolás/Sofía (que sí necesitaban forzar el mismo tamaño en ambos estados), se midió el bounding box de las dos ilustraciones de Daniela (cejas, collar, ancho de cabello) y ya vienen a la MISMA escala en el lienzo original — el achique por defecto de 0.94 en el hover (pensado para las parejas donde el "end" sí viene ~6% más grande) de hecho introduciría un salto de tamaño que no existe en el arte. Se anula ese achique con `.pcd-docente--daniela .pcd-docente__blob::after { transform: none; }` y, en el modal, `.pcd-docente-modal--daniela .pcd-docente-modal__portrait-layer--end { transform: scale(1.08); }` (el mismo 1.08 base del "init", sin el *0.94).
+- Archivos: `public/programa/img/Daniela_Init.webp`, `Daniela_End.webp`, `src/pages/ProgramaCreacionDigital.tsx`, `src/styles/programa.css`.
+
 ## [3.4.0] — 2026-08-18
 
 ### Agregado — Foto real de Sofía Jiménez (card + modal)

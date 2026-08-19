@@ -1302,6 +1302,14 @@
   transform: scale(1.2);
   transform-origin: center center;
 }
+/* Daniela: a diferencia de las demás parejas, el dibujo "end" (hover) NO
+   viene ~6% más grande que el "init" en su lienzo — medido, quedan
+   prácticamente idénticos (mismo encuadre de cejas/collar en ambos). El
+   achique por defecto de 0.94 en ::after de hecho INTRODUCIRÍA un salto de
+   tamaño que no existe en el arte original, así que se anula. */
+.pcd-docente--daniela .pcd-docente__blob::after {
+  transform: none;
+}
 .pcd-docente:hover .pcd-docente__blob::before { opacity: 0; }
 .pcd-docente:hover .pcd-docente__blob::after  { opacity: 1; }
 .pcd-docente__name {
@@ -1524,6 +1532,13 @@ body:has(.pcd-docente-modal[open]) {
 }
 .pcd-docente-modal--sofia .pcd-docente-modal__portrait-layer--end {
   transform: scale(1.2);
+}
+
+/* Daniela: mismo hallazgo que en la card del carrusel — el "end" ya viene
+   a la misma escala que el "init" en el lienzo original, así que se anula
+   el achique *0.94 del modal (se deja el 1.08 base para ambos). */
+.pcd-docente-modal--daniela .pcd-docente-modal__portrait-layer--end {
+  transform: scale(1.08);
 }
 .pcd-docente-modal__name {
   font-family: var(--pcd-serif);
