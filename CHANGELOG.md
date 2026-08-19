@@ -143,6 +143,14 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 - A diferencia de Nicolás/Sofía (que sí necesitaban forzar el mismo tamaño en ambos estados), se midió el bounding box de las dos ilustraciones de Daniela (cejas, collar, ancho de cabello) y ya vienen a la MISMA escala en el lienzo original — el achique por defecto de 0.94 en el hover (pensado para las parejas donde el "end" sí viene ~6% más grande) de hecho introduciría un salto de tamaño que no existe en el arte. Se anula ese achique con `.pcd-docente--daniela .pcd-docente__blob::after { transform: none; }` y, en el modal, `.pcd-docente-modal--daniela .pcd-docente-modal__portrait-layer--end { transform: scale(1.08); }` (el mismo 1.08 base del "init", sin el *0.94).
 - Archivos: `public/programa/img/Daniela_Init.webp`, `Daniela_End.webp`, `src/pages/ProgramaCreacionDigital.tsx`, `src/styles/programa.css`.
 
+### Agregado — 3 nuevos stickers en las cards de docentes (computador, cámara, control de videojuego)
+
+- El ciclo de íconos flotantes de las cards pasa de 3 a 6: estrella → computador → corazón → cámara → bombillo → control de videojuego → estrella... (antes solo rotaba estrella/bombillo/corazón).
+- Nuevos assets `Computer.webp`, `Camera.webp`, `Controller.webp` en `public/programa/img/`, a partir de los 3 íconos que envió el usuario.
+- Reasignados los stickers por docente para seguir el nuevo ciclo de 6 (aplicado también a los clones del loop infinito, para que coincidan con el original): Paula=estrella, Sofía=computador, Nicolás=corazón, Ximena=cámara, Camilo=bombillo, Daniela=control, Juan David=estrella, Vanessa=computador.
+- Nuevas clases `.pcd-sticker--computer`, `.pcd-sticker--camera`, `.pcd-sticker--controller` en `programa.css`, con su propia posición vertical y `animation-delay` para que el vaivén (`pcd-sticker-sway`) no se vea sincronizado entre cards.
+- Archivos: `public/programa/img/Computer.webp`, `Camera.webp`, `Controller.webp`, `src/pages/ProgramaCreacionDigital.tsx`, `src/styles/programa.css`.
+
 ## [3.4.0] — 2026-08-18
 
 ### Agregado — Foto real de Sofía Jiménez (card + modal)

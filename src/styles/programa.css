@@ -1210,6 +1210,12 @@
 .pcd-sticker--idea { top: 290px; animation-delay: -1.1s; }
 .pcd-sticker--love { top: 80px; animation-delay: -1.9s; }
 .pcd-sticker--star { top: 110px; animation-delay: -2.6s; } /* posición provisional hasta ver el asset real */
+/* Set nuevo de stickers: el ciclo de íconos por card pasa de 3 a 6
+   (estrella → computador → corazón → cámara → bombillo → control →
+   estrella...), ver asignación por docente en el TSX. */
+.pcd-sticker--computer { top: 130px; animation-delay: -0.7s; }
+.pcd-sticker--camera { top: 230px; animation-delay: -1.5s; }
+.pcd-sticker--controller { top: 60px; animation-delay: -2.2s; }
 .pcd-docente__blob {
   position: relative;
   height: 331px;
