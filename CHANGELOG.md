@@ -7,6 +7,352 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Cambiado — Subtítulo de "mundo 3d" ~20px más abajo
+
+- `.pcd-axis--mundo .pcd-axis__caption`: el componente Y de la curva de `translate` (interpolación continua) se corre +20px hacia abajo en ambos extremos: `-30px → -10px` en 1051px, `0px → 20px` en 1920px. Misma pendiente, mismo componente X (sin cambios).
+- Archivos: `src/styles/programa.css`.
+
+### Cambiado — Título "mundo 3d" un poco más a la derecha
+
+- `.pcd-axis--mundo .pcd-axis__word`: la curva de `translateX` (ver entrada anterior) se corre +40px a la derecha en sus dos extremos (`-45px → -5px` en el extremo angosto, `-220px → -180px` en el ancho); mantiene la misma pendiente/interpolación continua.
+- Archivos: `src/styles/programa.css`.
+
+### Corregido — Título "mundo 3d" montado sobre su caption en pantallas ≥1051px (interpolación continua, no más breakpoints fijos)
+
+- El corrimiento de la palabra "mundo" y del caption ("Videojuegos, diseño de personajes...") usaba 3 valores fijos en px (uno "de diseño" para ≥1486px y dos parches para 1051-1486px), pero `.pcd-axis__left` es una columna fluida (fr del grid) — un valor fijo solo se ve bien en el ancho exacto para el que se ajustó, y se rompe (se monta sobre el caption) en cualquier otro ancho, incluyendo la pantalla "normal" del usuario tras haber ajustado el valor viendo desde una pantalla más ancha.
+- Se reemplazan los 3 valores fijos por una interpolación continua con `clamp()`/`calc()` sobre `100vw`, entre 1051px (los valores ya afinados para ese extremo) y 1920px (el ancho máximo real de `.pcd-page`). Se ve bien en cualquier punto de ese rango, no solo en el que se probó la última vez.
+- Se eliminan los dos `@media` que parchaban esto (`1051-1486px` y `1201-1486px` para `.pcd-axis--mundo`); el de `producto` se mantiene intacto.
+- No se tocó el reset de mobile (`@media (max-width: 1050px)`).
+- Archivos: `src/styles/programa.css`.
+
+### Añadido — Copy real de las 5 descripciones de Equipo (ya no es Lorem Ipsum)
+
+- `translations.ts` (ES/EN): las 5 `descripcion` de Equipo (Estefany, Juan, Maria Paula, Tatiana, Fabian) reemplazan el Lorem Ipsum por texto real, condensado en un párrafo corto a partir del contenido que compartió el usuario ("¿En qué puedo ayudarte?").
+- Como el copy real es bastante más largo que el Lorem Ipsum usado para calibrar el alto fijo de la card (≥1486px, ver sesiones anteriores), se reajustaron los tamaños de esa card para que siga cabiendo sin scroll: `.pcd-team` baja su padding lateral de `64px` a `40px` (más alto de sobra para el video), `.pcd-team__panel-photo` de `260px` a `200px`, el padding de la card de `20px 32px` a `16px 24px`, y `.pcd-team__panel-desc` gana `font-size: 14px; line-height: 1.45` solo en ese rango.
+- Archivos: `src/i18n/translations.ts`, `src/styles/programa.css`.
+
+### Cambiado — Foto de la card de Equipo un poco más grande (≥1486px)
+
+- `.pcd-team__panel-photo`: tope de `220px` a `260px`. `.pcd-team__panel`: padding vertical de `24px` a `20px` (compensa el espacio extra para mantener margen de seguridad contra el alto mínimo del video en este rango).
+- Archivos: `src/styles/programa.css`.
+
+### Cambiado — Se quita el JS/scroll de la card de Equipo; alto garantizado por CSS puro (≥1486px)
+
+- Se revierte el enfoque de medir el alto del video con `ResizeObserver` y aplicarlo a la card con scroll interno — pedido explícito del usuario ("no le pusiste un scroll?? hazla de un alto fijo entonces y ajusta el alto del video si algo").
+- Se quitan `teamStageRef`, `teamPanelHeight` y el `useEffect` de medición en `ProgramaCreacionDigital.tsx`; `.pcd-team__panel` vuelve al `align-items: stretch` normal del padre (sin alto en px por JS) y a `justify-content: center`.
+- En cambio, se ajustó el CONTENIDO de la card en `@media (min-width: 1486px)` para que su alto natural quepa siempre por debajo del alto mínimo real del video en ese rango (~507px al ancho más angosto, 1486px — el video solo crece de ahí en adelante): la foto baja su tope de `380px` a `220px` y el padding vertical de la card de `40px` a `24px`. Con eso garantizado por diseño, el centrado vertical vuelve a ser seguro (no hay overflow que ocultar ni que scrollear).
+- Archivos: `src/pages/ProgramaCreacionDigital.tsx`, `src/styles/programa.css`.
+
+### Corregido — Texto de la card de Equipo pegado abajo cuando no cabe (≥1486px)
+
+- `.pcd-team__panel` (≥1486px): `justify-content: center` → `flex-start`. Cuando el contenido (foto + nombre/rol/descripción) no cabe exacto en el alto medido del video, `center` repartía el excedente mitad arriba/mitad abajo, pero con `overflow-y: auto` esa mitad de arriba queda fuera del scroll alcanzable — el nombre y el subtítulo quedaban pegados contra el borde inferior de la card. Con `flex-start` todo se ancla desde arriba: nombre/subtítulo siempre visibles completos, y si el texto no cabe, solo la descripción hace scroll hacia abajo.
+- Archivos: `src/styles/programa.css`.
+
+### Cambiado — Video y card de Equipo un poco más altos (≥1486px)
+
+- `.pcd-team` reduce su padding lateral de `88px` a `64px` dentro de `@media (min-width: 1486px)` — más ancho disponible para `.pcd-team__body`, así que el stage (con `aspect-ratio` fijo) crece un poco más de alto también. La card sigue automáticamente ese alto vía el `ResizeObserver` ya existente.
+- Archivos: `src/styles/programa.css`.
+
+### Corregido — Video y card de Equipo desajustados en alto (≥1486px)
+
+- Al pasar el layout en fila a arrancar en `1486px` (en vez de `1050px`), en el extremo angosto de ese rango el contenido natural de la card (foto de hasta 380px + nombre/rol/descripción) resultó más alto que el video a ese ancho — flexbox usa el máximo entre ambos para el alto de la fila, así que la card terminaba más alta que el video, desajustados.
+- Se mide el alto real renderizado del video (`.pcd-team__stage`, vía `ResizeObserver` + listener de resize) y se aplica ese mismo alto en px directo a la card (`.pcd-team__panel`) cuando el ancho es ≥1486px — mismo alto siempre, alineados. Por debajo de 1486px (layout apilado) el alto vuelve a ser automático.
+- `.pcd-team__panel` gana `overflow-y: auto` como red de seguridad para el caso borde en que el texto no quepa en ese alto exacto.
+- Archivos: `src/pages/ProgramaCreacionDigital.tsx`, `src/styles/programa.css`.
+
+### Cambiado — Card de Equipo vuelve a vertical por debajo de 500px
+
+- `@media (max-width: 500px)`: `.pcd-team__panel` vuelve a `flex-direction: column` (foto arriba, texto abajo, todo centrado) en vez de la fila foto-izq/texto-der — a ese ancho la fila ya no tenía aire real. El layout apilado del video (arriba, a todo el ancho) no cambia.
+- Archivos: `src/styles/programa.css`.
+
+### Cambiado — Layout de Equipo apilado hasta el ancho normal del sitio (1486px) + card foto-izq/texto-der
+
+- El layout en fila (video izquierda, card derecha) de la sección Equipo ya no arranca en `1050px`: el layout BASE ahora es siempre apilado (video arriba a todo el ancho, card abajo), y la fila queda dentro de `@media (min-width: 1486px)` — la constante de "ancho de referencia del diseño desktop" que ya usan el hero y el bloque "mundo 3d" en otras secciones. Pedido explícito del usuario tras ver que la fila se veía mal en anchos intermedios.
+- Dentro del rango apilado, la card (`.pcd-team__panel`) cambia de "foto arriba centrada / texto abajo centrado" a fila horizontal: foto a la izquierda (`min(30%, 220px)`, o `32%`/máx `130px` en mobile), texto a la derecha alineado a la izquierda. El diseño centrado original (foto arriba, texto abajo) se conserva solo dentro del media query de `1486px` para el layout en fila.
+- `.pcd-team__stage` deja de tener su ancho/flex fijo en el bloque base (ahora `width: 100%`, apilado) y los valores `flex: 2.2 1 0%` + `align-self: flex-start` (el fix del recorte del video) se movieron dentro del mismo media query de `1486px`, donde sigue aplicando.
+- Archivos: `src/styles/programa.css`.
+
+### Corregido — El video de Equipo se recortaba en desktop (align-items:stretch rompía su aspect-ratio)
+
+- `.pcd-team__body` usa `align-items: stretch` para que la card ocupe toda la altura del video, pero eso también estiraba el STAGE del video cuando la card necesitaba más alto del que el stage sacaba de su propio `aspect-ratio` — el ancho del stage se quedaba fijo, así que su proporción real (1280:716) se rompía y `object-fit: cover` recortaba los lados, perdiendo gente de los bordes (Estefany/Fabian).
+- `.pcd-team__stage` gana `align-self: flex-start` — sale del stretch del padre y siempre mantiene su propio alto por `aspect-ratio`, sin importar cuánto necesite la card.
+- Archivos: `src/styles/programa.css`.
+
+### Corregido — Layout de Equipo se cortaba en tablet (breakpoint desalineado con el resto del sitio)
+
+- A ~981px de ancho, `.pcd-team__body` seguía en fila (video+card lado a lado) porque su breakpoint de apilado era `980px`, mientras el resto del sitio ya pasa a modo móvil (nav hamburguesa) en `1050px` — el tag sobre el video se cortaba contra el borde por falta de espacio real.
+- El media query que apila `.pcd-team__body` (video arriba, card abajo) pasa de `max-width: 980px` a `max-width: 1050px`, alineado con el breakpoint global.
+- Archivos: `src/styles/programa.css`.
+
+### Cambiado — Tag flotante del video de Equipo oculto en mobile (<640px)
+
+- `@media (max-width: 640px)` de `.pcd-team`: `.pcd-team__tag { display: none; }` — el tag con el nombre sobre el video ya no se muestra en mobile (el click sigue seleccionando igual).
+- Archivos: `src/styles/programa.css`.
+
+### Cambiado — Otros +20px al padding superior de Proyectos
+
+- `.pcd-projects`: padding-top de `48px` a `68px` (total +40px sobre el original de `28px`).
+- Archivos: `src/styles/programa.css`.
+
+### Cambiado — +20px de padding: arriba en Proyectos, abajo en Docentes
+
+- `.pcd-projects`: padding-top de `28px` a `48px`.
+- `.pcd-docentes`: padding-bottom de `28px` a `48px`.
+- Archivos: `src/styles/programa.css`.
+
+### Cambiado — Más espacio título/subtítulo de Equipo + zonas clicables del video parejas
+
+- `.pcd-team__title`: `margin` de `0 0 12px` a `0 0 28px`, más aire antes del subtítulo.
+- Las 5 zonas clicables de `TEAM` (video) pasan de anchos medidos por persona (Estefany quedaba con 25.8%, notoriamente más ancha que las ~15-18% del medio) a un ancho parejo de `20%` cada una.
+- Archivos: `src/pages/ProgramaCreacionDigital.tsx`, `src/styles/programa.css`.
+
+### Cambiado — Colores de "equipo"/"enseñan" intercambiados + sin drop shadow en la card oscura
+
+- `.pcd-team__title-pop` ("equipo"/"team"): azul → amarillo (`--pcd-acid`).
+- `.pcd-docentes__title-pop` ("enseñan"/"teach"): rojo → azul (`--pcd-cobalt`).
+- `.pcd-team--dark .pcd-team__panel`: se quita el `box-shadow` blanco (se mantiene el borde).
+- Archivos: `src/styles/programa.css`.
+
+### Agregado — Prueba: variante de fondo negro para la sección Equipo
+
+- Nueva clase modificadora `.pcd-team--dark` (agregada al `<section>` de Equipo en el TSX) en vez de reescribir `.pcd-team` directamente, para poder revertir con un solo cambio si no convence.
+- Fondo de la sección a `var(--pcd-ink)`, título/subtítulo a `var(--pcd-paper)`. El borde del video y el borde+sombra de la card (originalmente `ink`) se invierten a `paper` porque con `ink` puro se perderían contra el fondo negro.
+- Archivos: `src/pages/ProgramaCreacionDigital.tsx`, `src/styles/programa.css`.
+
+### Cambiado — "enseñan" a rojo, "equipo" girado al otro lado
+
+- `.pcd-docentes__title-pop` ("enseñan"/"teach"): de amarillo (`--pcd-acid`) a rojo (`--pcd-tomato`).
+- `.pcd-team__title-pop` ("equipo"/"team"): rotación invertida (`rotate(-2deg)` → `rotate(2deg)`).
+- Archivos: `src/styles/programa.css`.
+
+### Cambiado — Título/subtítulo de Equipo centrados + palabras destacadas en Rubik Bubbles
+
+- `.pcd-team__head` centrado (`text-align: center`).
+- Siguiendo el mismo patrón que ya usaba `.pop` en Proyectos: "equipo"/"team" ahora es un span en Rubik Bubbles color azul (`--pcd-cobalt`) dentro del título de Equipo; "enseñan"/"teach" ahora es un span en Rubik Bubbles color amarillo (`--pcd-acid`) dentro del título de Docentes.
+- Las traducciones `docentes.sectionTitle` y `equipo.sectionTitle` (strings únicos con `\n`) se partieron en piezas (`sectionTitleL1/L2Pop/L2Rest` y `sectionTitleL1Pre/L1Pop/L2`) para poder envolver solo la palabra destacada.
+- Archivos: `src/pages/ProgramaCreacionDigital.tsx`, `src/i18n/translations.ts`, `src/styles/programa.css`.
+
+### Cambiado — Títulos de Docentes y Proyectos igualados al tamaño del de Equipo
+
+- `.pcd-docentes__title` y `.pcd-projects__title` bajan de `100px` a `72px` (el tamaño de `.pcd-team__title`), para que los 3 títulos de sección queden uniformes.
+- Archivos: `src/styles/programa.css`.
+
+### Cambiado — Texto de la ficha técnica de Equipo más pegado a la foto
+
+- `.pcd-team__panel` — `gap` entre la foto y el bloque de texto de `24px` a `10px`.
+- Archivos: `src/styles/programa.css`.
+
+### Cambiado — Fabian como persona por defecto de Equipo + foto sin marco y más grande
+
+- `activeTeam` inicial pasa de la primera del array (Estefany) a `'fabian'` literal.
+- `.pcd-team__panel-photo` pierde el borde de 2.5px, y el tope de tamaño sube de `min(60%, 300px)` a `min(80%, 380px)` (móvil: de `50%/180px` a `68%/240px`).
+- Archivos: `src/pages/ProgramaCreacionDigital.tsx`, `src/styles/programa.css`.
+
+### Cambiado — Ajuste fino: video de Equipo un poco más ancho todavía
+
+- Proporción video:card ajustada de `1.8:1` a `2.2:1` — el video pasa de ~64% a ~69% del ancho total.
+- Archivos: `src/styles/programa.css`.
+
+### Cambiado — Card de Equipo más angosta (video más ancho) + fondo igualado al de las fotos
+
+- Proporción del video vs. la card ajustada de `1.35:1` a `1.8:1`: el video pasa de ~57% a ~64% del ancho total, la card se angosta de ~43% a ~36%.
+- El fondo de la card pasa de `var(--pcd-paper)` a `#fefefe`, el mismo blanco real de fondo de los 5 retratos (verificado con PIL: los 5 comparten `rgb(254,254,254)`), para que no haya salto de color entre la foto y el fondo del panel.
+- Archivos: `src/styles/programa.css`.
+
+### Cambiado — Tercer rediseño de la card de Equipo: foto arriba centrada con tope de tamaño, texto abajo
+
+- La versión "foto ocupa toda la altura" se comía casi todo el ancho del panel y dejaba el texto reducido a una columna donde cada palabra caía en su propia línea. La proporción del panel (más angosto que alto) hace que cualquier cuadrado dimensionado desde la altura completa termine siendo más ancho que la mitad del panel.
+- Vuelve a columna (foto arriba, texto abajo), pero la foto ahora tiene un tope de tamaño fijo e independiente de la altura de la card (`width: min(60%, 300px)`), y todo el bloque foto+texto se centra vertical y horizontalmente dentro del panel — el espacio sobrante de la card (que ya ocupa la altura completa del video) se reparte como aire alrededor, no se fuerza a la foto a llenarlo.
+- `.pcd-team__panel-body` con `max-width: 420px` para que el texto no se estire de más en una card ancha.
+- Archivos: `src/styles/programa.css`.
+
+### Cambiado — Foto de la ficha técnica de Equipo ahora ocupa toda la altura de la card
+
+- La foto pasa de ser un cuadrado chico centrado (40% de ancho, tope 260px) a ocupar toda la altura de la card (`height: 100%` + `aspect-ratio: 1/1`, sin límite de ancho): sale grande y vertical, como un retrato editorial, pegada a los bordes de la card, sin recortar nada.
+- Archivos: `src/styles/programa.css`.
+
+### Corregido — Foto de la ficha técnica de Equipo quedaba recortada arriba
+
+- Los 5 retratos son cuadrados (1024×1024); el layout anterior los ponía arriba forzados a una franja baja del panel, recortando la cabeza. Ahora la foto va al lado del texto (fila, no columna) como un cuadrado real (`aspect-ratio: 1/1`) que se muestra completo, sin recortes, centrado verticalmente junto al texto. En móvil (`≤640px`) vuelve a apilarse por espacio, pero sigue siendo un cuadrado completo.
+- Archivos: `src/styles/programa.css`.
+
+### Corregido — Panel de la ficha técnica de Equipo no llenaba la altura del video
+
+- `.pcd-team__body` pasó de `display: grid` a `display: flex`: con grid, la altura del row "auto" no se calculaba bien a partir del `aspect-ratio` del video (definido sobre un ancho en `fr`), y el panel de la derecha quedaba mucho más bajo que el video en vez de estirarse a su misma altura. En flexbox el ancho se resuelve primero y la altura por aspect-ratio se calcula sobre ese ancho ya resuelto, así que el `stretch` del panel sí funciona.
+- Archivos: `src/styles/programa.css`.
+
+### Agregado — Nueva sección "Equipo" con video loop interactivo
+
+- Nueva sección `#equipo` entre Docentes y Proyectos: video loop (5 personas caminando, en orden Estefany > Juan > Paula V. > Tatiana > Fabian) con 5 zonas invisibles ("hotspots") superpuestas, una por persona.
+- Al pasar el cursor sobre una zona (o enfocarla con teclado) aparece un tag con su nombre. Al hacer clic, se selecciona esa persona y su ficha técnica (foto, nombre, profesión, rol, descripción) se muestra en el panel a la derecha del video. La primera persona (Estefany) queda seleccionada por defecto para que el panel nunca se vea vacío al llegar a la sección.
+- Los límites horizontales de cada zona se midieron analizando la oscuridad por columna de un frame del video (no son estimaciones a ojo).
+- Nuevo enlace "EQUIPO" en el navbar, entre Docentes y Proyectos, que hace scroll suave hasta la sección (`#equipo` sumado al grupo de selectores con `scroll-margin-top`).
+- Nuevas traducciones ES/EN: `nav.equipo` + bloque `equipo` completo (título, subtítulo y, por persona, nombre/profesión/rol/descripción). Las descripciones son un placeholder Lorem Ipsum a la espera del copy real.
+- Nuevos assets: `public/programa/video/equipo.mp4` (comprimido con ffmpeg, de 8.28MB a 1.23MB), `public/programa/img/equipo/equipo-poster.webp` (poster de fallback) y los 5 retratos `public/programa/img/equipo/{estefany,juan,paula-v,tatiana,fabian}.webp`.
+- Nuevos estilos `.pcd-team*` en `programa.css`, siguiendo la misma paleta/tipografía/bordes del resto del sitio (serif itálica para títulos, mono para meta, borde 2.5px + sombra dura en el panel).
+- Archivos: `src/pages/ProgramaCreacionDigital.tsx`, `src/i18n/translations.ts`, `src/styles/programa.css`, assets nuevos en `public/programa/`.
+
+### Agregado — Toggle Definición/Contenido en el eje 01 (home) + dock de herramientas
+
+- El chip "01 · programa" del eje "contenido" ahora es un toggle real de dos pestañas (Definición / Contenido) que controla el contenido de la columna derecha; antes era solo texto estático. Definición mantiene los 3 bloques "en vez de X; Y" que ya existían.
+- Nuevo copy para el modo Contenido (ES/EN): 3 bloques sobre fotografía/producción audiovisual en estudio, marketing/publicidad/métricas y pauta, e IA generativa.
+- Nuevo dock de software al final del modo Contenido: Higgsfield, ChatGPT, Runway, CapCut, DaVinci Resolve, Adobe y Affinity. Los 7 íconos son los logos reales que envió el usuario como referencia, recortados (fondo eliminado) y recoloreados a negro plano para calzar con la paleta editorial — sin reinterpretar la forma.
+- Nuevas traducciones en `translations.ts`: `axis01.toggleDefinicion/toggleContenido`, `axis01.cn1-3title/accent/body`, `axis01.dockLabel` (ES/EN).
+- Nuevos estilos `.pcd-axis__toggle`, `.pcd-axis__toggle-btn`, `.pcd-content-dock*` en `programa.css`.
+- Archivos: `src/pages/ProgramaCreacionDigital.tsx`, `src/i18n/translations.ts`, `src/styles/programa.css`, `public/programa/img/dock/*.png` (nuevos).
+
+### Cambiado — Bloque "Contenido" del eje 01 vuelve a párrafo único (sin título poético ni chips)
+
+- Se probaron dos formatos intermedios (3 bloques con título "En vez de X; es Y" + texto corto, y luego chips de skills) que el usuario no sintió naturales para este contenido — pidió volver a un párrafo cercano al texto original que redactó, pero con las frases clave resaltadas en negrita/color.
+- Nuevo helper `renderAccented()` en el componente: convierte `**frase**` dentro del string de traducción en `<strong className="pcd-accent-text">`, para poder resaltar palabras clave sin partir el párrafo en múltiples keys de i18n.
+- Traducción `axis01.contenidoBody` (ES/EN) reemplaza a `cn1-3title/accent/body/tags`.
+- Archivos: `src/pages/ProgramaCreacionDigital.tsx`, `src/i18n/translations.ts`, `src/styles/programa.css`.
+
+### Cambiado — Botón único (en vez de toggle de dos pestañas) para Definición/Contenido
+
+- Reemplazado el toggle de dos pestañas del eje 01 por un solo botón pastilla que alterna el modo: dice "Ver contenido" estando en Definición, y "Ver definición" estando en Contenido.
+- El botón tiene una animación de pulso sutil (box-shadow expandiéndose y desvaneciéndose) para invitar al clic sin ser intrusiva; respeta `prefers-reduced-motion`.
+- Nuevas traducciones `axis01.toggleToContenido` / `axis01.toggleToDefinicion` (ES/EN).
+- Archivos: `src/pages/ProgramaCreacionDigital.tsx`, `src/i18n/translations.ts`, `src/styles/programa.css`.
+
+### Corregido — Volver a "Definición" después de ver "Contenido" dejaba la columna derecha en blanco
+
+- Los 3 bloques de Definición tenían la clase `pcd-reveal` (animación de aparición al hacer scroll, controlada por un `IntersectionObserver` que solo observa los elementos presentes en el montaje inicial de la página). Al alternar a Contenido y volver a Definición, React desmonta y vuelve a montar esos bloques como nodos DOM nuevos, que nunca son observados de nuevo — quedaban con opacidad 0 para siempre.
+- Quitada la clase `pcd-reveal` de los 3 bloques de Definición, igual que ya se había hecho para los de Contenido por la misma razón.
+- Archivos: `src/pages/ProgramaCreacionDigital.tsx`.
+
+### Corregido — Íconos del dock (ChatGPT, Runway, CapCut) no coincidían con el logo real
+
+- El script de extracción de íconos determinaba el color de fondo a partir del color mayoritario dentro del bounding box del logo. En logos con trazo grueso que cubre más de la mitad de su propio bounding box (como el moño de CapCut), ese color mayoritario terminaba siendo la tinta negra del logo, no el fondo real — invirtiendo la máscara (solo quedaban el contorno delgado y los huecos, se perdía el relleno sólido y la línea diagonal).
+- Agregado un chequeo de seguridad: si el color de fondo detectado sale casi negro (lo cual nunca es válido, ya que el color de tinta objetivo ya es negro), se usa en su lugar el color real del fondo exterior de la imagen. Corrige CapCut (ahora conserva ambos huecos trapezoidales y la línea diagonal) y refina levemente ChatGPT y Runway; Higgsfield, DaVinci Resolve, Adobe y Affinity no cambiaron (no estaban afectados).
+- Archivos: `public/programa/img/dock/capcut.png`, `chatgpt.png`, `runway.png`.
+
+### Corregido — Portada de ChocoSapiens recortada en el home
+
+- La card ancha de proyectos del home usaba `background-size: cover`, y como `chocosapiens.webp` (910×510) es más ancho que el marco de la tarjeta (853:529), el texto y los nombres quedaban recortados en ambos bordes.
+- Aplicada la misma clase `pcd-project__media--contain` que ya se usaba para este caso en `/proyectos`, para que la portada se vea completa en vez de recortada.
+- Archivos: `src/pages/ProgramaCreacionDigital.tsx`.
+
+### Agregado — Toggle Definición/Contenido también en el eje 02 (mundo 3d)
+
+- Mismo patrón que el eje 01: botón único que alterna, título "¿Qué aprenderás?" en Rubik Bubbles, párrafo con frases clave resaltadas y dock de herramientas (Blender, Unity, Unreal Engine, Cascadeur).
+- 4 íconos nuevos recortados de los logos reales que envió el usuario (mismo criterio que el dock del eje 01: sin reinterpretar la forma, solo fondo eliminado y recoloreado a negro plano).
+- Archivos: `src/pages/ProgramaCreacionDigital.tsx`, `src/i18n/translations.ts`, `src/styles/programa.css`, `public/programa/img/dock/blender.png`, `unity.png`, `unreal-engine.png`, `cascadeur.png` (nuevos).
+
+### Agregado — Toggle Definición/Contenido también en el eje 03 (producto)
+
+- Mismo patrón que los ejes 01 y 02: botón único que alterna, título "¿Qué aprenderás?" en Rubik Bubbles, párrafo con frases clave resaltadas y dock de herramientas (Claude, Figma, GitHub, Visual Studio Code).
+- 4 íconos nuevos recortados de los logos reales que envió el usuario.
+- Archivos: `src/pages/ProgramaCreacionDigital.tsx`, `src/i18n/translations.ts`, `src/styles/programa.css`, `public/programa/img/dock/claude.png`, `figma.png`, `github.png`, `vscode.png` (nuevos).
+
+### Corregido — Ícono de Figma en el dock se veía "aplastado"
+
+- El pipeline de extracción forzaba cada ícono a un canvas cuadrado: primero un resize a 800x800 sin preservar el aspecto original de la imagen fuente, y luego un padding a cuadrado basado en el lado mayor del glifo. Para logos casi cuadrados esto no se notaba, pero el logo real de Figma es naturalmente más alto que ancho (~442×664), así que terminaba comprimido horizontalmente antes de exportarse — se veía "aplastado" dentro del dock (que usa `background-size: 62%` de ancho con alto automático, heredando el aspecto del PNG).
+- Regenerado `figma.png` preservando el aspecto real del glifo en todo el pipeline (sin el resize forzado a cuadrado, con padding proporcional en vez de forzar un lado igual al mayor), para que encaje sin distorsión en el contenedor de 48×48px del dock.
+- Archivos: `public/programa/img/dock/figma.png`.
+
+### Cambiado — Copy de "Contenido" en los 3 ejes, tamaño del ícono de Figma y color del botón toggle
+
+- Reescrito el párrafo del modo Contenido en los 3 ejes (Contenido, Mundo 3D, Producto) con el texto que redactó el usuario; en Producto ahora se menciona JavaScript en lugar de Java como lenguaje de ejemplo para frontend. Traducciones ES/EN actualizadas en `axis01/02/03.contenidoBody`.
+- El botón toggle "Ver contenido / Ver definición" tenía el texto en azul (`--pcd-cobalt`) por defecto; ahora es negro (`--pcd-ink`), igual en los 3 ejes.
+- El ícono de Figma en el dock se veía un poco más grande que el resto; se aumentó el padding proporcional en su render para que el trazo visible ocupe una fracción similar a los demás íconos.
+- Archivos: `src/i18n/translations.ts`, `src/styles/programa.css`, `public/programa/img/dock/figma.png`.
+
+### Cambiado — Más espacio entre el párrafo de Contenido y el dock de herramientas
+
+- `.pcd-content-dock` (selector compartido por los 3 ejes) tenía `margin-top: 8px`; se subió a `43px` (+35px) para separar más el final del párrafo del inicio de la etiqueta "Herramientas que usarás".
+- Archivos: `src/styles/programa.css`.
+
+### Corregido — Botón, título y subtítulo de cada eje en 3 alineaciones distintas en mobile
+
+- En móvil (≤1050px), el botón toggle (compartido por los 3 ejes) siempre quedaba pegado a la izquierda porque su selector no tenía override para ese breakpoint, mientras el título y el subtítulo se alineaban distinto según el eje (Contenido a la izquierda, Mundo 3D centrado, Producto a la derecha) — quedaban en 3 posiciones distintas dentro del mismo bloque.
+- `.pcd-axis__left` ahora es `display:flex; flex-direction:column; align-items:center;` en móvil, y las reglas de `.pcd-axis__word`/`.pcd-axis__caption` por eje se unificaron a `text-align:center`, así botón, título y subtítulo quedan alineados entre sí en los 3 ejes.
+- Archivos: `src/styles/programa.css`.
+
+### Agregado — Loop infinito en el carrusel de docentes
+
+- El carrusel de docentes (`.pcd-docentes__grid`) mantiene su drag-to-pan manual existente (arrastrar con el mouse mueve `scrollLeft`); además ahora es infinito: al llegar a la última card (Vanessa) vuelve a aparecer la primera (Paula), y así indefinidamente.
+- Implementado duplicando una vez el set de 8 cards en el DOM (los clones llevan `aria-hidden="true"` y `tabIndex={-1}` para no afectar el orden de tabulación ni lectores de pantalla, pero conservan el `onClick` así que abren el modal correcto igual que el original). Un handler en `onScroll` mide con `getBoundingClientRect()` la distancia real entre la primera card original y su clon, y al cruzarla salta `scrollLeft` hacia atrás exactamente ese ancho — como el clon es pixel-idéntico, el salto es imperceptible. También ajusta `dragState.startScroll` para no romper un arrastre en curso.
+- Archivos: `src/pages/ProgramaCreacionDigital.tsx`.
+
+### Agregado — Autoavance continuo del carrusel de docentes
+
+- El carrusel de docentes ahora avanza solo hacia la izquierda a ritmo constante (32px/s vía `requestAnimationFrame`, usando el delta real entre frames para que la velocidad no dependa del framerate).
+- Se detiene mientras se arrastra, mientras el mouse está encima de la fila o el dedo apoyado en móvil, y respeta `prefers-reduced-motion` (no arranca si el usuario tiene esa preferencia activada). Al soltar/quitar el cursor, retoma.
+- Se apoya en el loop infinito agregado antes: al llegar al final del set salta de vuelta a Paula sin transición visible, así que el autoavance nunca se detiene ni muestra un corte.
+- Archivos: `src/pages/ProgramaCreacionDigital.tsx`.
+
+### Corregido — El autoavance del carrusel de docentes no se veía, y luego el intento de arreglo rompió el diseño de las cards
+
+- Causa real de que no se viera avanzar: `.pcd-docentes__grid` tenía `scroll-snap-type: x mandatory`, y cada microincremento de `scrollLeft` que hacía el `requestAnimationFrame` del autoavance (fracciones de píxel por frame) el navegador lo revertía de inmediato al punto de snap más cercano — el movimiento quedaba anulado en la práctica en cada frame.
+- Primer intento de fix (revertido): reescribir el carrusel para moverse con `transform: translateX()` sobre un `div` interno nuevo (`.pcd-docentes__track`), igual que el marquee de arriba. Este cambio rompió el diseño visual de las cards (confirmado con capturas del usuario) y fue revertido por completo.
+- Fix real y mínimo, aplicado sobre la versión de cards ya confirmada correcta: se quita `scroll-snap-type: x mandatory` de `.pcd-docentes__grid` (y el `scroll-snap-type: none` de `.is-dragging`/`scroll-snap-align` en `.pcd-docente`, que quedan sin efecto sin él). Sin tocar la estructura del DOM ni ninguna otra propiedad de las cards.
+- Archivos: `src/pages/ProgramaCreacionDigital.tsx`, `src/styles/programa.css`.
+
+### Corregido — El autoavance de docentes seguía sin verse tras quitar scroll-snap
+
+- Quitar `scroll-snap-type` arregló el diseño (volvió a verse bien) pero el autoavance seguía sin notarse. Causa más probable: el efecto solo arrancaba el `requestAnimationFrame` si `window.matchMedia('(prefers-reduced-motion: reduce)').matches` era `false` — un chequeo de accesibilidad agregado por iniciativa propia (no pedido), que puede estar activo en el sistema/navegador del usuario y desactiva el autoavance por completo y en silencio. Además, la pausa en `onMouseEnter` (mouse encima del carrusel) es exactamente lo que ocurre mientras alguien lo está mirando para revisarlo.
+- Se quita el gate de `prefers-reduced-motion` y la pausa por hover/touch; el autoavance ahora solo se detiene durante un arrastre activo.
+- Archivos: `src/pages/ProgramaCreacionDigital.tsx`.
+
+### Corregido — Salto brusco del autoavance de docentes al volver de otra ventana/pestaña
+
+- `requestAnimationFrame` se pausa cuando la pestaña/ventana pierde el foco; al volver, el primer frame llegaba con un `time` que había saltado varios segundos, y ese `dt` gigante se traducía en un brinco visible del carrusel ("se veía bugueado").
+- Dos salvaguardas: se limita el `dt` máximo considerado por frame (nunca avanza de más aunque haya habido un frame lento o una pausa), y se resetea el `lastTime` de referencia en el evento `visibilitychange`, para que el primer frame tras recuperar el foco no cuente tiempo de más en absoluto.
+- Archivos: `src/pages/ProgramaCreacionDigital.tsx`.
+
+### Corregido — Causa real de que el autoavance de docentes nunca avanzara
+
+- Causa definitiva: el autoavance hacía `grid.scrollLeft += delta` en cada frame, un patrón read-modify-write. Los navegadores redondean `scrollLeft` a píxeles enteros al leerlo; con incrementos menores a 1px por frame (a la velocidad anterior, ~0.5px/frame a 60fps), cada lectura descartaba la parte fraccionaria antes de que pudiera acumularse entre frames — el carrusel quedaba congelado en la práctica casi todo el tiempo (el "salto de unos píxeles" ocasional era, presumiblemente, el único caso en que un frame con más tiempo transcurrido cruzaba 1px de una sola vez).
+- Fix: nueva `docentesScrollRef`, única fuente de verdad de la posición en punto flotante, mantenida enteramente en JS — ya no se vuelve a leer `grid.scrollLeft` para acumular sobre él. Tanto el drag como el autoavance escriben a través de `setDocentesScroll()`, que también aplica el loop infinito directamente (en vez de depender del evento `scroll`). Se conserva un handler de `scroll` solo como salvavidas para el drag nativo por touch en móvil (que mueve `scrollLeft` sin pasar por JS), sincronizando el ref después.
+- Velocidad subida de 32 a 40px/s.
+- Archivos: `src/pages/ProgramaCreacionDigital.tsx`.
+
+### Agregado — Pausar el autoavance de docentes al pasar el mouse encima
+
+- El carrusel de docentes se detiene mientras el mouse está sobre las cards, y retoma al quitarlo. Se agregó recién ahora (y no antes) porque una versión anterior de la pausa por hover enmascaraba el bug real del autoavance congelado durante el diagnóstico; con esa causa raíz ya resuelta, se puede agregar la pausa con confianza.
+- Archivos: `src/pages/ProgramaCreacionDigital.tsx`.
+
+### Corregido — Card del carrusel de docentes se veía "cortada" en seco contra el borde izquierdo
+
+- Con el autoavance continuo (y ahora que el hover lo puede dejar pausado a mitad de camino), una card entrando o saliendo por el borde izquierdo quedaba recortada en seco justo contra el padding de la sección, sin ningún margen ni transición — se notaba más ahora que el hover puede detener el scroll en cualquier punto intermedio.
+- Primer intento: fundido con `mask-image` en el borde izquierdo. El usuario lo rechazó — no quería un desvanecido, quería que la card literalmente siguiera hasta el borde real de la pantalla.
+- Segundo intento: `padding-left: 88px; margin-left: -88px;` (24px en mobile) directamente en `.pcd-docentes__grid`, espejo del bleed que ya usaba el lado derecho. Matemáticamente el ancho de contenido del grid queda igual (padding y margin se siguen cancelando), pero en la práctica **rompió por completo el layout del carrusel**: las cards perdían su ancho (`flex: 0 0 calc(...)`), el texto del bio dejaba de hacer wrap y se salía de pantalla, y el borde/fondo de la card desaparecía — confirmado por el usuario incluso después de hard refresh y reiniciar `npm run dev`, así que no era caché del dev server. Se revirtió por completo a `padding-left: 8px; margin-left: -8px;` (idéntico byte a byte al commit `d0f9bce`) como paso intermedio para devolver el carrusel a un estado funcional.
+- Fix definitivo: se separa el bleed geométrico del scroll. Nuevo wrapper `.pcd-docentes__grid-wrap` (div simple, sin `overflow`/`display:flex` propios) que lleva el `margin-left: -88px; margin-right: -88px;` (24px en mobile); `.pcd-docentes__grid` (el contenedor con `overflow-x:auto` + `display:flex`, el que hace scroll) ya no lleva ningún margen negativo, solo `padding-left: 88px; padding-right: 88px;` (24px en mobile). El ancho de contenido resultante es el mismo de siempre, pero ahora el margen negativo grande vive en un bloque simple en vez de en el propio contenedor con overflow — evita el bug del intento anterior sin sacrificar el resultado visual pedido.
+- Archivos: `src/pages/ProgramaCreacionDigital.tsx`, `src/styles/programa.css`.
+
+### Agregado — Foto real de Daniela Meza (card + modal)
+
+- Reemplazado el placeholder sin foto de Daniela Meza por su foto real: `Daniela_Init.webp` (default) y `Daniela_End.webp` (hover, seña de OK con la mano).
+- Quitada la clase `pcd-docente--no-photo` de su card (original y clon del loop); conectadas `--docente-init` / `--docente-end`; modal con `portrait` / `portraitEnd` apuntando a las nuevas imágenes.
+- A diferencia de Nicolás/Sofía (que sí necesitaban forzar el mismo tamaño en ambos estados), se midió el bounding box de las dos ilustraciones de Daniela (cejas, collar, ancho de cabello) y ya vienen a la MISMA escala en el lienzo original — el achique por defecto de 0.94 en el hover (pensado para las parejas donde el "end" sí viene ~6% más grande) de hecho introduciría un salto de tamaño que no existe en el arte. Se anula ese achique con `.pcd-docente--daniela .pcd-docente__blob::after { transform: none; }` y, en el modal, `.pcd-docente-modal--daniela .pcd-docente-modal__portrait-layer--end { transform: scale(1.08); }` (el mismo 1.08 base del "init", sin el *0.94).
+- Archivos: `public/programa/img/Daniela_Init.webp`, `Daniela_End.webp`, `src/pages/ProgramaCreacionDigital.tsx`, `src/styles/programa.css`.
+
+### Agregado — 3 nuevos stickers en las cards de docentes (computador, cámara, control de videojuego)
+
+- El ciclo de íconos flotantes de las cards pasa de 3 a 6: estrella → computador → corazón → cámara → bombillo → control de videojuego → estrella... (antes solo rotaba estrella/bombillo/corazón).
+- Nuevos assets `Computer.webp`, `Camera.webp`, `Controller.webp` en `public/programa/img/`, a partir de los 3 íconos que envió el usuario.
+- Reasignados los stickers por docente para seguir el nuevo ciclo de 6 (aplicado también a los clones del loop infinito, para que coincidan con el original): Paula=estrella, Sofía=computador, Nicolás=corazón, Ximena=cámara, Camilo=bombillo, Daniela=control, Juan David=estrella, Vanessa=computador.
+- Nuevas clases `.pcd-sticker--computer`, `.pcd-sticker--camera`, `.pcd-sticker--controller` en `programa.css`. Primer intento: cada ícono con su propia posición/`animation-delay` nuevos — el usuario corrigió: los 6 íconos forman 3 parejas por color (bombillo/computador = lima, estrella/cámara = azul, corazón/control = rosa) y cada pareja debe compartir la MISMA posición vertical que ya tenía su color en el set original de 3 (ej. el lima siempre "más abajo"), sin importar cuál de los dos íconos de esa pareja le toque a la card. Corregido para agrupar por color: `.pcd-sticker--idea, .pcd-sticker--computer` comparten posición/delay, igual `--love/--controller` y `--star/--camera`.
+- Archivos: `public/programa/img/Computer.webp`, `Camera.webp`, `Controller.webp`, `src/pages/ProgramaCreacionDigital.tsx`, `src/styles/programa.css`.
+
+### Corregido — El ciclo de 6 stickers repetía 2 íconos justo en la costura del loop infinito
+
+- Con 8 docentes y un ciclo de 6 íconos, por matemática pura 2 íconos (estrella y computador, los primeros del ciclo) se repetían dentro de las 8 cards (posiciones 1/7 y 2/8). Dentro de una sola vuelta eso queda separado por 6 cards, pero como el carrusel es circular, la posición 8 queda pegada a la posición 1 de nuevo — el usuario reportó ver computador→estrella→computador en solo 3 cards seguidas, justo en la costura del loop.
+- Causa raíz explicada al usuario: el sticker tiene que ser idéntico entre la card original y su clon del loop infinito (si no, el "salto" del loop dejaría de ser imperceptible), así que el ícono depende de la IDENTIDAD del docente, no de una posición que suma para siempre — con 8 docentes y un patrón de 6, dos íconos repetir es matemáticamente inevitable.
+- El usuario eligió agregar 2 íconos más (en vez de resignarse al choque o reordenar los 6 existentes): ahora hay 8 íconos únicos, uno por docente, sin ningún repetido. Nuevos: `Like.webp` (pulgar arriba, azul — ya existía este asset en el repo sin usar, coincide pixel a pixel con el que envió el usuario) y `Phone.webp` (celular, lima — nuevo).
+- El patrón de color subyacente (azul→amarillo→rojo, repetido dos veces en los 6 íconos originales) se mantiene: Juan David (antes estrella, ícono repetido) pasa a `like` (azul) y Vanessa (antes computador, ícono repetido) pasa a `phone` (amarillo), continuando el ritmo azul→amarillo→rojo→azul→amarillo→rojo→azul→amarillo.
+- Ciclo final por docente: Paula=estrella, Sofía=computador, Nicolás=corazón, Ximena=cámara, Camilo=bombillo, Daniela=control, Juan David=like (pulgar arriba), Vanessa=celular.
+- Archivos: `public/programa/img/Phone.webp` (nuevo), `src/pages/ProgramaCreacionDigital.tsx`, `src/styles/programa.css`.
+
+### Corregido — El ritmo de color azul/amarillo/rojo también se rompía en la costura del loop
+
+- Mismo problema de fondo que el anterior, un nivel más abajo: los 8 íconos forman 3 grupos de color (azul=3, amarillo=3, rojo=2), y 8 tampoco es múltiplo de 3. El grupo rojo queda corto por 1, así que en algún punto del círculo el ritmo azul→amarillo→rojo se salta el rojo. El usuario lo detectó en la misma costura de antes: Juan David→Vanessa→Paula→Sofía se veía azul→amarillo→azul→amarillo (2 colores alternando 4 cards seguidas) en vez de completar el rojo.
+- Explicado al usuario: con 8 cards de identidad fija y 3 colores, un ritmo 3-3-2 nunca cierra perfecto en un círculo — SIEMPRE hay un punto donde se salta un color. No es arreglable sin agregar un 4to color (8÷4 sí cierra exacto) o sin aceptar el salto en algún lado.
+- El usuario eligió reubicar el salto en vez de agregar un 4to color (para no salirse de los 3 colores de marca del sitio: azul/amarillo/rojo son los únicos definidos en `programa.css`). Cambio mínimo: se intercambian los íconos de Daniela y Juan David (`controller` ↔ `like`) — ambos ya estaban en uso, solo se reasignan a quién le toca cada uno. Esto separa los 2 rojos (Nicolás, Juan David) a la distancia circular máxima posible (4 cards), y ningún par de cards adyacentes (incluida la costura) vuelve a compartir color.
+- Ciclo final por docente: Paula=estrella (azul), Sofía=computador (amarillo), Nicolás=corazón (rojo), Ximena=cámara (azul), Camilo=bombillo (amarillo), Daniela=like (azul), Juan David=control (rojo), Vanessa=celular (amarillo).
+- Archivos: `src/pages/ProgramaCreacionDigital.tsx`.
+
 ## [3.4.0] — 2026-08-18
 
 ### Agregado — Foto real de Sofía Jiménez (card + modal)

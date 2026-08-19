@@ -683,6 +683,7 @@
 }
 #programa,
 #docentes,
+#equipo,
 #proyectos {
   scroll-margin-top: 68px; /* alto de .pcd-header fijo, para que no tape la sección al llegar por scroll suave */
 }
@@ -700,6 +701,59 @@
   border-radius: 999px;
   margin-bottom: 32px;
   width: max-content;
+}
+
+/* Botón único que alterna Definición / Contenido — pastilla sólida con
+   un pulso sutil para invitar al clic sin ser intrusivo. Reutilizado por
+   los ejes 01 (contenido), 02 (mundo 3d) y 03 (producto).
+   Nota: el selector va calificado con .pcd-axis__left para ganarle en
+   especificidad al reset global ".pcd-page button" (línea ~53), que si no
+   pisaba el background/color de este botón dejándolo transparente. */
+.pcd-axis__left .pcd-axis__switch {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #ffffff;
+  color: var(--pcd-ink);
+  border: 0;
+  font-family: var(--pcd-mono);
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 10px 20px;
+  border-radius: 999px;
+  margin-bottom: 32px;
+  width: max-content;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+  transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
+  animation: pcd-switch-pulse 2.8s ease-out infinite;
+}
+.pcd-axis__left .pcd-axis__switch::after {
+  content: "→";
+  display: inline-block;
+  transition: transform .15s ease;
+}
+.pcd-axis__left .pcd-axis__switch:hover {
+  background: var(--pcd-ink);
+  color: var(--pcd-paper);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.22);
+}
+.pcd-axis__left .pcd-axis__switch:hover::after { transform: translateX(2px); }
+.pcd-axis__left .pcd-axis__switch:active { transform: translateY(0); }
+
+/* Anillo que nace pegado al botón y se expande hacia afuera desvaneciéndose
+   (de adentro hacia afuera, sin "regresar") — como un eco, no una respiración. */
+@keyframes pcd-switch-pulse {
+  0%   { box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18), 0 0 0 0 rgba(255, 255, 255, 0.45); }
+  70%  { box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18), 0 0 0 7px rgba(255, 255, 255, 0); }
+  100% { box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18), 0 0 0 7px rgba(255, 255, 255, 0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pcd-axis__left .pcd-axis__switch { animation: none; }
 }
 .pcd-axis__word-mobile { display: none; } /* solo se muestra en móvil, ver media query */
 .pcd-axis__word {
@@ -753,9 +807,28 @@
   transform: rotate(-2deg) translateY(15px);
 }
 
-/* Eje 2 — mundo 3d (acid) */
+/* Eje 2 — mundo 3d (acid)
+   El corrimiento de "mundo" y del caption se había resuelto antes con 3
+   valores fijos en px (uno "de diseño" ≥1486px, y dos parches para el
+   rango 1051-1486px) — pero .pcd-axis__left es una columna FLUIDA (fr
+   del grid), así que un valor fijo solo se ve bien exactamente en el
+   ancho para el que se ajustó, y se rompe (se monta sobre el caption o
+   se aleja de más) en cualquier otro ancho ≥1051px, incluida la
+   pantalla "normal" del usuario. En vez de sumar un cuarto breakpoint,
+   se reemplazan los 3 valores fijos por una interpolación continua
+   entre 1051px (los valores ya afinados para ese extremo angosto) y
+   1920px (el ancho máximo real de .pcd-page — de ahí en adelante el
+   contenedor deja de crecer, así que el valor se queda fijo también).
+   Así se ve bien en CUALQUIER ancho de ese rango, no solo en el que se
+   probó la última vez. */
 .pcd-axis--mundo .pcd-axis__left { background: var(--pcd-acid); color: var(--pcd-ink); }
-.pcd-axis--mundo .pcd-axis__word { text-align: right; color: var(--pcd-ink); transform: translateX(-220px); }
+.pcd-axis--mundo .pcd-axis__word {
+  text-align: right;
+  color: var(--pcd-ink);
+  /* Misma curva que antes, corrida +40px a la derecha en los dos
+     extremos (pedido: "córrelo un poco más a la derecha"). */
+  transform: translateX(clamp(-180px, calc(-5px - (100vw - 1051px) * 0.2014), -5px));
+}
 .pcd-axis--mundo.pcd-axis--mundo-en .pcd-axis__word { transform: translateX(-250px); }
 .pcd-axis--mundo.pcd-axis--mundo-en .pcd-axis__caption { top: 180px; transform: translateX(55px); max-width: 22%; }
 .pcd-axis--mundo .pcd-axis__caption {
@@ -764,10 +837,14 @@
   bottom: auto;
   top: 38.8%;
   text-align: right;
-  max-width: 34%;
+  max-width: 38%;
   line-height: 1.25;
   color: var(--pcd-ink);
-  transform: translateX(-10px);
+  /* +20px en Y (pedido: "baja el subtítulo unos 20px"), misma curva. */
+  transform: translate(
+    clamp(-60px, calc(-60px + (100vw - 1051px) * 0.0575), -10px),
+    clamp(-10px, calc(-10px + (100vw - 1051px) * 0.0345), 20px)
+  );
   z-index: 3;
 }
 .pcd-axis--mundo .pcd-axis__image {
@@ -814,7 +891,7 @@
   justify-content: center;
   gap: 19px;
 }
-.pcd-axis--contenido .pcd-axis__right { background: var(--pcd-paper-2); }
+.pcd-axis--contenido .pcd-axis__right { background: var(--pcd-paper); }
 .pcd-axis--mundo .pcd-axis__right { background: var(--pcd-ink); color: var(--pcd-paper); }
 .pcd-axis--mundo .pcd-axis__right .pcd-vs__idx { color: var(--pcd-paper); }
 .pcd-axis--mundo .pcd-axis__right .pcd-vs__title { color: var(--pcd-paper); }
@@ -851,6 +928,43 @@
   color: var(--pcd-ink);
 }
 
+/* Título "¿Qué aprenderás?" — modo "Contenido" de los ejes 01, 02 y 03, en Rubik
+   Bubbles (misma fuente "fun" usada en .pcd-docente-modal__heading y otros
+   acentos del sitio) para diferenciarlo del resto de la tipografía serif/sans. */
+.pcd-content-title {
+  font-family: var(--pcd-fun);
+  font-style: normal;
+  font-weight: 400; /* Rubik Bubbles solo trae peso 400; ver nota en .pcd-axis__word */
+  font-size: 32px;
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  color: var(--pcd-ink);
+  margin: 0 0 14px;
+}
+.pcd-axis--mundo .pcd-axis__right .pcd-content-title { color: var(--pcd-paper); }
+
+/* Párrafo único — modo "Contenido" de los ejes 01, 02 y 03. En vez de partir el
+   texto en 3 bloques con título poético, se muestra como un párrafo corrido
+   con las frases clave resaltadas (ver renderAccented() / .pcd-accent-text),
+   más fiel al texto que redactó el usuario. */
+.pcd-content-copy {
+  font-family: var(--pcd-sans);
+  font-weight: 400;
+  font-size: 19px;
+  line-height: 1.65;
+  color: var(--pcd-ink);
+  max-width: 46ch;
+}
+.pcd-axis--mundo .pcd-axis__right .pcd-content-copy { color: var(--pcd-paper); }
+.pcd-accent-text {
+  font-weight: 700;
+  font-style: normal;
+  color: var(--pcd-ink);
+}
+.pcd-axis--contenido .pcd-accent-text { color: var(--pcd-cobalt); }
+.pcd-axis--mundo .pcd-accent-text { color: var(--pcd-acid); }
+.pcd-axis--producto .pcd-accent-text { color: var(--pcd-tomato); }
+
 /* Acento en el segundo clauso de "En vez de X; Y" */
 .pcd-vs__accent { font-style: italic; }
 .pcd-axis--contenido .pcd-vs__accent { color: var(--pcd-cobalt); }
@@ -863,6 +977,62 @@
   width: 100%;
 }
 
+/* Dock de software — modo "Contenido" de los ejes 01, 02 y 03 */
+.pcd-content-dock {
+  margin-top: 43px;
+}
+.pcd-content-dock__label {
+  display: block;
+  font-family: var(--pcd-mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--pcd-ink);
+  opacity: 0.6;
+  margin-bottom: 14px;
+}
+.pcd-axis--mundo .pcd-axis__right .pcd-content-dock__label { color: var(--pcd-paper); opacity: 0.7; }
+.pcd-content-dock__row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  background: var(--pcd-paper);
+  border: 1.5px solid rgba(13,13,13,0.08);
+  border-radius: 20px;
+  padding: 14px;
+}
+.pcd-content-dock__item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  width: 64px;
+}
+.pcd-content-dock__icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background-color: var(--pcd-paper-2);
+  background-size: 62%;
+  background-position: center;
+  background-repeat: no-repeat;
+  border: 1.5px solid rgba(13,13,13,0.08);
+  transition: transform .15s;
+}
+.pcd-content-dock__item:hover .pcd-content-dock__icon { transform: translateY(-3px); }
+.pcd-content-dock__name {
+  font-family: var(--pcd-mono);
+  font-size: 9px;
+  letter-spacing: 0.04em;
+  text-align: center;
+  line-height: 1.2;
+  color: var(--pcd-ink);
+  opacity: 0.7;
+}
+@media (max-width: 640px) {
+  .pcd-content-dock__row { justify-content: center; }
+}
+
 /* Breakpoint intermedio — antes de colapsar a 1 columna, damos aire a la
    columna derecha para que el texto no quede apretado en el grid 736/700. */
 @media (max-width: 1200px) {
@@ -870,27 +1040,32 @@
   .pcd-axis__word { font-size: 132px; }
 }
 
-/* En este rango (justo antes de colapsar a 1 columna, hasta el ancho de
-   referencia del diseño desktop = 1486px) "mundo 3d" quedaba montado sobre
-   su caption con el layout desktop de posiciones fijas; lo corremos para
-   que no se encimen. */
+/* "mundo 3d" (palabra + caption) ya no necesita un breakpoint propio
+   aquí — ver el comentario junto a .pcd-axis--mundo más arriba: ahora
+   se ajusta con una interpolación continua entre 1051px y 1920px, así
+   que se ve bien en todo este rango sin un parche adicional. */
 @media (min-width: 1051px) and (max-width: 1486px) {
-  .pcd-axis--mundo .pcd-axis__word { transform: translateX(-45px); }
-  .pcd-axis--mundo .pcd-axis__caption { max-width: 44%; transform: translate(-50px, -30px); }
   .pcd-axis--producto .pcd-axis__caption { max-width: 38%; }
-}
-/* De 1200 en adelante (hasta 1486), el caption de mundo 3d otros 10px más
-   a la izquierda que en el tramo 1051-1200. */
-@media (min-width: 1201px) and (max-width: 1486px) {
-  .pcd-axis--mundo .pcd-axis__caption { transform: translate(-60px, -30px); }
 }
 
 @media (max-width: 1050px) {
   .pcd-axis { grid-template-columns: 1fr; min-height: 0; }
   /* En móvil las imágenes están ocultas, así que overflow:hidden ya no recorta
      imágenes — solo arriesga cortar el texto del caption. Lo liberamos y dejamos
-     que el bloque crezca con su contenido. min-height: auto = nunca cap. */
-  .pcd-axis__left { padding: 56px 24px; min-height: auto; overflow: visible; }
+     que el bloque crezca con su contenido. min-height: auto = nunca cap.
+     display:flex column + align-items:center centra el botón, el título y el
+     subtítulo como un solo bloque, sin importar el ancho natural de cada uno
+     (antes quedaban en 3 alineaciones distintas: botón siempre a la izquierda,
+     título/subtítulo variando por eje). */
+  .pcd-axis__left {
+    padding: 56px 24px;
+    min-height: auto;
+    overflow: visible;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
   .pcd-axis__right { padding: 56px 24px; }
   .pcd-axis__word { font-size: 56px; }
   .pcd-axis__word-desktop { display: none; }
@@ -906,24 +1081,23 @@
     top: auto; bottom: auto; left: auto; right: auto;
     max-width: 100%;
     margin-top: 32px;
-    text-align: left;
+    text-align: center;
   }
   .pcd-axis__image { display: none; }
-  /* Mundo 3D: palabra + caption centrados en móvil */
+  /* Los 3 ejes quedan centrados en móvil (botón, título y subtítulo). */
   .pcd-axis--mundo .pcd-axis__tag { display: flex; margin-left: auto; margin-right: auto; }
   .pcd-axis--mundo .pcd-axis__word { text-align: center; transform: none; margin-right: 0; }
   .pcd-axis--mundo .pcd-axis__caption { text-align: center; transform: none; margin-right: 0; max-width: 100%; }
-  /* Producto: palabra + caption alineados a la derecha en móvil */
-  .pcd-axis--producto .pcd-axis__tag { display: flex; margin-left: auto; }
-  .pcd-axis--producto .pcd-axis__word { text-align: right; margin-right: 0; }
-  .pcd-axis--producto .pcd-axis__caption { text-align: right; transform: none; }
+  .pcd-axis--producto .pcd-axis__tag { display: flex; margin-left: auto; margin-right: auto; }
+  .pcd-axis--producto .pcd-axis__word { text-align: center; margin-right: 0; }
+  .pcd-axis--producto .pcd-axis__caption { text-align: center; transform: none; }
 }
 
 /* ────────────────────────────────────────────────────────────
    DOCENTES
    ──────────────────────────────────────────────────────────── */
 .pcd-docentes {
-  padding: 88px 88px 28px;
+  padding: 88px 88px 48px; /* +20px abajo (antes 28px) */
   background: var(--pcd-paper);
 }
 .pcd-docentes__head {
@@ -937,11 +1111,22 @@
   font-family: var(--pcd-serif);
   font-style: italic;
   font-weight: 400; /* ver nota en .pcd-axis__word: evita el bold falso sintetizado */
-  font-size: 100px;
+  font-size: 72px; /* igualado a .pcd-team__title, para que los 3 títulos de sección se vean uniformes */
   line-height: 0.92;
   letter-spacing: -0.025em;
   color: var(--pcd-ink);
   margin: 0;
+}
+/* "enseñan"/"teach" en Rubik Bubbles + azul (cobalt), mismo tratamiento
+   que .pcd-team__title-pop pero con el color de marca de Docentes. */
+.pcd-docentes__title-pop {
+  font-family: var(--pcd-fun);
+  font-style: normal;
+  color: var(--pcd-cobalt);
+  letter-spacing: -0.02em;
+  display: inline-block;
+  transform: translateY(0.05em) rotate(-2deg);
+  margin: 0 0.04em;
 }
 .pcd-docentes__sub-break { display: none; } /* solo se muestra en móvil, ver media query */
 .pcd-docentes__sub {
@@ -955,34 +1140,41 @@
   text-align: right;
   max-width: 132px;
 }
+/* Sin scroll-snap: el auto-avance mueve scrollLeft en fracciones de píxel
+   por frame (requestAnimationFrame), y con scroll-snap-type activo el
+   navegador revertía cada uno de esos micro-cambios al punto de snap más
+   cercano — el movimiento quedaba anulado en la práctica, no se veía. */
+/* El bleed hasta el borde real de la pantalla vive en .pcd-docentes__grid-wrap
+   (un bloque simple, sin overflow ni flex propios) y NO en .pcd-docentes__grid
+   directamente: un margin-left negativo grande puesto sobre el propio
+   contenedor con overflow-x:auto + display:flex rompía por completo el
+   layout de las cards (ver CHANGELOG). Separar el bleed geométrico (wrapper)
+   del scroll (grid) evita ese bug — el grid ahora solo usa padding positivo. */
+.pcd-docentes__grid-wrap {
+  margin-left: -88px;
+  margin-right: -88px;
+}
 .pcd-docentes__grid {
   display: flex;
   gap: 20px;
   overflow-x: auto;
   overflow-y: hidden;
-  scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
   -ms-overflow-style: none;
   padding-top: 8px; /* evita que el translateY(-3px) del hover recorte la card contra overflow-y:hidden */
-  padding-left: 8px; /* evita que el translateX(-3px) del hover corte el borde izquierdo de la 1ª card contra overflow-x:auto */
-  margin-left: -8px; /* cancela el corrimiento visual del padding-left, para no desalinear el carrusel con el título de arriba */
+  padding-left: 88px;
   padding-bottom: 16px;
-  margin-right: -88px;
   padding-right: 88px;
   cursor: grab;
   user-select: none;
 }
 .pcd-docentes__grid::-webkit-scrollbar { display: none; }
-.pcd-docentes__grid.is-dragging {
-  cursor: grabbing;
-  scroll-snap-type: none;
-}
+.pcd-docentes__grid.is-dragging { cursor: grabbing; }
 .pcd-docente {
   position: relative;
   z-index: 1;
   flex: 0 0 calc((100% - 40px) / 3 - 10px);
-  scroll-snap-align: start;
   background: var(--pcd-paper);
   border: 2.5px solid var(--pcd-ink);
   padding: 46px 35px 34px;
@@ -1042,10 +1234,23 @@
   0%, 100% { transform: rotate(-8deg); }
   50% { transform: rotate(8deg); }
 }
-.pcd-sticker--like { top: 110px; animation-delay: -0.4s; }
-.pcd-sticker--idea { top: 290px; animation-delay: -1.1s; }
-.pcd-sticker--love { top: 80px; animation-delay: -1.9s; }
-.pcd-sticker--star { top: 110px; animation-delay: -2.6s; } /* posición provisional hasta ver el asset real */
+/* El ciclo de íconos por card ya tiene 8 valores distintos, uno por
+   docente, sin ningún ícono repetido (antes de esto, con solo 6 íconos
+   para 8 docentes, 2 se repetían y quedaban pegados justo en la costura
+   del loop infinito — ver CHANGELOG). Los 8 íconos siguen formando 4
+   parejas por color (bombillo/computador = lima, estrella/cámara/like =
+   azul... en realidad "like" y "phone" se suman a los grupos existentes
+   para seguir el patrón azul→amarillo→rojo pedido) — cada pareja comparte
+   la MISMA posición vertical y animation-delay, para que el ícono siempre
+   "viva" en el mismo lugar de la card sin importar cuál de ellos le toque. */
+.pcd-sticker--idea,
+.pcd-sticker--computer,
+.pcd-sticker--phone { top: 290px; animation-delay: -1.1s; }
+.pcd-sticker--love,
+.pcd-sticker--controller { top: 80px; animation-delay: -1.9s; }
+.pcd-sticker--star,
+.pcd-sticker--camera,
+.pcd-sticker--like { top: 110px; animation-delay: -2.6s; }
 .pcd-docente__blob {
   position: relative;
   height: 331px;
@@ -1138,6 +1343,14 @@
   transform: scale(1.2);
   transform-origin: center center;
 }
+/* Daniela: a diferencia de las demás parejas, el dibujo "end" (hover) NO
+   viene ~6% más grande que el "init" en su lienzo — medido, quedan
+   prácticamente idénticos (mismo encuadre de cejas/collar en ambos). El
+   achique por defecto de 0.94 en ::after de hecho INTRODUCIRÍA un salto de
+   tamaño que no existe en el arte original, así que se anula. */
+.pcd-docente--daniela .pcd-docente__blob::after {
+  transform: none;
+}
 .pcd-docente:hover .pcd-docente__blob::before { opacity: 0; }
 .pcd-docente:hover .pcd-docente__blob::after  { opacity: 1; }
 .pcd-docente__name {
@@ -1179,7 +1392,8 @@
 }
 @media (max-width: 640px) {
   .pcd-docentes { padding: 56px 24px 24px; }
-  .pcd-docentes__grid { margin-right: -24px; padding-right: 24px; }
+  .pcd-docentes__grid-wrap { margin-left: -24px; margin-right: -24px; }
+  .pcd-docentes__grid { padding-left: 24px; padding-right: 24px; }
   .pcd-docente { flex: 0 0 85%; }
 }
 
@@ -1360,6 +1574,13 @@ body:has(.pcd-docente-modal[open]) {
 .pcd-docente-modal--sofia .pcd-docente-modal__portrait-layer--end {
   transform: scale(1.2);
 }
+
+/* Daniela: mismo hallazgo que en la card del carrusel — el "end" ya viene
+   a la misma escala que el "init" en el lienzo original, así que se anula
+   el achique *0.94 del modal (se deja el 1.08 base para ambos). */
+.pcd-docente-modal--daniela .pcd-docente-modal__portrait-layer--end {
+  transform: scale(1.08);
+}
 .pcd-docente-modal__name {
   font-family: var(--pcd-serif);
   font-style: italic;
@@ -1500,10 +1721,292 @@ body:has(.pcd-docente-modal[open]) {
 }
 
 /* ────────────────────────────────────────────────────────────
+   EQUIPO — video loop con hotspots + ficha técnica
+   ──────────────────────────────────────────────────────────── */
+.pcd-team {
+  padding: 88px 88px 96px;
+  background: var(--pcd-paper);
+}
+.pcd-team__head {
+  margin-bottom: 56px;
+  text-align: center;
+}
+.pcd-team__title {
+  font-family: var(--pcd-serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 72px;
+  line-height: 0.96;
+  letter-spacing: -0.025em;
+  color: var(--pcd-ink);
+  margin: 0 0 28px; /* más aire entre el título y el subtítulo (antes 12px) */
+}
+/* "equipo"/"team" en Rubik Bubbles + amarillo (acid), mismo tratamiento
+   que .pop en Proyectos (fuente "fun", ligera rotación) pero en el color
+   de marca de Equipo en vez del tomato de Proyectos. */
+.pcd-team__title-pop {
+  font-family: var(--pcd-fun);
+  font-style: normal;
+  color: var(--pcd-acid);
+  letter-spacing: -0.02em;
+  display: inline-block;
+  transform: translateY(0.05em) rotate(2deg);
+  margin: 0 0.04em;
+}
+.pcd-team__sub {
+  font-family: var(--pcd-mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--pcd-ink);
+}
+/* Apilado (video arriba, card abajo a todo el ancho) es el layout BASE,
+   no solo el de mobile: el usuario pidió explícitamente mantenerlo así
+   "hasta que llegue al ancho normal" — el ancho de referencia del diseño
+   desktop (1486px, la misma constante que usan el hero y el bloque
+   "mundo 3d" en otras secciones, ver arriba). Recién a partir de ahí se
+   activa el layout en fila (video izquierda, card derecha) dentro del
+   media query al final de este bloque. */
+.pcd-team__body {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+.pcd-team__stage {
+  position: relative;
+  overflow: hidden;
+  border: 2.5px solid var(--pcd-ink);
+  background: var(--pcd-ink);
+  aspect-ratio: 1280 / 716;
+  width: 100%;
+}
+.pcd-team__video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.pcd-team__hotspot {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+.pcd-team__hotspot:hover,
+.pcd-team__hotspot:focus-visible,
+.pcd-team__hotspot.is-active {
+  background: rgba(209, 255, 34, 0.16); /* --pcd-acid a baja opacidad, feedback sutil de la zona activa */
+}
+.pcd-team__hotspot.is-active {
+  box-shadow: inset 0 0 0 2.5px var(--pcd-acid);
+}
+.pcd-team__tag {
+  margin-top: 16px;
+  padding: 6px 14px;
+  background: var(--pcd-ink);
+  color: var(--pcd-paper);
+  font-family: var(--pcd-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateY(-6px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  pointer-events: none;
+}
+.pcd-team__hotspot:hover .pcd-team__tag,
+.pcd-team__hotspot:focus-visible .pcd-team__tag,
+.pcd-team__hotspot.is-active .pcd-team__tag {
+  opacity: 1;
+  transform: translateY(0);
+}
+/* Layout BASE de la card (para el rango apilado, ver comentario en
+   .pcd-team__body): foto a la izquierda, texto a la derecha — pedido
+   explícito del usuario al ver que, con el video a todo el ancho arriba,
+   una card angosta centrada verticalmente ya no tenía sentido debajo.
+   El layout centrado (foto arriba, texto abajo) se preserva solo para
+   el layout en fila de escritorio ancho, dentro del media query. */
+.pcd-team__panel {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 28px;
+  padding: 28px 32px;
+  border: 2.5px solid var(--pcd-ink);
+  box-shadow: 8px 8px 0 var(--pcd-ink);
+  background: #fefefe; /* mismo blanco de fondo que traen los 5 retratos (rgb 254,254,254), para que la foto no se note "pegada" contra un fondo distinto */
+  overflow: hidden;
+}
+.pcd-team__panel-photo {
+  flex: none;
+  width: min(30%, 220px);
+  aspect-ratio: 1 / 1;
+  background-size: cover;
+  background-position: center top;
+}
+.pcd-team__panel-body {
+  flex: 1 1 0%;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  gap: 10px;
+  overflow-y: auto;
+}
+.pcd-team__panel-name {
+  font-family: var(--pcd-serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 32px;
+  line-height: 1.05;
+  color: var(--pcd-ink);
+  margin: 0;
+}
+.pcd-team__panel-role {
+  font-family: var(--pcd-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--pcd-cobalt);
+  margin: 0;
+}
+.pcd-team__panel-desc {
+  font-family: var(--pcd-sans);
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--pcd-ink);
+  margin: 4px 0 0;
+}
+
+/* Variante oscura, a modo de prueba — pidió "verla en negro" antes de
+   decidir si se queda. Para revertir: quitar la clase pcd-team--dark del
+   <section> en el TSX, no hace falta tocar este bloque. La card (panel)
+   sigue en blanco (matchea las fotos); el borde de marca (ink) se
+   invierte a paper para que siga leyéndose contra el fondo negro — con
+   ink puro se perdería, es casi el mismo color que el fondo. El drop
+   shadow duro de la card se quita en esta variante (pedido explícito). */
+.pcd-team--dark { background: var(--pcd-ink); }
+.pcd-team--dark .pcd-team__title,
+.pcd-team--dark .pcd-team__sub { color: var(--pcd-paper); }
+.pcd-team--dark .pcd-team__stage { border-color: var(--pcd-paper); }
+.pcd-team--dark .pcd-team__panel {
+  border-color: var(--pcd-paper);
+  box-shadow: none;
+}
+
+/* Antes el layout en fila arrancaba en 1050px (el breakpoint de nav
+   hamburguesa del resto del sitio) pero a esos anchos el video en fila
+   quedaba muy angosto y la card no tenía aire real. Pedido explícito del
+   usuario: mantener el apilado (video arriba a todo el ancho, card abajo)
+   hasta "el ancho normal" del sitio — 1486px, la constante de referencia
+   del diseño desktop que ya usan el hero y el bloque "mundo 3d" (ver
+   arriba). Debajo de 1486px, .pcd-team__body/.pcd-team__stage/
+   .pcd-team__panel usan sus estilos base (apilados, foto-izq/texto-der).
+   La fila (video izq, card der, foto arriba/texto abajo centrados) queda
+   reservada para pantallas realmente anchas. */
+@media (min-width: 1486px) {
+  /* Menos padding lateral = más ancho disponible para .pcd-team__body =
+     el stage (aspect-ratio fijo) crece un poco más alto también, ya que
+     su alto depende de su ancho. Con el copy real (más largo que el
+     Lorem Ipsum usado antes para calcular el margen) hizo falta bajar
+     esto de 64px a 40px para darle al video un poco más de alto de
+     sobra en el punto más angosto del rango (1486px). */
+  .pcd-team { padding-left: 40px; padding-right: 40px; }
+  .pcd-team__body {
+    flex-direction: row;
+    align-items: stretch;
+    gap: 40px;
+  }
+  .pcd-team__stage {
+    flex: 2.2 1 0%; /* video más ancho, card más angosta (antes 1.35:1, luego 1.8:1) */
+    width: auto;
+    min-width: 0;
+    /* Sin esto, align-items:stretch del padre estira el alto del stage
+       para igualar el de la card cuando la card necesita más alto que
+       el que le da su propio aspect-ratio — eso rompe la proporción
+       real del video (el ancho se queda fijo, el alto crece) y
+       object-fit:cover termina recortando los lados, perdiendo gente
+       (Estefany/Fabian, los del borde). El stage SIEMPRE mantiene su
+       propio alto por aspect-ratio; es la card la que se ajusta a él. */
+    align-self: flex-start;
+  }
+  /* SIN JS ni scroll: la card usa el stretch normal del padre (vuelve
+     a estirarse para llenar el alto que termine teniendo la fila, como
+     al principio) y su CONTENIDO (foto, paddings, tamaño de la
+     descripción) se dimensionó a propósito con el copy REAL de las 5
+     personas (no el Lorem Ipsum genérico) para que, sumado, quepa
+     siempre por debajo del alto mínimo real que puede tener el video
+     en este rango (~525px a 1486px de ancho, el punto más angosto —
+     el video solo crece de ahí para arriba). Con eso garantizado, el
+     centrado vertical (justify-content:center) vuelve a ser seguro. */
+  .pcd-team__panel {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 1 1 0%;
+    min-width: 0;
+    gap: 10px;
+    padding: 16px 24px;
+  }
+  .pcd-team__panel-photo {
+    width: min(80%, 200px);
+  }
+  .pcd-team__panel-body {
+    flex: none;
+    width: 100%;
+    max-width: 420px; /* líneas de texto legibles aunque la card sea ancha */
+    align-items: center;
+    text-align: center;
+  }
+  /* La descripción real (hasta ~50 palabras) es bastante más larga que
+     el Lorem Ipsum de antes — la achicamos un poco solo en este rango
+     para que las ~7 líneas que necesita quepan sin desbordar la card. */
+  .pcd-team__panel-desc {
+    font-size: 14px;
+    line-height: 1.45;
+  }
+}
+@media (max-width: 1050px) {
+  .pcd-team { padding: 56px 24px 64px; }
+  .pcd-team__title { font-size: clamp(36px, 8vw, 56px); }
+}
+@media (max-width: 640px) {
+  .pcd-team { padding: 48px 20px 56px; }
+  .pcd-team__panel { padding: 20px; gap: 16px; }
+  .pcd-team__panel-photo { width: 32%; max-width: 130px; }
+  .pcd-team__panel-name { font-size: 24px; }
+  .pcd-team__panel-desc { font-size: 14px; }
+  .pcd-team__tag { display: none; } /* en mobile el tag flotante sobre el video no cabe/estorba; el click ya selecciona igual */
+}
+/* Por debajo de 500px la fila foto-izq/texto-der ya no tiene aire real
+   (la foto se angosta demasiado y el texto queda apretado contra el
+   borde) — pedido explícito del usuario: volver a apilar la card
+   (foto arriba, texto abajo) solo en este rango, sin tocar el layout
+   apilado del video (que sigue igual). */
+@media (max-width: 500px) {
+  .pcd-team__panel {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 14px;
+  }
+  .pcd-team__panel-photo { width: 60%; max-width: 200px; }
+  .pcd-team__panel-body { align-items: center; text-align: center; }
+}
+
+/* ────────────────────────────────────────────────────────────
    PROYECTOS
    ──────────────────────────────────────────────────────────── */
 .pcd-projects {
-  padding: 28px 84px 96px;
+  padding: 68px 84px 96px; /* +20px arriba otra vez (antes 28px, luego 48px) */
   background: var(--pcd-paper);
 }
 .pcd-projects__head {
@@ -1517,7 +2020,7 @@ body:has(.pcd-docente-modal[open]) {
   font-family: var(--pcd-serif);
   font-style: italic;
   font-weight: 400; /* ver nota en .pcd-axis__word: evita el bold falso sintetizado */
-  font-size: 100px; /* igualado a .pcd-docentes__title */
+  font-size: 72px; /* igualado a .pcd-docentes__title / .pcd-team__title */
   line-height: 0.94;
   letter-spacing: -0.03em;
   color: var(--pcd-ink);

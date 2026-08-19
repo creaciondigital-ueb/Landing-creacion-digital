@@ -5,7 +5,69 @@ import { useLang } from '../i18n/LanguageContext';
 import '../styles/programa.css';
 
 const IMG = '/programa/img';
+const VIDEO = '/programa/video';
 const APLICA_URL = 'https://www.unbosque.edu.co/inscripciones/pregrado';
+
+/**
+ * Equipo — 5 personas en el video loop, en el mismo orden en que aparecen
+ * caminando de izquierda a derecha en el video (Estefany > Juan > Paula >
+ * Tatiana > Fabian). `left`/`width` son porcentajes del ancho del frame
+ * que delimitan la zona "clicable" de cada persona.
+ *
+ * Al principio se midieron a partir de la oscuridad por columna de un
+ * frame real del video, pero eso dejaba a Estefany con una zona (25.8%)
+ * notoriamente más ancha que las demás (~15-18%) — pedido explícito del
+ * usuario: "la card de estefany es un poco más grande, déjala del mismo
+ * tamaño que las otras". Ahora las 5 zonas son parejas (20% cada una),
+ * a costa de perder algo de precisión contra los bordes reales de cada
+ * figura en el video.
+ */
+const TEAM = [
+  { id: 'estefany', photo: `${IMG}/equipo/estefany.webp`, left: 0, width: 20 },
+  { id: 'juan', photo: `${IMG}/equipo/juan.webp`, left: 20, width: 20 },
+  { id: 'paulav', photo: `${IMG}/equipo/paula-v.webp`, left: 40, width: 20 },
+  { id: 'tatiana', photo: `${IMG}/equipo/tatiana.webp`, left: 60, width: 20 },
+  { id: 'fabian', photo: `${IMG}/equipo/fabian.webp`, left: 80, width: 20 },
+] as const;
+
+/** Herramientas del dock — modo "Contenido" del eje 01. */
+const CONTENIDO_DOCK = [
+  { name: 'Higgsfield', icon: `${IMG}/dock/higgsfield.png` },
+  { name: 'ChatGPT', icon: `${IMG}/dock/chatgpt.png` },
+  { name: 'Runway', icon: `${IMG}/dock/runway.png` },
+  { name: 'CapCut', icon: `${IMG}/dock/capcut.png` },
+  { name: 'DaVinci Resolve', icon: `${IMG}/dock/davinci-resolve.png` },
+  { name: 'Adobe', icon: `${IMG}/dock/adobe.png` },
+  { name: 'Affinity', icon: `${IMG}/dock/affinity.png` },
+];
+
+/** Herramientas del dock — modo "Contenido" del eje 02 (mundo 3d). */
+const MUNDO_DOCK = [
+  { name: 'Blender', icon: `${IMG}/dock/blender.png` },
+  { name: 'Unity', icon: `${IMG}/dock/unity.png` },
+  { name: 'Unreal Engine', icon: `${IMG}/dock/unreal-engine.png` },
+  { name: 'Cascadeur', icon: `${IMG}/dock/cascadeur.png` },
+];
+
+/** Herramientas del dock — modo "Contenido" del eje 03 (producto). */
+const PRODUCTO_DOCK = [
+  { name: 'Claude', icon: `${IMG}/dock/claude.png` },
+  { name: 'Figma', icon: `${IMG}/dock/figma.png` },
+  { name: 'GitHub', icon: `${IMG}/dock/github.png` },
+  { name: 'Visual Studio Code', icon: `${IMG}/dock/vscode.png` },
+];
+
+/**
+ * Convierte un string con **frases resaltadas** (marcadas entre doble
+ * asterisco, estilo markdown liviano) en nodos React con <strong> en vez
+ * de texto plano — para poder resaltar palabras clave dentro de un párrafo
+ * de traducción sin partirlo en múltiples keys de i18n.
+ */
+function renderAccented(text: string): ReactNode[] {
+  return text.split(/\*\*(.+?)\*\*/g).map((chunk, i) =>
+    i % 2 === 1 ? <strong className="pcd-accent-text" key={i}>{chunk}</strong> : chunk
+  );
+}
 
 /**
  * Landing pública del Programa Creación Digital (Universidad El Bosque).
@@ -127,6 +189,20 @@ export default function ProgramaCreacionDigital() {
   // Menú hamburguer
   const [menuOpen, setMenuOpen] = useState(false);
 
+  // Equipo: persona seleccionada para la ficha técnica (Fabian por
+  // defecto — pedido explícito del usuario — para que el panel nunca se
+  // vea vacío al llegar).
+  const [activeTeam, setActiveTeam] = useState<typeof TEAM[number]['id']>('fabian');
+  const activeTeamMember = t.equipo[activeTeam];
+
+
+  // Toggle Definición / Contenido — eje 01 (sección "contenido")
+  const [axis01Mode, setAxis01Mode] = useState<'definicion' | 'contenido'>('definicion');
+  // Toggle Definición / Contenido — eje 02 (sección "mundo 3d")
+  const [axis02Mode, setAxis02Mode] = useState<'definicion' | 'contenido'>('definicion');
+  // Toggle Definición / Contenido — eje 03 (sección "producto")
+  const [axis03Mode, setAxis03Mode] = useState<'definicion' | 'contenido'>('definicion');
+
   // ── Hero typewriter ──────────────────────────────────────────
   const [heroTypedChars, setHeroTypedChars] = useState(0);
   const [heroStrikeActive, setHeroStrikeActive] = useState(false);
@@ -198,22 +274,67 @@ export default function ProgramaCreacionDigital() {
     return () => observer.disconnect();
   }, []);
 
-  // Drag-to-pan carrusel docentes
+  // Carrusel de docentes: drag-to-pan + loop infinito (el set de cards se
+  // duplica una vez en el DOM; al cruzar el borde entre el set original y
+  // el duplicado, restamos ese mismo ancho — visualmente idéntico, así que
+  // el salto es imperceptible) + autoavance continuo hacia la izquierda.
+  //
+  // docentesScrollRef es la ÚNICA fuente de verdad de la posición: nunca se
+  // vuelve a leer grid.scrollLeft para acumular sobre él. Esto es clave —
+  // `grid.scrollLeft += x` es un read-modify-write, y los navegadores
+  // redondean scrollLeft a píxeles enteros al leerlo; con incrementos
+  // menores a 1px por frame (32px/s a 60fps ≈ 0.5px/frame) cada lectura
+  // descartaba la parte fraccionaria antes de que pudiera acumularse, así
+  // que el carrusel quedaba efectivamente congelado para siempre (por eso
+  // "no avanza nunca continuo"). Acumulando en una variable de JS en punto
+  // flotante y solo escribiendo hacia el DOM, nada se pierde entre frames.
   const docentesGridRef = useRef<HTMLDivElement>(null);
-  const dragState = useRef({ isDown: false, startX: 0, startScroll: 0, moved: false });
+  const docentesFirstCardRef = useRef<HTMLElement>(null);
+  const docentesFirstCloneRef = useRef<HTMLElement>(null);
+  const docentesScrollRef = useRef(0);
+  const docentesHoverPausedRef = useRef(false);
+  const dragState = useRef({ isDown: false, startX: 0, startOffset: 0, moved: false });
 
-  const onDocentesMouseDown = (e: React.MouseEvent) => {
+  const setDocentesScroll = (value: number) => {
     const grid = docentesGridRef.current;
     if (!grid) return;
-    dragState.current = { isDown: true, startX: e.pageX, startScroll: grid.scrollLeft, moved: false };
-    grid.classList.add('is-dragging');
+    let v = value;
+    const a = docentesFirstCardRef.current;
+    const b = docentesFirstCloneRef.current;
+    if (a && b) {
+      const period = b.getBoundingClientRect().left - a.getBoundingClientRect().left;
+      if (period > 0) v = ((v % period) + period) % period; // siempre en [0, period)
+    }
+    docentesScrollRef.current = v;
+    grid.scrollLeft = v;
+  };
+
+  // Salvavidas para el drag NATIVO por touch en móvil (el navegador mueve
+  // scrollLeft directamente vía swipe, sin pasar por setDocentesScroll):
+  // aplica el mismo loop infinito y mantiene docentesScrollRef sincronizado
+  // para que el autoavance retome desde ahí al soltar.
+  const onDocentesScroll = () => {
+    const grid = docentesGridRef.current;
+    const a = docentesFirstCardRef.current;
+    const b = docentesFirstCloneRef.current;
+    if (!grid || !a || !b) return;
+    const period = b.getBoundingClientRect().left - a.getBoundingClientRect().left;
+    if (period > 0) {
+      if (grid.scrollLeft >= period) grid.scrollLeft -= period;
+      else if (grid.scrollLeft < 0) grid.scrollLeft += period;
+    }
+    docentesScrollRef.current = grid.scrollLeft;
+  };
+
+  const onDocentesMouseDown = (e: React.MouseEvent) => {
+    dragState.current = { isDown: true, startX: e.pageX, startOffset: docentesScrollRef.current, moved: false };
+    docentesGridRef.current?.classList.add('is-dragging');
   };
   const onDocentesMouseMove = (e: React.MouseEvent) => {
-    const grid = docentesGridRef.current;
-    if (!grid || !dragState.current.isDown) return;
+    if (!dragState.current.isDown) return;
     const dx = e.pageX - dragState.current.startX;
     if (Math.abs(dx) > 4) dragState.current.moved = true;
-    grid.scrollLeft = dragState.current.startScroll - dx;
+    setDocentesScroll(dragState.current.startOffset - dx);
   };
   const endDocentesDrag = () => {
     docentesGridRef.current?.classList.remove('is-dragging');
@@ -223,6 +344,45 @@ export default function ProgramaCreacionDigital() {
     if (dragState.current.moved) { dragState.current.moved = false; return; }
     openDocente(id);
   };
+  const onDocentesMouseEnter = () => { docentesHoverPausedRef.current = true; };
+  const onDocentesMouseLeaveWrap = () => {
+    docentesHoverPausedRef.current = false;
+    endDocentesDrag();
+  };
+
+  // Autoavance continuo hacia la izquierda. Solo se detiene mientras se
+  // arrastra activamente. Al cambiar de ventana/pestaña, requestAnimationFrame
+  // se pausa; al volver, el próximo frame llega con un "time" que saltó
+  // varios segundos — se limita el dt máximo por frame y se resetea
+  // lastTime en 'visibilitychange' para que ese primer frame de vuelta no
+  // cuente tiempo de más.
+  useEffect(() => {
+    const grid = docentesGridRef.current;
+    if (!grid) return;
+    docentesScrollRef.current = grid.scrollLeft;
+
+    const SPEED_PX_PER_SEC = 40;
+    const MAX_DT = 1 / 30;
+    let rafId = 0;
+    let lastTime: number | null = null;
+
+    const step = (time: number) => {
+      if (lastTime === null) lastTime = time;
+      const dt = Math.min((time - lastTime) / 1000, MAX_DT);
+      lastTime = time;
+      if (!dragState.current.isDown && !docentesHoverPausedRef.current) {
+        setDocentesScroll(docentesScrollRef.current + SPEED_PX_PER_SEC * dt);
+      }
+      rafId = requestAnimationFrame(step);
+    };
+    const onVisibilityChange = () => { lastTime = null; };
+    document.addEventListener('visibilitychange', onVisibilityChange);
+    rafId = requestAnimationFrame(step);
+    return () => {
+      cancelAnimationFrame(rafId);
+      document.removeEventListener('visibilitychange', onVisibilityChange);
+    };
+  }, []);
 
   /** Toggle visual ES | EN */
   const LangToggle = () => (
@@ -249,6 +409,7 @@ export default function ProgramaCreacionDigital() {
         <nav className={`pcd-nav${menuOpen ? ' is-open' : ''}`} aria-label="Principal">
           <a className="pcd-nav__link" href="#programa" onClick={() => setMenuOpen(false)}>{t.nav.programa}</a>
           <a className="pcd-nav__link" href="#docentes" onClick={() => setMenuOpen(false)}>{t.nav.docentes}</a>
+          <a className="pcd-nav__link" href="#equipo" onClick={() => setMenuOpen(false)}>{t.nav.equipo}</a>
           <a className="pcd-nav__link" href="#proyectos" onClick={() => setMenuOpen(false)}>{t.nav.proyectos}</a>
           <LangToggle />
         </nav>
@@ -360,7 +521,14 @@ export default function ProgramaCreacionDigital() {
       {/* ===== AXIS 01 · CONTENIDO ===== */}
       <section className="pcd-axis pcd-axis--contenido">
         <div className="pcd-axis__left">
-          <div className="pcd-axis__tag pcd-reveal">{t.axis01.tag}</div>
+          <button
+            type="button"
+            className="pcd-axis__switch pcd-reveal"
+            aria-label={axis01Mode === 'definicion' ? t.axis01.toggleToContenido : t.axis01.toggleToDefinicion}
+            onClick={() => setAxis01Mode(axis01Mode === 'definicion' ? 'contenido' : 'definicion')}
+          >
+            {axis01Mode === 'definicion' ? t.axis01.toggleToContenido : t.axis01.toggleToDefinicion}
+          </button>
           <h2 className="pcd-axis__word pcd-reveal">
             <span className="pcd-axis__word-desktop">
               {t.axis01.wordLine1}
@@ -372,36 +540,63 @@ export default function ProgramaCreacionDigital() {
           <div className="pcd-axis__image pcd-reveal" style={{ backgroundImage: `url('${IMG}/proyecto-3.webp')` }} aria-hidden="true" />
         </div>
         <div className="pcd-axis__right">
-          <article className="pcd-vs pcd-reveal">
-            <span className="pcd-vs__idx">1.1</span>
-            <div>
-              <h3 className="pcd-vs__title">{t.axis01.vs11title} <span className="pcd-vs__accent">{t.axis01.vs11accent}</span></h3>
-              <p className="pcd-vs__body">{t.axis01.vs11body}</p>
-            </div>
-          </article>
-          <hr className="pcd-axis__divider" />
-          <article className="pcd-vs pcd-reveal">
-            <span className="pcd-vs__idx">1.2</span>
-            <div>
-              <h3 className="pcd-vs__title">{t.axis01.vs12title} <span className="pcd-vs__accent">{t.axis01.vs12accent}</span></h3>
-              <p className="pcd-vs__body">{t.axis01.vs12body}</p>
-            </div>
-          </article>
-          <hr className="pcd-axis__divider" />
-          <article className="pcd-vs pcd-reveal">
-            <span className="pcd-vs__idx">1.3</span>
-            <div>
-              <h3 className="pcd-vs__title">{t.axis01.vs13title} <span className="pcd-vs__accent">{t.axis01.vs13accent}</span></h3>
-              <p className="pcd-vs__body">{t.axis01.vs13body}</p>
-            </div>
-          </article>
+          {axis01Mode === 'definicion' ? (
+            <>
+              <article className="pcd-vs">
+                <span className="pcd-vs__idx">1.1</span>
+                <div>
+                  <h3 className="pcd-vs__title">{t.axis01.vs11title} <span className="pcd-vs__accent">{t.axis01.vs11accent}</span></h3>
+                  <p className="pcd-vs__body">{t.axis01.vs11body}</p>
+                </div>
+              </article>
+              <hr className="pcd-axis__divider" />
+              <article className="pcd-vs">
+                <span className="pcd-vs__idx">1.2</span>
+                <div>
+                  <h3 className="pcd-vs__title">{t.axis01.vs12title} <span className="pcd-vs__accent">{t.axis01.vs12accent}</span></h3>
+                  <p className="pcd-vs__body">{t.axis01.vs12body}</p>
+                </div>
+              </article>
+              <hr className="pcd-axis__divider" />
+              <article className="pcd-vs">
+                <span className="pcd-vs__idx">1.3</span>
+                <div>
+                  <h3 className="pcd-vs__title">{t.axis01.vs13title} <span className="pcd-vs__accent">{t.axis01.vs13accent}</span></h3>
+                  <p className="pcd-vs__body">{t.axis01.vs13body}</p>
+                </div>
+              </article>
+            </>
+          ) : (
+            <>
+              <h3 className="pcd-content-title">{t.axis01.contenidoTitle}</h3>
+              <p className="pcd-content-copy">{renderAccented(t.axis01.contenidoBody)}</p>
+              <div className="pcd-content-dock">
+                <span className="pcd-content-dock__label">{t.axis01.dockLabel}</span>
+                <div className="pcd-content-dock__row">
+                  {CONTENIDO_DOCK.map((tool) => (
+                    <div className="pcd-content-dock__item" key={tool.name} title={tool.name}>
+                      <div className="pcd-content-dock__icon" style={{ backgroundImage: `url('${tool.icon}')` }} aria-hidden="true" />
+                      <span className="pcd-content-dock__name">{tool.name}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </>
+          )}
         </div>
       </section>
 
       {/* ===== AXIS 02 · MUNDO 3D ===== */}
       <section className={`pcd-axis pcd-axis--mundo${lang === 'en' ? ' pcd-axis--mundo-en' : ''}`}>
         <div className="pcd-axis__left">
-          <div className="pcd-axis__tag pcd-reveal">{t.axis02.tag}</div>
+          <button
+            type="button"
+            className="pcd-axis__switch pcd-reveal"
+            aria-label={axis02Mode === 'definicion' ? t.axis02.toggleToContenido : t.axis02.toggleToDefinicion}
+            onClick={() => setAxis02Mode(axis02Mode === 'definicion' ? 'contenido' : 'definicion')}
+          >
+            {axis02Mode === 'definicion' ? t.axis02.toggleToContenido : t.axis02.toggleToDefinicion}
+          </button>
           <h2 className="pcd-axis__word pcd-reveal">
             <span className="pcd-axis__word-desktop">
               {t.axis02.wordLine1}
@@ -413,36 +608,63 @@ export default function ProgramaCreacionDigital() {
           <div className="pcd-axis__image pcd-reveal" style={{ backgroundImage: `url('${IMG}/proyecto-5.webp')` }} aria-hidden="true" />
         </div>
         <div className="pcd-axis__right">
-          <article className="pcd-vs pcd-reveal">
-            <span className="pcd-vs__idx">2.1</span>
-            <div>
-              <h3 className="pcd-vs__title">{t.axis02.vs21title} <span className="pcd-vs__accent">{t.axis02.vs21accent}</span></h3>
-              <p className="pcd-vs__body">{t.axis02.vs21body}</p>
-            </div>
-          </article>
-          <hr className="pcd-axis__divider" />
-          <article className="pcd-vs pcd-reveal">
-            <span className="pcd-vs__idx">2.2</span>
-            <div>
-              <h3 className="pcd-vs__title">{t.axis02.vs22title} <span className="pcd-vs__accent">{t.axis02.vs22accent}</span></h3>
-              <p className="pcd-vs__body">{t.axis02.vs22body}</p>
-            </div>
-          </article>
-          <hr className="pcd-axis__divider" />
-          <article className="pcd-vs pcd-reveal">
-            <span className="pcd-vs__idx">2.3</span>
-            <div>
-              <h3 className="pcd-vs__title">{t.axis02.vs23title} <span className="pcd-vs__accent">{t.axis02.vs23accent}</span></h3>
-              <p className="pcd-vs__body">{t.axis02.vs23body}</p>
-            </div>
-          </article>
+          {axis02Mode === 'definicion' ? (
+            <>
+              <article className="pcd-vs">
+                <span className="pcd-vs__idx">2.1</span>
+                <div>
+                  <h3 className="pcd-vs__title">{t.axis02.vs21title} <span className="pcd-vs__accent">{t.axis02.vs21accent}</span></h3>
+                  <p className="pcd-vs__body">{t.axis02.vs21body}</p>
+                </div>
+              </article>
+              <hr className="pcd-axis__divider" />
+              <article className="pcd-vs">
+                <span className="pcd-vs__idx">2.2</span>
+                <div>
+                  <h3 className="pcd-vs__title">{t.axis02.vs22title} <span className="pcd-vs__accent">{t.axis02.vs22accent}</span></h3>
+                  <p className="pcd-vs__body">{t.axis02.vs22body}</p>
+                </div>
+              </article>
+              <hr className="pcd-axis__divider" />
+              <article className="pcd-vs">
+                <span className="pcd-vs__idx">2.3</span>
+                <div>
+                  <h3 className="pcd-vs__title">{t.axis02.vs23title} <span className="pcd-vs__accent">{t.axis02.vs23accent}</span></h3>
+                  <p className="pcd-vs__body">{t.axis02.vs23body}</p>
+                </div>
+              </article>
+            </>
+          ) : (
+            <>
+              <h3 className="pcd-content-title">{t.axis02.contenidoTitle}</h3>
+              <p className="pcd-content-copy">{renderAccented(t.axis02.contenidoBody)}</p>
+              <div className="pcd-content-dock">
+                <span className="pcd-content-dock__label">{t.axis02.dockLabel}</span>
+                <div className="pcd-content-dock__row">
+                  {MUNDO_DOCK.map((tool) => (
+                    <div className="pcd-content-dock__item" key={tool.name} title={tool.name}>
+                      <div className="pcd-content-dock__icon" style={{ backgroundImage: `url('${tool.icon}')` }} aria-hidden="true" />
+                      <span className="pcd-content-dock__name">{tool.name}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </>
+          )}
         </div>
       </section>
 
       {/* ===== AXIS 03 · PRODUCTO ===== */}
       <section className="pcd-axis pcd-axis--producto">
         <div className="pcd-axis__left">
-          <div className="pcd-axis__tag pcd-reveal">{t.axis03.tag}</div>
+          <button
+            type="button"
+            className="pcd-axis__switch pcd-reveal"
+            aria-label={axis03Mode === 'definicion' ? t.axis03.toggleToContenido : t.axis03.toggleToDefinicion}
+            onClick={() => setAxis03Mode(axis03Mode === 'definicion' ? 'contenido' : 'definicion')}
+          >
+            {axis03Mode === 'definicion' ? t.axis03.toggleToContenido : t.axis03.toggleToDefinicion}
+          </button>
           <h2 className="pcd-axis__word pcd-reveal">
             <span className="pcd-axis__word-desktop">
               {t.axis03.wordLine1}
@@ -454,29 +676,49 @@ export default function ProgramaCreacionDigital() {
           <div className="pcd-axis__image pcd-reveal" style={{ backgroundImage: `url('${IMG}/proyecto-6.webp')` }} aria-hidden="true" />
         </div>
         <div className="pcd-axis__right">
-          <article className="pcd-vs pcd-reveal">
-            <span className="pcd-vs__idx">3.1</span>
-            <div>
-              <h3 className="pcd-vs__title">{t.axis03.vs31title} <span className="pcd-vs__accent">{t.axis03.vs31accent}</span></h3>
-              <p className="pcd-vs__body">{t.axis03.vs31body}</p>
-            </div>
-          </article>
-          <hr className="pcd-axis__divider" />
-          <article className="pcd-vs pcd-reveal">
-            <span className="pcd-vs__idx">3.2</span>
-            <div>
-              <h3 className="pcd-vs__title">{t.axis03.vs32title} <span className="pcd-vs__accent">{t.axis03.vs32accent}</span></h3>
-              <p className="pcd-vs__body">{t.axis03.vs32body}</p>
-            </div>
-          </article>
-          <hr className="pcd-axis__divider" />
-          <article className="pcd-vs pcd-reveal">
-            <span className="pcd-vs__idx">3.3</span>
-            <div>
-              <h3 className="pcd-vs__title">{t.axis03.vs33title} <span className="pcd-vs__accent">{t.axis03.vs33accent}</span></h3>
-              <p className="pcd-vs__body">{t.axis03.vs33body}</p>
-            </div>
-          </article>
+          {axis03Mode === 'definicion' ? (
+            <>
+              <article className="pcd-vs">
+                <span className="pcd-vs__idx">3.1</span>
+                <div>
+                  <h3 className="pcd-vs__title">{t.axis03.vs31title} <span className="pcd-vs__accent">{t.axis03.vs31accent}</span></h3>
+                  <p className="pcd-vs__body">{t.axis03.vs31body}</p>
+                </div>
+              </article>
+              <hr className="pcd-axis__divider" />
+              <article className="pcd-vs">
+                <span className="pcd-vs__idx">3.2</span>
+                <div>
+                  <h3 className="pcd-vs__title">{t.axis03.vs32title} <span className="pcd-vs__accent">{t.axis03.vs32accent}</span></h3>
+                  <p className="pcd-vs__body">{t.axis03.vs32body}</p>
+                </div>
+              </article>
+              <hr className="pcd-axis__divider" />
+              <article className="pcd-vs">
+                <span className="pcd-vs__idx">3.3</span>
+                <div>
+                  <h3 className="pcd-vs__title">{t.axis03.vs33title} <span className="pcd-vs__accent">{t.axis03.vs33accent}</span></h3>
+                  <p className="pcd-vs__body">{t.axis03.vs33body}</p>
+                </div>
+              </article>
+            </>
+          ) : (
+            <>
+              <h3 className="pcd-content-title">{t.axis03.contenidoTitle}</h3>
+              <p className="pcd-content-copy">{renderAccented(t.axis03.contenidoBody)}</p>
+              <div className="pcd-content-dock">
+                <span className="pcd-content-dock__label">{t.axis03.dockLabel}</span>
+                <div className="pcd-content-dock__row">
+                  {PRODUCTO_DOCK.map((tool) => (
+                    <div className="pcd-content-dock__item" key={tool.name} title={tool.name}>
+                      <div className="pcd-content-dock__icon" style={{ backgroundImage: `url('${tool.icon}')` }} aria-hidden="true" />
+                      <span className="pcd-content-dock__name">{tool.name}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </>
+          )}
         </div>
       </section>
 
@@ -502,22 +744,25 @@ export default function ProgramaCreacionDigital() {
       <section className="pcd-docentes">
         <header className="pcd-docentes__head pcd-reveal">
           <h2 className="pcd-docentes__title">
-            {t.docentes.sectionTitle.split('\n').map((line, i) => (
-              <span key={i}>{line}{i === 0 && <br />}</span>
-            ))}
+            {t.docentes.sectionTitleL1}<br />
+            <span className="pcd-docentes__title-pop">{t.docentes.sectionTitleL2Pop}</span>{t.docentes.sectionTitleL2Rest}
           </h2>
           <p className="pcd-docentes__sub">{t.docentes.sectionSub}</p>
         </header>
+        <div className="pcd-docentes__grid-wrap">
         <div
           className="pcd-docentes__grid"
           ref={docentesGridRef}
           onMouseDown={onDocentesMouseDown}
           onMouseMove={onDocentesMouseMove}
           onMouseUp={endDocentesDrag}
-          onMouseLeave={endDocentesDrag}
+          onMouseEnter={onDocentesMouseEnter}
+          onMouseLeave={onDocentesMouseLeaveWrap}
+          onScroll={onDocentesScroll}
         >
           {/* Paula */}
           <article
+            ref={docentesFirstCardRef}
             className="pcd-docente pcd-docente--paula pcd-reveal" tabIndex={0} role="button"
             aria-label={t.docentes.paula.ariaLabel}
             onClick={() => onDocenteCardClick('paula')}
@@ -542,7 +787,7 @@ export default function ProgramaCreacionDigital() {
             style={{ '--docente-init': `url('${IMG}/Sofia_Init.webp')`, '--docente-end': `url('${IMG}/Sofia_End.webp')` } as CSSProperties}
           >
             <div className="pcd-docente__blob" aria-hidden="true" />
-            <img className="pcd-sticker pcd-sticker--idea" src={`${IMG}/Idea.webp`} alt="" aria-hidden="true" />
+            <img className="pcd-sticker pcd-sticker--computer" src={`${IMG}/Computer.webp`} alt="" aria-hidden="true" />
             <h3 className="pcd-docente__name">Sofía<br />Jiménez</h3>
             <p className="pcd-docente__bio">{t.docentes.sofia.bio}</p>
             <div className="pcd-docente__tags">
@@ -576,7 +821,7 @@ export default function ProgramaCreacionDigital() {
             style={{ '--docente-init': `url('${IMG}/Ximena_Init.webp')`, '--docente-end': `url('${IMG}/Ximena_End.webp')` } as CSSProperties}
           >
             <div className="pcd-docente__blob" aria-hidden="true" />
-            <img className="pcd-sticker pcd-sticker--star" src={`${IMG}/Star.webp`} alt="" aria-hidden="true" />
+            <img className="pcd-sticker pcd-sticker--camera" src={`${IMG}/Camera.webp`} alt="" aria-hidden="true" />
             <h3 className="pcd-docente__name">Ximena<br />Tovar</h3>
             <p className="pcd-docente__bio">{t.docentes.ximena.bio}</p>
             <div className="pcd-docente__tags">
@@ -603,14 +848,14 @@ export default function ProgramaCreacionDigital() {
 
           {/* Daniela */}
           <article
-            className="pcd-docente pcd-docente--daniela pcd-docente--no-photo pcd-reveal" tabIndex={0} role="button"
+            className="pcd-docente pcd-docente--daniela pcd-reveal" tabIndex={0} role="button"
             aria-label={t.docentes.daniela.ariaLabel}
             onClick={() => onDocenteCardClick('daniela')}
             onKeyDown={(e) => onCardKey(e, 'daniela')}
-            style={{} as CSSProperties}
+            style={{ '--docente-init': `url('${IMG}/Daniela_Init.webp')`, '--docente-end': `url('${IMG}/Daniela_End.webp')` } as CSSProperties}
           >
             <div className="pcd-docente__blob" aria-hidden="true" />
-            <img className="pcd-sticker pcd-sticker--love" src={`${IMG}/Love.webp`} alt="" aria-hidden="true" />
+            <img className="pcd-sticker pcd-sticker--like" src={`${IMG}/Like.webp`} alt="" aria-hidden="true" />
             <h3 className="pcd-docente__name">Daniela<br />Meza</h3>
             <p className="pcd-docente__bio">{t.docentes.daniela.bio}</p>
             <div className="pcd-docente__tags">
@@ -627,7 +872,7 @@ export default function ProgramaCreacionDigital() {
             style={{ '--docente-init': `url('${IMG}/JuanDavid_Init.webp')`, '--docente-end': `url('${IMG}/JuanDavid_End.webp')` } as CSSProperties}
           >
             <div className="pcd-docente__blob" aria-hidden="true" />
-            <img className="pcd-sticker pcd-sticker--star" src={`${IMG}/Star.webp`} alt="" aria-hidden="true" />
+            <img className="pcd-sticker pcd-sticker--controller" src={`${IMG}/Controller.webp`} alt="" aria-hidden="true" />
             <h3 className="pcd-docente__name">Juan David<br />Aristizabal</h3>
             <p className="pcd-docente__bio">{t.docentes.juandavid.bio}</p>
             <div className="pcd-docente__tags">
@@ -644,13 +889,152 @@ export default function ProgramaCreacionDigital() {
             style={{ '--docente-init': `url('${IMG}/Vanessa_Init.webp')`, '--docente-end': `url('${IMG}/Vanessa_End.webp')` } as CSSProperties}
           >
             <div className="pcd-docente__blob" aria-hidden="true" />
-            <img className="pcd-sticker pcd-sticker--idea" src={`${IMG}/Idea.webp`} alt="" aria-hidden="true" />
+            <img className="pcd-sticker pcd-sticker--phone" src={`${IMG}/Phone.webp`} alt="" aria-hidden="true" />
             <h3 className="pcd-docente__name">Vanessa<br />Tovar</h3>
             <p className="pcd-docente__bio">{t.docentes.vanessa.bio}</p>
             <div className="pcd-docente__tags">
               {t.docentes.vanessa.tags.map((tag) => <span key={tag} className="pcd-docente__tag">{tag}</span>)}
             </div>
           </article>
+
+          {/* ── set duplicado: permite el loop infinito del carrusel ── */}
+          {/* Paula (clon para loop infinito) */}
+          <article
+            ref={docentesFirstCloneRef}
+            className="pcd-docente pcd-docente--paula pcd-reveal" tabIndex={-1} role="button" aria-hidden="true"
+            aria-label={t.docentes.paula.ariaLabel}
+            onClick={() => onDocenteCardClick('paula')}
+            onKeyDown={(e) => onCardKey(e, 'paula')}
+            style={{ '--docente-init': `url('${IMG}/Paula_Init.webp')`, '--docente-end': `url('${IMG}/Paula_End.webp')` } as CSSProperties}
+          >
+            <div className="pcd-docente__blob" aria-hidden="true" />
+            <img className="pcd-sticker pcd-sticker--star" src={`${IMG}/Star.webp`} alt="" aria-hidden="true" />
+            <h3 className="pcd-docente__name">Paula<br />Lenis</h3>
+            <p className="pcd-docente__bio">{t.docentes.paula.bio}</p>
+            <div className="pcd-docente__tags">
+              {t.docentes.paula.tags.map((tag) => <span key={tag} className="pcd-docente__tag">{tag}</span>)}
+            </div>
+          </article>
+
+          {/* Sofía (clon para loop infinito) */}
+          <article
+            className="pcd-docente pcd-docente--sofia pcd-reveal" tabIndex={-1} role="button" aria-hidden="true"
+            aria-label={t.docentes.sofia.ariaLabel}
+            onClick={() => onDocenteCardClick('sofia')}
+            onKeyDown={(e) => onCardKey(e, 'sofia')}
+            style={{ '--docente-init': `url('${IMG}/Sofia_Init.webp')`, '--docente-end': `url('${IMG}/Sofia_End.webp')` } as CSSProperties}
+          >
+            <div className="pcd-docente__blob" aria-hidden="true" />
+            <img className="pcd-sticker pcd-sticker--computer" src={`${IMG}/Computer.webp`} alt="" aria-hidden="true" />
+            <h3 className="pcd-docente__name">Sofía<br />Jiménez</h3>
+            <p className="pcd-docente__bio">{t.docentes.sofia.bio}</p>
+            <div className="pcd-docente__tags">
+              {t.docentes.sofia.tags.map((tag) => <span key={tag} className="pcd-docente__tag">{tag}</span>)}
+            </div>
+          </article>
+
+          {/* Nicolás (clon para loop infinito) */}
+          <article
+            className="pcd-docente pcd-docente--nicolas pcd-reveal" tabIndex={-1} role="button" aria-hidden="true"
+            aria-label={t.docentes.nicolas.ariaLabel}
+            onClick={() => onDocenteCardClick('nicolas')}
+            onKeyDown={(e) => onCardKey(e, 'nicolas')}
+            style={{ '--docente-init': `url('${IMG}/Nicolas_Init.webp')`, '--docente-end': `url('${IMG}/Nicolas_End.webp')` } as CSSProperties}
+          >
+            <div className="pcd-docente__blob" aria-hidden="true" />
+            <img className="pcd-sticker pcd-sticker--love" src={`${IMG}/Love.webp`} alt="" aria-hidden="true" />
+            <h3 className="pcd-docente__name">Nicolás<br />Bartolo</h3>
+            <p className="pcd-docente__bio">{t.docentes.nicolas.bio}</p>
+            <div className="pcd-docente__tags">
+              {t.docentes.nicolas.tags.map((tag) => <span key={tag} className="pcd-docente__tag">{tag}</span>)}
+            </div>
+          </article>
+
+          {/* Ximena (clon para loop infinito) */}
+          <article
+            className="pcd-docente pcd-docente--ximena pcd-reveal" tabIndex={-1} role="button" aria-hidden="true"
+            aria-label={t.docentes.ximena.ariaLabel}
+            onClick={() => onDocenteCardClick('ximena')}
+            onKeyDown={(e) => onCardKey(e, 'ximena')}
+            style={{ '--docente-init': `url('${IMG}/Ximena_Init.webp')`, '--docente-end': `url('${IMG}/Ximena_End.webp')` } as CSSProperties}
+          >
+            <div className="pcd-docente__blob" aria-hidden="true" />
+            <img className="pcd-sticker pcd-sticker--camera" src={`${IMG}/Camera.webp`} alt="" aria-hidden="true" />
+            <h3 className="pcd-docente__name">Ximena<br />Tovar</h3>
+            <p className="pcd-docente__bio">{t.docentes.ximena.bio}</p>
+            <div className="pcd-docente__tags">
+              {t.docentes.ximena.tags.map((tag) => <span key={tag} className="pcd-docente__tag">{tag}</span>)}
+            </div>
+          </article>
+
+          {/* Camilo (clon para loop infinito) */}
+          <article
+            className="pcd-docente pcd-docente--camilo pcd-reveal" tabIndex={-1} role="button" aria-hidden="true"
+            aria-label={t.docentes.camilo.ariaLabel}
+            onClick={() => onDocenteCardClick('camilo')}
+            onKeyDown={(e) => onCardKey(e, 'camilo')}
+            style={{ '--docente-init': `url('${IMG}/Camilo_Init.webp')`, '--docente-end': `url('${IMG}/Camilo_End.webp')` } as CSSProperties}
+          >
+            <div className="pcd-docente__blob" aria-hidden="true" />
+            <img className="pcd-sticker pcd-sticker--idea" src={`${IMG}/Idea.webp`} alt="" aria-hidden="true" />
+            <h3 className="pcd-docente__name">Camilo<br />Cardozo</h3>
+            <p className="pcd-docente__bio">{t.docentes.camilo.bio}</p>
+            <div className="pcd-docente__tags">
+              {t.docentes.camilo.tags.map((tag) => <span key={tag} className="pcd-docente__tag">{tag}</span>)}
+            </div>
+          </article>
+
+          {/* Daniela (clon para loop infinito) */}
+          <article
+            className="pcd-docente pcd-docente--daniela pcd-reveal" tabIndex={-1} role="button" aria-hidden="true"
+            aria-label={t.docentes.daniela.ariaLabel}
+            onClick={() => onDocenteCardClick('daniela')}
+            onKeyDown={(e) => onCardKey(e, 'daniela')}
+            style={{ '--docente-init': `url('${IMG}/Daniela_Init.webp')`, '--docente-end': `url('${IMG}/Daniela_End.webp')` } as CSSProperties}
+          >
+            <div className="pcd-docente__blob" aria-hidden="true" />
+            <img className="pcd-sticker pcd-sticker--like" src={`${IMG}/Like.webp`} alt="" aria-hidden="true" />
+            <h3 className="pcd-docente__name">Daniela<br />Meza</h3>
+            <p className="pcd-docente__bio">{t.docentes.daniela.bio}</p>
+            <div className="pcd-docente__tags">
+              {t.docentes.daniela.tags.map((tag) => <span key={tag} className="pcd-docente__tag">{tag}</span>)}
+            </div>
+          </article>
+
+          {/* Juan David (clon para loop infinito) */}
+          <article
+            className="pcd-docente pcd-docente--juandavid pcd-reveal" tabIndex={-1} role="button" aria-hidden="true"
+            aria-label={t.docentes.juandavid.ariaLabel}
+            onClick={() => onDocenteCardClick('juandavid')}
+            onKeyDown={(e) => onCardKey(e, 'juandavid')}
+            style={{ '--docente-init': `url('${IMG}/JuanDavid_Init.webp')`, '--docente-end': `url('${IMG}/JuanDavid_End.webp')` } as CSSProperties}
+          >
+            <div className="pcd-docente__blob" aria-hidden="true" />
+            <img className="pcd-sticker pcd-sticker--controller" src={`${IMG}/Controller.webp`} alt="" aria-hidden="true" />
+            <h3 className="pcd-docente__name">Juan David<br />Aristizabal</h3>
+            <p className="pcd-docente__bio">{t.docentes.juandavid.bio}</p>
+            <div className="pcd-docente__tags">
+              {t.docentes.juandavid.tags.map((tag) => <span key={tag} className="pcd-docente__tag">{tag}</span>)}
+            </div>
+          </article>
+
+          {/* Vanessa (clon para loop infinito) */}
+          <article
+            className="pcd-docente pcd-docente--vanessa pcd-reveal" tabIndex={-1} role="button" aria-hidden="true"
+            aria-label={t.docentes.vanessa.ariaLabel}
+            onClick={() => onDocenteCardClick('vanessa')}
+            onKeyDown={(e) => onCardKey(e, 'vanessa')}
+            style={{ '--docente-init': `url('${IMG}/Vanessa_Init.webp')`, '--docente-end': `url('${IMG}/Vanessa_End.webp')` } as CSSProperties}
+          >
+            <div className="pcd-docente__blob" aria-hidden="true" />
+            <img className="pcd-sticker pcd-sticker--phone" src={`${IMG}/Phone.webp`} alt="" aria-hidden="true" />
+            <h3 className="pcd-docente__name">Vanessa<br />Tovar</h3>
+            <p className="pcd-docente__bio">{t.docentes.vanessa.bio}</p>
+            <div className="pcd-docente__tags">
+              {t.docentes.vanessa.tags.map((tag) => <span key={tag} className="pcd-docente__tag">{tag}</span>)}
+            </div>
+          </article>
+        </div>
         </div>
       </section>
 
@@ -773,7 +1157,8 @@ export default function ProgramaCreacionDigital() {
 
       <DocenteModal
         id="daniela" active={activeDocente === 'daniela'} onClose={closeDocente} onSwipe={onSwipeDocente}
-        portrait="" portraitEnd=""
+        portrait={`${IMG}/Daniela_Init.webp`}
+        portraitEnd={`${IMG}/Daniela_End.webp`}
         name={<>Daniela<br />Meza</>}
         tags={t.docentes.daniela.modalTags}
       >
@@ -835,6 +1220,58 @@ export default function ProgramaCreacionDigital() {
         </ul>
       </DocenteModal>
 
+      {/* ===== EQUIPO ===== */}
+      <section id="equipo" className="pcd-team pcd-team--dark">
+        <header className="pcd-team__head pcd-reveal">
+          <h2 className="pcd-team__title">
+            {t.equipo.sectionTitleL1Pre}<span className="pcd-team__title-pop">{t.equipo.sectionTitleL1Pop}</span><br />
+            {t.equipo.sectionTitleL2}
+          </h2>
+          <p className="pcd-team__sub">{t.equipo.sectionSub}</p>
+        </header>
+
+        <div className="pcd-team__body pcd-reveal">
+          <div className="pcd-team__stage">
+            <video
+              className="pcd-team__video"
+              src={`${VIDEO}/equipo.mp4`}
+              poster={`${IMG}/equipo/equipo-poster.webp`}
+              autoPlay
+              loop
+              muted
+              playsInline
+              aria-hidden="true"
+            />
+            {TEAM.map((person) => (
+              <button
+                key={person.id}
+                type="button"
+                className={`pcd-team__hotspot${activeTeam === person.id ? ' is-active' : ''}`}
+                style={{ left: `${person.left}%`, width: `${person.width}%` }}
+                onClick={() => setActiveTeam(person.id)}
+                aria-pressed={activeTeam === person.id}
+                aria-label={t.equipo[person.id].nombre}
+              >
+                <span className="pcd-team__tag">{t.equipo[person.id].nombre}</span>
+              </button>
+            ))}
+          </div>
+
+          <aside className="pcd-team__panel" aria-live="polite">
+            <div
+              className="pcd-team__panel-photo"
+              style={{ backgroundImage: `url('${TEAM.find((p) => p.id === activeTeam)!.photo}')` }}
+              aria-hidden="true"
+            />
+            <div className="pcd-team__panel-body">
+              <h3 className="pcd-team__panel-name">{activeTeamMember.nombre}</h3>
+              <p className="pcd-team__panel-role">{activeTeamMember.profesion} · {activeTeamMember.rol}</p>
+              <p className="pcd-team__panel-desc">{activeTeamMember.descripcion}</p>
+            </div>
+          </aside>
+        </div>
+      </section>
+
       {/* ===== PROYECTOS ===== */}
       <section id="proyectos" className="pcd-projects">
         <header className="pcd-projects__head pcd-reveal">
@@ -856,7 +1293,7 @@ export default function ProgramaCreacionDigital() {
             const inner = (
               <>
                 <div
-                  className="pcd-project__media"
+                  className={`pcd-project__media${p.id === 'chocosapiens-humanismo-digital' ? ' pcd-project__media--contain' : ''}`}
                   style={{ backgroundImage: `url('${imgSrc}')` }}
                   aria-hidden="true"
                 />
