@@ -1787,32 +1787,42 @@ body:has(.pcd-docente-modal[open]) {
   opacity: 1;
   transform: translateY(0);
 }
+/* Foto al lado del texto (no arriba): los retratos son cuadrados
+   (1024x1024) — ponerlos arriba forzados a una franja baja y ancha
+   los recortaba (se comía el pelo/la cabeza). Al lado, el cuadrado
+   se muestra completo sin recortar nada, con el texto centrado
+   verticalmente junto a él. */
 .pcd-team__panel {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  align-items: center;
   flex: 1 1 0%;
   min-width: 0;
+  gap: 24px;
+  padding: 32px;
   border: 2.5px solid var(--pcd-ink);
   box-shadow: 8px 8px 0 var(--pcd-ink);
   background: var(--pcd-paper);
   overflow: hidden;
 }
 .pcd-team__panel-photo {
-  flex: 0 0 44%;
-  min-height: 180px;
+  flex: 0 0 auto;
+  width: 40%;
+  max-width: 260px;
+  aspect-ratio: 1 / 1;
   background-size: cover;
   background-position: center top;
-  border-bottom: 2.5px solid var(--pcd-ink);
+  border: 2.5px solid var(--pcd-ink);
 }
 .pcd-team__panel-body {
   flex: 1 1 auto;
-  padding: 28px 32px 32px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   gap: 10px;
   overflow-y: auto;
   min-height: 0;
+  min-width: 0;
 }
 .pcd-team__panel-name {
   font-family: var(--pcd-serif);
@@ -1848,11 +1858,18 @@ body:has(.pcd-docente-modal[open]) {
   }
   .pcd-team__stage { flex: none; }
   .pcd-team__panel { flex: none; }
-  .pcd-team__panel-photo { flex: none; min-height: 220px; }
 }
 @media (max-width: 640px) {
   .pcd-team { padding: 48px 20px 56px; }
-  .pcd-team__panel-body { padding: 22px 20px 26px; }
+  /* Panel apilado en vez de al lado: en una columna angosta no cabe la
+     foto + el texto uno junto al otro con espacio legible. */
+  .pcd-team__panel {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 24px 20px 28px;
+  }
+  .pcd-team__panel-photo { width: 55%; max-width: 200px; }
 }
 
 /* ────────────────────────────────────────────────────────────

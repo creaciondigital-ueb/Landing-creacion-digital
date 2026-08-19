@@ -7,6 +7,11 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Corregido — Foto de la ficha técnica de Equipo quedaba recortada arriba
+
+- Los 5 retratos son cuadrados (1024×1024); el layout anterior los ponía arriba forzados a una franja baja del panel, recortando la cabeza. Ahora la foto va al lado del texto (fila, no columna) como un cuadrado real (`aspect-ratio: 1/1`) que se muestra completo, sin recortes, centrado verticalmente junto al texto. En móvil (`≤640px`) vuelve a apilarse por espacio, pero sigue siendo un cuadrado completo.
+- Archivos: `src/styles/programa.css`.
+
 ### Corregido — Panel de la ficha técnica de Equipo no llenaba la altura del video
 
 - `.pcd-team__body` pasó de `display: grid` a `display: flex`: con grid, la altura del row "auto" no se calculaba bien a partir del `aspect-ratio` del video (definido sobre un ancho en `fr`), y el panel de la derecha quedaba mucho más bajo que el video en vez de estirarse a su misma altura. En flexbox el ancho se resuelve primero y la altura por aspect-ratio se calcula sobre ese ancho ya resuelto, así que el `stretch` del panel sí funciona.
