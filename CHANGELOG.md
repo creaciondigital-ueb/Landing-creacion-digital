@@ -7,6 +7,12 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Corregido — Layout de Equipo se cortaba en tablet (breakpoint desalineado con el resto del sitio)
+
+- A ~981px de ancho, `.pcd-team__body` seguía en fila (video+card lado a lado) porque su breakpoint de apilado era `980px`, mientras el resto del sitio ya pasa a modo móvil (nav hamburguesa) en `1050px` — el tag sobre el video se cortaba contra el borde por falta de espacio real.
+- El media query que apila `.pcd-team__body` (video arriba, card abajo) pasa de `max-width: 980px` a `max-width: 1050px`, alineado con el breakpoint global.
+- Archivos: `src/styles/programa.css`.
+
 ### Cambiado — Tag flotante del video de Equipo oculto en mobile (<640px)
 
 - `@media (max-width: 640px)` de `.pcd-team`: `.pcd-team__tag { display: none; }` — el tag con el nombre sobre el video ya no se muestra en mobile (el click sigue seleccionando igual).

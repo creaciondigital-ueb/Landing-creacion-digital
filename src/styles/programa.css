@@ -1894,7 +1894,13 @@ body:has(.pcd-docente-modal[open]) {
   box-shadow: none;
 }
 
-@media (max-width: 980px) {
+/* 1050px, no 980px: es el mismo breakpoint donde el resto del sitio pasa
+   a nav hamburguesa (ver .pcd-header). Con 980px el video+card en fila
+   quedaban activos en un rango de ancho que ya es "móvil" para el resto
+   de la página, y no había espacio real — el tag se cortaba contra el
+   borde del video. Apilado (video arriba, card abajo) hasta el mismo
+   punto en que el sitio entero se considera desktop. */
+@media (max-width: 1050px) {
   .pcd-team { padding: 56px 24px 64px; }
   .pcd-team__title { font-size: clamp(36px, 8vw, 56px); }
   .pcd-team__body {
