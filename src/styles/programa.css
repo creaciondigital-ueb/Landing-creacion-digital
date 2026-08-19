@@ -1908,6 +1908,7 @@ body:has(.pcd-docente-modal[open]) {
   .pcd-team { padding: 48px 20px 56px; }
   .pcd-team__panel { padding: 28px 20px; gap: 18px; }
   .pcd-team__panel-photo { width: 68%; max-width: 240px; }
+  .pcd-team__tag { display: none; } /* en mobile el tag flotante sobre el video no cabe/estorba; el click ya selecciona igual */
 }
 
 /* ────────────────────────────────────────────────────────────

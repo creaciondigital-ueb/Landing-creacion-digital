@@ -7,6 +7,11 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Cambiado — Tag flotante del video de Equipo oculto en mobile (<640px)
+
+- `@media (max-width: 640px)` de `.pcd-team`: `.pcd-team__tag { display: none; }` — el tag con el nombre sobre el video ya no se muestra en mobile (el click sigue seleccionando igual).
+- Archivos: `src/styles/programa.css`.
+
 ### Cambiado — Otros +20px al padding superior de Proyectos
 
 - `.pcd-projects`: padding-top de `48px` a `68px` (total +40px sobre el original de `28px`).
