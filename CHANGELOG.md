@@ -7,6 +7,12 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Corregido — El video de Equipo se recortaba en desktop (align-items:stretch rompía su aspect-ratio)
+
+- `.pcd-team__body` usa `align-items: stretch` para que la card ocupe toda la altura del video, pero eso también estiraba el STAGE del video cuando la card necesitaba más alto del que el stage sacaba de su propio `aspect-ratio` — el ancho del stage se quedaba fijo, así que su proporción real (1280:716) se rompía y `object-fit: cover` recortaba los lados, perdiendo gente de los bordes (Estefany/Fabian).
+- `.pcd-team__stage` gana `align-self: flex-start` — sale del stretch del padre y siempre mantiene su propio alto por `aspect-ratio`, sin importar cuánto necesite la card.
+- Archivos: `src/styles/programa.css`.
+
 ### Corregido — Layout de Equipo se cortaba en tablet (breakpoint desalineado con el resto del sitio)
 
 - A ~981px de ancho, `.pcd-team__body` seguía en fila (video+card lado a lado) porque su breakpoint de apilado era `980px`, mientras el resto del sitio ya pasa a modo móvil (nav hamburguesa) en `1050px` — el tag sobre el video se cortaba contra el borde por falta de espacio real.

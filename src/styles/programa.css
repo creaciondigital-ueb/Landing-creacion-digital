@@ -1763,6 +1763,14 @@ body:has(.pcd-docente-modal[open]) {
   aspect-ratio: 1280 / 716;
   flex: 2.2 1 0%; /* video más ancho, card más angosta (antes 1.35:1, luego 1.8:1) */
   min-width: 0;
+  /* Sin esto, align-items:stretch del padre (.pcd-team__body) estira el
+     alto del stage para igualar el de la card cuando la card necesita
+     más alto que el que le da su propio aspect-ratio — eso rompe la
+     proporción real del video (el ancho se queda fijo, el alto crece) y
+     object-fit:cover termina recortando los lados, perdiendo gente
+     (Estefany/Fabian, los del borde). El stage SIEMPRE mantiene su
+     propio alto por aspect-ratio; es la card la que se ajusta a él. */
+  align-self: flex-start;
 }
 .pcd-team__video {
   display: block;
