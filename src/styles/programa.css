@@ -1207,15 +1207,19 @@
   50% { transform: rotate(8deg); }
 }
 .pcd-sticker--like { top: 110px; animation-delay: -0.4s; }
-.pcd-sticker--idea { top: 290px; animation-delay: -1.1s; }
-.pcd-sticker--love { top: 80px; animation-delay: -1.9s; }
-.pcd-sticker--star { top: 110px; animation-delay: -2.6s; } /* posición provisional hasta ver el asset real */
-/* Set nuevo de stickers: el ciclo de íconos por card pasa de 3 a 6
-   (estrella → computador → corazón → cámara → bombillo → control →
-   estrella...), ver asignación por docente en el TSX. */
-.pcd-sticker--computer { top: 130px; animation-delay: -0.7s; }
-.pcd-sticker--camera { top: 230px; animation-delay: -1.5s; }
-.pcd-sticker--controller { top: 60px; animation-delay: -2.2s; }
+/* El ciclo de íconos por card pasa de 3 a 6 (estrella → computador →
+   corazón → cámara → bombillo → control → estrella...), pero los 6 íconos
+   forman 3 parejas por color (bombillo/computador = lima, estrella/cámara =
+   azul, corazón/control = rosa/rojo) — cada pareja comparte la MISMA
+   posición vertical y animation-delay que ya tenía su color en el set
+   original de 3, para que el ícono siempre "viva" en el mismo lugar de la
+   card sin importar cuál de los dos íconos de ese color le toque. */
+.pcd-sticker--idea,
+.pcd-sticker--computer { top: 290px; animation-delay: -1.1s; }
+.pcd-sticker--love,
+.pcd-sticker--controller { top: 80px; animation-delay: -1.9s; }
+.pcd-sticker--star,
+.pcd-sticker--camera { top: 110px; animation-delay: -2.6s; }
 .pcd-docente__blob {
   position: relative;
   height: 331px;
