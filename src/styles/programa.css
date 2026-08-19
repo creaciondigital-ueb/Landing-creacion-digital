@@ -1932,7 +1932,16 @@ body:has(.pcd-docente-modal[open]) {
   .pcd-team__panel {
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    /* flex-start, no center: con justify-content:center, cuando el
+       contenido (foto + texto) no cabe exacto en el alto medido del
+       video, el exceso se reparte mitad arriba/mitad abajo — con
+       overflow:auto esa mitad de arriba queda fuera del scroll
+       alcanzable (el famoso problema de "unsafe centering"), y el
+       nombre/subtítulo/texto terminaban pegados contra el borde de
+       abajo. flex-start ancla todo desde arriba: siempre se ve el
+       nombre y el subtítulo completos, y si el texto no cabe, solo la
+       descripción hace scroll hacia abajo. */
+    justify-content: flex-start;
     flex: 1 1 0%;
     min-width: 0;
     min-height: 0;

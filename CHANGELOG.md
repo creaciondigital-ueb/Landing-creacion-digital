@@ -7,6 +7,11 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Corregido — Texto de la card de Equipo pegado abajo cuando no cabe (≥1486px)
+
+- `.pcd-team__panel` (≥1486px): `justify-content: center` → `flex-start`. Cuando el contenido (foto + nombre/rol/descripción) no cabe exacto en el alto medido del video, `center` repartía el excedente mitad arriba/mitad abajo, pero con `overflow-y: auto` esa mitad de arriba queda fuera del scroll alcanzable — el nombre y el subtítulo quedaban pegados contra el borde inferior de la card. Con `flex-start` todo se ancla desde arriba: nombre/subtítulo siempre visibles completos, y si el texto no cabe, solo la descripción hace scroll hacia abajo.
+- Archivos: `src/styles/programa.css`.
+
 ### Cambiado — Video y card de Equipo un poco más altos (≥1486px)
 
 - `.pcd-team` reduce su padding lateral de `88px` a `64px` dentro de `@media (min-width: 1486px)` — más ancho disponible para `.pcd-team__body`, así que el stage (con `aspect-ratio` fijo) crece un poco más de alto también. La card sigue automáticamente ese alto vía el `ResizeObserver` ya existente.
