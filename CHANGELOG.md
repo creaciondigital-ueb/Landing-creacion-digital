@@ -7,6 +7,13 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Cambiado — Título/subtítulo de Equipo centrados + palabras destacadas en Rubik Bubbles
+
+- `.pcd-team__head` centrado (`text-align: center`).
+- Siguiendo el mismo patrón que ya usaba `.pop` en Proyectos: "equipo"/"team" ahora es un span en Rubik Bubbles color azul (`--pcd-cobalt`) dentro del título de Equipo; "enseñan"/"teach" ahora es un span en Rubik Bubbles color amarillo (`--pcd-acid`) dentro del título de Docentes.
+- Las traducciones `docentes.sectionTitle` y `equipo.sectionTitle` (strings únicos con `\n`) se partieron en piezas (`sectionTitleL1/L2Pop/L2Rest` y `sectionTitleL1Pre/L1Pop/L2`) para poder envolver solo la palabra destacada.
+- Archivos: `src/pages/ProgramaCreacionDigital.tsx`, `src/i18n/translations.ts`, `src/styles/programa.css`.
+
 ### Cambiado — Títulos de Docentes y Proyectos igualados al tamaño del de Equipo
 
 - `.pcd-docentes__title` y `.pcd-projects__title` bajan de `100px` a `72px` (el tamaño de `.pcd-team__title`), para que los 3 títulos de sección queden uniformes.

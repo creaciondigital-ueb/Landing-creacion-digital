@@ -736,9 +736,8 @@ export default function ProgramaCreacionDigital() {
       <section className="pcd-docentes">
         <header className="pcd-docentes__head pcd-reveal">
           <h2 className="pcd-docentes__title">
-            {t.docentes.sectionTitle.split('\n').map((line, i) => (
-              <span key={i}>{line}{i === 0 && <br />}</span>
-            ))}
+            {t.docentes.sectionTitleL1}<br />
+            <span className="pcd-docentes__title-pop">{t.docentes.sectionTitleL2Pop}</span>{t.docentes.sectionTitleL2Rest}
           </h2>
           <p className="pcd-docentes__sub">{t.docentes.sectionSub}</p>
         </header>
@@ -1217,9 +1216,8 @@ export default function ProgramaCreacionDigital() {
       <section id="equipo" className="pcd-team">
         <header className="pcd-team__head pcd-reveal">
           <h2 className="pcd-team__title">
-            {t.equipo.sectionTitle.split('\n').map((line, i) => (
-              <span key={i}>{line}{i === 0 && <br />}</span>
-            ))}
+            {t.equipo.sectionTitleL1Pre}<span className="pcd-team__title-pop">{t.equipo.sectionTitleL1Pop}</span><br />
+            {t.equipo.sectionTitleL2}
           </h2>
           <p className="pcd-team__sub">{t.equipo.sectionSub}</p>
         </header>

@@ -1101,6 +1101,17 @@
   color: var(--pcd-ink);
   margin: 0;
 }
+/* "enseñan"/"teach" en Rubik Bubbles + amarillo (acid), mismo tratamiento
+   que .pcd-team__title-pop pero con el color de marca de Docentes. */
+.pcd-docentes__title-pop {
+  font-family: var(--pcd-fun);
+  font-style: normal;
+  color: var(--pcd-acid);
+  letter-spacing: -0.02em;
+  display: inline-block;
+  transform: translateY(0.05em) rotate(-2deg);
+  margin: 0 0.04em;
+}
 .pcd-docentes__sub-break { display: none; } /* solo se muestra en móvil, ver media query */
 .pcd-docentes__sub {
   align-self: end;
@@ -1702,6 +1713,7 @@ body:has(.pcd-docente-modal[open]) {
 }
 .pcd-team__head {
   margin-bottom: 56px;
+  text-align: center;
 }
 .pcd-team__title {
   font-family: var(--pcd-serif);
@@ -1712,6 +1724,18 @@ body:has(.pcd-docente-modal[open]) {
   letter-spacing: -0.025em;
   color: var(--pcd-ink);
   margin: 0 0 12px;
+}
+/* "equipo"/"team" en Rubik Bubbles + azul, mismo tratamiento que .pop
+   en Proyectos (fuente "fun", ligera rotación) pero en el color de marca
+   de Equipo en vez del tomato de Proyectos. */
+.pcd-team__title-pop {
+  font-family: var(--pcd-fun);
+  font-style: normal;
+  color: var(--pcd-cobalt);
+  letter-spacing: -0.02em;
+  display: inline-block;
+  transform: translateY(0.05em) rotate(-2deg);
+  margin: 0 0.04em;
 }
 .pcd-team__sub {
   font-family: var(--pcd-mono);

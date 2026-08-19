@@ -98,7 +98,9 @@ const translations = {
       vs33body: "Las grandes plataformas digitales comenzaron como una idea capaz de resolver una necesidad real. Aquí aprendes a combinar creatividad, tecnología y estrategia para construir experiencias digitales con potencial de crecer en el mundo real.",
     },
     docentes: {
-      sectionTitle: "Quienes crean afuera,\nenseñan aquí.",
+      sectionTitleL1: "Quienes crean afuera,",
+      sectionTitleL2Pop: "enseñan",
+      sectionTitleL2Rest: " aquí.",
       sectionSub: "Experiencia real convertida en aprendizaje",
       modalPerfil: "Perfil",
       modalExp: "Experiencia",
@@ -206,7 +208,9 @@ const translations = {
       },
     },
     equipo: {
-      sectionTitle: "El equipo\ndetrás del programa.",
+      sectionTitleL1Pre: "El ",
+      sectionTitleL1Pop: "equipo",
+      sectionTitleL2: "detrás del programa.",
       sectionSub: "Pasa el cursor y haz clic para conocernos",
       estefany: {
         nombre: "Estefany Córdoba",
@@ -378,7 +382,9 @@ const translations = {
       vs33body: "The great digital platforms started as an idea capable of solving a real need. Here you learn to combine creativity, technology and strategy to build digital experiences with potential to grow in the real world.",
     },
     docentes: {
-      sectionTitle: "Those who create outside,\nteach here.",
+      sectionTitleL1: "Those who create outside,",
+      sectionTitleL2Pop: "teach",
+      sectionTitleL2Rest: " here.",
       sectionSub: "Real experience turned into learning",
       modalPerfil: "Profile",
       modalExp: "Experience",
@@ -486,7 +492,9 @@ const translations = {
       },
     },
     equipo: {
-      sectionTitle: "The team\nbehind the program.",
+      sectionTitleL1Pre: "The ",
+      sectionTitleL1Pop: "team",
+      sectionTitleL2: "behind the program.",
       sectionSub: "Hover and click to meet us",
       estefany: {
         nombre: "Estefany Córdoba",
