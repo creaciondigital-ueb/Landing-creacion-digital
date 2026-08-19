@@ -7,6 +7,11 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Cambiado — Foto de la card de Equipo un poco más grande (≥1486px)
+
+- `.pcd-team__panel-photo`: tope de `220px` a `260px`. `.pcd-team__panel`: padding vertical de `24px` a `20px` (compensa el espacio extra para mantener margen de seguridad contra el alto mínimo del video en este rango).
+- Archivos: `src/styles/programa.css`.
+
 ### Cambiado — Se quita el JS/scroll de la card de Equipo; alto garantizado por CSS puro (≥1486px)
 
 - Se revierte el enfoque de medir el alto del video con `ResizeObserver` y aplicarlo a la card con scroll interno — pedido explícito del usuario ("no le pusiste un scroll?? hazla de un alto fijo entonces y ajusta el alto del video si algo").

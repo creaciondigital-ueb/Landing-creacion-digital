@@ -1922,7 +1922,7 @@ body:has(.pcd-docente-modal[open]) {
   /* SIN JS ni scroll: la card usa el stretch normal del padre (vuelve
      a estirarse para llenar el alto que termine teniendo la fila, como
      al principio) y su CONTENIDO se dimensionó a propósito (foto tope
-     220px, padding vertical 24px) para que, sumado, quepa siempre por
+     260px, padding vertical 20px) para que, sumado, quepa siempre por
      debajo del alto mínimo real que puede tener el video en este rango
      (~507px a 1486px de ancho, el punto más angosto — el video solo
      crece de ahí para arriba). Con eso garantizado, el centrado
@@ -1935,10 +1935,10 @@ body:has(.pcd-docente-modal[open]) {
     flex: 1 1 0%;
     min-width: 0;
     gap: 10px;
-    padding: 24px 32px;
+    padding: 20px 32px;
   }
   .pcd-team__panel-photo {
-    width: min(80%, 220px);
+    width: min(80%, 260px);
   }
   .pcd-team__panel-body {
     flex: none;
