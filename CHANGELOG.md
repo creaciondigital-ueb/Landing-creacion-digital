@@ -7,6 +7,13 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Cambiado — Colores de "equipo"/"enseñan" intercambiados + sin drop shadow en la card oscura
+
+- `.pcd-team__title-pop` ("equipo"/"team"): azul → amarillo (`--pcd-acid`).
+- `.pcd-docentes__title-pop` ("enseñan"/"teach"): rojo → azul (`--pcd-cobalt`).
+- `.pcd-team--dark .pcd-team__panel`: se quita el `box-shadow` blanco (se mantiene el borde).
+- Archivos: `src/styles/programa.css`.
+
 ### Agregado — Prueba: variante de fondo negro para la sección Equipo
 
 - Nueva clase modificadora `.pcd-team--dark` (agregada al `<section>` de Equipo en el TSX) en vez de reescribir `.pcd-team` directamente, para poder revertir con un solo cambio si no convence.
