@@ -7,6 +7,13 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Cambiado — Tercer rediseño de la card de Equipo: foto arriba centrada con tope de tamaño, texto abajo
+
+- La versión "foto ocupa toda la altura" se comía casi todo el ancho del panel y dejaba el texto reducido a una columna donde cada palabra caía en su propia línea. La proporción del panel (más angosto que alto) hace que cualquier cuadrado dimensionado desde la altura completa termine siendo más ancho que la mitad del panel.
+- Vuelve a columna (foto arriba, texto abajo), pero la foto ahora tiene un tope de tamaño fijo e independiente de la altura de la card (`width: min(60%, 300px)`), y todo el bloque foto+texto se centra vertical y horizontalmente dentro del panel — el espacio sobrante de la card (que ya ocupa la altura completa del video) se reparte como aire alrededor, no se fuerza a la foto a llenarlo.
+- `.pcd-team__panel-body` con `max-width: 420px` para que el texto no se estire de más en una card ancha.
+- Archivos: `src/styles/programa.css`.
+
 ### Cambiado — Foto de la ficha técnica de Equipo ahora ocupa toda la altura de la card
 
 - La foto pasa de ser un cuadrado chico centrado (40% de ancho, tope 260px) a ocupar toda la altura de la card (`height: 100%` + `aspect-ratio: 1/1`, sin límite de ancho): sale grande y vertical, como un retrato editorial, pegada a los bordes de la card, sin recortar nada.
