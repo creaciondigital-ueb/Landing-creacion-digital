@@ -7,6 +7,11 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Cambiado — Card de Equipo vuelve a vertical por debajo de 500px
+
+- `@media (max-width: 500px)`: `.pcd-team__panel` vuelve a `flex-direction: column` (foto arriba, texto abajo, todo centrado) en vez de la fila foto-izq/texto-der — a ese ancho la fila ya no tenía aire real. El layout apilado del video (arriba, a todo el ancho) no cambia.
+- Archivos: `src/styles/programa.css`.
+
 ### Cambiado — Layout de Equipo apilado hasta el ancho normal del sitio (1486px) + card foto-izq/texto-der
 
 - El layout en fila (video izquierda, card derecha) de la sección Equipo ya no arranca en `1050px`: el layout BASE ahora es siempre apilado (video arriba a todo el ancho, card abajo), y la fila queda dentro de `@media (min-width: 1486px)` — la constante de "ancho de referencia del diseño desktop" que ya usan el hero y el bloque "mundo 3d" en otras secciones. Pedido explícito del usuario tras ver que la fila se veía mal en anchos intermedios.

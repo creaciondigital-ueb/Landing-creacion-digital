@@ -1947,6 +1947,21 @@ body:has(.pcd-docente-modal[open]) {
   .pcd-team__panel-desc { font-size: 14px; }
   .pcd-team__tag { display: none; } /* en mobile el tag flotante sobre el video no cabe/estorba; el click ya selecciona igual */
 }
+/* Por debajo de 500px la fila foto-izq/texto-der ya no tiene aire real
+   (la foto se angosta demasiado y el texto queda apretado contra el
+   borde) — pedido explícito del usuario: volver a apilar la card
+   (foto arriba, texto abajo) solo en este rango, sin tocar el layout
+   apilado del video (que sigue igual). */
+@media (max-width: 500px) {
+  .pcd-team__panel {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 14px;
+  }
+  .pcd-team__panel-photo { width: 60%; max-width: 200px; }
+  .pcd-team__panel-body { align-items: center; text-align: center; }
+}
 
 /* ────────────────────────────────────────────────────────────
    PROYECTOS
