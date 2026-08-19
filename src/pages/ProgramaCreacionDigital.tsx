@@ -5,7 +5,23 @@ import { useLang } from '../i18n/LanguageContext';
 import '../styles/programa.css';
 
 const IMG = '/programa/img';
+const VIDEO = '/programa/video';
 const APLICA_URL = 'https://www.unbosque.edu.co/inscripciones/pregrado';
+
+/**
+ * Equipo — 5 personas en el video loop, en el mismo orden en que aparecen
+ * caminando de izquierda a derecha en el video (Estefany > Juan > Paula >
+ * Tatiana > Fabian). `left`/`width` son porcentajes del ancho del frame
+ * (1280px) que delimitan la zona "clicable" de cada persona — medidos
+ * analizando la oscuridad por columna de un frame del video.
+ */
+const TEAM = [
+  { id: 'estefany', photo: `${IMG}/equipo/estefany.webp`, left: 0, width: 25.8 },
+  { id: 'juan', photo: `${IMG}/equipo/juan.webp`, left: 25.8, width: 17.65 },
+  { id: 'paulav', photo: `${IMG}/equipo/paula-v.webp`, left: 43.45, width: 16.95 },
+  { id: 'tatiana', photo: `${IMG}/equipo/tatiana.webp`, left: 60.4, width: 15.4 },
+  { id: 'fabian', photo: `${IMG}/equipo/fabian.webp`, left: 75.8, width: 24.2 },
+] as const;
 
 /** Herramientas del dock — modo "Contenido" del eje 01. */
 const CONTENIDO_DOCK = [
@@ -165,6 +181,11 @@ export default function ProgramaCreacionDigital() {
 
   // Menú hamburguer
   const [menuOpen, setMenuOpen] = useState(false);
+
+  // Equipo: persona seleccionada para la ficha técnica (se muestra la
+  // primera por defecto, para que el panel nunca se vea vacío al llegar).
+  const [activeTeam, setActiveTeam] = useState<typeof TEAM[number]['id']>(TEAM[0].id);
+  const activeTeamMember = t.equipo[activeTeam];
 
   // Toggle Definición / Contenido — eje 01 (sección "contenido")
   const [axis01Mode, setAxis01Mode] = useState<'definicion' | 'contenido'>('definicion');
@@ -379,6 +400,7 @@ export default function ProgramaCreacionDigital() {
         <nav className={`pcd-nav${menuOpen ? ' is-open' : ''}`} aria-label="Principal">
           <a className="pcd-nav__link" href="#programa" onClick={() => setMenuOpen(false)}>{t.nav.programa}</a>
           <a className="pcd-nav__link" href="#docentes" onClick={() => setMenuOpen(false)}>{t.nav.docentes}</a>
+          <a className="pcd-nav__link" href="#equipo" onClick={() => setMenuOpen(false)}>{t.nav.equipo}</a>
           <a className="pcd-nav__link" href="#proyectos" onClick={() => setMenuOpen(false)}>{t.nav.proyectos}</a>
           <LangToggle />
         </nav>
@@ -1189,6 +1211,59 @@ export default function ProgramaCreacionDigital() {
           ))}
         </ul>
       </DocenteModal>
+
+      {/* ===== EQUIPO ===== */}
+      <section id="equipo" className="pcd-team">
+        <header className="pcd-team__head pcd-reveal">
+          <h2 className="pcd-team__title">
+            {t.equipo.sectionTitle.split('\n').map((line, i) => (
+              <span key={i}>{line}{i === 0 && <br />}</span>
+            ))}
+          </h2>
+          <p className="pcd-team__sub">{t.equipo.sectionSub}</p>
+        </header>
+
+        <div className="pcd-team__body pcd-reveal">
+          <div className="pcd-team__stage">
+            <video
+              className="pcd-team__video"
+              src={`${VIDEO}/equipo.mp4`}
+              poster={`${IMG}/equipo/equipo-poster.webp`}
+              autoPlay
+              loop
+              muted
+              playsInline
+              aria-hidden="true"
+            />
+            {TEAM.map((person) => (
+              <button
+                key={person.id}
+                type="button"
+                className={`pcd-team__hotspot${activeTeam === person.id ? ' is-active' : ''}`}
+                style={{ left: `${person.left}%`, width: `${person.width}%` }}
+                onClick={() => setActiveTeam(person.id)}
+                aria-pressed={activeTeam === person.id}
+                aria-label={t.equipo[person.id].nombre}
+              >
+                <span className="pcd-team__tag">{t.equipo[person.id].nombre}</span>
+              </button>
+            ))}
+          </div>
+
+          <aside className="pcd-team__panel" aria-live="polite">
+            <div
+              className="pcd-team__panel-photo"
+              style={{ backgroundImage: `url('${TEAM.find((p) => p.id === activeTeam)!.photo}')` }}
+              aria-hidden="true"
+            />
+            <div className="pcd-team__panel-body">
+              <h3 className="pcd-team__panel-name">{activeTeamMember.nombre}</h3>
+              <p className="pcd-team__panel-role">{activeTeamMember.profesion} · {activeTeamMember.rol}</p>
+              <p className="pcd-team__panel-desc">{activeTeamMember.descripcion}</p>
+            </div>
+          </aside>
+        </div>
+      </section>
 
       {/* ===== PROYECTOS ===== */}
       <section id="proyectos" className="pcd-projects">

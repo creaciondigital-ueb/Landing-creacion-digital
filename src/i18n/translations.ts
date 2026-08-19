@@ -8,6 +8,7 @@ const translations = {
     nav: {
       programa: "PROGRAMA",
       docentes: "docentes",
+      equipo: "equipo",
       proyectos: "PROYECTOS",
       aplicaAhora: "APLICA AHORA",
       menu: "Menú",
@@ -204,6 +205,40 @@ const translations = {
         ],
       },
     },
+    equipo: {
+      sectionTitle: "El equipo\ndetrás del programa.",
+      sectionSub: "Pasa el cursor y haz clic para conocernos",
+      estefany: {
+        nombre: "Estefany Córdoba",
+        profesion: "Diseñadora de comunicación",
+        rol: "Docente de Creación Digital",
+        descripcion: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.",
+      },
+      juan: {
+        nombre: "Juan Esteban Peña",
+        profesion: "Psicólogo",
+        rol: "Líder de Éxito estudiantil",
+        descripcion: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.",
+      },
+      paulav: {
+        nombre: "Maria Paula Vásquez",
+        profesion: "Diseñadora Industrial",
+        rol: "Líder de Comunicaciones",
+        descripcion: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.",
+      },
+      tatiana: {
+        nombre: "Tatiana Flórez",
+        profesion: "Psicóloga",
+        rol: "Coordinadora del programa",
+        descripcion: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.",
+      },
+      fabian: {
+        nombre: "Fabian Herrera",
+        profesion: "Diseñador Industrial",
+        rol: "Director del programa",
+        descripcion: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.",
+      },
+    },
     projects: {
       sectionTitleL1: "Proyectos que",
       sectionTitlePop: "crean",
@@ -253,6 +288,7 @@ const translations = {
     nav: {
       programa: "PROGRAM",
       docentes: "faculty",
+      equipo: "team",
       proyectos: "PROJECTS",
       aplicaAhora: "APPLY NOW",
       menu: "Menu",
@@ -447,6 +483,40 @@ const translations = {
           { title: "Mercado Libre", body: "Sr. UX Designer with 3 and a half years at the company, focused on designing intuitive and scalable digital solutions for millions of users across Latin America.", boldParts: null as null | string[] },
           { title: "+Voces en UX LATAM", body: "Volunteer for a year and a half, supporting the strengthening of the women in UX community across the region.", boldParts: null as null | string[] },
         ],
+      },
+    },
+    equipo: {
+      sectionTitle: "The team\nbehind the program.",
+      sectionSub: "Hover and click to meet us",
+      estefany: {
+        nombre: "Estefany Córdoba",
+        profesion: "Communication Designer",
+        rol: "Digital Creation Faculty",
+        descripcion: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.",
+      },
+      juan: {
+        nombre: "Juan Esteban Peña",
+        profesion: "Psychologist",
+        rol: "Student Success Lead",
+        descripcion: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.",
+      },
+      paulav: {
+        nombre: "Maria Paula Vásquez",
+        profesion: "Industrial Designer",
+        rol: "Communications Lead",
+        descripcion: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.",
+      },
+      tatiana: {
+        nombre: "Tatiana Flórez",
+        profesion: "Psychologist",
+        rol: "Program Coordinator",
+        descripcion: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.",
+      },
+      fabian: {
+        nombre: "Fabian Herrera",
+        profesion: "Industrial Designer",
+        rol: "Program Director",
+        descripcion: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.",
       },
     },
     projects: {

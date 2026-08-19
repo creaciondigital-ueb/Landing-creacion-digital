@@ -7,6 +7,17 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Agregado — Nueva sección "Equipo" con video loop interactivo
+
+- Nueva sección `#equipo` entre Docentes y Proyectos: video loop (5 personas caminando, en orden Estefany > Juan > Paula V. > Tatiana > Fabian) con 5 zonas invisibles ("hotspots") superpuestas, una por persona.
+- Al pasar el cursor sobre una zona (o enfocarla con teclado) aparece un tag con su nombre. Al hacer clic, se selecciona esa persona y su ficha técnica (foto, nombre, profesión, rol, descripción) se muestra en el panel a la derecha del video. La primera persona (Estefany) queda seleccionada por defecto para que el panel nunca se vea vacío al llegar a la sección.
+- Los límites horizontales de cada zona se midieron analizando la oscuridad por columna de un frame del video (no son estimaciones a ojo).
+- Nuevo enlace "EQUIPO" en el navbar, entre Docentes y Proyectos, que hace scroll suave hasta la sección (`#equipo` sumado al grupo de selectores con `scroll-margin-top`).
+- Nuevas traducciones ES/EN: `nav.equipo` + bloque `equipo` completo (título, subtítulo y, por persona, nombre/profesión/rol/descripción). Las descripciones son un placeholder Lorem Ipsum a la espera del copy real.
+- Nuevos assets: `public/programa/video/equipo.mp4` (comprimido con ffmpeg, de 8.28MB a 1.23MB), `public/programa/img/equipo/equipo-poster.webp` (poster de fallback) y los 5 retratos `public/programa/img/equipo/{estefany,juan,paula-v,tatiana,fabian}.webp`.
+- Nuevos estilos `.pcd-team*` en `programa.css`, siguiendo la misma paleta/tipografía/bordes del resto del sitio (serif itálica para títulos, mono para meta, borde 2.5px + sombra dura en el panel).
+- Archivos: `src/pages/ProgramaCreacionDigital.tsx`, `src/i18n/translations.ts`, `src/styles/programa.css`, assets nuevos en `public/programa/`.
+
 ### Agregado — Toggle Definición/Contenido en el eje 01 (home) + dock de herramientas
 
 - El chip "01 · programa" del eje "contenido" ahora es un toggle real de dos pestañas (Definición / Contenido) que controla el contenido de la columna derecha; antes era solo texto estático. Definición mantiene los 3 bloques "en vez de X; Y" que ya existían.
