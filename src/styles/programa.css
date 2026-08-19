@@ -1787,19 +1787,17 @@ body:has(.pcd-docente-modal[open]) {
   opacity: 1;
   transform: translateY(0);
 }
-/* Foto al lado del texto (no arriba): los retratos son cuadrados
-   (1024x1024) — ponerlos arriba forzados a una franja baja y ancha
-   los recortaba (se comía el pelo/la cabeza). Al lado, el cuadrado
-   se muestra completo sin recortar nada, con el texto centrado
-   verticalmente junto a él. */
+/* Foto al lado del texto, ocupando toda la altura de la card (no un
+   cuadrado chico centrado): con height:100% + aspect-ratio:1/1, el ancho
+   de la foto sale de su propia altura (la altura completa de la card),
+   así que se ve grande y vertical, como un retrato editorial, sin
+   recortar nada del cuadrado original. */
 .pcd-team__panel {
   display: flex;
   flex-direction: row;
-  align-items: center;
+  align-items: stretch;
   flex: 1 1 0%;
   min-width: 0;
-  gap: 24px;
-  padding: 32px;
   border: 2.5px solid var(--pcd-ink);
   box-shadow: 8px 8px 0 var(--pcd-ink);
   background: var(--pcd-paper);
@@ -1807,22 +1805,22 @@ body:has(.pcd-docente-modal[open]) {
 }
 .pcd-team__panel-photo {
   flex: 0 0 auto;
-  width: 40%;
-  max-width: 260px;
+  height: 100%;
   aspect-ratio: 1 / 1;
   background-size: cover;
   background-position: center top;
-  border: 2.5px solid var(--pcd-ink);
+  border-right: 2.5px solid var(--pcd-ink);
 }
 .pcd-team__panel-body {
   flex: 1 1 auto;
+  min-width: 0;
+  padding: 28px 30px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   gap: 10px;
   overflow-y: auto;
   min-height: 0;
-  min-width: 0;
 }
 .pcd-team__panel-name {
   font-family: var(--pcd-serif);
@@ -1867,9 +1865,16 @@ body:has(.pcd-docente-modal[open]) {
     flex-direction: column;
     align-items: center;
     text-align: center;
-    padding: 24px 20px 28px;
   }
-  .pcd-team__panel-photo { width: 55%; max-width: 200px; }
+  .pcd-team__panel-photo {
+    height: auto;
+    width: 55%;
+    max-width: 200px;
+    margin-top: 24px;
+    border-right: 0;
+    border-bottom: 2.5px solid var(--pcd-ink);
+  }
+  .pcd-team__panel-body { padding: 20px 20px 28px; align-items: center; }
 }
 
 /* ────────────────────────────────────────────────────────────

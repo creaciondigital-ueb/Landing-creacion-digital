@@ -7,6 +7,11 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Cambiado — Foto de la ficha técnica de Equipo ahora ocupa toda la altura de la card
+
+- La foto pasa de ser un cuadrado chico centrado (40% de ancho, tope 260px) a ocupar toda la altura de la card (`height: 100%` + `aspect-ratio: 1/1`, sin límite de ancho): sale grande y vertical, como un retrato editorial, pegada a los bordes de la card, sin recortar nada.
+- Archivos: `src/styles/programa.css`.
+
 ### Corregido — Foto de la ficha técnica de Equipo quedaba recortada arriba
 
 - Los 5 retratos son cuadrados (1024×1024); el layout anterior los ponía arriba forzados a una franja baja del panel, recortando la cabeza. Ahora la foto va al lado del texto (fila, no columna) como un cuadrado real (`aspect-ratio: 1/1`) que se muestra completo, sin recortes, centrado verticalmente junto al texto. En móvil (`≤640px`) vuelve a apilarse por espacio, pero sigue siendo un cuadrado completo.
