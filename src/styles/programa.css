@@ -1095,7 +1095,7 @@
   font-family: var(--pcd-serif);
   font-style: italic;
   font-weight: 400; /* ver nota en .pcd-axis__word: evita el bold falso sintetizado */
-  font-size: 100px;
+  font-size: 72px; /* igualado a .pcd-team__title, para que los 3 títulos de sección se vean uniformes */
   line-height: 0.92;
   letter-spacing: -0.025em;
   color: var(--pcd-ink);
@@ -1888,7 +1888,7 @@ body:has(.pcd-docente-modal[open]) {
   font-family: var(--pcd-serif);
   font-style: italic;
   font-weight: 400; /* ver nota en .pcd-axis__word: evita el bold falso sintetizado */
-  font-size: 100px; /* igualado a .pcd-docentes__title */
+  font-size: 72px; /* igualado a .pcd-docentes__title / .pcd-team__title */
   line-height: 0.94;
   letter-spacing: -0.03em;
   color: var(--pcd-ink);
