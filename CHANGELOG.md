@@ -7,6 +7,11 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Cambiado — Subtítulo de "producto" (sección Programa) ~20px más abajo
+
+- `.pcd-axis--producto .pcd-axis__caption`: `transform: translateY(30px)` → `translateY(50px)`.
+- Archivos: `src/styles/programa.css`.
+
 ### Cambiado — Subtítulo de "mundo 3d" ~20px más abajo
 
 - `.pcd-axis--mundo .pcd-axis__caption`: el componente Y de la curva de `translate` (interpolación continua) se corre +20px hacia abajo en ambos extremos: `-30px → -10px` en 1051px, `0px → 20px` en 1920px. Misma pendiente, mismo componente X (sin cambios).
