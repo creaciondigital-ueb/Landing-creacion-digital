@@ -411,6 +411,7 @@ export default function ProgramaCreacionDigital() {
           <a className="pcd-nav__link" href="#docentes" onClick={() => setMenuOpen(false)}>{t.nav.docentes}</a>
           <a className="pcd-nav__link" href="#equipo" onClick={() => setMenuOpen(false)}>{t.nav.equipo}</a>
           <a className="pcd-nav__link" href="#proyectos" onClick={() => setMenuOpen(false)}>{t.nav.proyectos}</a>
+          <Link className="pcd-nav__link" to="/blog" onClick={() => setMenuOpen(false)}>{t.nav.blog}</Link>
           <LangToggle />
         </nav>
         <div className="pcd-header__actions">

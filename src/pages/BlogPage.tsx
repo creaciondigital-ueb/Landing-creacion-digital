@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { PROYECTOS } from '../data/proyectos';
+import { BLOG_POSTS } from '../data/blog';
 import { useLang } from '../i18n/LanguageContext';
 import '../styles/programa.css';
 
@@ -8,50 +8,51 @@ const IMG = '/programa/img';
 const APLICA_URL = 'https://www.unbosque.edu.co/inscripciones/pregrado';
 const PAGE_SIZE = 9;
 
-type FilterKind = 'year' | 'subject';
+type FilterKind = 'year' | 'category';
 interface Chip { kind: FilterKind; value: string; }
 
 /**
- * Galería de proyectos de estudiantes — /proyectos.
- * Soporta ES / EN mediante el contexto LanguageContext + hook useLang().
+ * Blog del programa — /blog. Noticias e información importante del
+ * programa. Sigue el mismo patrón de /proyectos (filtros, grid, paginación)
+ * reutilizando los estilos editoriales del sitio.
  */
-export default function ProyectosPage() {
+export default function BlogPage() {
   const { lang, setLang, t } = useLang();
-  const tp = t.proyectosPage;
+  const tb = t.blogPage;
 
   const [menuOpen, setMenuOpen] = useState(false);
   const [yearOpen, setYearOpen] = useState(false);
-  const [subjectOpen, setSubjectOpen] = useState(false);
+  const [categoryOpen, setCategoryOpen] = useState(false);
   const [selectedYears, setSelectedYears] = useState<string[]>([]);
-  const [selectedSubjects, setSelectedSubjects] = useState<string[]>([]);
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [page, setPage] = useState(1);
 
   const filtersRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
-    if (!yearOpen && !subjectOpen) return;
+    if (!yearOpen && !categoryOpen) return;
     const onPointerDown = (e: MouseEvent) => {
       if (filtersRef.current && !filtersRef.current.contains(e.target as Node)) {
         setYearOpen(false);
-        setSubjectOpen(false);
+        setCategoryOpen(false);
       }
     };
     document.addEventListener('mousedown', onPointerDown);
     return () => document.removeEventListener('mousedown', onPointerDown);
-  }, [yearOpen, subjectOpen]);
+  }, [yearOpen, categoryOpen]);
 
   const availableYears = useMemo(
-    () => Array.from(new Set(PROYECTOS.map((p) => p.year))).sort((a, b) => b.localeCompare(a)),
+    () => Array.from(new Set(BLOG_POSTS.map((p) => p.year))).sort((a, b) => b.localeCompare(a)),
     []
   );
-  const availableSubjects = useMemo(
-    () => Array.from(new Set(PROYECTOS.map((p) => p.subject))).sort((a, b) => a.localeCompare(b)),
+  const availableCategories = useMemo(
+    () => Array.from(new Set(BLOG_POSTS.map((p) => p.category))).sort((a, b) => a.localeCompare(b)),
     []
   );
-  // Mapeo ES subject → EN label para mostrar en filtros y chips
-  const subjectLabel = (subject: string) => {
-    if (lang !== 'en') return subject;
-    const p = PROYECTOS.find((p) => p.subject === subject);
-    return p?.subjectEn ?? subject;
+  // Mapeo ES category → EN label para mostrar en filtros y chips
+  const categoryLabel = (category: string) => {
+    if (lang !== 'en') return category;
+    const p = BLOG_POSTS.find((p) => p.category === category);
+    return p?.categoryEn ?? category;
   };
 
   const toggleYear = (year: string) => {
@@ -59,23 +60,23 @@ export default function ProyectosPage() {
     setPage(1);
     setYearOpen(false);
   };
-  const toggleSubject = (subject: string) => {
-    setSelectedSubjects((prev) => (prev.includes(subject) ? prev.filter((s) => s !== subject) : [...prev, subject]));
+  const toggleCategory = (category: string) => {
+    setSelectedCategories((prev) => (prev.includes(category) ? prev.filter((c) => c !== category) : [...prev, category]));
     setPage(1);
-    setSubjectOpen(false);
+    setCategoryOpen(false);
   };
-  const clearAll = () => { setSelectedYears([]); setSelectedSubjects([]); setPage(1); };
+  const clearAll = () => { setSelectedYears([]); setSelectedCategories([]); setPage(1); };
 
   const chips: Chip[] = [
     ...selectedYears.map((value): Chip => ({ kind: 'year', value })),
-    ...selectedSubjects.map((value): Chip => ({ kind: 'subject', value })),
+    ...selectedCategories.map((value): Chip => ({ kind: 'category', value })),
   ];
-  const removeChip = (chip: Chip) => (chip.kind === 'year' ? toggleYear(chip.value) : toggleSubject(chip.value));
+  const removeChip = (chip: Chip) => (chip.kind === 'year' ? toggleYear(chip.value) : toggleCategory(chip.value));
 
-  const filtered = PROYECTOS.filter(
+  const filtered = BLOG_POSTS.filter(
     (p) =>
       (selectedYears.length === 0 || selectedYears.includes(p.year)) &&
-      (selectedSubjects.length === 0 || selectedSubjects.includes(p.subject))
+      (selectedCategories.length === 0 || selectedCategories.includes(p.category))
   );
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   const currentPage = Math.min(page, totalPages);
@@ -97,7 +98,7 @@ export default function ProyectosPage() {
     );
     els.forEach((el) => observer.observe(el));
     return () => observer.disconnect();
-  }, [selectedYears, selectedSubjects, currentPage]);
+  }, [selectedYears, selectedCategories, currentPage]);
 
   /** Toggle visual ES | EN */
   const LangToggle = () => (
@@ -150,27 +151,15 @@ export default function ProyectosPage() {
         <div className="pcd-projects-hero__content pcd-reveal">
           <div className="pcd-projects-hero__eyebrow-row">
             <Link to="/" className="pcd-projects-hero__back">
-              {tp.back}
+              {tb.back}
             </Link>
-            <span className="pcd-projects-hero__eyebrow">{tp.eyebrow}</span>
+            <span className="pcd-projects-hero__eyebrow">{tb.eyebrow}</span>
           </div>
           <h1 className="pcd-projects-hero__title">
-            {tp.titleL1}<br className="pcd-projects-hero__title-break" /> <span className="pop">{tp.titlePop}</span><br />
-            {tp.titleL2}
-            {tp.titleL3 && <>{' '}<br className="pcd-projects-hero__title-break" />{tp.titleL3}</>}
+            {tb.titleL1}<br className="pcd-projects-hero__title-break" /> <span className="pop">{tb.titlePop}</span><br />
+            {tb.titleL2}
+            {tb.titleL3 && <>{' '}<br className="pcd-projects-hero__title-break" />{tb.titleL3}</>}
           </h1>
-        </div>
-        <div className="pcd-projects-hero__illustration">
-          <span className="pcd-projects-hero__globo-wrap pcd-projects-hero__globo-wrap--cen">
-            <img className="pcd-projects-hero__globo pcd-projects-hero__globo--cen" src={`${IMG}/globo-cen.webp`} alt="" aria-hidden="true" />
-          </span>
-          <span className="pcd-projects-hero__globo-wrap pcd-projects-hero__globo-wrap--izq">
-            <img className="pcd-projects-hero__globo pcd-projects-hero__globo--izq" src={`${IMG}/globo-izq.webp`} alt="" aria-hidden="true" />
-          </span>
-          <span className="pcd-projects-hero__globo-wrap pcd-projects-hero__globo-wrap--der">
-            <img className="pcd-projects-hero__globo pcd-projects-hero__globo--der" src={`${IMG}/globo-der.webp`} alt="" aria-hidden="true" />
-          </span>
-          <img className="pcd-projects-hero__people" src={`${IMG}/proyectos-imagen.webp`} alt="Estudiantes de Creación Digital conversando" />
         </div>
       </section>
 
@@ -181,14 +170,14 @@ export default function ProyectosPage() {
             <button
               type="button"
               className={`pcd-projects__filter-btn pcd-projects__filter-btn--year${selectedYears.length ? ' is-active' : ''}`}
-              onClick={() => { setYearOpen((v) => !v); setSubjectOpen(false); }}
+              onClick={() => { setYearOpen((v) => !v); setCategoryOpen(false); }}
               aria-expanded={yearOpen}
             >
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                 <rect x="3" y="5" width="18" height="16" rx="2" />
                 <path d="M3 10h18M8 3v4M16 3v4" />
               </svg>
-              {tp.filterYear}
+              {tb.filterYear}
             </button>
             {yearOpen && (
               <div className="pcd-projects__filter-menu">
@@ -216,33 +205,33 @@ export default function ProyectosPage() {
           <div className="pcd-projects__filter-dropdown">
             <button
               type="button"
-              className={`pcd-projects__filter-btn pcd-projects__filter-btn--subject${selectedSubjects.length ? ' is-active' : ''}`}
-              onClick={() => { setSubjectOpen((v) => !v); setYearOpen(false); }}
-              aria-expanded={subjectOpen}
+              className={`pcd-projects__filter-btn pcd-projects__filter-btn--subject${selectedCategories.length ? ' is-active' : ''}`}
+              onClick={() => { setCategoryOpen((v) => !v); setYearOpen(false); }}
+              aria-expanded={categoryOpen}
             >
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                 <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
                 <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
               </svg>
-              {tp.filterSubject}
+              {tb.filterCategory}
             </button>
-            {subjectOpen && (
+            {categoryOpen && (
               <div className="pcd-projects__filter-menu">
-                {availableSubjects.map((subject) => (
+                {availableCategories.map((category) => (
                   <button
-                    key={subject}
+                    key={category}
                     type="button"
-                    className={`pcd-projects__filter-option pcd-projects__filter-option--subject${selectedSubjects.includes(subject) ? ' is-selected' : ''}`}
-                    onClick={() => toggleSubject(subject)}
+                    className={`pcd-projects__filter-option pcd-projects__filter-option--subject${selectedCategories.includes(category) ? ' is-selected' : ''}`}
+                    onClick={() => toggleCategory(category)}
                   >
                     <span className="pcd-projects__filter-checkbox" aria-hidden="true">
-                      {selectedSubjects.includes(subject) && (
+                      {selectedCategories.includes(category) && (
                         <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
                           <path d="M20 6 9 17l-5-5" />
                         </svg>
                       )}
                     </span>
-                    {subjectLabel(subject)}
+                    {categoryLabel(category)}
                   </button>
                 ))}
               </div>
@@ -253,13 +242,13 @@ export default function ProyectosPage() {
             <>
               <div className="pcd-projects__chips">
                 {chips.map((chip) => (
-                  <span className={`pcd-projects__chip pcd-projects__chip--${chip.kind}`} key={`${chip.kind}-${chip.value}`}>
-                    {chip.kind === 'subject' ? subjectLabel(chip.value) : chip.value}
-                    <button type="button" aria-label={`${tp.removeFilter} ${chip.value}`} onClick={() => removeChip(chip)}>×</button>
+                  <span className={`pcd-projects__chip pcd-projects__chip--${chip.kind === 'year' ? 'year' : 'subject'}`} key={`${chip.kind}-${chip.value}`}>
+                    {chip.kind === 'category' ? categoryLabel(chip.value) : chip.value}
+                    <button type="button" aria-label={`${tb.removeFilter} ${chip.value}`} onClick={() => removeChip(chip)}>×</button>
                   </span>
                 ))}
               </div>
-              <button type="button" className="pcd-projects__filter-clear" onClick={clearAll} aria-label={tp.clearAll}>
+              <button type="button" className="pcd-projects__filter-clear" onClick={clearAll} aria-label={tb.clearAll}>
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                   <path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0-1 14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2L4 6" />
                   <path d="M10 11v6M14 11v6" />
@@ -276,24 +265,20 @@ export default function ProyectosPage() {
               const inner = (
                 <>
                   <div
-                    className={`pcd-project__media${p.id === 'chocosapiens-humanismo-digital' ? ' pcd-project__media--contain' : ''}`}
+                    className="pcd-project__media"
                     style={{ backgroundImage: `url('${p.image}')` }}
                     aria-hidden="true"
                   />
                   <div className="pcd-project__meta">
-                    <span>{(lang === 'en' ? (p.subjectEn ?? p.subject) : p.subject).toUpperCase()}</span>
-                    <span>{p.year}</span>
+                    <span>{(lang === 'en' ? (p.categoryEn ?? p.category) : p.category).toUpperCase()}</span>
+                    <span>{lang === 'en' ? (p.dateEn ?? p.date) : p.date}</span>
                   </div>
-                  <p className="pcd-project__caption">{lang === 'en' ? (p.captionEn ?? p.caption) : p.caption}</p>
-                  {p.fileUrl && (
-                    <a className="pcd-project__file" href={p.fileUrl} target="_blank" rel="noopener">
-                      {p.fileLabel ?? tp.fileLabel} <span aria-hidden="true">→</span>
-                    </a>
-                  )}
+                  <p className="pcd-project__caption">{lang === 'en' ? (p.titleEn ?? p.title) : p.title}</p>
+                  <p className="pcd-project__description">{lang === 'en' ? (p.excerptEn ?? p.excerpt) : p.excerpt}</p>
                 </>
               );
-              return p.modal ? (
-                <Link key={p.id} to={`/proyectos/${p.id}`} className="pcd-project pcd-project--clickable pcd-reveal" style={{ textDecoration: 'none' }}>
+              return p.detail ? (
+                <Link key={p.id} to={`/blog/${p.id}`} className="pcd-project pcd-project--clickable pcd-reveal" style={{ textDecoration: 'none' }}>
                   {inner}
                 </Link>
               ) : (
@@ -302,17 +287,17 @@ export default function ProyectosPage() {
             })}
           </div>
         ) : (
-          <p className="pcd-projects__empty">{tp.empty}</p>
+          <p className="pcd-projects__empty">{tb.empty}</p>
         )}
 
         {/* ===== PAGINACIÓN ===== */}
-        {(totalPages >= 1) && (
-          <nav className="pcd-projects__pagination pcd-reveal" aria-label={tp.paginationLabel}>
+        {filtered.length > 0 && totalPages > 1 && (
+          <nav className="pcd-projects__pagination pcd-reveal" aria-label={tb.paginationLabel}>
             <button
               type="button"
               disabled={currentPage === 1}
               onClick={() => setPage((p) => Math.max(1, p - 1))}
-              aria-label={tp.prevPage}
+              aria-label={tb.prevPage}
             >
               ←
             </button>
@@ -331,7 +316,7 @@ export default function ProyectosPage() {
               type="button"
               disabled={currentPage === totalPages}
               onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-              aria-label={tp.nextPage}
+              aria-label={tb.nextPage}
             >
               →
             </button>

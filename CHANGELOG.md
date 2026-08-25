@@ -7,6 +7,17 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Agregado — Nueva sección Blog (/blog y /blog/:id)
+
+- Se creó una sección de Blog para publicar noticias importantes del programa, siguiendo exactamente el estilo editorial del resto del sitio (misma tipografía, colores, header/footer, y los mismos patrones visuales de filtros/grid/paginación de `/proyectos` y de página de detalle de `/proyectos/:id`).
+- Listado en `/blog` (`src/pages/BlogPage.tsx`): hero, filtros por Año y Categoría, grid de tarjetas, paginación y estado vacío ("Todavía no hay publicaciones. ¡Vuelve pronto!" / "No posts yet. Check back soon!").
+- Cada publicación tiene su propia página de detalle en `/blog/:id` (`src/pages/BlogPostPage.tsx`), reutilizando el mismo layout de ficha técnica + artículo + carrusel + "más publicaciones" que `/proyectos/:id`.
+- Nuevo modelo de datos `src/data/blog.ts` (`BlogPost` / `BlogPostDetail`), inicia vacío (`BLOG_POSTS = []`) — se irán agregando publicaciones a mano, mismo patrón que `proyectos.ts`.
+- Se agregó el link "Blog" al navbar en todas las páginas (inicio, `/proyectos`, `/proyectos/:id`, `/blog`, `/blog/:id`), ubicado después de "Proyectos", tanto en desktop como en el menú mobile.
+- Nuevas traducciones ES/EN: `t.nav.blog` y el namespace `t.blogPage` (`src/i18n/translations.ts`).
+- Nuevas rutas lazy-loaded `/blog` y `/blog/:id` en `src/App.tsx`, con el mismo `Suspense` fallback que el resto de rutas.
+- Archivos: `src/data/blog.ts` (nuevo), `src/pages/BlogPage.tsx` (nuevo), `src/pages/BlogPostPage.tsx` (nuevo), `src/App.tsx`, `src/i18n/translations.ts`, `src/pages/ProgramaCreacionDigital.tsx`, `src/pages/ProyectosPage.tsx`, `src/pages/ProyectoDetallePage.tsx`.
+
 ### Agregado — Dos proyectos adicionales en /proyectos (fuera de asignatura)
 
 - Libro ilustrado con IA para la concientización del vitiligo infantil (Junior Mejía Méndez, 2026-1) y 3er lugar en la Global Hack de seguros educativos (Danna Bolaños, Mariana Cifuentes y Juliana Sanabria, 2026-1).

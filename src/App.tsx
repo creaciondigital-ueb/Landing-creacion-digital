@@ -7,6 +7,8 @@ import { Routes, Route, useLocation } from 'react-router-dom';
 const ProgramaCreacionDigital = lazy(() => import('./pages/ProgramaCreacionDigital'));
 const ProyectosPage = lazy(() => import('./pages/ProyectosPage'));
 const ProyectoDetallePage = lazy(() => import('./pages/ProyectoDetallePage'));
+const BlogPage = lazy(() => import('./pages/BlogPage'));
+const BlogPostPage = lazy(() => import('./pages/BlogPostPage'));
 
 /**
  * React Router no resetea el scroll al navegar entre rutas (a diferencia de
@@ -50,6 +52,22 @@ export default function App() {
           element={
             <Suspense fallback={<div className="pcd-loading">Cargando…</div>}>
               <ProyectoDetallePage />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/blog"
+          element={
+            <Suspense fallback={<div className="pcd-loading">Cargando…</div>}>
+              <BlogPage />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/blog/:id"
+          element={
+            <Suspense fallback={<div className="pcd-loading">Cargando…</div>}>
+              <BlogPostPage />
             </Suspense>
           }
         />

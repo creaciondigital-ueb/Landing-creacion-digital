@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { Link, useParams, Navigate } from 'react-router-dom';
-import { PROYECTOS } from '../data/proyectos';
+import { BLOG_POSTS } from '../data/blog';
 import { useLang } from '../i18n/LanguageContext';
 import '../styles/programa.css';
 import '../styles/proyecto-detalle.css';
@@ -8,38 +8,33 @@ import '../styles/proyecto-detalle.css';
 const IMG = '/programa/img';
 const APLICA_URL = 'https://www.unbosque.edu.co/inscripciones/pregrado';
 
-export default function ProyectoDetallePage() {
+export default function BlogPostPage() {
   const { id } = useParams<{ id: string }>();
   const { lang, setLang, t } = useLang();
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const proyecto = PROYECTOS.find((p) => p.id === id);
-  if (!proyecto || !proyecto.modal) return <Navigate to="/proyectos" replace />;
+  const post = BLOG_POSTS.find((p) => p.id === id);
+  if (!post || !post.detail) return <Navigate to="/blog" replace />;
 
-  const otrosProyectos = PROYECTOS.filter((p) => p.id !== id);
+  const otrosPosts = BLOG_POSTS.filter((p) => p.id !== id);
 
-  const m = proyecto.modal;
-  const title   = lang === 'en' ? (m.titleEn ?? m.titleEs ?? proyecto.captionEn ?? proyecto.caption) : (m.titleEs ?? proyecto.caption);
-  const caption  = lang === 'en' ? (proyecto.captionEn ?? proyecto.caption) : proyecto.caption;
-  const subject  = lang === 'en' ? (proyecto.subjectEn ?? proyecto.subject) : proyecto.subject;
-  const desc     = lang === 'en' ? m.descriptionEn : m.descriptionEs;
-  const skills   = lang === 'en' ? (m.skillsEn ?? []) : (m.skillsEs ?? []);
+  const d = post.detail;
+  const title    = lang === 'en' ? (post.titleEn ?? post.title) : post.title;
+  const excerpt  = lang === 'en' ? (post.excerptEn ?? post.excerpt) : post.excerpt;
+  const category = lang === 'en' ? (post.categoryEn ?? post.category) : post.category;
+  const date     = lang === 'en' ? (post.dateEn ?? post.date) : post.date;
+  const desc     = lang === 'en' ? d.descriptionEn : d.descriptionEs;
+  const tags     = lang === 'en' ? (d.tagsEn ?? []) : (d.tagsEs ?? []);
   const paragraphs = desc.split('\n\n').filter(Boolean);
 
-  const professorFull = proyecto.professor
-    ?.replace('C. Cardozo', 'Camilo Cardozo')
-    .replace('J. Lamprea', 'John Lamprea')
-    .replace('A. Rozo', 'A. Rozo')
-    .replace('J. Suárez', 'J. Suárez');
-
   const labels = lang === 'en'
-    ? { subject: 'Subject', professor: 'Faculty', students: 'Students', year: 'Year',
-        skills: 'Skills developed', back: '← Back to projects', more: 'More projects' }
-    : { subject: 'Materia', professor: 'Docente', students: 'Estudiantes', year: 'Año',
-        skills: 'Habilidades desarrolladas', back: '← Volver a proyectos', more: 'Más proyectos' };
+    ? { category: 'Category', author: 'Author', date: 'Date',
+        tags: 'Related topics', back: '← Back to blog', more: 'More posts' }
+    : { category: 'Categoría', author: 'Autor', date: 'Fecha',
+        tags: 'Temas relacionados', back: '← Volver al blog', more: 'Más publicaciones' };
 
   /* ── Carrusel ── */
-  const images = m.images;
+  const images = d.images;
   const [slide, setSlide] = useState(0);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
@@ -87,6 +82,7 @@ export default function ProyectoDetallePage() {
         <nav className={`pcd-nav${menuOpen ? ' is-open' : ''}`} aria-label="Principal">
           <Link className="pcd-nav__link" to="/#programa" onClick={() => setMenuOpen(false)}>{t.nav.programa}</Link>
           <Link className="pcd-nav__link" to="/#docentes" onClick={() => setMenuOpen(false)}>{t.nav.docentes}</Link>
+          <Link className="pcd-nav__link" to="/#equipo" onClick={() => setMenuOpen(false)}>{t.nav.equipo}</Link>
           <Link className="pcd-nav__link" to="/proyectos" onClick={() => setMenuOpen(false)}>{t.nav.proyectos}</Link>
           <Link className="pcd-nav__link" to="/blog" onClick={() => setMenuOpen(false)}>{t.nav.blog}</Link>
           <LangToggle />
@@ -108,38 +104,40 @@ export default function ProyectoDetallePage() {
 
         {/* BACK TOP */}
         <div className="pdet__back-top">
-          <Link to="/proyectos" className="pdet__back">{labels.back}</Link>
+          <Link to="/blog" className="pdet__back">{labels.back}</Link>
         </div>
 
         {/* TÍTULO */}
         <h1 className="pdet__title">{title}</h1>
-        <p className="pdet__subtitle">{caption}</p>
+        <p className="pdet__subtitle">{excerpt}</p>
 
         {/* CARRUSEL — ancho completo */}
-        <div className="pdet__carousel" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
-          <div className="pdet__carousel-track">
-            {images.map((src, i) => (
-              <img
-                key={src}
-                className={`pdet__slide${i === slide ? ' pdet__slide--active' : ''}`}
-                src={src}
-                alt={`${caption} — imagen ${i + 1}`}
-              />
-            ))}
+        {images.length > 0 && (
+          <div className="pdet__carousel" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
+            <div className="pdet__carousel-track">
+              {images.map((src, i) => (
+                <img
+                  key={src}
+                  className={`pdet__slide${i === slide ? ' pdet__slide--active' : ''}`}
+                  src={src}
+                  alt={`${title} — imagen ${i + 1}`}
+                />
+              ))}
+            </div>
+            {images.length > 1 && (
+              <>
+                <button className="pdet__nav pdet__nav--prev" onClick={handlePrev} aria-label="Anterior">‹</button>
+                <button className="pdet__nav pdet__nav--next" onClick={handleNext} aria-label="Siguiente">›</button>
+                <div className="pdet__dots">
+                  {images.map((_, i) => (
+                    <button key={i} className={`pdet__dot${i === slide ? ' pdet__dot--active' : ''}`}
+                      onClick={() => goTo(i)} aria-label={`Imagen ${i + 1}`} />
+                  ))}
+                </div>
+              </>
+            )}
           </div>
-          {images.length > 1 && (
-            <>
-              <button className="pdet__nav pdet__nav--prev" onClick={handlePrev} aria-label="Anterior">‹</button>
-              <button className="pdet__nav pdet__nav--next" onClick={handleNext} aria-label="Siguiente">›</button>
-              <div className="pdet__dots">
-                {images.map((_, i) => (
-                  <button key={i} className={`pdet__dot${i === slide ? ' pdet__dot--active' : ''}`}
-                    onClick={() => goTo(i)} aria-label={`Imagen ${i + 1}`} />
-                ))}
-              </div>
-            </>
-          )}
-        </div>
+        )}
 
         {/* CONTENIDO — ficha + texto */}
         <div className="pdet__body">
@@ -147,29 +145,23 @@ export default function ProyectoDetallePage() {
           {/* Columna izquierda — ficha técnica */}
           <aside className="pdet__aside">
             <dl className="pdet__sheet">
-              <dt>{labels.subject}</dt>
-              <dd>{subject}</dd>
-              {professorFull && (
+              <dt>{labels.category}</dt>
+              <dd>{category}</dd>
+              {post.author && (
                 <>
-                  <dt>{labels.professor}</dt>
-                  <dd>{professorFull}</dd>
+                  <dt>{labels.author}</dt>
+                  <dd>{post.author}</dd>
                 </>
               )}
-              {proyecto.student && (
-                <>
-                  <dt>{labels.students}</dt>
-                  <dd>{proyecto.student}</dd>
-                </>
-              )}
-              <dt>{labels.year}</dt>
-              <dd>{proyecto.year}</dd>
+              <dt>{labels.date}</dt>
+              <dd>{date}</dd>
             </dl>
 
-            {skills.length > 0 && (
+            {tags.length > 0 && (
               <div className="pdet__skills-block">
-                <p className="pdet__skills-label">{labels.skills}</p>
+                <p className="pdet__skills-label">{labels.tags}</p>
                 <div className="pdet__skills">
-                  {skills.map((s) => <span key={s} className="pdet__skill">{s}</span>)}
+                  {tags.map((s) => <span key={s} className="pdet__skill">{s}</span>)}
                 </div>
               </div>
             )}
@@ -183,27 +175,27 @@ export default function ProyectoDetallePage() {
           </article>
         </div>
 
-        {/* OTROS PROYECTOS */}
-        {otrosProyectos.length > 0 && (
+        {/* OTRAS PUBLICACIONES */}
+        {otrosPosts.length > 0 && (
           <div className="pdet__more">
             <p className="pdet__more-title">{labels.more}</p>
             <div className="pdet__more-track">
-              {otrosProyectos.map((p) => {
-                const cap = lang === 'en' ? (p.captionEn ?? p.caption) : p.caption;
-                const subj = lang === 'en' ? (p.subjectEn ?? p.subject) : p.subject;
+              {otrosPosts.map((p) => {
+                const cap = lang === 'en' ? (p.titleEn ?? p.title) : p.title;
+                const cat = lang === 'en' ? (p.categoryEn ?? p.category) : p.category;
                 const card = (
                   <>
                     <div className="pdet__more-thumb" style={{ backgroundImage: `url('${p.image}')` }} />
                     <div className="pdet__more-info">
-                      <span className="pdet__more-subject">{subj}</span>
+                      <span className="pdet__more-subject">{cat}</span>
                       <p className="pdet__more-caption">{cap}</p>
                     </div>
                   </>
                 );
-                return p.modal ? (
-                  <Link key={p.id} to={`/proyectos/${p.id}`} className="pdet__more-card">{card}</Link>
+                return p.detail ? (
+                  <Link key={p.id} to={`/blog/${p.id}`} className="pdet__more-card">{card}</Link>
                 ) : (
-                  <Link key={p.id} to="/proyectos" className="pdet__more-card">{card}</Link>
+                  <Link key={p.id} to="/blog" className="pdet__more-card">{card}</Link>
                 );
               })}
             </div>
