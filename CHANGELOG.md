@@ -7,6 +7,13 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Cambiado — Pills del banner final (ESTRATEGIA/TECNOLOGÍA/FUTURO) de latido a flote
+
+- A pedido del usuario, se reemplazó la animación de latido (`pcd-bullet-pulse`, escala 1 → 1.06) por una de flote suave (`pcd-bullet-float`, `translate` vertical entre 0 y -8px).
+- Se animó la propiedad independiente `translate` (no `transform`) porque cada pill ya trae su propio `transform` fijo (rotate + translateY(-50%) en el caso de la pill 1) para su posición/inclinación en el banner; animar `transform` directamente lo hubiera pisado. Mismo truco que ya usa `scale` en otra parte de la hoja para no chocar con transforms fijos.
+- Duraciones y retrasos ligeramente distintos entre las 3 pills para que no floten en fase.
+- Archivos: `src/styles/programa.css`.
+
 ### Corregido — Ceja "HERRAMIENTAS QUE USARÁS" desalineada del contenedor de íconos
 
 - Al centrar `.pcd-content-dock__row` en el cambio anterior, la ceja (`.pcd-content-dock__label`, que sigue ocupando todo el ancho de la columna) quedó pegada al margen izquierdo mientras la fila de íconos —más angosta— se centraba por separado debajo, desalineando ambos elementos.

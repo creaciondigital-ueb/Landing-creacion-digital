@@ -2890,15 +2890,21 @@ body:has(.pcd-docente-modal[open]) {
 .pcd-bullet--1 { top: 50%; left: 80px; transform: translateY(-50%) rotate(2deg); }
 .pcd-bullet--2 { top: 90px; right: 90px; transform: rotate(-3deg); background: var(--pcd-cobalt); color: var(--pcd-paper); }
 .pcd-bullet--3 { bottom: 78px; right: 48px; transform: rotate(-1deg); background: var(--pcd-tomato); color: var(--pcd-paper); }
-.pcd-bullet {
-  animation: pcd-bullet-pulse 2.4s ease-in-out infinite;
-}
-.pcd-bullet--1 { animation-delay: -0.5s; }
-.pcd-bullet--2 { animation-delay: -1.3s; }
-.pcd-bullet--3 { animation-delay: -2s; }
-@keyframes pcd-bullet-pulse {
-  0%, 100% { scale: 1; }
-  50% { scale: 1.06; }
+/* Flotar en vez de latir (pedido del usuario) — se anima la propiedad
+   independiente `translate` (no `transform`) porque cada pill ya trae
+   su propio `transform` fijo (rotate + translateY(-50%) en el caso de
+   --1) para su posición/inclinación; animar `transform` directamente
+   pisaría ese valor. `translate`/`scale`/`rotate` son propiedades CSS
+   aparte que se combinan con `transform` sin conflicto (mismo truco que
+   ya usa `scale` en .pcd-projects-hero__globo-in de esta hoja). Retrasos
+   y duraciones ligeramente distintos entre las 3 para que no floten en
+   fase (mismo patrón que .pcd-projects-globo-float). */
+.pcd-bullet--1 { animation: pcd-bullet-float 3s ease-in-out -0.5s infinite; }
+.pcd-bullet--2 { animation: pcd-bullet-float 3.4s ease-in-out -1.3s infinite; }
+.pcd-bullet--3 { animation: pcd-bullet-float 3.2s ease-in-out -2s infinite; }
+@keyframes pcd-bullet-float {
+  0%, 100% { translate: 0 0; }
+  50% { translate: 0 -8px; }
 }
 
 @media (max-width: 980px) {
