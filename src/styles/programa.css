@@ -1999,12 +1999,12 @@ body:has(.pcd-docente-modal[open]) {
   }
   .pcd-team__panel-photo {
     /* Ajustada a pedido del usuario (200px -> 230px -> 300px -> 400px ->
-       350px) — solo en este rango (>=1486px) se veía chica. Si el copy
+       350px -> 300px) — solo en este rango (>=1486px) se veía chica. Si el copy
        real hace que el panel quede más alto que el video en el punto
        más angosto del rango (~525px a 1486px de ancho),
        .pcd-team__panel-body ya tiene overflow-y:auto como red de
        seguridad (scroll interno del texto en vez de desbordar la card). */
-    width: min(80%, 350px);
+    width: min(80%, 300px);
   }
   .pcd-team__panel-body {
     flex: none;

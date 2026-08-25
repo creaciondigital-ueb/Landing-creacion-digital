@@ -7,6 +7,11 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Cambiado — Foto del equipo bajada a 300px en desktop (≥1486px)
+
+- Bajada de 350px a 300px a pedido del usuario. Solo en el rango ≥1486px (fila video + card); el resto de tamaños no se tocó.
+- Archivos: `src/styles/programa.css`.
+
 ### Cambiado — Foto del equipo ajustada a 350px en desktop (≥1486px)
 
 - Bajada de 400px a 350px a pedido del usuario. Solo en el rango ≥1486px (fila video + card); el resto de tamaños no se tocó.
