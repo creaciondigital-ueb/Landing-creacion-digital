@@ -1990,13 +1990,13 @@ body:has(.pcd-docente-modal[open]) {
     padding: 16px 24px;
   }
   .pcd-team__panel-photo {
-    /* Subida a pedido del usuario (200px -> 230px -> 300px) — solo en
-       este rango (>=1486px) se veía chica. Si el copy real hace que el
-       panel quede más alto que el video en el punto más angosto del
-       rango (~525px a 1486px de ancho), .pcd-team__panel-body ya tiene
-       overflow-y:auto como red de seguridad (scroll interno del texto
-       en vez de desbordar la card). */
-    width: min(80%, 300px);
+    /* Subida a pedido del usuario (200px -> 230px -> 300px -> 400px) —
+       solo en este rango (>=1486px) se veía chica. Si el copy real hace
+       que el panel quede más alto que el video en el punto más angosto
+       del rango (~525px a 1486px de ancho), .pcd-team__panel-body ya
+       tiene overflow-y:auto como red de seguridad (scroll interno del
+       texto en vez de desbordar la card). */
+    width: min(80%, 400px);
   }
   .pcd-team__panel-body {
     flex: none;
