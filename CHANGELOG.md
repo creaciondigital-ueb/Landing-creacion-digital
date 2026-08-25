@@ -7,6 +7,12 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Cambiado — Texto de "¿Qué aprenderás?" estirado hasta el margen y dock de software centrado
+
+- `.pcd-content-copy` (el párrafo de los 3 ejes: contenido, mundo 3D, producto) tenía `max-width: 46ch`, dejando el texto en una columna angosta con harto espacio libre a la derecha. Se quitó ese límite a pedido del usuario para que ocupe todo el ancho de `.pcd-axis__right`, igual que el título.
+- El contenedor de íconos de software (`.pcd-content-dock__row`, ya ajustado a `width: fit-content` en un cambio anterior) se centró horizontalmente (`margin: 0 auto`) para que no quede pegado al margen izquierdo ahora que el texto de arriba ocupa todo el ancho.
+- Archivos: `src/styles/programa.css`.
+
 ### Corregido — Contenedor de herramientas ("Herramientas que usarás") se estiraba hasta el margen
 
 - `.pcd-content-dock__row` (el bloque con los íconos de software, usado en los 3 ejes: contenido, mundo 3D y producto) no tenía `width` propio, así que por defecto ocupaba el 100% del ancho disponible del padre aunque tuviera pocos íconos — se veía estirado hasta el margen derecho incluso con solo 3-4 herramientas (ej. Blender/Unity/Unreal Engine/Cascadeur en mundo 3D).

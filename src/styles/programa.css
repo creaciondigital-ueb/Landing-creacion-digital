@@ -953,7 +953,9 @@
   font-size: 19px;
   line-height: 1.65;
   color: var(--pcd-ink);
-  max-width: 46ch;
+  /* Antes tenía max-width: 46ch (columna angosta a propósito) — a pedido
+     del usuario ahora se estira hasta el margen de .pcd-axis__right,
+     igual que el título y el dock. */
 }
 .pcd-axis--mundo .pcd-axis__right .pcd-content-copy { color: var(--pcd-paper); }
 .pcd-accent-text {
@@ -1010,6 +1012,10 @@
      programas que muestra. */
   width: fit-content;
   max-width: 100%;
+  /* Centrado a pedido del usuario, ahora que el texto de arriba ocupa
+     todo el ancho — sin esto quedaba pegado al margen izquierdo. */
+  margin-left: auto;
+  margin-right: auto;
 }
 .pcd-content-dock__item {
   display: flex;
