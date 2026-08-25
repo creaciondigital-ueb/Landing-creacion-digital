@@ -7,6 +7,15 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Agregado — 5 docentes nuevos en la galería (sin foto por ahora)
+
+- Se agregaron 5 docentes nuevos al carrusel de la sección Docentes, ubicados todos después de Vanessa (tanto en el orden de las cards como en la navegación por swipe del modal): Carlos Almeyda, Dayana González, John Lamprea, Tatiana Flórez y Pilar Camargo.
+- Perfil completo para cada uno (bio corta, tags, 2 párrafos de perfil y experiencia laboral con 2-3 entradas), con textos provistos por el usuario y traducidos al inglés.
+- Sin fotos todavía — usan la clase `pcd-docente--no-photo` (mismo placeholder gris que ya existía para docentes sin foto) tanto en la card del carrusel como en el retrato del modal. Cuando lleguen las imágenes, solo hay que agregar el `style` con `--docente-init`/`--docente-end` (mismo patrón usado para Nicolás y Sofía) y quitar la clase `--no-photo`.
+- El carrusel infinito no necesitó cambios de lógica — el loop se calcula dinámicamente por posición en el DOM, no por una cantidad fija de cards.
+- Nuevas traducciones ES/EN: `t.docentes.carlos`, `.dayana`, `.john`, `.tatiana`, `.pilar`.
+- Archivos: `src/pages/ProgramaCreacionDigital.tsx`, `src/i18n/translations.ts`, `src/styles/programa.css`.
+
 ### Agregado — Franja "marquee" divisora entre Proyectos y Blog
 
 - Se agregó una tercera franja de texto en movimiento (mismo componente `.pcd-marquee` que separa "Programa" de la primera sección, y "Docentes" del axis anterior), ahora entre Proyectos y Blog, con la frase "Lo que sucede en Creación Digital" / "What's happening in Creación Digital".

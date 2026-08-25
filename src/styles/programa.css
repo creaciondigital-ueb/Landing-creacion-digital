@@ -1289,6 +1289,15 @@
 .pcd-docente--no-photo .pcd-docente__blob {
   background: rgba(13,13,13,0.06);
 }
+/* Docentes recién agregados, todavía sin foto — mismo placeholder gris
+   también en el modal (portrait) hasta que lleguen las imágenes reales. */
+.pcd-docente-modal--carlos .pcd-docente-modal__portrait,
+.pcd-docente-modal--dayana .pcd-docente-modal__portrait,
+.pcd-docente-modal--john .pcd-docente-modal__portrait,
+.pcd-docente-modal--tatiana .pcd-docente-modal__portrait,
+.pcd-docente-modal--pilar .pcd-docente-modal__portrait {
+  background: rgba(13,13,13,0.06);
+}
 /* Ilustración de Juan David un poco más grande a pedido, en ambos estados */
 .pcd-docente--juandavid .pcd-docente__blob::before {
   transform: scale(1.15);

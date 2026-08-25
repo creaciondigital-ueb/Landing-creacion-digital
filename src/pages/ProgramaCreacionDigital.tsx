@@ -176,7 +176,7 @@ export default function ProgramaCreacionDigital() {
   const openDocente = (id: string) => setActiveDocente(id);
   const closeDocente = () => setActiveDocente(null);
 
-  const DOCENTE_ORDER = ['paula', 'sofia', 'nicolas', 'ximena', 'camilo', 'daniela', 'juandavid', 'vanessa'];
+  const DOCENTE_ORDER = ['paula', 'sofia', 'nicolas', 'ximena', 'camilo', 'daniela', 'juandavid', 'vanessa', 'carlos', 'dayana', 'john', 'tatiana', 'pilar'];
   const onSwipeDocente = (dir: 1 | -1) => {
     setActiveDocente((current) => {
       if (!current) return current;
@@ -899,6 +899,86 @@ export default function ProgramaCreacionDigital() {
             </div>
           </article>
 
+          {/* Carlos */}
+          <article
+            className="pcd-docente pcd-docente--carlos pcd-docente--no-photo pcd-reveal" tabIndex={0} role="button"
+            aria-label={t.docentes.carlos.ariaLabel}
+            onClick={() => onDocenteCardClick('carlos')}
+            onKeyDown={(e) => onCardKey(e, 'carlos')}
+          >
+            <div className="pcd-docente__blob" aria-hidden="true" />
+            <img className="pcd-sticker pcd-sticker--star" src={`${IMG}/Star.webp`} alt="" aria-hidden="true" />
+            <h3 className="pcd-docente__name">Carlos<br />Almeyda</h3>
+            <p className="pcd-docente__bio">{t.docentes.carlos.bio}</p>
+            <div className="pcd-docente__tags">
+              {t.docentes.carlos.tags.map((tag) => <span key={tag} className="pcd-docente__tag">{tag}</span>)}
+            </div>
+          </article>
+
+          {/* Dayana */}
+          <article
+            className="pcd-docente pcd-docente--dayana pcd-docente--no-photo pcd-reveal" tabIndex={0} role="button"
+            aria-label={t.docentes.dayana.ariaLabel}
+            onClick={() => onDocenteCardClick('dayana')}
+            onKeyDown={(e) => onCardKey(e, 'dayana')}
+          >
+            <div className="pcd-docente__blob" aria-hidden="true" />
+            <img className="pcd-sticker pcd-sticker--computer" src={`${IMG}/Computer.webp`} alt="" aria-hidden="true" />
+            <h3 className="pcd-docente__name">Dayana<br />González</h3>
+            <p className="pcd-docente__bio">{t.docentes.dayana.bio}</p>
+            <div className="pcd-docente__tags">
+              {t.docentes.dayana.tags.map((tag) => <span key={tag} className="pcd-docente__tag">{tag}</span>)}
+            </div>
+          </article>
+
+          {/* John */}
+          <article
+            className="pcd-docente pcd-docente--john pcd-docente--no-photo pcd-reveal" tabIndex={0} role="button"
+            aria-label={t.docentes.john.ariaLabel}
+            onClick={() => onDocenteCardClick('john')}
+            onKeyDown={(e) => onCardKey(e, 'john')}
+          >
+            <div className="pcd-docente__blob" aria-hidden="true" />
+            <img className="pcd-sticker pcd-sticker--love" src={`${IMG}/Love.webp`} alt="" aria-hidden="true" />
+            <h3 className="pcd-docente__name">John<br />Lamprea</h3>
+            <p className="pcd-docente__bio">{t.docentes.john.bio}</p>
+            <div className="pcd-docente__tags">
+              {t.docentes.john.tags.map((tag) => <span key={tag} className="pcd-docente__tag">{tag}</span>)}
+            </div>
+          </article>
+
+          {/* Tatiana */}
+          <article
+            className="pcd-docente pcd-docente--tatiana pcd-docente--no-photo pcd-reveal" tabIndex={0} role="button"
+            aria-label={t.docentes.tatiana.ariaLabel}
+            onClick={() => onDocenteCardClick('tatiana')}
+            onKeyDown={(e) => onCardKey(e, 'tatiana')}
+          >
+            <div className="pcd-docente__blob" aria-hidden="true" />
+            <img className="pcd-sticker pcd-sticker--camera" src={`${IMG}/Camera.webp`} alt="" aria-hidden="true" />
+            <h3 className="pcd-docente__name">Tatiana<br />Flórez</h3>
+            <p className="pcd-docente__bio">{t.docentes.tatiana.bio}</p>
+            <div className="pcd-docente__tags">
+              {t.docentes.tatiana.tags.map((tag) => <span key={tag} className="pcd-docente__tag">{tag}</span>)}
+            </div>
+          </article>
+
+          {/* Pilar */}
+          <article
+            className="pcd-docente pcd-docente--pilar pcd-docente--no-photo pcd-reveal" tabIndex={0} role="button"
+            aria-label={t.docentes.pilar.ariaLabel}
+            onClick={() => onDocenteCardClick('pilar')}
+            onKeyDown={(e) => onCardKey(e, 'pilar')}
+          >
+            <div className="pcd-docente__blob" aria-hidden="true" />
+            <img className="pcd-sticker pcd-sticker--idea" src={`${IMG}/Idea.webp`} alt="" aria-hidden="true" />
+            <h3 className="pcd-docente__name">Pilar<br />Camargo</h3>
+            <p className="pcd-docente__bio">{t.docentes.pilar.bio}</p>
+            <div className="pcd-docente__tags">
+              {t.docentes.pilar.tags.map((tag) => <span key={tag} className="pcd-docente__tag">{tag}</span>)}
+            </div>
+          </article>
+
           {/* ── set duplicado: permite el loop infinito del carrusel ── */}
           {/* Paula (clon para loop infinito) */}
           <article
@@ -1034,6 +1114,86 @@ export default function ProgramaCreacionDigital() {
             <p className="pcd-docente__bio">{t.docentes.vanessa.bio}</p>
             <div className="pcd-docente__tags">
               {t.docentes.vanessa.tags.map((tag) => <span key={tag} className="pcd-docente__tag">{tag}</span>)}
+            </div>
+          </article>
+
+          {/* Carlos (clon para loop infinito) */}
+          <article
+            className="pcd-docente pcd-docente--carlos pcd-docente--no-photo pcd-reveal" tabIndex={-1} role="button" aria-hidden="true"
+            aria-label={t.docentes.carlos.ariaLabel}
+            onClick={() => onDocenteCardClick('carlos')}
+            onKeyDown={(e) => onCardKey(e, 'carlos')}
+          >
+            <div className="pcd-docente__blob" aria-hidden="true" />
+            <img className="pcd-sticker pcd-sticker--star" src={`${IMG}/Star.webp`} alt="" aria-hidden="true" />
+            <h3 className="pcd-docente__name">Carlos<br />Almeyda</h3>
+            <p className="pcd-docente__bio">{t.docentes.carlos.bio}</p>
+            <div className="pcd-docente__tags">
+              {t.docentes.carlos.tags.map((tag) => <span key={tag} className="pcd-docente__tag">{tag}</span>)}
+            </div>
+          </article>
+
+          {/* Dayana (clon para loop infinito) */}
+          <article
+            className="pcd-docente pcd-docente--dayana pcd-docente--no-photo pcd-reveal" tabIndex={-1} role="button" aria-hidden="true"
+            aria-label={t.docentes.dayana.ariaLabel}
+            onClick={() => onDocenteCardClick('dayana')}
+            onKeyDown={(e) => onCardKey(e, 'dayana')}
+          >
+            <div className="pcd-docente__blob" aria-hidden="true" />
+            <img className="pcd-sticker pcd-sticker--computer" src={`${IMG}/Computer.webp`} alt="" aria-hidden="true" />
+            <h3 className="pcd-docente__name">Dayana<br />González</h3>
+            <p className="pcd-docente__bio">{t.docentes.dayana.bio}</p>
+            <div className="pcd-docente__tags">
+              {t.docentes.dayana.tags.map((tag) => <span key={tag} className="pcd-docente__tag">{tag}</span>)}
+            </div>
+          </article>
+
+          {/* John (clon para loop infinito) */}
+          <article
+            className="pcd-docente pcd-docente--john pcd-docente--no-photo pcd-reveal" tabIndex={-1} role="button" aria-hidden="true"
+            aria-label={t.docentes.john.ariaLabel}
+            onClick={() => onDocenteCardClick('john')}
+            onKeyDown={(e) => onCardKey(e, 'john')}
+          >
+            <div className="pcd-docente__blob" aria-hidden="true" />
+            <img className="pcd-sticker pcd-sticker--love" src={`${IMG}/Love.webp`} alt="" aria-hidden="true" />
+            <h3 className="pcd-docente__name">John<br />Lamprea</h3>
+            <p className="pcd-docente__bio">{t.docentes.john.bio}</p>
+            <div className="pcd-docente__tags">
+              {t.docentes.john.tags.map((tag) => <span key={tag} className="pcd-docente__tag">{tag}</span>)}
+            </div>
+          </article>
+
+          {/* Tatiana (clon para loop infinito) */}
+          <article
+            className="pcd-docente pcd-docente--tatiana pcd-docente--no-photo pcd-reveal" tabIndex={-1} role="button" aria-hidden="true"
+            aria-label={t.docentes.tatiana.ariaLabel}
+            onClick={() => onDocenteCardClick('tatiana')}
+            onKeyDown={(e) => onCardKey(e, 'tatiana')}
+          >
+            <div className="pcd-docente__blob" aria-hidden="true" />
+            <img className="pcd-sticker pcd-sticker--camera" src={`${IMG}/Camera.webp`} alt="" aria-hidden="true" />
+            <h3 className="pcd-docente__name">Tatiana<br />Flórez</h3>
+            <p className="pcd-docente__bio">{t.docentes.tatiana.bio}</p>
+            <div className="pcd-docente__tags">
+              {t.docentes.tatiana.tags.map((tag) => <span key={tag} className="pcd-docente__tag">{tag}</span>)}
+            </div>
+          </article>
+
+          {/* Pilar (clon para loop infinito) */}
+          <article
+            className="pcd-docente pcd-docente--pilar pcd-docente--no-photo pcd-reveal" tabIndex={-1} role="button" aria-hidden="true"
+            aria-label={t.docentes.pilar.ariaLabel}
+            onClick={() => onDocenteCardClick('pilar')}
+            onKeyDown={(e) => onCardKey(e, 'pilar')}
+          >
+            <div className="pcd-docente__blob" aria-hidden="true" />
+            <img className="pcd-sticker pcd-sticker--idea" src={`${IMG}/Idea.webp`} alt="" aria-hidden="true" />
+            <h3 className="pcd-docente__name">Pilar<br />Camargo</h3>
+            <p className="pcd-docente__bio">{t.docentes.pilar.bio}</p>
+            <div className="pcd-docente__tags">
+              {t.docentes.pilar.tags.map((tag) => <span key={tag} className="pcd-docente__tag">{tag}</span>)}
             </div>
           </article>
         </div>
@@ -1214,6 +1374,111 @@ export default function ProgramaCreacionDigital() {
         <h3 className="pcd-docente-modal__heading">{t.docentes.modalExp}</h3>
         <ul className="pcd-docente-modal__list">
           {t.docentes.ximena.exp.map((item) => (
+            <li key={item.title}>
+              <strong>{item.title}</strong>
+              <span className="pcd-docente-modal__detail-plain">{item.body}</span>
+            </li>
+          ))}
+        </ul>
+      </DocenteModal>
+
+      <DocenteModal
+        id="carlos" active={activeDocente === 'carlos'} onClose={closeDocente} onSwipe={onSwipeDocente}
+        portrait="" portraitEnd=""
+        name={<>Carlos<br />Almeyda</>}
+        tags={t.docentes.carlos.modalTags}
+      >
+        <h3 className="pcd-docente-modal__heading">{t.docentes.modalPerfil}</h3>
+        <p className="pcd-docente-modal__p">{t.docentes.carlos.p1}</p>
+        <p className="pcd-docente-modal__p">{t.docentes.carlos.p2}</p>
+        <hr className="pcd-docente-modal__rule" />
+        <h3 className="pcd-docente-modal__heading">{t.docentes.modalExp}</h3>
+        <ul className="pcd-docente-modal__list">
+          {t.docentes.carlos.exp.map((item) => (
+            <li key={item.title}>
+              <strong>{item.title}</strong>
+              <span className="pcd-docente-modal__detail-plain">{item.body}</span>
+            </li>
+          ))}
+        </ul>
+      </DocenteModal>
+
+      <DocenteModal
+        id="dayana" active={activeDocente === 'dayana'} onClose={closeDocente} onSwipe={onSwipeDocente}
+        portrait="" portraitEnd=""
+        name={<>Dayana<br />González</>}
+        tags={t.docentes.dayana.modalTags}
+      >
+        <h3 className="pcd-docente-modal__heading">{t.docentes.modalPerfil}</h3>
+        <p className="pcd-docente-modal__p">{t.docentes.dayana.p1}</p>
+        <p className="pcd-docente-modal__p">{t.docentes.dayana.p2}</p>
+        <hr className="pcd-docente-modal__rule" />
+        <h3 className="pcd-docente-modal__heading">{t.docentes.modalExp}</h3>
+        <ul className="pcd-docente-modal__list">
+          {t.docentes.dayana.exp.map((item) => (
+            <li key={item.title}>
+              <strong>{item.title}</strong>
+              <span className="pcd-docente-modal__detail-plain">{item.body}</span>
+            </li>
+          ))}
+        </ul>
+      </DocenteModal>
+
+      <DocenteModal
+        id="john" active={activeDocente === 'john'} onClose={closeDocente} onSwipe={onSwipeDocente}
+        portrait="" portraitEnd=""
+        name={<>John<br />Lamprea</>}
+        tags={t.docentes.john.modalTags}
+      >
+        <h3 className="pcd-docente-modal__heading">{t.docentes.modalPerfil}</h3>
+        <p className="pcd-docente-modal__p">{t.docentes.john.p1}</p>
+        <p className="pcd-docente-modal__p">{t.docentes.john.p2}</p>
+        <hr className="pcd-docente-modal__rule" />
+        <h3 className="pcd-docente-modal__heading">{t.docentes.modalExp}</h3>
+        <ul className="pcd-docente-modal__list">
+          {t.docentes.john.exp.map((item) => (
+            <li key={item.title}>
+              <strong>{item.title}</strong>
+              <span className="pcd-docente-modal__detail-plain">{item.body}</span>
+            </li>
+          ))}
+        </ul>
+      </DocenteModal>
+
+      <DocenteModal
+        id="tatiana" active={activeDocente === 'tatiana'} onClose={closeDocente} onSwipe={onSwipeDocente}
+        portrait="" portraitEnd=""
+        name={<>Tatiana<br />Flórez</>}
+        tags={t.docentes.tatiana.modalTags}
+      >
+        <h3 className="pcd-docente-modal__heading">{t.docentes.modalPerfil}</h3>
+        <p className="pcd-docente-modal__p">{t.docentes.tatiana.p1}</p>
+        <p className="pcd-docente-modal__p">{t.docentes.tatiana.p2}</p>
+        <hr className="pcd-docente-modal__rule" />
+        <h3 className="pcd-docente-modal__heading">{t.docentes.modalExp}</h3>
+        <ul className="pcd-docente-modal__list">
+          {t.docentes.tatiana.exp.map((item) => (
+            <li key={item.title}>
+              <strong>{item.title}</strong>
+              <span className="pcd-docente-modal__detail-plain">{item.body}</span>
+            </li>
+          ))}
+        </ul>
+      </DocenteModal>
+
+      <DocenteModal
+        id="pilar" active={activeDocente === 'pilar'} onClose={closeDocente} onSwipe={onSwipeDocente}
+        portrait="" portraitEnd=""
+        name={<>Pilar<br />Camargo</>}
+        tags={t.docentes.pilar.modalTags}
+      >
+        <h3 className="pcd-docente-modal__heading">{t.docentes.modalPerfil}</h3>
+        <p className="pcd-docente-modal__p">{t.docentes.pilar.p1}</p>
+        <p className="pcd-docente-modal__p">{t.docentes.pilar.p2}</p>
+        <hr className="pcd-docente-modal__rule" />
+        <h3 className="pcd-docente-modal__heading">{t.docentes.modalExp}</h3>
+        <ul className="pcd-docente-modal__list">
+          {t.docentes.pilar.exp.map((item) => (
             <li key={item.title}>
               <strong>{item.title}</strong>
               <span className="pcd-docente-modal__detail-plain">{item.body}</span>
