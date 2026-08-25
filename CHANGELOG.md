@@ -7,6 +7,12 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Cambiado — Ciclo de color de los stickers azul→amarillo→rojo en las 16 cards
+
+- Con los 8 docentes nuevos agregados en esta sesión, el ciclo de color de los iconos flotantes (Star/Camera/Like = azul, Idea/Computer/Phone = amarillo, Love/Controller = rojo) se había roto en varias cards. Se reasignó el ícono de 7 docentes (Daniela, Juan David, Julián, John, Tatiana, Pilar, Jaime) para que el ciclo azul→amarillo→rojo se mantenga perfecto y sin cortes en las 16 cards, empezando en Paula Lenis (primera del carrusel).
+- Los colores se verificaron programáticamente contra el RGB promedio de cada .webp (no a ojo): azul = Star/Camera/Like, amarillo = Idea/Computer/Phone, rojo = Love/Controller.
+- Archivos: `src/pages/ProgramaCreacionDigital.tsx` (sticker className + src en card y clon de cada docente afectado).
+
 ### Agregado — 3 docentes más, solo con nombre por ahora (sin perfil ni foto)
 
 - Se agregaron 3 docentes adicionales al carrusel, sin información todavía: Rusbel Castillo (antes de Carlos Almeyda), Julián Bejarano (después de Dayana González) y Jaime Velásquez (después de Pilar Camargo). Mismo orden aplicado en `DOCENTE_ORDER` para el swipe del modal.
