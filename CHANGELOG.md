@@ -7,6 +7,13 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Corregido — Título y subtítulo de "mundo 3d" desalineados en móvil + inglés
+
+- En móvil, al cambiar a inglés, el título y el subtítulo de "mundo 3d" quedaban desplazados (subtítulo angostado a 22% de ancho, corrido hacia abajo y a la derecha) y terminaban montados sobre la sección siguiente.
+- Causa: el selector de la variante inglés `.pcd-axis--mundo.pcd-axis--mundo-en .pcd-axis__caption` (pensado para el offset de escritorio, `top: 180px`, `translateX(55px)`, `max-width: 22%`) tiene mayor especificidad CSS (2 clases combinadas) que el reset de móvil ya existente (`.pcd-axis--mundo .pcd-axis__caption`, 1 clase), así que ese reset perdía y el offset de escritorio se seguía aplicando dentro del media query mobile.
+- Se agregaron reglas dentro del mismo media query con la especificidad exacta de la variante inglés (`.pcd-axis--mundo.pcd-axis--mundo-en .pcd-axis__word` / `.pcd-axis__caption`) para neutralizar `transform`, `top` y `max-width` en móvil — el español no tenía este problema porque no usa esos selectores combinados.
+- Archivos: `src/styles/programa.css`.
+
 ### Corregido — Menú mobile se cierra al tocar/hacer clic fuera de él
 
 - En mobile, el menú hamburguesa solo se cerraba con el botón X. Ahora también se cierra al tocar o hacer clic en cualquier parte fuera del menú desplegado (mismo patrón que ya usaban los dropdowns de filtros en /proyectos).

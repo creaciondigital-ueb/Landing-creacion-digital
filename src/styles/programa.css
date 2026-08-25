@@ -1088,6 +1088,15 @@
   .pcd-axis--mundo .pcd-axis__tag { display: flex; margin-left: auto; margin-right: auto; }
   .pcd-axis--mundo .pcd-axis__word { text-align: center; transform: none; margin-right: 0; }
   .pcd-axis--mundo .pcd-axis__caption { text-align: center; transform: none; margin-right: 0; max-width: 100%; }
+  /* La variante EN (.pcd-axis--mundo-en) tiene selectores de 2 clases
+     combinadas con .pcd-axis--mundo (especificidad 0,3,0) para el offset
+     de escritorio (translateX/top pensados para el layout ancho). Esa
+     especificidad le gana a los resets de arriba (0,2,0) incluso dentro
+     de este media query — sin esto, en móvil + inglés el título y el
+     subtítulo de "mundo 3d" seguían desplazados con los valores de
+     escritorio y quedaban montados uno sobre el otro. */
+  .pcd-axis--mundo.pcd-axis--mundo-en .pcd-axis__word { transform: none; }
+  .pcd-axis--mundo.pcd-axis--mundo-en .pcd-axis__caption { top: auto; transform: none; max-width: 100%; }
   .pcd-axis--producto .pcd-axis__tag { display: flex; margin-left: auto; margin-right: auto; }
   .pcd-axis--producto .pcd-axis__word { text-align: center; margin-right: 0; }
   .pcd-axis--producto .pcd-axis__caption { text-align: center; transform: none; }
