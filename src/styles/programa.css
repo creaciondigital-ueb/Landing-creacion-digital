@@ -2005,6 +2005,12 @@ body:has(.pcd-docente-modal[open]) {
        .pcd-team__panel-body ya tiene overflow-y:auto como red de
        seguridad (scroll interno del texto en vez de desbordar la card). */
     width: min(80%, 300px);
+    /* Subido ~15px a pedido del usuario. Se usa transform (no
+       margin-top negativo) para no alterar el cálculo de
+       justify-content:center del padre (.pcd-team__panel) — el bloque
+       foto+texto se desplaza como unidad sin romper el centrado ni el
+       gap entre ambos. */
+    transform: translateY(-15px);
   }
   .pcd-team__panel-body {
     flex: none;
@@ -2012,6 +2018,7 @@ body:has(.pcd-docente-modal[open]) {
     max-width: 420px; /* líneas de texto legibles aunque la card sea ancha */
     align-items: center;
     text-align: center;
+    transform: translateY(-15px); /* ver comentario en .pcd-team__panel-photo */
   }
   /* La descripción real (hasta ~50 palabras) es bastante más larga que
      el Lorem Ipsum de antes — la achicamos un poco solo en este rango

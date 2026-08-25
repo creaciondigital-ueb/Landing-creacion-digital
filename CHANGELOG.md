@@ -7,6 +7,11 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Cambiado — Foto + texto del panel de equipo subidos ~15px en desktop (≥1486px)
+
+- El bloque foto+texto de la card se desplazó ~15px hacia arriba a pedido del usuario. Se usó `transform: translateY(-15px)` en `.pcd-team__panel-photo` y `.pcd-team__panel-body` (no `margin-top` negativo) para no alterar el cálculo de `justify-content:center` del contenedor padre — el bloque se mueve como unidad, sin romper el centrado ni el gap entre foto y texto. Solo en el rango ≥1486px; el resto de tamaños no se tocó.
+- Archivos: `src/styles/programa.css`.
+
 ### Cambiado — Foto del equipo bajada a 300px en desktop (≥1486px)
 
 - Bajada de 350px a 300px a pedido del usuario. Solo en el rango ≥1486px (fila video + card); el resto de tamaños no se tocó.
