@@ -1881,7 +1881,15 @@ body:has(.pcd-docente-modal[open]) {
   flex: none;
   width: min(30%, 220px);
   aspect-ratio: 1 / 1;
-  background-size: cover;
+  /* Las 5 ilustraciones (equipo/*.webp) son lienzos cuadrados con bastante
+     aire en blanco alrededor del personaje, más marcado abajo (~12-17%
+     del lienzo) que arriba (~6-10%) — con cover puro (100%, mismo aspect
+     ratio que el contenedor) se ve completo tal cual, sin recortar nada
+     de ese aire. Se hace zoom leve (108%) para recortar ese excedente;
+     background-position:center top ancla el recorte extra abajo (no
+     toca el margen superior). Verificado con las 5 imágenes que ningún
+     personaje queda cortado con este valor. */
+  background-size: 108%;
   background-position: center top;
 }
 .pcd-team__panel-body {

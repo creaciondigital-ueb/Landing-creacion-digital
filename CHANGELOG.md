@@ -7,6 +7,12 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Corregido — Espacio en blanco excesivo debajo de las fotos del equipo
+
+- Las 5 ilustraciones del equipo (`equipo/*.webp`) son lienzos cuadrados con harto aire en blanco alrededor del personaje, más marcado abajo (11.9%-17.3% del lienzo, medido) que arriba (5.9%-10.5%) — con `background-size: cover` (mismo aspect ratio 1:1 que el contenedor) se mostraba completo tal cual, sin recortar ese excedente, dejando el nombre y el texto más abajo de lo necesario.
+- Se aplicó un zoom leve (`background-size: 108%`) con `background-position: center top`, que recorta el excedente solo por abajo (y un poco a los lados) sin tocar el margen superior. Verificado con las 5 fotos (Estefany, Juan, Paula V., Tatiana, Fabián) que ningún personaje queda cortado con este valor — el caso más ajustado (Paula V.) queda con ~3.9% de aire abajo y ~4.3% a la derecha.
+- Archivos: `src/styles/programa.css`.
+
 ### Cambiado — Foto del equipo a 400px en desktop (≥1486px)
 
 - Subida de 300px a 400px a pedido del usuario. Solo en el rango ≥1486px (fila video + card); el resto de tamaños no se tocó.
