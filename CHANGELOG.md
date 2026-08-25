@@ -7,6 +7,12 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Corregido — Menú mobile se cierra al tocar/hacer clic fuera de él
+
+- En mobile, el menú hamburguesa solo se cerraba con el botón X. Ahora también se cierra al tocar o hacer clic en cualquier parte fuera del menú desplegado (mismo patrón que ya usaban los dropdowns de filtros en /proyectos).
+- Aplicado en las 5 páginas que tienen navbar propio: home, /proyectos, /proyectos/:id, /blog y /blog/:id.
+- Archivos: `src/pages/ProgramaCreacionDigital.tsx`, `src/pages/ProyectosPage.tsx`, `src/pages/ProyectoDetallePage.tsx`, `src/pages/BlogPage.tsx`, `src/pages/BlogPostPage.tsx`.
+
 ### Corregido — Revertida la card "Próximamente"; se cambió el ícono de Jaime a amarillo en su lugar
 
 - El pedido era cambiar el ícono que queda entre Jaime y Paula (el de la propia card de Jaime, que visualmente sobresale hacia la card siguiente) a amarillo — no agregar una card nueva. Se revirtió por completo la card "Próximamente" (main, clon, modal, traducciones y las extensiones de CSS que había agregado) y en su lugar se cambió el sticker de Jaime Velásquez de `like` (azul) a `phone` (amarillo).

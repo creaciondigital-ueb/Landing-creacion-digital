@@ -21,6 +21,25 @@ export default function BlogPage() {
   const tb = t.blogPage;
 
   const [menuOpen, setMenuOpen] = useState(false);
+
+  // Cierra el menú mobile al hacer clic/tocar fuera de él (no solo con la X).
+  const mobileNavRef = useRef<HTMLElement>(null);
+  const hamburgerRef = useRef<HTMLButtonElement>(null);
+  useEffect(() => {
+    if (!menuOpen) return;
+    const onOutsidePointerDown = (e: MouseEvent | TouchEvent) => {
+      const target = e.target as Node;
+      if (mobileNavRef.current?.contains(target)) return;
+      if (hamburgerRef.current?.contains(target)) return;
+      setMenuOpen(false);
+    };
+    document.addEventListener('mousedown', onOutsidePointerDown);
+    document.addEventListener('touchstart', onOutsidePointerDown);
+    return () => {
+      document.removeEventListener('mousedown', onOutsidePointerDown);
+      document.removeEventListener('touchstart', onOutsidePointerDown);
+    };
+  }, [menuOpen]);
   const [yearOpen, setYearOpen] = useState(false);
   const [categoryOpen, setCategoryOpen] = useState(false);
   const [selectedYears, setSelectedYears] = useState<string[]>([]);
@@ -120,7 +139,7 @@ export default function BlogPage() {
         <Link to="/" className="pcd-brand" aria-label="Inicio Creación Digital · Universidad El Bosque">
           <img className="pcd-brand__logo" src={`${IMG}/Label_UEB_CreacionDigital_Horizontal.png`} alt="Universidad El Bosque · Creación Digital" />
         </Link>
-        <nav className={`pcd-nav${menuOpen ? ' is-open' : ''}`} aria-label="Principal">
+        <nav ref={mobileNavRef} className={`pcd-nav${menuOpen ? ' is-open' : ''}`} aria-label="Principal">
           <Link className="pcd-nav__link" to="/#programa" onClick={() => setMenuOpen(false)}>{t.nav.programa}</Link>
           <Link className="pcd-nav__link" to="/#docentes" onClick={() => setMenuOpen(false)}>{t.nav.docentes}</Link>
           <Link className="pcd-nav__link" to="/#equipo" onClick={() => setMenuOpen(false)}>{t.nav.equipo}</Link>
@@ -136,6 +155,7 @@ export default function BlogPage() {
           </a>
         </div>
         <button
+          ref={hamburgerRef}
           type="button"
           className={`pcd-hamburger${menuOpen ? ' is-open' : ''}`}
           aria-label={t.nav.menu}

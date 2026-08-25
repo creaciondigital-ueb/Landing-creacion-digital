@@ -190,6 +190,25 @@ export default function ProgramaCreacionDigital() {
   // Menú hamburguer
   const [menuOpen, setMenuOpen] = useState(false);
 
+  // Cierra el menú mobile al hacer clic/tocar fuera de él (no solo con la X).
+  const mobileNavRef = useRef<HTMLElement>(null);
+  const hamburgerRef = useRef<HTMLButtonElement>(null);
+  useEffect(() => {
+    if (!menuOpen) return;
+    const onOutsidePointerDown = (e: MouseEvent | TouchEvent) => {
+      const target = e.target as Node;
+      if (mobileNavRef.current?.contains(target)) return;
+      if (hamburgerRef.current?.contains(target)) return;
+      setMenuOpen(false);
+    };
+    document.addEventListener('mousedown', onOutsidePointerDown);
+    document.addEventListener('touchstart', onOutsidePointerDown);
+    return () => {
+      document.removeEventListener('mousedown', onOutsidePointerDown);
+      document.removeEventListener('touchstart', onOutsidePointerDown);
+    };
+  }, [menuOpen]);
+
   // Equipo: persona seleccionada para la ficha técnica (Fabian por
   // defecto — pedido explícito del usuario — para que el panel nunca se
   // vea vacío al llegar).
@@ -407,7 +426,7 @@ export default function ProgramaCreacionDigital() {
         <a href="#top" className="pcd-brand" aria-label="Inicio Creación Digital · Universidad El Bosque">
           <img className="pcd-brand__logo" src={`${IMG}/Label_UEB_CreacionDigital_Horizontal.png`} alt="Universidad El Bosque · Creación Digital" />
         </a>
-        <nav className={`pcd-nav${menuOpen ? ' is-open' : ''}`} aria-label="Principal">
+        <nav ref={mobileNavRef} className={`pcd-nav${menuOpen ? ' is-open' : ''}`} aria-label="Principal">
           <a className="pcd-nav__link" href="#programa" onClick={() => setMenuOpen(false)}>{t.nav.programa}</a>
           <a className="pcd-nav__link" href="#docentes" onClick={() => setMenuOpen(false)}>{t.nav.docentes}</a>
           <a className="pcd-nav__link" href="#equipo" onClick={() => setMenuOpen(false)}>{t.nav.equipo}</a>
@@ -423,6 +442,7 @@ export default function ProgramaCreacionDigital() {
           </a>
         </div>
         <button
+          ref={hamburgerRef}
           type="button"
           className={`pcd-hamburger${menuOpen ? ' is-open' : ''}`}
           aria-label={t.nav.menu}
