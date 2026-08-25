@@ -7,6 +7,15 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Agregado — 3 docentes más, solo con nombre por ahora (sin perfil ni foto)
+
+- Se agregaron 3 docentes adicionales al carrusel, sin información todavía: Rusbel Castillo (antes de Carlos Almeyda), Julián Bejarano (después de Dayana González) y Jaime Velásquez (después de Pilar Camargo). Mismo orden aplicado en `DOCENTE_ORDER` para el swipe del modal.
+- Card: mismo placeholder sin foto (`pcd-docente--no-photo`) que el resto de docentes pendientes, con una bio corta genérica ("Perfil en construcción — pronto vas a conocer su experiencia.") y sin tags.
+- Modal: en vez de las secciones Perfil/Experiencia (vacías), muestra un único mensaje ("Estamos completando el perfil de [nombre]. ¡Vuelve pronto!") — mismo espíritu que el estado vacío ya usado en la sección Blog.
+- Se extendieron las reglas CSS `.pcd-docente:nth-child(n)` (control de z-index para que el sticker de cada card no quede tapado por la siguiente) de 20 a 32, ya que ahora son 16 docentes × 2 (set + clon del loop infinito) = 32 cards en el carrusel.
+- Nuevas traducciones ES/EN: `t.docentes.rusbel`, `.julian`, `.jaime`.
+- Archivos: `src/pages/ProgramaCreacionDigital.tsx`, `src/i18n/translations.ts`, `src/styles/programa.css`.
+
 ### Agregado — 5 docentes nuevos en la galería (sin foto por ahora)
 
 - Se agregaron 5 docentes nuevos al carrusel de la sección Docentes, ubicados todos después de Vanessa (tanto en el orden de las cards como en la navegación por swipe del modal): Carlos Almeyda, Dayana González, John Lamprea, Tatiana Flórez y Pilar Camargo.

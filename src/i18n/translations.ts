@@ -273,6 +273,24 @@ const translations = {
           { title: "LQN", body: "Como Desarrolladora Front-End participé en el diseño, desarrollo e implementación de aplicaciones web para el módulo de administración de hipotecas. Trabajé con tecnologías como React, JavaScript, HTML5, CSS3, Ant Design, Material UI y GraphQL, combinando diseño y programación para transformar propuestas de experiencia e interfaz en productos digitales funcionales.", boldParts: null as null | string[] },
         ],
       },
+      rusbel: {
+        ariaLabel: "Ver perfil de Rusbel Castillo",
+        bio: "Perfil en construcción — pronto vas a conocer su experiencia.",
+        tags: [] as string[],
+        note: "Estamos completando el perfil de Rusbel Castillo. ¡Vuelve pronto para conocer más sobre su experiencia!",
+      },
+      julian: {
+        ariaLabel: "Ver perfil de Julián Bejarano",
+        bio: "Perfil en construcción — pronto vas a conocer su experiencia.",
+        tags: [] as string[],
+        note: "Estamos completando el perfil de Julián Bejarano. ¡Vuelve pronto para conocer más sobre su experiencia!",
+      },
+      jaime: {
+        ariaLabel: "Ver perfil de Jaime Velásquez",
+        bio: "Perfil en construcción — pronto vas a conocer su experiencia.",
+        tags: [] as string[],
+        note: "Estamos completando el perfil de Jaime Velásquez. ¡Vuelve pronto para conocer más sobre su experiencia!",
+      },
     },
     equipo: {
       sectionTitleL1Pre: "El ",
@@ -648,6 +666,24 @@ const translations = {
           { title: "CUN", body: "As a User Experience Specialist I led the definition and evolution of digital experiences for different institutional projects. I designed wireframes, prototypes, user flows and interfaces, and carried out research and usability testing. I took part in developing CUN 360, an educational platform for students.", boldParts: null as null | string[] },
           { title: "LQN", body: "As a Front-End Developer I took part in designing, developing and implementing web applications for the mortgage administration module. I worked with technologies such as React, JavaScript, HTML5, CSS3, Ant Design, Material UI and GraphQL, combining design and programming to turn experience and interface proposals into functional digital products.", boldParts: null as null | string[] },
         ],
+      },
+      rusbel: {
+        ariaLabel: "View Rusbel Castillo profile",
+        bio: "Profile in progress — check back soon to learn about their experience.",
+        tags: [] as string[],
+        note: "We're completing Rusbel Castillo's profile. Check back soon to learn more about his experience!",
+      },
+      julian: {
+        ariaLabel: "View Julián Bejarano profile",
+        bio: "Profile in progress — check back soon to learn about their experience.",
+        tags: [] as string[],
+        note: "We're completing Julián Bejarano's profile. Check back soon to learn more about his experience!",
+      },
+      jaime: {
+        ariaLabel: "View Jaime Velásquez profile",
+        bio: "Profile in progress — check back soon to learn about their experience.",
+        tags: [] as string[],
+        note: "We're completing Jaime Velásquez's profile. Check back soon to learn more about his experience!",
       },
     },
     equipo: {
