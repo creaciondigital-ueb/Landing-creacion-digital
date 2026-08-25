@@ -7,6 +7,11 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Cambiado — Foto del equipo ajustada a 350px en desktop (≥1486px)
+
+- Bajada de 400px a 350px a pedido del usuario. Solo en el rango ≥1486px (fila video + card); el resto de tamaños no se tocó.
+- Archivos: `src/styles/programa.css`.
+
 ### Corregido — Espacio en blanco excesivo debajo de las fotos del equipo
 
 - Las 5 ilustraciones del equipo (`equipo/*.webp`) son lienzos cuadrados con harto aire en blanco alrededor del personaje, más marcado abajo (11.9%-17.3% del lienzo, medido) que arriba (5.9%-10.5%) — con `background-size: cover` (mismo aspect ratio 1:1 que el contenedor) se mostraba completo tal cual, sin recortar ese excedente, dejando el nombre y el texto más abajo de lo necesario.
