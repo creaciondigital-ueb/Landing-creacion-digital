@@ -7,6 +7,12 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Corregido — Revertida la card "Próximamente"; se cambió el ícono de Jaime a amarillo en su lugar
+
+- El pedido era cambiar el ícono que queda entre Jaime y Paula (el de la propia card de Jaime, que visualmente sobresale hacia la card siguiente) a amarillo — no agregar una card nueva. Se revirtió por completo la card "Próximamente" (main, clon, modal, traducciones y las extensiones de CSS que había agregado) y en su lugar se cambió el sticker de Jaime Velásquez de `like` (azul) a `phone` (amarillo).
+- Con este cambio Jaime pasa a amarillo justo antes de que el carrusel vuelva a Paula (azul), suavizando esa transición sin agregar ninguna card ni docente nuevo.
+- Archivos: `src/pages/ProgramaCreacionDigital.tsx`, `src/i18n/translations.ts`, `src/styles/programa.css`.
+
 ### Agregado — Card "Próximamente" (amarillo) entre Jaime y Paula
 
 - Se agregó una card final al carrusel, ubicada después de Jaime Velásquez y antes de que la secuencia vuelva a Paula Lenis (el ciclo se repite ahí), con ícono amarillo (idea) — pedido explícito para cerrar bien esa transición de color.

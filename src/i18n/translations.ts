@@ -291,13 +291,6 @@ const translations = {
         tags: [] as string[],
         note: "Estamos completando el perfil de Jaime Velásquez. ¡Vuelve pronto para conocer más sobre su experiencia!",
       },
-      proximo: {
-        name: "Próximamente",
-        ariaLabel: "Nuevo docente próximamente",
-        bio: "Pronto se suma un nuevo docente a nuestro equipo.",
-        tags: [] as string[],
-        note: "Muy pronto vamos a anunciar a un nuevo docente de Creación Digital. ¡Vuelve pronto!",
-      },
     },
     equipo: {
       sectionTitleL1Pre: "El ",
@@ -691,13 +684,6 @@ const translations = {
         bio: "Profile in progress — check back soon to learn about their experience.",
         tags: [] as string[],
         note: "We're completing Jaime Velásquez's profile. Check back soon to learn more about his experience!",
-      },
-      proximo: {
-        name: "Coming soon",
-        ariaLabel: "New faculty member coming soon",
-        bio: "A new faculty member is joining our team soon.",
-        tags: [] as string[],
-        note: "We'll be announcing a new Creación Digital faculty member very soon. Check back soon!",
       },
     },
     equipo: {
