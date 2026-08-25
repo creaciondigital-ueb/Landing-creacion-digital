@@ -7,6 +7,13 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Corregido — La página se sentía "trabada" (ej. el toggle ES|EN no respondía) mientras se escribía el título del hero
+
+- Causa: el estado de la animación de máquina de escribir del hero (`heroTypedChars`) vivía dentro de `ProgramaCreacionDigital`, que es literalmente TODA la página (docentes, equipo, proyectos, blog, etc.). El `setInterval` que escribe una letra cada 100ms actualizaba ese estado, y cada tick re-renderizaba el árbol de React completo mientras el texto se escribía (varios segundos) — eso saturaba el hilo principal e interacciones como el click en el toggle ES|EN se sentían bloqueadas hasta que la animación terminaba.
+- Se extrajo toda la lógica y el estado del typewriter a un componente nuevo y aislado, `HeroTitle` (recibe `line1/line2pre/line2word/line3` como props). Ahora cada tick de 100ms solo re-renderiza ese componente chico; el resto de la página (y sus botones, incluido el toggle de idioma) queda libre para responder de inmediato en todo momento, incluso mientras el texto se sigue escribiendo.
+- Sin cambios visuales ni de comportamiento — mismo efecto de escritura, mismo timing.
+- Archivos: `src/pages/ProgramaCreacionDigital.tsx`.
+
 ### Cambiado — Pills del banner final (ESTRATEGIA/TECNOLOGÍA/FUTURO) de latido a flote
 
 - A pedido del usuario, se reemplazó la animación de latido (`pcd-bullet-pulse`, escala 1 → 1.06) por una de flote suave (`pcd-bullet-float`, `translate` vertical entre 0 y -8px).

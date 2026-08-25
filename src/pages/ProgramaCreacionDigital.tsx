@@ -168,6 +168,79 @@ function DocenteModal({ id, active, onClose, onSwipe, portrait, portraitEnd, nam
   );
 }
 
+/**
+ * Título del hero con efecto máquina de escribir — extraído como
+ * componente aparte a propósito. Antes este estado (heroTypedChars)
+ * vivía en ProgramaCreacionDigital y se actualizaba cada 100ms con
+ * setInterval: como ese componente es TODA la página (docentes,
+ * equipo, proyectos, blog...), cada uno de esos ticks re-renderizaba
+ * el árbol entero mientras el texto se escribía (varios segundos),
+ * saturando el hilo principal y haciendo que clics en esos segundos
+ * (ej. el toggle ES|EN) se sintieran "bloqueados" hasta que la
+ * animación terminaba. Aislando el estado acá, el tick de cada 100ms
+ * solo re-renderiza este componente chico — el resto de la página
+ * (y sus botones) queda libre para responder de inmediato en todo
+ * momento, incluso mientras el texto se sigue escribiendo.
+ */
+function HeroTitle({ line1, line2pre, line2word, line3 }: { line1: string; line2pre: string; line2word: string; line3: string }) {
+  const [typedChars, setTypedChars] = useState(0);
+  const [strikeActive, setStrikeActive] = useState(false);
+
+  // Reinicia la animación cuando cambia el texto (ej. cambio de idioma)
+  useEffect(() => {
+    const total = line1.length + line2pre.length + line2word.length + line3.length;
+
+    setTypedChars(0);
+    setStrikeActive(false);
+
+    const typeInterval = setInterval(() => {
+      setTypedChars((prev) => {
+        if (prev >= total) { clearInterval(typeInterval); return prev; }
+        return prev + 1;
+      });
+    }, 100);
+    return () => clearInterval(typeInterval);
+  }, [line1, line2pre, line2word, line3]);
+
+  const totalChars = line1.length + line2pre.length + line2word.length + line3.length;
+
+  useEffect(() => {
+    if (typedChars < totalChars) return;
+    const strikeTimeout = setTimeout(() => setStrikeActive(true), 300);
+    return () => clearTimeout(strikeTimeout);
+  }, [typedChars, totalChars]);
+
+  const line1Visible = line1.slice(0, Math.min(line1.length, typedChars));
+  const line2PreVisible = line2pre.slice(0, Math.max(0, Math.min(line2pre.length, typedChars - line1.length)));
+  const line2WordVisible = line2word.slice(0, Math.max(0, Math.min(line2word.length, typedChars - line1.length - line2pre.length)));
+  const line3Visible = line3.slice(0, Math.max(0, Math.min(line3.length, typedChars - line1.length - line2pre.length - line2word.length)));
+  const typingDone = typedChars >= totalChars;
+
+  const row2Total = line2pre.length + line2word.length;
+  const row1Active = typedChars < line1.length;
+  const row2Active = !row1Active && typedChars < line1.length + row2Total;
+  const row3Active = !row1Active && !row2Active && !typingDone;
+
+  return (
+    <h1 className="pcd-hero__title">
+      <span className="row">
+        {line1Visible}
+        {row1Active && <span className="pcd-hero__cursor" aria-hidden="true" />}
+      </span>
+      <span className="row row--shift1">
+        {line2PreVisible}
+        <span className={`pcd-hero__dictar${strikeActive ? ' is-struck' : ''}`}>{line2WordVisible}</span>
+        {row2Active && <span className="pcd-hero__cursor" aria-hidden="true" />}
+      </span>
+      <span className="row row--shift2">
+        {line3Visible}
+        <span className={`blob${typingDone ? ' is-visible' : ''}`}>.</span>
+        {row3Active && <span className="pcd-hero__cursor" aria-hidden="true" />}
+      </span>
+    </h1>
+  );
+}
+
 export default function ProgramaCreacionDigital() {
   const { lang, setLang, t } = useLang();
 
@@ -223,53 +296,9 @@ export default function ProgramaCreacionDigital() {
   // Toggle Definición / Contenido — eje 03 (sección "producto")
   const [axis03Mode, setAxis03Mode] = useState<'definicion' | 'contenido'>('definicion');
 
-  // ── Hero typewriter ──────────────────────────────────────────
-  const [heroTypedChars, setHeroTypedChars] = useState(0);
-  const [heroStrikeActive, setHeroStrikeActive] = useState(false);
-
-  // Reinicia la animación cuando cambia el idioma
-  useEffect(() => {
-    const L1 = t.hero.line1;
-    const L2PRE = t.hero.line2pre;
-    const L2WORD = t.hero.line2word;
-    const L3 = t.hero.line3;
-    const total = L1.length + L2PRE.length + L2WORD.length + L3.length;
-
-    setHeroTypedChars(0);
-    setHeroStrikeActive(false);
-
-    const typeInterval = setInterval(() => {
-      setHeroTypedChars((prev) => {
-        if (prev >= total) { clearInterval(typeInterval); return prev; }
-        return prev + 1;
-      });
-    }, 100);
-    return () => clearInterval(typeInterval);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [lang]);
-
-  const HERO_L1 = t.hero.line1;
-  const HERO_L2_PRE = t.hero.line2pre;
-  const HERO_L2_WORD = t.hero.line2word;
-  const HERO_L3 = t.hero.line3;
-  const heroTotalChars = HERO_L1.length + HERO_L2_PRE.length + HERO_L2_WORD.length + HERO_L3.length;
-
-  useEffect(() => {
-    if (heroTypedChars < heroTotalChars) return;
-    const strikeTimeout = setTimeout(() => setHeroStrikeActive(true), 300);
-    return () => clearTimeout(strikeTimeout);
-  }, [heroTypedChars, heroTotalChars]);
-
-  const heroLine1Visible = HERO_L1.slice(0, Math.min(HERO_L1.length, heroTypedChars));
-  const heroLine2PreVisible = HERO_L2_PRE.slice(0, Math.max(0, Math.min(HERO_L2_PRE.length, heroTypedChars - HERO_L1.length)));
-  const heroLine2WordVisible = HERO_L2_WORD.slice(0, Math.max(0, Math.min(HERO_L2_WORD.length, heroTypedChars - HERO_L1.length - HERO_L2_PRE.length)));
-  const heroLine3Visible = HERO_L3.slice(0, Math.max(0, Math.min(HERO_L3.length, heroTypedChars - HERO_L1.length - HERO_L2_PRE.length - HERO_L2_WORD.length)));
-  const heroTypingDone = heroTypedChars >= heroTotalChars;
-
-  const heroRow2Total = HERO_L2_PRE.length + HERO_L2_WORD.length;
-  const heroRow1Active = heroTypedChars < HERO_L1.length;
-  const heroRow2Active = !heroRow1Active && heroTypedChars < HERO_L1.length + heroRow2Total;
-  const heroRow3Active = !heroRow1Active && !heroRow2Active && !heroTypingDone;
+  // Hero typewriter: ver componente HeroTitle (arriba) — el estado se
+  // aisló ahí a propósito para no re-renderizar toda la página en cada
+  // tick de la animación.
 
   const onCardKey = (e: React.KeyboardEvent, id: string) => {
     if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openDocente(id); }
@@ -467,22 +496,12 @@ export default function ProgramaCreacionDigital() {
           <span className="right"><b>{t.hero.meta.snies}</b> · <span className="pcd-hero__meta-value">116265</span></span>
         </div>
 
-        <h1 className="pcd-hero__title">
-          <span className="row">
-            {heroLine1Visible}
-            {heroRow1Active && <span className="pcd-hero__cursor" aria-hidden="true" />}
-          </span>
-          <span className="row row--shift1">
-            {heroLine2PreVisible}
-            <span className={`pcd-hero__dictar${heroStrikeActive ? ' is-struck' : ''}`}>{heroLine2WordVisible}</span>
-            {heroRow2Active && <span className="pcd-hero__cursor" aria-hidden="true" />}
-          </span>
-          <span className="row row--shift2">
-            {heroLine3Visible}
-            <span className={`blob${heroTypingDone ? ' is-visible' : ''}`}>.</span>
-            {heroRow3Active && <span className="pcd-hero__cursor" aria-hidden="true" />}
-          </span>
-        </h1>
+        <HeroTitle
+          line1={t.hero.line1}
+          line2pre={t.hero.line2pre}
+          line2word={t.hero.line2word}
+          line3={t.hero.line3}
+        />
 
         <div className="pcd-hero__bottom">
           <div className="pcd-hero__floor-line" aria-hidden="true" />
