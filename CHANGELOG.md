@@ -7,6 +7,11 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Cambiado — Foto del equipo a 300px en desktop (≥1486px)
+
+- Seguía viéndose chica en 230px; se subió a 300px a pedido del usuario. Sigue siendo solo en el rango ≥1486px (fila video + card); el resto de tamaños no se tocó.
+- Archivos: `src/styles/programa.css`.
+
 ### Cambiado — Foto del equipo un poco más grande en desktop (≥1486px)
 
 - En el rango de escritorio ancho (fila video + card, ≥1486px), la foto del panel del equipo quedaba chica (200px). Se subió a 230px — el resto de tamaños (donde el layout es foto-izquierda/texto-derecha) no se tocó porque ya estaba bien.
