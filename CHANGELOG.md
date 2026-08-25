@@ -7,6 +7,13 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Agregado — Franja "marquee" divisora entre Proyectos y Blog
+
+- Se agregó una tercera franja de texto en movimiento (mismo componente `.pcd-marquee` que separa "Programa" de la primera sección, y "Docentes" del axis anterior), ahora entre Proyectos y Blog, con la frase "Lo que sucede en Creación Digital" / "What's happening in Creación Digital".
+- Sin CSS nuevo — reutiliza el estilo existente (franja negra, texto serif itálico, estrellas en verde ácido, scroll infinito, respeta `prefers-reduced-motion`).
+- Nueva traducción ES/EN: `t.marquee3`.
+- Archivos: `src/pages/ProgramaCreacionDigital.tsx`, `src/i18n/translations.ts`.
+
 ### Agregado — Sección "Blog" en la landing (debajo de Proyectos)
 
 - Se agregó una nueva sección `#blog` en el home, ubicada justo debajo de "Proyectos" y antes del CTA final ("Estudia con nosotros"), con diseño propio siguiendo el sistema editorial del sitio (serif itálica para títulos, mono uppercase para meta/labels, mismo patrón de card con borde 2.5px y hover shadow-shift que "Más proyectos" en el detalle).

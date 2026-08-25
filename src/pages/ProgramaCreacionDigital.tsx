@@ -1321,6 +1321,24 @@ export default function ProgramaCreacionDigital() {
         </div>
       </section>
 
+      {/* ===== MARQUEE · lo que sucede ===== */}
+      <div className="pcd-marquee" aria-hidden="true">
+        <div className="pcd-marquee__track">
+          <span>
+            {t.marquee3} <span className="pcd-marquee__star">✺</span>
+            {t.marquee3} <span className="pcd-marquee__star">✺</span>
+            {t.marquee3} <span className="pcd-marquee__star">✺</span>
+            {t.marquee3} <span className="pcd-marquee__star">✺</span>
+          </span>
+          <span>
+            {t.marquee3} <span className="pcd-marquee__star">✺</span>
+            {t.marquee3} <span className="pcd-marquee__star">✺</span>
+            {t.marquee3} <span className="pcd-marquee__star">✺</span>
+            {t.marquee3} <span className="pcd-marquee__star">✺</span>
+          </span>
+        </div>
+      </div>
+
       {/* ===== BLOG ===== */}
       <section id="blog" className="pcd-blog-preview">
         <header className="pcd-blog-preview__head pcd-reveal">

@@ -33,6 +33,7 @@ const translations = {
     },
     marquee1: "Esto aprenderás estudiando nuestro pregrado",
     marquee2: "Conoce a nuestro equipo docente",
+    marquee3: "Lo que sucede en Creación Digital",
     axis01: {
       tag: "01 · programa",
       toggleDefinicion: "Definición",
@@ -343,6 +344,7 @@ const translations = {
     },
     marquee1: "This is what you will learn in our program",
     marquee2: "Meet our teaching team",
+    marquee3: "What's happening in Creación Digital",
     axis01: {
       tag: "01 · program",
       toggleDefinicion: "Definition",
