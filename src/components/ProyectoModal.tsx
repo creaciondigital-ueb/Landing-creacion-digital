@@ -24,7 +24,7 @@ export default function ProyectoModal({ proyecto, lang, onClose }: Props) {
     : { project: 'Proyecto', subject: 'Materia', professor: 'Docente', students: 'Estudiantes', year: 'Año', skills: 'Habilidades desarrolladas' };
 
   const professorFull = proyecto.professor
-    .replace('C. Cardozo', 'Camilo Cardozo')
+    ?.replace('C. Cardozo', 'Camilo Cardozo')
     .replace('A. Rozo', 'A. Rozo')
     .replace('J. Suárez', 'J. Suárez');
 
@@ -121,10 +121,12 @@ export default function ProyectoModal({ proyecto, lang, onClose }: Props) {
                 <dt>{labels.subject}</dt>
                 <dd>{subject}</dd>
               </div>
-              <div className="proy-modal__sheet-row">
-                <dt>{labels.professor}</dt>
-                <dd>{professorFull}</dd>
-              </div>
+              {professorFull && (
+                <div className="proy-modal__sheet-row">
+                  <dt>{labels.professor}</dt>
+                  <dd>{professorFull}</dd>
+                </div>
+              )}
               {proyecto.student && (
                 <div className="proy-modal__sheet-row">
                   <dt>{labels.students}</dt>

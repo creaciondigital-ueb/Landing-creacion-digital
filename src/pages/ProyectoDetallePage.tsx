@@ -27,7 +27,7 @@ export default function ProyectoDetallePage() {
   const paragraphs = desc.split('\n\n').filter(Boolean);
 
   const professorFull = proyecto.professor
-    .replace('C. Cardozo', 'Camilo Cardozo')
+    ?.replace('C. Cardozo', 'Camilo Cardozo')
     .replace('J. Lamprea', 'John Lamprea')
     .replace('A. Rozo', 'A. Rozo')
     .replace('J. Suárez', 'J. Suárez');
@@ -148,8 +148,12 @@ export default function ProyectoDetallePage() {
             <dl className="pdet__sheet">
               <dt>{labels.subject}</dt>
               <dd>{subject}</dd>
-              <dt>{labels.professor}</dt>
-              <dd>{professorFull}</dd>
+              {professorFull && (
+                <>
+                  <dt>{labels.professor}</dt>
+                  <dd>{professorFull}</dd>
+                </>
+              )}
               {proyecto.student && (
                 <>
                   <dt>{labels.students}</dt>

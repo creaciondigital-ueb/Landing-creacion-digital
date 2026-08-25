@@ -7,6 +7,15 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Agregado — Dos proyectos adicionales en /proyectos (fuera de asignatura)
+
+- Libro ilustrado con IA para la concientización del vitiligo infantil (Junior Mejía Méndez, 2026-1) y 3er lugar en la Global Hack de seguros educativos (Danna Bolaños, Mariana Cifuentes y Juliana Sanabria, 2026-1).
+- Ambos son iniciativas de estudiantes por fuera de una asignatura del programa, así que en vez de una materia real usan `subject: "Proyecto adicional"` / `"Additional project"` — aparece como cualquier otro chip en el filtro de Asignatura.
+- Sin imágenes por ahora (`image: ''`, `modal.images: []`) — el usuario las va a enviar después; el carrusel del modal y la card quedan en blanco (color de fondo de respaldo) sin romperse hasta que se agreguen.
+- Se corrigió ortografía/redacción del texto original del usuario (tildes, concordancia, puntuación) para ambas descripciones, en español e inglés.
+- `professor` ahora es opcional en el modelo `Proyecto` (antes obligatorio) — estas dos iniciativas no tienen un docente de asignatura asociado, así que la fila "Docente" del modal/detalle se oculta cuando no aplica (mismo patrón que ya existía para `student`).
+- Archivos: `src/data/proyectos.ts`, `src/components/ProyectoModal.tsx`, `src/pages/ProyectoDetallePage.tsx`.
+
 ### Cambiado — Tag "Product Thinking" de Nicolás acortado a "Producto"/"Product"
 
 - Las pills/tags de Nicolás Bartolo (docentes) pasaban a 2 filas porque "Product Thinking" era demasiado largo. Se acortó a "Producto" (ES) / "Product" (EN), igual que el resto de docentes que ya usan ese tag corto.

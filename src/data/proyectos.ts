@@ -34,8 +34,8 @@ export interface Proyecto {
   subject: string;
   /** Versión en inglés de subject, opcional. */
   subjectEn?: string;
-  /** Iniciales o nombre del profesor, ej. "A. Rozo". */
-  professor: string;
+  /** Iniciales o nombre del profesor, ej. "A. Rozo". Opcional — hay proyectos (iniciativas fuera de una asignatura) sin docente asociado. */
+  professor?: string;
   /** Año del proyecto (texto, ej. "2026") — se usa para el filtro. */
   year: string;
   /** Descripción corta (1 línea), se usa en el home y como título en /proyectos. */
@@ -143,6 +143,48 @@ export const PROYECTOS: Proyecto[] = [
         'La Guarida started as a web series about two childhood friends, Carlos and Camila, who share a rooftop in the middle of the urban chaos. But before it could exist on screen, it had to exist as an image. Laura, Mateo and Manuel took that story and turned it into a complete visual system — a universe where every decision, the color, the typeface, the framing, says something about friendship, time, and what gets lost without anyone noticing.\n\nThe palette came from a clear concept: close bonds. Earth tones, warm browns, and a sepia filter that unifies every piece without making them monotonous. The main typeface, Headstock Sans, gives the titles a contemporary character; Aileron keeps the body text clean and readable. The logo was built on a visible grid — structure as part of the design — and reads in two beats: first "Guarida", then "La". An intentional hierarchy.\n\nThe campaign rolled out in three phases on Instagram (@laguaridafilm): expectation, launch, and sustaining. Each piece was designed to work alone and as part of a whole, building a coherent feed. The project ended with an A24-style merchandise line — cap, tote bag, notebook, postcard — that carried the identity beyond the screen and turned it into an object.',
       skillsEs: ['Dirección de arte', 'Identidad visual', 'Diseño tipográfico', 'Fotografía editorial', 'Campaña en redes', 'Diseño de logo', 'Merchandising'],
       skillsEn: ['Art Direction', 'Visual Identity', 'Typographic Design', 'Editorial Photography', 'Social Media Campaign', 'Logo Design', 'Merchandising'],
+    },
+  },
+  {
+    id: 'libro-ilustrado-ia-vitiligo-infantil',
+    image: '',
+    subject: 'Proyecto adicional',
+    subjectEn: 'Additional project',
+    year: '2026',
+    caption: 'Libro ilustrado con IA para la concientización del vitiligo infantil',
+    captionEn: 'AI-illustrated book raising awareness about childhood vitiligo',
+    student: 'Junior Mejía Méndez',
+    modal: {
+      images: [],
+      titleEs: 'Libro Ilustrado con IA — Vitiligo Infantil',
+      titleEn: 'AI-Illustrated Book — Childhood Vitiligo',
+      descriptionEs:
+        'En 2026-1, el estudiante Junior Mejía Méndez, quien cursaba tercer semestre en ese momento, realizó la diagramación de un libro ilustrado hecho con inteligencia artificial para la concientización del vitiligo infantil. La iniciativa nació cuando la Dra. María Paula Torres Langhammer, residente de dermatología, expresó la necesidad de crear un cuento de biblioterapia infantil sobre vitiligo pediátrico, y logró conectarse con nuestro creador para llevarlo a cabo.\n\nJunior desarrolló un proceso muy interesante: primero buscó referentes de inspiración, definió un estilo propio y entrenó modelos de IA con imágenes para lograr uniformidad y estabilidad visual entre las ilustraciones. Luego generó todo el contenido final con herramientas como Higgsfield y Gemini, logrando un resultado que combina estética, composición, manejo de herramientas de inteligencia artificial y otras habilidades propias de un creador digital.',
+      descriptionEn:
+        'In 2026-1, student Junior Mejía Méndez — who was in his third semester at the time — designed and laid out an AI-illustrated book to raise awareness about childhood vitiligo. The project began when Dr. María Paula Torres Langhammer, a dermatology resident, expressed the need for a children\'s bibliotherapy story about pediatric vitiligo, and connected with our creator to bring it to life.\n\nJunior went through a fascinating process: he first researched visual references, defined his own style, and trained AI image models to achieve visual consistency and stability across the illustrations. He then generated all of the final content using tools like Higgsfield and Gemini, producing a result that combines aesthetics, composition, AI tool mastery, and the broader skill set of a digital creator.',
+      skillsEs: ['Ilustración con IA', 'Entrenamiento de modelos de imagen', 'Diagramación editorial', 'Diseño de personajes', 'Storytelling visual'],
+      skillsEn: ['AI Illustration', 'Image Model Training', 'Editorial Layout', 'Character Design', 'Visual Storytelling'],
+    },
+  },
+  {
+    id: 'global-hack-seguros-educativos',
+    image: '',
+    subject: 'Proyecto adicional',
+    subjectEn: 'Additional project',
+    year: '2026',
+    caption: 'Tercer lugar en la Global Hack de seguros educativos',
+    captionEn: 'Third place at the Global Hack for educational insurance',
+    student: 'Danna Bolaños, Mariana Cifuentes y Juliana Sanabria',
+    modal: {
+      images: [],
+      titleEs: 'Global Hack de Seguros Educativos — 3er lugar',
+      titleEn: 'Educational Insurance Global Hack — 3rd Place',
+      descriptionEs:
+        'En 2026-1, nuestras tres estudiantes de tercer semestre —Danna Bolaños, Mariana Cifuentes y Juliana Sanabria— compitieron en la Global Hack 2026 de seguros educativos, enfrentándose a más de 19 grupos conformados, en su mayoría, por estudiantes de sexto semestre en adelante.\n\nAtravesaron varias fases construyendo y consolidando su propuesta hasta llegar a la final, en la que lograron el tercer puesto con una idea inspirada en la bóveda y en el concepto de protección. Esto representa un gran logro para ellas, sobre todo al ser las únicas concursantes de tercer semestre.\n\nLas creadoras cuentan que su perfil versátil y su conocimiento en diferentes campos les ayudó a construir una propuesta integral que llamó la atención.',
+      descriptionEn:
+        'In 2026-1, three of our third-semester students — Danna Bolaños, Mariana Cifuentes, and Juliana Sanabria — competed in the 2026 Global Hack for educational insurance, going up against more than 19 teams made up mostly of sixth-semester students and above.\n\nThey went through several rounds building and refining their proposal, making it all the way to the final, where they placed third with an idea inspired by the vault and the concept of protection. It\'s a major achievement for them, especially as the only third-semester competitors in the whole hackathon.\n\nThe creators say their versatile profile and knowledge across different fields helped them put together a well-rounded proposal that stood out.',
+      skillsEs: ['Design thinking', 'Prototipado rápido', 'Trabajo en equipo', 'Presentación a jurado', 'Pensamiento estratégico'],
+      skillsEn: ['Design Thinking', 'Rapid Prototyping', 'Teamwork', 'Pitching', 'Strategic Thinking'],
     },
   },
 ];
