@@ -41,4 +41,49 @@ export interface BlogPost {
   detail?: BlogPostDetail;
 }
 
-export const BLOG_POSTS: BlogPost[] = [];
+/**
+ * ⚠️ CONTENIDO DE EJEMPLO (placeholder) — solo para previsualizar el diseño
+ * de las tarjetas en la landing y en /blog. Reemplazar/borrar estos 3
+ * objetos cuando lleguen las publicaciones reales del programa.
+ */
+export const BLOG_POSTS: BlogPost[] = [
+  {
+    id: 'ejemplo-post-1',
+    image: '',
+    category: 'Logros',
+    categoryEn: 'Achievements',
+    year: '2026',
+    date: 'Agosto 2026',
+    dateEn: 'August 2026',
+    title: 'Título de ejemplo — logro destacado de un estudiante',
+    titleEn: 'Sample title — a student\'s standout achievement',
+    excerpt: 'Texto de ejemplo para previsualizar cómo se ve la bajada de una tarjeta del blog en la landing.',
+    excerptEn: 'Sample text to preview how a blog card\'s excerpt looks on the landing page.',
+  },
+  {
+    id: 'ejemplo-post-2',
+    image: '',
+    category: 'Eventos',
+    categoryEn: 'Events',
+    year: '2026',
+    date: 'Julio 2026',
+    dateEn: 'July 2026',
+    title: 'Título de ejemplo — evento o actividad del programa',
+    titleEn: 'Sample title — a program event or activity',
+    excerpt: 'Otro texto de ejemplo, un poco más largo, para ver cómo se acomoda en dos o tres líneas dentro de la tarjeta.',
+    excerptEn: 'Another sample text, a bit longer, to see how it wraps across two or three lines inside the card.',
+  },
+  {
+    id: 'ejemplo-post-3',
+    image: '',
+    category: 'Noticias',
+    categoryEn: 'News',
+    year: '2026',
+    date: 'Junio 2026',
+    dateEn: 'June 2026',
+    title: 'Título de ejemplo — noticia importante del programa',
+    titleEn: 'Sample title — important program news',
+    excerpt: 'Texto de ejemplo corto para la tercera tarjeta de prueba.',
+    excerptEn: 'Short sample text for the third test card.',
+  },
+];
