@@ -7,6 +7,12 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Corregido — Ceja "HERRAMIENTAS QUE USARÁS" desalineada del contenedor de íconos
+
+- Al centrar `.pcd-content-dock__row` en el cambio anterior, la ceja (`.pcd-content-dock__label`, que sigue ocupando todo el ancho de la columna) quedó pegada al margen izquierdo mientras la fila de íconos —más angosta— se centraba por separado debajo, desalineando ambos elementos.
+- Se movió el `width: fit-content` + centrado (`margin: 0 auto`) del hijo (`.pcd-content-dock__row`) al padre (`.pcd-content-dock`, que envuelve ceja + fila), así todo el bloque se centra como unidad y la ceja queda siempre alineada con el borde izquierdo real del contenedor de íconos.
+- Archivos: `src/styles/programa.css`.
+
 ### Cambiado — Texto de "¿Qué aprenderás?" estirado hasta el margen y dock de software centrado
 
 - `.pcd-content-copy` (el párrafo de los 3 ejes: contenido, mundo 3D, producto) tenía `max-width: 46ch`, dejando el texto en una columna angosta con harto espacio libre a la derecha. Se quitó ese límite a pedido del usuario para que ocupe todo el ancho de `.pcd-axis__right`, igual que el título.

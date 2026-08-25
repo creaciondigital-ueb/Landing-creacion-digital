@@ -982,6 +982,15 @@
 /* Dock de software — modo "Contenido" de los ejes 01, 02 y 03 */
 .pcd-content-dock {
   margin-top: 43px;
+  /* fit-content + auto centra TODO el bloque (ceja + fila de íconos)
+     como una unidad — así la ceja ("HERRAMIENTAS QUE USARÁS") queda
+     siempre alineada con el borde izquierdo real del contenedor de
+     íconos, en vez de quedar pegada al margen izquierdo de la columna
+     mientras la fila (más angosta) se centra por separado debajo. */
+  width: fit-content;
+  max-width: 100%;
+  margin-left: auto;
+  margin-right: auto;
 }
 .pcd-content-dock__label {
   display: block;
@@ -1010,12 +1019,10 @@
      items (con wrap) y limita a lo que quepa en el padre en pantallas
      angostas, así el contenedor nunca es más ancho que la cantidad de
      programas que muestra. */
-  width: fit-content;
-  max-width: 100%;
-  /* Centrado a pedido del usuario, ahora que el texto de arriba ocupa
-     todo el ancho — sin esto quedaba pegado al margen izquierdo. */
-  margin-left: auto;
-  margin-right: auto;
+  /* Ya no necesita su propio width/margin de centrado: ahora es
+     .pcd-content-dock (ceja + fila) el que se centra como unidad, ver
+     comentario ahí — esta fila simplemente llena ese contenedor. */
+  width: 100%;
 }
 .pcd-content-dock__item {
   display: flex;
