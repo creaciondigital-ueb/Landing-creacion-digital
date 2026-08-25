@@ -152,7 +152,7 @@ export default function ProyectosPage() {
           <h1 className="pcd-projects-hero__title">
             {tp.titleL1}<br className="pcd-projects-hero__title-break" /> <span className="pop">{tp.titlePop}</span><br />
             {tp.titleL2}
-            {tp.titleL3 && <><br className="pcd-projects-hero__title-break" />{tp.titleL3}</>}
+            {tp.titleL3 && <>{' '}<br className="pcd-projects-hero__title-break" />{tp.titleL3}</>}
           </h1>
         </div>
         <div className="pcd-projects-hero__illustration">
