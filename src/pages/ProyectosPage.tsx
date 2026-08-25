@@ -122,13 +122,17 @@ export default function ProyectosPage() {
         <nav className={`pcd-nav${menuOpen ? ' is-open' : ''}`} aria-label="Principal">
           <Link className="pcd-nav__link" to="/#programa" onClick={() => setMenuOpen(false)}>{t.nav.programa}</Link>
           <Link className="pcd-nav__link" to="/#docentes" onClick={() => setMenuOpen(false)}>{t.nav.docentes}</Link>
+          <Link className="pcd-nav__link" to="/#equipo" onClick={() => setMenuOpen(false)}>{t.nav.equipo}</Link>
           <Link className="pcd-nav__link" to="/proyectos" onClick={() => setMenuOpen(false)}>{t.nav.proyectos}</Link>
           <LangToggle />
         </nav>
-        <a className="pcd-cta-pill" href={APLICA_URL} target="_blank" rel="noopener">
-          <span>{t.nav.aplicaAhora}</span>
-          <span className="pcd-cta-pill__arrow" aria-hidden="true">→</span>
-        </a>
+        <div className="pcd-header__actions">
+          <LangToggle />
+          <a className="pcd-cta-pill" href={APLICA_URL} target="_blank" rel="noopener">
+            <span>{t.nav.aplicaAhora}</span>
+            <span className="pcd-cta-pill__arrow" aria-hidden="true">→</span>
+          </a>
+        </div>
         <button
           type="button"
           className={`pcd-hamburger${menuOpen ? ' is-open' : ''}`}
