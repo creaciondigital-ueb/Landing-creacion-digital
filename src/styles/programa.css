@@ -1222,6 +1222,8 @@
 .pcd-docente:nth-child(30) { z-index: -9; }
 .pcd-docente:nth-child(31) { z-index: -10; }
 .pcd-docente:nth-child(32) { z-index: -11; }
+.pcd-docente:nth-child(33) { z-index: -12; }
+.pcd-docente:nth-child(34) { z-index: -13; }
 .pcd-docente:hover {
   /* Sin z-index propio: el orden descendente por :nth-child ya garantiza
      que cada card quede por encima de la siguiente en todo momento; subir
@@ -1310,7 +1312,8 @@
 .pcd-docente-modal--pilar .pcd-docente-modal__portrait,
 .pcd-docente-modal--rusbel .pcd-docente-modal__portrait,
 .pcd-docente-modal--julian .pcd-docente-modal__portrait,
-.pcd-docente-modal--jaime .pcd-docente-modal__portrait {
+.pcd-docente-modal--jaime .pcd-docente-modal__portrait,
+.pcd-docente-modal--proximo .pcd-docente-modal__portrait {
   background: rgba(13,13,13,0.06);
 }
 /* Ilustración de Juan David un poco más grande a pedido, en ambos estados */

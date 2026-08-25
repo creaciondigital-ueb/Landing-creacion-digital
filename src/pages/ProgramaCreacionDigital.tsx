@@ -176,7 +176,7 @@ export default function ProgramaCreacionDigital() {
   const openDocente = (id: string) => setActiveDocente(id);
   const closeDocente = () => setActiveDocente(null);
 
-  const DOCENTE_ORDER = ['paula', 'sofia', 'nicolas', 'ximena', 'camilo', 'daniela', 'juandavid', 'vanessa', 'rusbel', 'carlos', 'dayana', 'julian', 'john', 'tatiana', 'pilar', 'jaime'];
+  const DOCENTE_ORDER = ['paula', 'sofia', 'nicolas', 'ximena', 'camilo', 'daniela', 'juandavid', 'vanessa', 'rusbel', 'carlos', 'dayana', 'julian', 'john', 'tatiana', 'pilar', 'jaime', 'proximo'];
   const onSwipeDocente = (dir: 1 | -1) => {
     setActiveDocente((current) => {
       if (!current) return current;
@@ -1027,6 +1027,22 @@ export default function ProgramaCreacionDigital() {
             </div>
           </article>
 
+          {/* Próximamente */}
+          <article
+            className="pcd-docente pcd-docente--proximo pcd-docente--no-photo pcd-reveal" tabIndex={0} role="button"
+            aria-label={t.docentes.proximo.ariaLabel}
+            onClick={() => onDocenteCardClick('proximo')}
+            onKeyDown={(e) => onCardKey(e, 'proximo')}
+          >
+            <div className="pcd-docente__blob" aria-hidden="true" />
+            <img className="pcd-sticker pcd-sticker--idea" src={`${IMG}/Idea.webp`} alt="" aria-hidden="true" />
+            <h3 className="pcd-docente__name">{t.docentes.proximo.name}</h3>
+            <p className="pcd-docente__bio">{t.docentes.proximo.bio}</p>
+            <div className="pcd-docente__tags">
+              {t.docentes.proximo.tags.map((tag) => <span key={tag} className="pcd-docente__tag">{tag}</span>)}
+            </div>
+          </article>
+
 
           {/* ── set duplicado: permite el loop infinito del carrusel ── */}
           {/* Paula (clon para loop infinito) */}
@@ -1293,7 +1309,21 @@ export default function ProgramaCreacionDigital() {
               {t.docentes.jaime.tags.map((tag) => <span key={tag} className="pcd-docente__tag">{tag}</span>)}
             </div>
           </article>
-
+          {/* Próximamente (clon para loop infinito) */}
+          <article
+            className="pcd-docente pcd-docente--proximo pcd-docente--no-photo pcd-reveal" tabIndex={-1} role="button" aria-hidden="true"
+            aria-label={t.docentes.proximo.ariaLabel}
+            onClick={() => onDocenteCardClick('proximo')}
+            onKeyDown={(e) => onCardKey(e, 'proximo')}
+          >
+            <div className="pcd-docente__blob" aria-hidden="true" />
+            <img className="pcd-sticker pcd-sticker--idea" src={`${IMG}/Idea.webp`} alt="" aria-hidden="true" />
+            <h3 className="pcd-docente__name">{t.docentes.proximo.name}</h3>
+            <p className="pcd-docente__bio">{t.docentes.proximo.bio}</p>
+            <div className="pcd-docente__tags">
+              {t.docentes.proximo.tags.map((tag) => <span key={tag} className="pcd-docente__tag">{tag}</span>)}
+            </div>
+          </article>
         </div>
         </div>
       </section>
@@ -1610,6 +1640,15 @@ export default function ProgramaCreacionDigital() {
         tags={t.docentes.jaime.tags}
       >
         <p className="pcd-docente-modal__p">{t.docentes.jaime.note}</p>
+      </DocenteModal>
+
+      <DocenteModal
+        id="proximo" active={activeDocente === 'proximo'} onClose={closeDocente} onSwipe={onSwipeDocente}
+        portrait="" portraitEnd=""
+        name={t.docentes.proximo.name}
+        tags={t.docentes.proximo.tags}
+      >
+        <p className="pcd-docente-modal__p">{t.docentes.proximo.note}</p>
       </DocenteModal>
 
       {/* ===== EQUIPO ===== */}

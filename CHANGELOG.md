@@ -7,6 +7,14 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Agregado — Card "Próximamente" (amarillo) entre Jaime y Paula
+
+- Se agregó una card final al carrusel, ubicada después de Jaime Velásquez y antes de que la secuencia vuelva a Paula Lenis (el ciclo se repite ahí), con ícono amarillo (idea) — pedido explícito para cerrar bien esa transición de color.
+- Es una card genérica sin persona asociada todavía ("Próximamente" / "Coming soon"), mismo patrón visual sin foto que el resto de docentes pendientes; el modal muestra un mensaje corto anunciando que pronto se suma un nuevo docente.
+- Se extendieron las reglas `.pcd-docente:nth-child(n)` de z-index hasta 34 (17 docentes × 2 por el loop infinito) y la lista de selectores de fondo placeholder del modal.
+- Nueva traducción ES/EN: `t.docentes.proximo`.
+- Archivos: `src/pages/ProgramaCreacionDigital.tsx`, `src/i18n/translations.ts`, `src/styles/programa.css`.
+
 ### Cambiado — Ciclo de color de los stickers azul→amarillo→rojo en las 16 cards
 
 - Con los 8 docentes nuevos agregados en esta sesión, el ciclo de color de los iconos flotantes (Star/Camera/Like = azul, Idea/Computer/Phone = amarillo, Love/Controller = rojo) se había roto en varias cards. Se reasignó el ícono de 7 docentes (Daniela, Juan David, Julián, John, Tatiana, Pilar, Jaime) para que el ciclo azul→amarillo→rojo se mantenga perfecto y sin cortes en las 16 cards, empezando en Paula Lenis (primera del carrusel).
