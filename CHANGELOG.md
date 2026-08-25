@@ -7,6 +7,12 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Cambiado — Foto del equipo un poco más grande en desktop (≥1486px)
+
+- En el rango de escritorio ancho (fila video + card, ≥1486px), la foto del panel del equipo quedaba chica (200px). Se subió a 230px — el resto de tamaños (donde el layout es foto-izquierda/texto-derecha) no se tocó porque ya estaba bien.
+- Se verificó que sigue habiendo margen de sobra respecto al alto mínimo del video en el punto más angosto del rango (~525px a 1486px de ancho) para no desbordar la card.
+- Archivos: `src/styles/programa.css`.
+
 ### Corregido — Título y subtítulo de "mundo 3d" desalineados en móvil + inglés
 
 - En móvil, al cambiar a inglés, el título y el subtítulo de "mundo 3d" quedaban desplazados (subtítulo angostado a 22% de ancho, corrido hacia abajo y a la derecha) y terminaban montados sobre la sección siguiente.
