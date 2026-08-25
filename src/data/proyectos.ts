@@ -6,8 +6,17 @@
  * imágenes/archivos se suben directo a `public/programa/img/proyectos/`
  * (o donde corresponda) y se referencian aquí por ruta.
  *
- * - Los primeros 2 proyectos del array son los que se muestran como
- *   preview en el home (sección "Proyectos que crean nuestros estudiantes").
+ * - El preview del home (sección "Proyectos que crean nuestros
+ *   estudiantes") NO muestra siempre los mismos 2 proyectos: en cada
+ *   carga de página elige 2 al azar entre los que tengan AMBAS
+ *   portadas (`image` horizontal + `imageVertical`) — ver
+ *   HOME_PROJECTS_POOL/pickHomeProjects en ProgramaCreacionDigital.tsx.
+ *   Por eso, para que un proyecto entre a esa rotación, necesita las
+ *   dos versiones de portada: puede tocarle el marco ancho (horizontal)
+ *   o el marco alto (vertical) según le toque en el sorteo. Un proyecto
+ *   sin `imageVertical` simplemente no participa del preview del home
+ *   (pero sí aparece igual en `/proyectos`, que muestra el array
+ *   completo).
  * - `/proyectos` muestra el array completo.
  */
 
@@ -28,7 +37,9 @@ export interface Proyecto {
   id: string;
   /** Imagen principal (portada) del proyecto — siempre horizontal. */
   image: string;
-  /** Versión vertical de la portada — usada en el marco tall del home. */
+  /** Versión vertical de la portada. Si falta, el proyecto no entra en
+      el sorteo del preview del home (ver comentario arriba del array) —
+      igual se sigue mostrando en /proyectos con la horizontal. */
   imageVertical?: string;
   /** Asignatura/curso, ej. "Estudio de Creación Digital 4" — se usa para el filtro. */
   subject: string;

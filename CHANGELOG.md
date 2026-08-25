@@ -7,6 +7,13 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Cambiado — Preview de proyectos en el home ahora rota, en vez de mostrar siempre los mismos 2
+
+- Antes el home mostraba siempre `PROYECTOS[0]` y `PROYECTOS[1]` (fijos). Ahora, en cada carga de página se sortean 2 proyectos al azar entre los que tengan AMBAS portadas (`image` horizontal + `imageVertical`), ya que cualquiera de los 2 puede tocarle el marco ancho (horizontal) o el marco alto (vertical) según el sorteo.
+- Solo participan del sorteo los proyectos con las 2 portadas — hoy 3 de los 5 (ChocoSapiens, Rappi, La Guarida); los otros 2 (libro de vitiligo, Global Hack) todavía no tienen ninguna imagen y quedan fuera del preview del home hasta que se les suba portada, aunque siguen apareciendo en `/proyectos`. A medida que se agreguen proyectos nuevos con ambas portadas, entran automáticamente a la rotación.
+- El sorteo queda documentado en `data/proyectos.ts` (comentario de cabecera + campo `imageVertical`) y en `pickHomeProjects()`/`HOME_PROJECTS_POOL` en `ProgramaCreacionDigital.tsx`, con un fallback de seguridad por si algún día quedan menos de 2 proyectos con ambas portadas.
+- Archivos: `src/data/proyectos.ts`, `src/pages/ProgramaCreacionDigital.tsx`.
+
 ### Corregido — La página se sentía "trabada" (ej. el toggle ES|EN no respondía) mientras se escribía el título del hero
 
 - Causa: el estado de la animación de máquina de escribir del hero (`heroTypedChars`) vivía dentro de `ProgramaCreacionDigital`, que es literalmente TODA la página (docentes, equipo, proyectos, blog, etc.). El `setInterval` que escribe una letra cada 100ms actualizaba ese estado, y cada tick re-renderizaba el árbol de React completo mientras el texto se escribía (varios segundos) — eso saturaba el hilo principal e interacciones como el click en el toggle ES|EN se sentían bloqueadas hasta que la animación terminaba.

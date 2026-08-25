@@ -10,6 +10,28 @@ const VIDEO = '/programa/video';
 const APLICA_URL = 'https://www.unbosque.edu.co/inscripciones/pregrado';
 
 /**
+ * Preview de proyectos en el home: en vez de mostrar siempre los mismos
+ * 2 (los primeros del array), se sortean 2 al azar en cada carga de
+ * página, para variar con el resto de proyectos ("que se roten"). Solo
+ * participan los que tienen AMBAS portadas (horizontal + vertical) —
+ * ver comentario en data/proyectos.ts — porque cualquiera de los 2
+ * puede tocarle el marco ancho o el marco alto según el sorteo.
+ */
+const HOME_PROJECTS_POOL = PROYECTOS.filter((p) => p.image && p.imageVertical);
+function pickHomeProjects(): typeof PROYECTOS {
+  // Fallback de seguridad: si en algún momento hay menos de 2 proyectos
+  // con ambas portadas, se completa con cualquier proyecto que al menos
+  // tenga la horizontal, para que el preview del home nunca quede vacío.
+  const pool = HOME_PROJECTS_POOL.length >= 2 ? HOME_PROJECTS_POOL : PROYECTOS.filter((p) => p.image);
+  const shuffled = [...pool];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled.slice(0, 2);
+}
+
+/**
  * Equipo — 5 personas en el video loop, en el mismo orden en que aparecen
  * caminando de izquierda a derecha en el video (Estefany > Juan > Paula >
  * Tatiana > Fabian). `left`/`width` son porcentajes del ancho del frame
@@ -286,6 +308,10 @@ export default function ProgramaCreacionDigital() {
   // defecto — pedido explícito del usuario — para que el panel nunca se
   // vea vacío al llegar).
   const [activeTeam, setActiveTeam] = useState<typeof TEAM[number]['id']>('fabian');
+
+  // Proyectos que se muestran en el preview del home — sorteados una
+  // sola vez al cargar la página (ver pickHomeProjects arriba).
+  const [homeProjects] = useState(pickHomeProjects);
   const activeTeamMember = t.equipo[activeTeam];
 
 
@@ -1717,7 +1743,7 @@ export default function ProgramaCreacionDigital() {
         </header>
 
         <div className="pcd-projects__grid">
-          {PROYECTOS.slice(0, 2).map((p, i) => {
+          {homeProjects.map((p, i) => {
             const isTall = i === 1;
             const imgSrc = isTall ? (p.imageVertical ?? p.image) : p.image;
             const inner = (
