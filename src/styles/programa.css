@@ -1000,6 +1000,16 @@
   border: 1.5px solid rgba(13,13,13,0.08);
   border-radius: 20px;
   padding: 14px;
+  /* Antes era un bloque flex sin width propio, así que por defecto
+     ocupaba el 100% del ancho disponible del padre (comportamiento
+     normal de un flex container a nivel de bloque) aunque tuviera pocos
+     íconos adentro — se veía "estirado" hasta el margen derecho aun con
+     solo 3-4 herramientas. fit-content lo encoge al ancho real de los
+     items (con wrap) y limita a lo que quepa en el padre en pantallas
+     angostas, así el contenedor nunca es más ancho que la cantidad de
+     programas que muestra. */
+  width: fit-content;
+  max-width: 100%;
 }
 .pcd-content-dock__item {
   display: flex;

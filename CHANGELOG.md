@@ -7,6 +7,12 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Corregido — Contenedor de herramientas ("Herramientas que usarás") se estiraba hasta el margen
+
+- `.pcd-content-dock__row` (el bloque con los íconos de software, usado en los 3 ejes: contenido, mundo 3D y producto) no tenía `width` propio, así que por defecto ocupaba el 100% del ancho disponible del padre aunque tuviera pocos íconos — se veía estirado hasta el margen derecho incluso con solo 3-4 herramientas (ej. Blender/Unity/Unreal Engine/Cascadeur en mundo 3D).
+- Se cambió a `width: fit-content` (con `max-width: 100%` de resguardo) para que el contenedor se ajuste al ancho real de los íconos que muestra, y solo ocupe todo el ancho disponible cuando de verdad no entran todos en una fila (ahí sigue haciendo wrap normalmente).
+- Archivos: `src/styles/programa.css`.
+
 ### Cambiado — Foto + texto del panel de equipo subidos ~15px en desktop (≥1486px)
 
 - El bloque foto+texto de la card se desplazó ~15px hacia arriba a pedido del usuario. Se usó `transform: translateY(-15px)` en `.pcd-team__panel-photo` y `.pcd-team__panel-body` (no `margin-top` negativo) para no alterar el cálculo de `justify-content:center` del contenedor padre — el bloque se mueve como unidad, sin romper el centrado ni el gap entre foto y texto. Solo en el rango ≥1486px; el resto de tamaños no se tocó.
