@@ -7,6 +7,15 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Agregado — Sección "Blog" en la landing (debajo de Proyectos)
+
+- Se agregó una nueva sección `#blog` en el home, ubicada justo debajo de "Proyectos" y antes del CTA final ("Estudia con nosotros"), con diseño propio siguiendo el sistema editorial del sitio (serif itálica para títulos, mono uppercase para meta/labels, mismo patrón de card con borde 2.5px y hover shadow-shift que "Más proyectos" en el detalle).
+- Muestra hasta 3 publicaciones recientes en grid de 3 columnas (1 columna en mobile), cada card con miniatura, categoría + fecha, título y bajada; abre `/blog/:id` si la publicación tiene página de detalle.
+- Como `BLOG_POSTS` todavía está vacío, se diseñó un estado vacío dedicado ("Próximamente" / "Coming soon") en vez de ocultar la sección, para que ya sea visible en la landing aunque no haya publicaciones aún.
+- El link "Blog" del navbar en el home ahora hace scroll a esta sección (`href="#blog"`, mismo patrón que "Proyectos" → `#proyectos`) en vez de navegar a la página `/blog`; el CTA "VER BLOG" dentro de la sección sí lleva a la página completa.
+- Nuevas traducciones ES/EN: namespace `t.blog` (título de sección, CTA, textos del estado vacío).
+- Archivos: `src/pages/ProgramaCreacionDigital.tsx`, `src/styles/programa.css`, `src/i18n/translations.ts`.
+
 ### Agregado — Nueva sección Blog (/blog y /blog/:id)
 
 - Se creó una sección de Blog para publicar noticias importantes del programa, siguiendo exactamente el estilo editorial del resto del sitio (misma tipografía, colores, header/footer, y los mismos patrones visuales de filtros/grid/paginación de `/proyectos` y de página de detalle de `/proyectos/:id`).

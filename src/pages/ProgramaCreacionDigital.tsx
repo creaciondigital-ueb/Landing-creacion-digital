@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef, type ReactNode, type CSSProperties } from 'react';
 import { Link } from 'react-router-dom';
 import { PROYECTOS } from '../data/proyectos';
+import { BLOG_POSTS } from '../data/blog';
 import { useLang } from '../i18n/LanguageContext';
 import '../styles/programa.css';
 
@@ -411,7 +412,7 @@ export default function ProgramaCreacionDigital() {
           <a className="pcd-nav__link" href="#docentes" onClick={() => setMenuOpen(false)}>{t.nav.docentes}</a>
           <a className="pcd-nav__link" href="#equipo" onClick={() => setMenuOpen(false)}>{t.nav.equipo}</a>
           <a className="pcd-nav__link" href="#proyectos" onClick={() => setMenuOpen(false)}>{t.nav.proyectos}</a>
-          <Link className="pcd-nav__link" to="/blog" onClick={() => setMenuOpen(false)}>{t.nav.blog}</Link>
+          <a className="pcd-nav__link" href="#blog" onClick={() => setMenuOpen(false)}>{t.nav.blog}</a>
           <LangToggle />
         </nav>
         <div className="pcd-header__actions">
@@ -1318,6 +1319,51 @@ export default function ProgramaCreacionDigital() {
             );
           })}
         </div>
+      </section>
+
+      {/* ===== BLOG ===== */}
+      <section id="blog" className="pcd-blog-preview">
+        <header className="pcd-blog-preview__head pcd-reveal">
+          <h2 className="pcd-blog-preview__title">
+            {t.blog.sectionTitleL1}<br />
+            <span className="pop">{t.blog.sectionTitlePop}</span>{t.blog.sectionTitleL2rest}
+            {t.blog.sectionTitleL3 && <><br />{t.blog.sectionTitleL3}</>}
+          </h2>
+          <Link className="pcd-cta-secondary" to="/blog">
+            <span>{t.blog.cta}</span>
+            <span aria-hidden="true">→</span>
+          </Link>
+        </header>
+
+        {BLOG_POSTS.length > 0 ? (
+          <div className="pcd-blog-preview__grid">
+            {BLOG_POSTS.slice(0, 3).map((post) => {
+              const inner = (
+                <>
+                  <div className="pcd-blog-preview__thumb" style={{ backgroundImage: `url('${post.image}')` }} aria-hidden="true" />
+                  <div className="pcd-blog-preview__body">
+                    <div className="pcd-blog-preview__meta">
+                      <span>{(lang === 'en' ? (post.categoryEn ?? post.category) : post.category).toUpperCase()}</span>
+                      <span>{lang === 'en' ? (post.dateEn ?? post.date) : post.date}</span>
+                    </div>
+                    <p className="pcd-blog-preview__card-title">{lang === 'en' ? (post.titleEn ?? post.title) : post.title}</p>
+                    <p className="pcd-blog-preview__excerpt">{lang === 'en' ? (post.excerptEn ?? post.excerpt) : post.excerpt}</p>
+                  </div>
+                </>
+              );
+              return post.detail ? (
+                <Link key={post.id} to={`/blog/${post.id}`} className="pcd-blog-preview__card pcd-reveal">{inner}</Link>
+              ) : (
+                <article key={post.id} className="pcd-blog-preview__card pcd-reveal">{inner}</article>
+              );
+            })}
+          </div>
+        ) : (
+          <div className="pcd-blog-preview__empty pcd-reveal">
+            <span className="pcd-blog-preview__empty-eyebrow">{t.blog.emptyEyebrow}</span>
+            <p className="pcd-blog-preview__empty-body">{t.blog.emptyBody}</p>
+          </div>
+        )}
       </section>
 
       {/* ===== ESTUDIA / CTA FINAL ===== */}

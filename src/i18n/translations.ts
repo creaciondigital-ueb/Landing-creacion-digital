@@ -251,6 +251,15 @@ const translations = {
       sectionTitleL3: "estudiantes.",
       cta: "VER PROYECTOS",
     },
+    blog: {
+      sectionTitleL1: "Historias que",
+      sectionTitlePop: "cuenta",
+      sectionTitleL2rest: " nuestro",
+      sectionTitleL3: "programa.",
+      cta: "VER BLOG",
+      emptyEyebrow: "Próximamente",
+      emptyBody: "Muy pronto vas a encontrar acá las noticias, logros y eventos más importantes del programa.",
+    },
     estudia: {
       eyebrow: "U. EL BOSQUE >> SNIES 116265 >> 8 SEMESTRES",
       title: "Estudia",
@@ -551,6 +560,15 @@ const translations = {
       sectionTitleL2rest: " create.",
       sectionTitleL3: "",
       cta: "SEE PROJECTS",
+    },
+    blog: {
+      sectionTitleL1: "Stories our",
+      sectionTitlePop: "program",
+      sectionTitleL2rest: "",
+      sectionTitleL3: "tells.",
+      cta: "SEE BLOG",
+      emptyEyebrow: "Coming soon",
+      emptyBody: "Soon you'll find the program's most important news, achievements, and events right here.",
     },
     estudia: {
       eyebrow: "U. EL BOSQUE >> SNIES 116265 >> 8 SEMESTERS",

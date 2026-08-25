@@ -2106,6 +2106,144 @@ body:has(.pcd-docente-modal[open]) {
 }
 
 /* ────────────────────────────────────────────────────────────
+   BLOG — preview en home (debajo de Proyectos)
+   ──────────────────────────────────────────────────────────── */
+.pcd-blog-preview {
+  padding: 68px 84px 96px;
+  background: var(--pcd-paper);
+  border-top: 1.5px solid rgba(13,13,13,0.1);
+}
+.pcd-blog-preview__head {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: end;
+  gap: 40px;
+  margin-bottom: 56px;
+}
+.pcd-blog-preview__title {
+  font-family: var(--pcd-serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 72px;
+  line-height: 0.94;
+  letter-spacing: -0.03em;
+  color: var(--pcd-ink);
+  margin: 0;
+}
+.pcd-blog-preview__title .pop {
+  font-family: var(--pcd-fun);
+  font-style: normal;
+  color: var(--pcd-cobalt);
+  letter-spacing: -0.02em;
+  display: inline-block;
+  transform: translateY(0.05em) rotate(-2deg);
+  margin: 0 0.04em;
+}
+
+/* ── Grid de publicaciones (cuando ya hay contenido) ── */
+.pcd-blog-preview__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+.pcd-blog-preview__card {
+  display: flex;
+  flex-direction: column;
+  color: var(--pcd-ink);
+  text-decoration: none;
+  border: 2.5px solid var(--pcd-ink);
+  transition: box-shadow 0.25s ease, transform 0.25s ease;
+}
+.pcd-blog-preview__card:hover {
+  box-shadow: 6px 6px 0 var(--pcd-ink);
+  transform: translate(-2px, -2px);
+}
+.pcd-blog-preview__thumb {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background-size: cover;
+  background-position: center;
+  background-color: #0d0d0d;
+}
+.pcd-blog-preview__body {
+  padding: 18px 20px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.pcd-blog-preview__meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--pcd-mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--pcd-ink);
+  opacity: 0.5;
+}
+.pcd-blog-preview__meta span:first-child {
+  color: var(--pcd-cobalt);
+  opacity: 1;
+  font-weight: 700;
+}
+.pcd-blog-preview__card-title {
+  font-family: var(--pcd-serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 22px;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+.pcd-blog-preview__excerpt {
+  font-family: var(--pcd-sans);
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--pcd-ink);
+  opacity: 0.75;
+  margin: 0;
+}
+
+/* ── Estado vacío — todavía no hay publicaciones ── */
+.pcd-blog-preview__empty {
+  border: 1.5px dashed rgba(13,13,13,0.28);
+  border-radius: 24px;
+  padding: 56px 48px;
+  text-align: center;
+  max-width: 640px;
+  margin: 0 auto;
+}
+.pcd-blog-preview__empty-eyebrow {
+  display: inline-block;
+  font-family: var(--pcd-mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--pcd-paper);
+  background: var(--pcd-ink);
+  padding: 6px 16px;
+  border-radius: 999px;
+  margin-bottom: 18px;
+}
+.pcd-blog-preview__empty-body {
+  font-family: var(--pcd-sans);
+  font-size: 16px;
+  line-height: 1.55;
+  color: var(--pcd-ink);
+  opacity: 0.65;
+  margin: 0;
+}
+
+@media (max-width: 980px) {
+  .pcd-blog-preview { padding: 24px 24px 56px; }
+  .pcd-blog-preview__head { grid-template-columns: 1fr; }
+  .pcd-blog-preview__title { font-size: 56px; }
+  .pcd-blog-preview__grid { grid-template-columns: 1fr; }
+  .pcd-blog-preview__empty { padding: 40px 28px; }
+}
+
+/* ────────────────────────────────────────────────────────────
    /proyectos — hero
    ──────────────────────────────────────────────────────────── */
 .pcd-projects-hero {
