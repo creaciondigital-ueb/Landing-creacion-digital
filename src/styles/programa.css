@@ -2147,20 +2147,14 @@ body:has(.pcd-docente-modal[open]) {
 /* Rotación automática del preview de proyectos en el home (cada 5s,
    con las 2 cards desfasadas entre sí — ver HomeProjectsPreview /
    RotatingProjectCard en el TSX). El nodo de la card nunca se remonta
-   al rotar (antes se hacía key={p.id}, lo que causaba un corte duro:
-   el proyecto viejo desaparecía de golpe) — en vez de eso arma un
-   crossfade real con 2 capas superpuestas: la capa nueva
-   (--incoming) entra en fade-in ENCIMA de la vieja (--current, que
-   sigue completa por debajo todo el tiempo), así nunca hay un salto,
-   solo una disolución suave — a pedido del usuario ("muy fuerte" el
-   cambio anterior). */
-.pcd-project--crossfade { position: relative; }
-.pcd-project__layer {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-.pcd-project__layer--incoming {
+   al rotar. El crossfade suave es SOLO de la imagen — a pedido del
+   usuario, el texto (categoría/año/bajada) cambia directo, sin
+   desvanecerse. La imagen nueva (--incoming) entra en fade-in ENCIMA
+   de la vieja (que sigue completa por debajo todo el tiempo dentro de
+   .pcd-project__media-wrap), así nunca hay un salto en la foto, solo
+   una disolución suave. */
+.pcd-project__media-wrap { position: relative; }
+.pcd-project__media--incoming {
   position: absolute;
   inset: 0;
   animation: pcd-project-crossfade-in 1.8s ease forwards;
@@ -2170,7 +2164,7 @@ body:has(.pcd-docente-modal[open]) {
   to { opacity: 1; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .pcd-project__layer--incoming { animation: none; opacity: 1; }
+  .pcd-project__media--incoming { animation: none; opacity: 1; }
 }
 /* Zoom puntual para la foto de la campaña del Mundial: la card mantiene su
    tamaño, solo se agranda el encuadre de la imagen dentro de ella. */

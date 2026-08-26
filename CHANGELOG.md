@@ -7,6 +7,12 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Cambiado — Crossfade de proyectos del home solo en la imagen, no en el texto
+
+- A pedido del usuario, el fade suave queda solo en la foto de portada; la categoría/año/bajada ya no se desvanecen — cambian directo, en el mismo instante en que la imagen termina su transición y pasa a ser la nueva "actual".
+- Estructura: la imagen ahora vive en `.pcd-project__media-wrap` con 2 capas (actual + entrante superpuesta con `position:absolute`); el texto se renderiza una sola vez, siempre a partir del proyecto "actual" (sin capa duplicada).
+- Archivos: `src/pages/ProgramaCreacionDigital.tsx`, `src/styles/programa.css`.
+
 ### Cambiado — Rotación de proyectos del home: crossfade real (antes remontaba la card entera)
 
 - El usuario seguía sintiendo el cambio "fuerte" incluso con el fade más largo (1.8s). Causa real: cada rotación remontaba la card completa (`key={p.id}`) — el proyecto anterior desaparecía de golpe (corte duro) y recién ahí el nuevo empezaba su fade-in desde cero; alargar la duración no arregla un corte, solo lo alarga.

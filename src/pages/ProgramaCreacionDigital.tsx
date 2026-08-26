@@ -111,15 +111,17 @@ function HomeProjectsPreview({ lang }: { lang: 'es' | 'en' }) {
 /**
  * Una card del preview de proyectos del home. El NODO nunca se
  * remonta al rotar (antes se hacía key={p.id}, lo que causaba un corte
- * duro: el proyecto anterior desaparecía de golpe y el nuevo aparecía
- * encima) — ahora, cuando cambia el proyecto que le toca mostrar
- * (prop `project`), arma un crossfade real: el proyecto nuevo entra en
- * una capa superpuesta ("incoming") que se desvanece hacia adentro
- * (opacity 0 -> 1) EN VIVO sobre la capa vieja ("current", que se ve
- * completa todo el tiempo por debajo) — mucho más suave que un
- * remontaje, a pedido del usuario. Al terminar la transición, la capa
- * "incoming" pasa a ser la nueva "current" y se descarta la de arriba
- * (mismo estado visual, sin salto).
+ * duro). El crossfade suave es SOLO de la imagen — a pedido del
+ * usuario, el texto (categoría/año/bajada) no se desvanece, cambia
+ * directo apenas le toca al proyecto nuevo, en sincronía con el
+ * momento en que la imagen termina su transición.
+ *
+ * La imagen nueva entra en una capa superpuesta ("incoming") que se
+ * desvanece hacia adentro (opacity 0 -> 1) EN VIVO sobre la imagen
+ * vieja ("current", que se ve completa todo el tiempo por debajo). Al
+ * terminar la transición, la capa "incoming" pasa a ser la nueva
+ * "current" (imagen Y texto se actualizan juntos en ese instante) y se
+ * descarta la capa de encima — sin salto visual.
  */
 const PROJECT_CROSSFADE_MS = 1800; // debe coincidir con la duración de la animación CSS (pcd-project-crossfade-in)
 
@@ -139,43 +141,33 @@ function RotatingProjectCard({ slot, project, lang }: { slot: 'wide' | 'tall'; p
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [project.id]);
 
-  const renderInner = (p: Proyecto) => {
-    const imgSrc = isWide ? p.image : (p.imageVertical ?? p.image);
-    return (
-      <>
-        <div
-          className={`pcd-project__media${p.id === 'chocosapiens-humanismo-digital' ? ' pcd-project__media--contain' : ''}`}
-          style={{ backgroundImage: `url('${imgSrc}')` }}
-          aria-hidden="true"
-        />
-        <div className="pcd-project__meta">
-          <span>{(lang === 'en' ? (p.subjectEn ?? p.subject) : p.subject).toUpperCase()}</span>
-          <span>{p.year}</span>
-        </div>
-        <p className="pcd-project__caption">{lang === 'en' ? (p.captionEn ?? p.caption) : p.caption}</p>
-      </>
-    );
-  };
+  const mediaClass = (p: Proyecto) => `pcd-project__media${p.id === 'chocosapiens-humanismo-digital' ? ' pcd-project__media--contain' : ''}`;
+  const imgSrc = (p: Proyecto) => (isWide ? p.image : (p.imageVertical ?? p.image));
 
   const frameClass = isWide ? 'pcd-project--wide' : 'pcd-project--tall';
-  const className = `pcd-project ${frameClass} pcd-project--crossfade pcd-reveal`;
-  const layers = (
+  const className = `pcd-project ${frameClass} pcd-reveal`;
+  const content = (
     <>
-      <div className="pcd-project__layer">{renderInner(current)}</div>
-      {incoming && (
-        <div key={incoming.id} className="pcd-project__layer pcd-project__layer--incoming">
-          {renderInner(incoming)}
-        </div>
-      )}
+      <div className="pcd-project__media-wrap">
+        <div className={mediaClass(current)} style={{ backgroundImage: `url('${imgSrc(current)}')` }} aria-hidden="true" />
+        {incoming && (
+          <div key={incoming.id} className={`${mediaClass(incoming)} pcd-project__media--incoming`} style={{ backgroundImage: `url('${imgSrc(incoming)}')` }} aria-hidden="true" />
+        )}
+      </div>
+      <div className="pcd-project__meta">
+        <span>{(lang === 'en' ? (current.subjectEn ?? current.subject) : current.subject).toUpperCase()}</span>
+        <span>{current.year}</span>
+      </div>
+      <p className="pcd-project__caption">{lang === 'en' ? (current.captionEn ?? current.caption) : current.caption}</p>
     </>
   );
 
   return current.modal ? (
     <Link to={`/proyectos/${current.id}`} className={`${className} pcd-project--clickable`} style={{ textDecoration: 'none' }}>
-      {layers}
+      {content}
     </Link>
   ) : (
-    <article className={className}>{layers}</article>
+    <article className={className}>{content}</article>
   );
 }
 
