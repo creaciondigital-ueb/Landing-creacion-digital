@@ -2226,8 +2226,10 @@ body:has(.pcd-docente-modal[open]) {
    la categoría/fecha, el título y el resumen adentro del bloque. */
 .pcd-blog-preview__grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
+  /* 4 en vez de 3 — a pedido del usuario, para que las cards queden
+     más chicas (más angostas por columna) además de menos altas. */
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
 }
 .pcd-blog-preview__card {
   display: flex;
@@ -2237,11 +2239,11 @@ body:has(.pcd-docente-modal[open]) {
   text-decoration: none;
   border: 2.5px solid var(--pcd-ink);
   transition: box-shadow 0.25s ease, transform 0.25s ease;
-  /* Más vertical que el layout anterior (foto 16:9 + texto abajo) —
-     ratio de retrato en vez de paisaje, a pedido del usuario. */
-  aspect-ratio: 3 / 4;
-  min-height: 420px;
-  padding: 24px 24px 28px;
+  /* Cards más chicas y menos altas que la primera versión (esa era
+     3/4 + min-height 420px) — a pedido del usuario. */
+  aspect-ratio: 4 / 5;
+  min-height: 280px;
+  padding: 18px 18px 20px;
 }
 .pcd-blog-preview__card:hover {
   box-shadow: 6px 6px 0 var(--pcd-ink);
@@ -2256,14 +2258,14 @@ body:has(.pcd-docente-modal[open]) {
 .pcd-blog-preview__card--tomato { background: var(--pcd-tomato); color: var(--pcd-paper); }
 .pcd-blog-preview__index {
   font-family: var(--pcd-mono);
-  font-size: 13px;
+  font-size: 12px;
   letter-spacing: 0.08em;
   opacity: 0.7;
 }
 .pcd-blog-preview__body {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
 }
 .pcd-blog-preview__meta {
   display: flex;
@@ -2283,15 +2285,15 @@ body:has(.pcd-docente-modal[open]) {
   font-family: var(--pcd-serif);
   font-style: italic;
   font-weight: 400;
-  font-size: 26px;
+  font-size: 19px;
   line-height: 1.12;
   letter-spacing: -0.01em;
   margin: 0;
 }
 .pcd-blog-preview__excerpt {
   font-family: var(--pcd-sans);
-  font-size: 14px;
-  line-height: 1.5;
+  font-size: 12.5px;
+  line-height: 1.45;
   opacity: 0.85;
   margin: 0;
 }
@@ -2330,8 +2332,13 @@ body:has(.pcd-docente-modal[open]) {
   .pcd-blog-preview { padding: 24px 24px 56px; }
   .pcd-blog-preview__head { grid-template-columns: 1fr; }
   .pcd-blog-preview__title { font-size: 56px; }
-  .pcd-blog-preview__grid { grid-template-columns: 1fr; }
+  /* 2 en vez de 4 en este rango — con 4 columnas fijas las cards
+     quedarían demasiado angostas antes de llegar al colapso a 1. */
+  .pcd-blog-preview__grid { grid-template-columns: repeat(2, 1fr); }
   .pcd-blog-preview__empty { padding: 40px 28px; }
+}
+@media (max-width: 560px) {
+  .pcd-blog-preview__grid { grid-template-columns: 1fr; }
 }
 
 /* ────────────────────────────────────────────────────────────

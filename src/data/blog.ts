@@ -43,7 +43,7 @@ export interface BlogPost {
 
 /**
  * ⚠️ CONTENIDO DE EJEMPLO (placeholder) — solo para previsualizar el diseño
- * de las tarjetas en la landing y en /blog. Reemplazar/borrar estos 3
+ * de las tarjetas en la landing y en /blog. Reemplazar/borrar estos 4
  * objetos cuando lleguen las publicaciones reales del programa.
  */
 export const BLOG_POSTS: BlogPost[] = [
@@ -85,5 +85,18 @@ export const BLOG_POSTS: BlogPost[] = [
     titleEn: 'Sample title — important program news',
     excerpt: 'Texto de ejemplo corto para la tercera tarjeta de prueba.',
     excerptEn: 'Short sample text for the third test card.',
+  },
+  {
+    id: 'ejemplo-post-4',
+    image: '',
+    category: 'Logros',
+    categoryEn: 'Achievements',
+    year: '2026',
+    date: 'Mayo 2026',
+    dateEn: 'May 2026',
+    title: 'Título de ejemplo — cuarta tarjeta de prueba',
+    titleEn: 'Sample title — fourth test card',
+    excerpt: 'Texto de ejemplo para la cuarta tarjeta, así se ve la fila completa de 4.',
+    excerptEn: 'Sample text for the fourth card, to preview the full row of 4.',
   },
 ];

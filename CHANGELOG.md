@@ -7,6 +7,14 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Cambiado — Cards de blog del home más chicas: 4 en fila en vez de 3, menos altas
+
+- Grid del preview de blog: `repeat(3, 1fr)` -> `repeat(4, 1fr)` (`gap` 24px -> 18px), a pedido del usuario. Se agregó un 4to post de ejemplo en `data/blog.ts` (`ejemplo-post-4`) para previsualizar la fila completa.
+- Cards menos altas: `aspect-ratio` 3/4 -> 4/5, `min-height` 420px -> 280px, padding y tipografías (índice, título, resumen) reducidos en proporción.
+- Colores: se sigue usando el mismo ciclo de 3 (cobalt/acid/tomato) — la 4ta card repite el primer color, mismo criterio que otros ciclos de color del sitio.
+- Responsive: se agregó un escalón intermedio a 2 columnas (antes saltaba directo de 4 a 1); colapsa a 1 columna recién en ≤560px.
+- Archivos: `src/data/blog.ts`, `src/pages/ProgramaCreacionDigital.tsx`, `src/styles/programa.css`.
+
 ### Cambiado — Cards de blog en el home rediseñadas: color sólido en vez de foto, más verticales
 
 - A pedido del usuario (a partir de una referencia visual), las 3 cards del preview de blog en el home dejaron de mostrar una foto de portada (`.pcd-blog-preview__thumb` eliminado) y ahora son un bloque de color sólido con número de orden ("01"/"02"/"03"), categoría/fecha, título y resumen adentro.

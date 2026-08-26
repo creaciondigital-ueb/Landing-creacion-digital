@@ -1814,7 +1814,7 @@ export default function ProgramaCreacionDigital() {
 
         {BLOG_POSTS.length > 0 ? (
           <div className="pcd-blog-preview__grid">
-            {BLOG_POSTS.slice(0, 3).map((post, i) => {
+            {BLOG_POSTS.slice(0, 4).map((post, i) => {
               // Sin foto: cada card es un bloque de color sólido — se
               // reutiliza el mismo ciclo azul(cobalt) -> amarillo(acid) ->
               // rojo(tomato) que ya usamos en los stickers de docentes,
