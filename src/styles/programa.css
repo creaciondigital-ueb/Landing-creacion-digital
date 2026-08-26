@@ -2144,6 +2144,22 @@ body:has(.pcd-docente-modal[open]) {
 }
 .pcd-project--wide .pcd-project__media { aspect-ratio: 853 / 529; }
 .pcd-project--tall .pcd-project__media { aspect-ratio: 417 / 514; }
+/* Rotación automática del preview de proyectos en el home (cada 5s,
+   ver HomeProjectsPreview en el TSX): las cards que entran DESPUÉS del
+   primer render se remontan (cambia el key al cambiar de proyecto), así
+   que no pueden depender del IntersectionObserver de .pcd-reveal (ese
+   escanea el DOM una sola vez al cargar la página) — usan esta
+   animación propia, que se dispara sola al montar. */
+.pcd-project--rotate-in {
+  animation: pcd-project-rotate-in 0.5s ease;
+}
+@keyframes pcd-project-rotate-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pcd-project--rotate-in { animation: none; }
+}
 /* Zoom puntual para la foto de la campaña del Mundial: la card mantiene su
    tamaño, solo se agranda el encuadre de la imagen dentro de ella. */
 .pcd-project__media--zoom {

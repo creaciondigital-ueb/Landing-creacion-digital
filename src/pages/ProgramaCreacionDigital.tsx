@@ -24,17 +24,91 @@ const HOME_PROJECTS_POOL = PROYECTOS.filter((p) => p.image && p.imageVertical);
  * rojo(tomato) que los stickers de docentes; la 4ta es negra (ink), a
  * pedido del usuario, para cerrar la fila con contraste. */
 const BLOG_CARD_COLORS = ['cobalt', 'acid', 'tomato', 'ink'] as const;
-function pickHomeProjects(): typeof PROYECTOS {
-  // Fallback de seguridad: si en algún momento hay menos de 2 proyectos
-  // con ambas portadas, se completa con cualquier proyecto que al menos
-  // tenga la horizontal, para que el preview del home nunca quede vacío.
-  const pool = HOME_PROJECTS_POOL.length >= 2 ? HOME_PROJECTS_POOL : PROYECTOS.filter((p) => p.image);
-  const shuffled = [...pool];
-  for (let i = shuffled.length - 1; i > 0; i--) {
+function shuffleArray<T>(arr: T[]): T[] {
+  const out = [...arr];
+  for (let i = out.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
-    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    [out[i], out[j]] = [out[j], out[i]];
   }
-  return shuffled.slice(0, 2);
+  return out;
+}
+
+/**
+ * Preview de proyectos del home — componente aparte a propósito (mismo
+ * motivo que HeroTitle más abajo): rota cada 5s con su propio
+ * setInterval, y si ese estado viviera en ProgramaCreacionDigital
+ * (TODA la página) cada tick de 5s re-renderizaría el árbol completo
+ * para siempre mientras la página esté abierta. Aislado acá, el tick
+ * solo re-renderiza estas 2 cards.
+ *
+ * Mecánica de la rotación: se arma UNA vez un orden al azar de todo el
+ * pool elegible (>=2 proyectos con ambas portadas). Cada 5s se avanza
+ * un índice en 1 — la card angosta ("wide") pasa a mostrar el proyecto
+ * que antes estaba en la card alta ("tall"), y en la card alta entra
+ * el siguiente proyecto del orden. Así, en cada tick, siempre entra un
+ * proyecto "nuevo" a la vista (la card alta) en vez de barajar las 2
+ * de una — se siente como una rotación real, no un parpadeo random.
+ */
+function HomeProjectsPreview({ lang }: { lang: 'es' | 'en' }) {
+  const [order] = useState(() => {
+    const pool = HOME_PROJECTS_POOL.length >= 2 ? HOME_PROJECTS_POOL : PROYECTOS.filter((p) => p.image);
+    return shuffleArray(pool);
+  });
+  const [tick, setTick] = useState(0);
+
+  useEffect(() => {
+    if (order.length < 2) return;
+    const interval = setInterval(() => setTick((v) => v + 1), 5000);
+    return () => clearInterval(interval);
+  }, [order.length]);
+
+  if (order.length === 0) return null;
+  const n = order.length;
+  const pair = n >= 2 ? [order[tick % n], order[(tick + 1) % n]] : [order[0]];
+
+  return (
+    <div className="pcd-projects__grid">
+      {pair.map((p, i) => {
+        const isTall = i === 1;
+        const imgSrc = isTall ? (p.imageVertical ?? p.image) : p.image;
+        const inner = (
+          <>
+            <div
+              className={`pcd-project__media${p.id === 'chocosapiens-humanismo-digital' ? ' pcd-project__media--contain' : ''}`}
+              style={{ backgroundImage: `url('${imgSrc}')` }}
+              aria-hidden="true"
+            />
+            <div className="pcd-project__meta">
+              <span>{(lang === 'en' ? (p.subjectEn ?? p.subject) : p.subject).toUpperCase()}</span>
+              <span>{p.year}</span>
+            </div>
+            <p className="pcd-project__caption">{lang === 'en' ? (p.captionEn ?? p.caption) : p.caption}</p>
+          </>
+        );
+        // La primera vez (tick === 0) usa pcd-reveal, como el resto de
+        // la página, para el fade-in al hacer scroll (el
+        // IntersectionObserver de ProgramaCreacionDigital escanea el
+        // DOM una sola vez al montar, así que sí lo detecta acá). Las
+        // rotaciones siguientes (tick > 0) montan cards nuevas después
+        // de ese escaneo único, así que usan una animación propia
+        // (pcd-project--rotate-in) que se dispara sola al montar, en
+        // vez de depender del observer.
+        const revealClass = tick === 0 ? 'pcd-reveal' : 'pcd-project--rotate-in';
+        const frameClass = i === 0 ? 'pcd-project--wide' : 'pcd-project--tall';
+        return p.modal ? (
+          <Link key={p.id} to={`/proyectos/${p.id}`}
+            className={`pcd-project ${frameClass} pcd-project--clickable ${revealClass}`}
+            style={{ textDecoration: 'none' }}>
+            {inner}
+          </Link>
+        ) : (
+          <article key={p.id} className={`pcd-project ${frameClass} ${revealClass}`}>
+            {inner}
+          </article>
+        );
+      })}
+    </div>
+  );
 }
 
 /**
@@ -315,9 +389,6 @@ export default function ProgramaCreacionDigital() {
   // vea vacío al llegar).
   const [activeTeam, setActiveTeam] = useState<typeof TEAM[number]['id']>('fabian');
 
-  // Proyectos que se muestran en el preview del home — sorteados una
-  // sola vez al cargar la página (ver pickHomeProjects arriba).
-  const [homeProjects] = useState(pickHomeProjects);
   const activeTeamMember = t.equipo[activeTeam];
 
 
@@ -1760,37 +1831,7 @@ export default function ProgramaCreacionDigital() {
           </Link>
         </header>
 
-        <div className="pcd-projects__grid">
-          {homeProjects.map((p, i) => {
-            const isTall = i === 1;
-            const imgSrc = isTall ? (p.imageVertical ?? p.image) : p.image;
-            const inner = (
-              <>
-                <div
-                  className={`pcd-project__media${p.id === 'chocosapiens-humanismo-digital' ? ' pcd-project__media--contain' : ''}`}
-                  style={{ backgroundImage: `url('${imgSrc}')` }}
-                  aria-hidden="true"
-                />
-                <div className="pcd-project__meta">
-                  <span>{(lang === 'en' ? (p.subjectEn ?? p.subject) : p.subject).toUpperCase()}</span>
-                  <span>{p.year}</span>
-                </div>
-                <p className="pcd-project__caption">{lang === 'en' ? (p.captionEn ?? p.caption) : p.caption}</p>
-              </>
-            );
-            return p.modal ? (
-              <Link key={p.id} to={`/proyectos/${p.id}`}
-                className={`pcd-project ${i === 0 ? 'pcd-project--wide' : 'pcd-project--tall'} pcd-project--clickable pcd-reveal`}
-                style={{ textDecoration: 'none' }}>
-                {inner}
-              </Link>
-            ) : (
-              <article key={p.id} className={`pcd-project ${i === 0 ? 'pcd-project--wide' : 'pcd-project--tall'} pcd-reveal`}>
-                {inner}
-              </article>
-            );
-          })}
-        </div>
+        <HomeProjectsPreview lang={lang} />
       </section>
 
       {/* ===== MARQUEE · lo que sucede ===== */}

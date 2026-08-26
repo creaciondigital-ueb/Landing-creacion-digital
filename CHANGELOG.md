@@ -7,6 +7,14 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Cambiado — Preview de proyectos del home: rotación automática cada 5s (antes solo variaba al recargar)
+
+- El sorteo anterior (`pickHomeProjects`) elegía 2 proyectos al azar UNA vez, al cargar la página — la corrección del usuario: quería que rotaran solos cada ~5 segundos sin necesidad de recargar, mostrando un proyecto distinto con el tiempo.
+- Se reemplazó por `HomeProjectsPreview`, un componente aparte con su propio `setInterval` de 5000ms: arma un orden al azar del pool elegible una vez, y cada tick avanza un índice — el proyecto que estaba en la card alta pasa a la card ancha, y entra uno nuevo a la card alta. Con esto, cada 5s aparece un proyecto distinto en vez de barajar las 2 cards de golpe.
+- Aislado como componente propio (mismo motivo que `HeroTitle`, ver entrada anterior del changelog): si el tick de 5s viviera en `ProgramaCreacionDigital` (toda la página), re-renderizaría el árbol completo cada 5s para siempre mientras la página esté abierta.
+- Las 2 cards iniciales (tick 0) siguen usando `pcd-reveal` para el fade-in al hacer scroll (igual que el resto del sitio); las rotaciones siguientes usan una animación propia (`pcd-project--rotate-in`) que se dispara sola al montar, porque el `IntersectionObserver` de `.pcd-reveal` solo escanea el DOM una vez al cargar la página y no vería cards montadas después.
+- Archivos: `src/pages/ProgramaCreacionDigital.tsx`, `src/styles/programa.css`.
+
 ### Cambiado — Perfil completo de Julián Bejarano
 
 - Julián Bejarano tenía una tarjeta mínima (solo nombre, "perfil en construcción") desde que se agregó. El usuario mandó su información completa y se cargó siguiendo el mismo patrón de los docentes con perfil completo (Carlos, Dayana, John, Tatiana, Pilar): bio corta + tags para la tarjeta, y Perfil (2 párrafos) + Experiencia laboral (3 ítems: IDARTES, Laboratorio Kino Colombia, Práctica artística y producción multimedia) para el modal.
