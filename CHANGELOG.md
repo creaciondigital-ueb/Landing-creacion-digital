@@ -7,6 +7,14 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Cambiado — Rotación de proyectos del home: a destiempo y con fade suave (antes cambiaban las 2 juntas)
+
+- La rotación anterior avanzaba un solo índice compartido cada 5s, así que las 2 cards cambiaban siempre en el mismo instante — el usuario pidió que no fuera así.
+- Ahora cada card tiene su PROPIO timer de 5s: la card ancha rota en 5s/10s/15s..., la card alta arranca desfasada 2.5s (2.5s/7.5s/12.5s...) — nunca caen en el mismo instante, se ve una card cambiando a la vez.
+- Se agregó una validación en cada render para que, aunque el desfase algún día coincidiera (ej. con un pool de exactamente 2 proyectos elegibles), nunca se muestre el mismo proyecto en las 2 cards a la vez.
+- La animación de entrada (`pcd-project--rotate-in`) pasó de fade+translateY de 0.5s a un fade puro (sin desplazamiento) de 0.9s, para que el cambio se sienta suave en vez de brusco.
+- Archivos: `src/pages/ProgramaCreacionDigital.tsx`, `src/styles/programa.css`.
+
 ### Cambiado — Preview de proyectos del home: rotación automática cada 5s (antes solo variaba al recargar)
 
 - El sorteo anterior (`pickHomeProjects`) elegía 2 proyectos al azar UNA vez, al cargar la página — la corrección del usuario: quería que rotaran solos cada ~5 segundos sin necesidad de recargar, mostrando un proyecto distinto con el tiempo.

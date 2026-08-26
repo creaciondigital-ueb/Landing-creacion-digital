@@ -35,78 +35,98 @@ function shuffleArray<T>(arr: T[]): T[] {
 
 /**
  * Preview de proyectos del home — componente aparte a propósito (mismo
- * motivo que HeroTitle más abajo): rota cada 5s con su propio
- * setInterval, y si ese estado viviera en ProgramaCreacionDigital
- * (TODA la página) cada tick de 5s re-renderizaría el árbol completo
- * para siempre mientras la página esté abierta. Aislado acá, el tick
- * solo re-renderiza estas 2 cards.
+ * motivo que HeroTitle más abajo): rota con sus propios setInterval, y
+ * si ese estado viviera en ProgramaCreacionDigital (TODA la página)
+ * cada tick re-renderizaría el árbol completo para siempre mientras la
+ * página esté abierta. Aislado acá, el tick solo re-renderiza estas 2
+ * cards.
  *
- * Mecánica de la rotación: se arma UNA vez un orden al azar de todo el
- * pool elegible (>=2 proyectos con ambas portadas). Cada 5s se avanza
- * un índice en 1 — la card angosta ("wide") pasa a mostrar el proyecto
- * que antes estaba en la card alta ("tall"), y en la card alta entra
- * el siguiente proyecto del orden. Así, en cada tick, siempre entra un
- * proyecto "nuevo" a la vista (la card alta) en vez de barajar las 2
- * de una — se siente como una rotación real, no un parpadeo random.
+ * Mecánica de la rotación — a pedido del usuario, NO las 2 al mismo
+ * tiempo: cada card (wide/tall) tiene su PROPIO timer de 5s, pero el
+ * de la card alta arranca desfasado 2.5s respecto al de la ancha, así
+ * nunca caen en el mismo instante — se ve una cosa a la vez cambiando,
+ * no un salto doble. Cada una recorre el mismo orden ya barajado con
+ * un offset relativo de 1 (para no empezar mostrando el mismo
+ * proyecto); por las dudas (por si el desfase algún día coincidiera,
+ * ej. con un pool de exactamente 2 proyectos) se valida en cada
+ * render que nunca terminen mostrando el mismo proyecto las dos a la
+ * vez.
  */
 function HomeProjectsPreview({ lang }: { lang: 'es' | 'en' }) {
   const [order] = useState(() => {
     const pool = HOME_PROJECTS_POOL.length >= 2 ? HOME_PROJECTS_POOL : PROYECTOS.filter((p) => p.image);
     return shuffleArray(pool);
   });
-  const [tick, setTick] = useState(0);
+  const [wideTick, setWideTick] = useState(0);
+  const [tallTick, setTallTick] = useState(0);
 
   useEffect(() => {
     if (order.length < 2) return;
-    const interval = setInterval(() => setTick((v) => v + 1), 5000);
-    return () => clearInterval(interval);
+    const wideInterval = setInterval(() => setWideTick((v) => v + 1), 5000);
+    // La card alta arranca 2.5s desfasada — así su primer cambio cae
+    // justo a mitad de camino entre 2 cambios de la card ancha.
+    let tallInterval: ReturnType<typeof setInterval> | undefined;
+    const tallStart = setTimeout(() => {
+      setTallTick((v) => v + 1);
+      tallInterval = setInterval(() => setTallTick((v) => v + 1), 5000);
+    }, 2500);
+    return () => {
+      clearInterval(wideInterval);
+      clearTimeout(tallStart);
+      if (tallInterval) clearInterval(tallInterval);
+    };
   }, [order.length]);
 
   if (order.length === 0) return null;
   const n = order.length;
-  const pair = n >= 2 ? [order[tick % n], order[(tick + 1) % n]] : [order[0]];
+  const wideProject = order[wideTick % n];
+  let tallIdx = (tallTick + 1) % n;
+  if (order[tallIdx] === wideProject) tallIdx = (tallIdx + 1) % n; // nunca las 2 iguales a la vez
+  const tallProject = order[tallIdx];
+
+  const renderCard = (p: (typeof order)[number], isWide: boolean, hasRotated: boolean) => {
+    const imgSrc = isWide ? p.image : (p.imageVertical ?? p.image);
+    const inner = (
+      <>
+        <div
+          className={`pcd-project__media${p.id === 'chocosapiens-humanismo-digital' ? ' pcd-project__media--contain' : ''}`}
+          style={{ backgroundImage: `url('${imgSrc}')` }}
+          aria-hidden="true"
+        />
+        <div className="pcd-project__meta">
+          <span>{(lang === 'en' ? (p.subjectEn ?? p.subject) : p.subject).toUpperCase()}</span>
+          <span>{p.year}</span>
+        </div>
+        <p className="pcd-project__caption">{lang === 'en' ? (p.captionEn ?? p.caption) : p.caption}</p>
+      </>
+    );
+    // El primer render de cada card (hasRotated === false) usa
+    // pcd-reveal, como el resto de la página, para el fade-in al hacer
+    // scroll (el IntersectionObserver de ProgramaCreacionDigital
+    // escanea el DOM una sola vez al montar, así que sí lo detecta
+    // acá). Las rotaciones siguientes montan cards nuevas después de
+    // ese escaneo único, así que usan una animación propia
+    // (pcd-project--rotate-in, un fade suave sin movimiento) que se
+    // dispara sola al montar, en vez de depender del observer.
+    const revealClass = hasRotated ? 'pcd-project--rotate-in' : 'pcd-reveal';
+    const frameClass = isWide ? 'pcd-project--wide' : 'pcd-project--tall';
+    return p.modal ? (
+      <Link key={p.id} to={`/proyectos/${p.id}`}
+        className={`pcd-project ${frameClass} pcd-project--clickable ${revealClass}`}
+        style={{ textDecoration: 'none' }}>
+        {inner}
+      </Link>
+    ) : (
+      <article key={p.id} className={`pcd-project ${frameClass} ${revealClass}`}>
+        {inner}
+      </article>
+    );
+  };
 
   return (
     <div className="pcd-projects__grid">
-      {pair.map((p, i) => {
-        const isTall = i === 1;
-        const imgSrc = isTall ? (p.imageVertical ?? p.image) : p.image;
-        const inner = (
-          <>
-            <div
-              className={`pcd-project__media${p.id === 'chocosapiens-humanismo-digital' ? ' pcd-project__media--contain' : ''}`}
-              style={{ backgroundImage: `url('${imgSrc}')` }}
-              aria-hidden="true"
-            />
-            <div className="pcd-project__meta">
-              <span>{(lang === 'en' ? (p.subjectEn ?? p.subject) : p.subject).toUpperCase()}</span>
-              <span>{p.year}</span>
-            </div>
-            <p className="pcd-project__caption">{lang === 'en' ? (p.captionEn ?? p.caption) : p.caption}</p>
-          </>
-        );
-        // La primera vez (tick === 0) usa pcd-reveal, como el resto de
-        // la página, para el fade-in al hacer scroll (el
-        // IntersectionObserver de ProgramaCreacionDigital escanea el
-        // DOM una sola vez al montar, así que sí lo detecta acá). Las
-        // rotaciones siguientes (tick > 0) montan cards nuevas después
-        // de ese escaneo único, así que usan una animación propia
-        // (pcd-project--rotate-in) que se dispara sola al montar, en
-        // vez de depender del observer.
-        const revealClass = tick === 0 ? 'pcd-reveal' : 'pcd-project--rotate-in';
-        const frameClass = i === 0 ? 'pcd-project--wide' : 'pcd-project--tall';
-        return p.modal ? (
-          <Link key={p.id} to={`/proyectos/${p.id}`}
-            className={`pcd-project ${frameClass} pcd-project--clickable ${revealClass}`}
-            style={{ textDecoration: 'none' }}>
-            {inner}
-          </Link>
-        ) : (
-          <article key={p.id} className={`pcd-project ${frameClass} ${revealClass}`}>
-            {inner}
-          </article>
-        );
-      })}
+      {renderCard(wideProject, true, wideTick > 0)}
+      {renderCard(tallProject, false, tallTick > 0)}
     </div>
   );
 }

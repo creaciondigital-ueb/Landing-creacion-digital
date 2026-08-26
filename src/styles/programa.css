@@ -2145,17 +2145,20 @@ body:has(.pcd-docente-modal[open]) {
 .pcd-project--wide .pcd-project__media { aspect-ratio: 853 / 529; }
 .pcd-project--tall .pcd-project__media { aspect-ratio: 417 / 514; }
 /* Rotación automática del preview de proyectos en el home (cada 5s,
-   ver HomeProjectsPreview en el TSX): las cards que entran DESPUÉS del
-   primer render se remontan (cambia el key al cambiar de proyecto), así
-   que no pueden depender del IntersectionObserver de .pcd-reveal (ese
-   escanea el DOM una sola vez al cargar la página) — usan esta
-   animación propia, que se dispara sola al montar. */
+   con las 2 cards desfasadas entre sí — ver HomeProjectsPreview en el
+   TSX): las cards que entran DESPUÉS del primer render se remontan
+   (cambia el key al cambiar de proyecto), así que no pueden depender
+   del IntersectionObserver de .pcd-reveal (ese escanea el DOM una sola
+   vez al cargar la página) — usan esta animación propia, que se
+   dispara sola al montar. Fade puro (sin desplazamiento) y más largo
+   que el .pcd-reveal normal, para que el cambio se sienta suave y no
+   brusco — a pedido del usuario. */
 .pcd-project--rotate-in {
-  animation: pcd-project-rotate-in 0.5s ease;
+  animation: pcd-project-rotate-in 0.9s ease;
 }
 @keyframes pcd-project-rotate-in {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 @media (prefers-reduced-motion: reduce) {
   .pcd-project--rotate-in { animation: none; }
