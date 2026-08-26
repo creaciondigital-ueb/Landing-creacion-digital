@@ -2145,23 +2145,32 @@ body:has(.pcd-docente-modal[open]) {
 .pcd-project--wide .pcd-project__media { aspect-ratio: 853 / 529; }
 .pcd-project--tall .pcd-project__media { aspect-ratio: 417 / 514; }
 /* Rotación automática del preview de proyectos en el home (cada 5s,
-   con las 2 cards desfasadas entre sí — ver HomeProjectsPreview en el
-   TSX): las cards que entran DESPUÉS del primer render se remontan
-   (cambia el key al cambiar de proyecto), así que no pueden depender
-   del IntersectionObserver de .pcd-reveal (ese escanea el DOM una sola
-   vez al cargar la página) — usan esta animación propia, que se
-   dispara sola al montar. Fade puro (sin desplazamiento) y más largo
-   que el .pcd-reveal normal, para que el cambio se sienta suave y no
-   brusco — a pedido del usuario. */
-.pcd-project--rotate-in {
-  animation: pcd-project-rotate-in 1.8s ease;
+   con las 2 cards desfasadas entre sí — ver HomeProjectsPreview /
+   RotatingProjectCard en el TSX). El nodo de la card nunca se remonta
+   al rotar (antes se hacía key={p.id}, lo que causaba un corte duro:
+   el proyecto viejo desaparecía de golpe) — en vez de eso arma un
+   crossfade real con 2 capas superpuestas: la capa nueva
+   (--incoming) entra en fade-in ENCIMA de la vieja (--current, que
+   sigue completa por debajo todo el tiempo), así nunca hay un salto,
+   solo una disolución suave — a pedido del usuario ("muy fuerte" el
+   cambio anterior). */
+.pcd-project--crossfade { position: relative; }
+.pcd-project__layer {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
-@keyframes pcd-project-rotate-in {
+.pcd-project__layer--incoming {
+  position: absolute;
+  inset: 0;
+  animation: pcd-project-crossfade-in 1.8s ease forwards;
+}
+@keyframes pcd-project-crossfade-in {
   from { opacity: 0; }
   to { opacity: 1; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .pcd-project--rotate-in { animation: none; }
+  .pcd-project__layer--incoming { animation: none; opacity: 1; }
 }
 /* Zoom puntual para la foto de la campaña del Mundial: la card mantiene su
    tamaño, solo se agranda el encuadre de la imagen dentro de ella. */

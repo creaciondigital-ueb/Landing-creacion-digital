@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef, type ReactNode, type CSSProperties } from 'react';
 import { Link } from 'react-router-dom';
-import { PROYECTOS } from '../data/proyectos';
+import { PROYECTOS, type Proyecto } from '../data/proyectos';
 import { BLOG_POSTS } from '../data/blog';
 import { useLang } from '../i18n/LanguageContext';
 import '../styles/programa.css';
@@ -52,6 +52,22 @@ function shuffleArray<T>(arr: T[]): T[] {
  * render que nunca terminen mostrando el mismo proyecto las dos a la
  * vez.
  */
+/**
+ * Preview de proyectos del home — componente aparte a propósito (mismo
+ * motivo que HeroTitle más abajo): rota con sus propios setInterval, y
+ * si ese estado viviera en ProgramaCreacionDigital (TODA la página)
+ * cada tick re-renderizaría el árbol completo para siempre mientras la
+ * página esté abierta. Aislado acá, el tick solo re-renderiza estas 2
+ * cards.
+ *
+ * Mecánica de la rotación — a pedido del usuario, NO las 2 al mismo
+ * tiempo: cada card (wide/tall) tiene su PROPIO timer de 5s, pero el
+ * de la card alta arranca desfasado 2.5s respecto al de la ancha, así
+ * nunca caen en el mismo instante. Cada una recorre el mismo orden ya
+ * barajado con un offset relativo de 1 (para no empezar mostrando el
+ * mismo proyecto); por las dudas se valida en cada render que nunca
+ * terminen mostrando el mismo proyecto las dos a la vez.
+ */
 function HomeProjectsPreview({ lang }: { lang: 'es' | 'en' }) {
   const [order] = useState(() => {
     const pool = HOME_PROJECTS_POOL.length >= 2 ? HOME_PROJECTS_POOL : PROYECTOS.filter((p) => p.image);
@@ -84,9 +100,48 @@ function HomeProjectsPreview({ lang }: { lang: 'es' | 'en' }) {
   if (order[tallIdx] === wideProject) tallIdx = (tallIdx + 1) % n; // nunca las 2 iguales a la vez
   const tallProject = order[tallIdx];
 
-  const renderCard = (p: (typeof order)[number], isWide: boolean, hasRotated: boolean) => {
+  return (
+    <div className="pcd-projects__grid">
+      <RotatingProjectCard slot="wide" project={wideProject} lang={lang} />
+      <RotatingProjectCard slot="tall" project={tallProject} lang={lang} />
+    </div>
+  );
+}
+
+/**
+ * Una card del preview de proyectos del home. El NODO nunca se
+ * remonta al rotar (antes se hacía key={p.id}, lo que causaba un corte
+ * duro: el proyecto anterior desaparecía de golpe y el nuevo aparecía
+ * encima) — ahora, cuando cambia el proyecto que le toca mostrar
+ * (prop `project`), arma un crossfade real: el proyecto nuevo entra en
+ * una capa superpuesta ("incoming") que se desvanece hacia adentro
+ * (opacity 0 -> 1) EN VIVO sobre la capa vieja ("current", que se ve
+ * completa todo el tiempo por debajo) — mucho más suave que un
+ * remontaje, a pedido del usuario. Al terminar la transición, la capa
+ * "incoming" pasa a ser la nueva "current" y se descarta la de arriba
+ * (mismo estado visual, sin salto).
+ */
+const PROJECT_CROSSFADE_MS = 1800; // debe coincidir con la duración de la animación CSS (pcd-project-crossfade-in)
+
+function RotatingProjectCard({ slot, project, lang }: { slot: 'wide' | 'tall'; project: Proyecto; lang: 'es' | 'en' }) {
+  const isWide = slot === 'wide';
+  const [current, setCurrent] = useState(project);
+  const [incoming, setIncoming] = useState<Proyecto | null>(null);
+
+  useEffect(() => {
+    if (project.id === current.id) return;
+    setIncoming(project);
+    const timeout = setTimeout(() => {
+      setCurrent(project);
+      setIncoming(null);
+    }, PROJECT_CROSSFADE_MS);
+    return () => clearTimeout(timeout);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [project.id]);
+
+  const renderInner = (p: Proyecto) => {
     const imgSrc = isWide ? p.image : (p.imageVertical ?? p.image);
-    const inner = (
+    return (
       <>
         <div
           className={`pcd-project__media${p.id === 'chocosapiens-humanismo-digital' ? ' pcd-project__media--contain' : ''}`}
@@ -100,34 +155,27 @@ function HomeProjectsPreview({ lang }: { lang: 'es' | 'en' }) {
         <p className="pcd-project__caption">{lang === 'en' ? (p.captionEn ?? p.caption) : p.caption}</p>
       </>
     );
-    // El primer render de cada card (hasRotated === false) usa
-    // pcd-reveal, como el resto de la página, para el fade-in al hacer
-    // scroll (el IntersectionObserver de ProgramaCreacionDigital
-    // escanea el DOM una sola vez al montar, así que sí lo detecta
-    // acá). Las rotaciones siguientes montan cards nuevas después de
-    // ese escaneo único, así que usan una animación propia
-    // (pcd-project--rotate-in, un fade suave sin movimiento) que se
-    // dispara sola al montar, en vez de depender del observer.
-    const revealClass = hasRotated ? 'pcd-project--rotate-in' : 'pcd-reveal';
-    const frameClass = isWide ? 'pcd-project--wide' : 'pcd-project--tall';
-    return p.modal ? (
-      <Link key={p.id} to={`/proyectos/${p.id}`}
-        className={`pcd-project ${frameClass} pcd-project--clickable ${revealClass}`}
-        style={{ textDecoration: 'none' }}>
-        {inner}
-      </Link>
-    ) : (
-      <article key={p.id} className={`pcd-project ${frameClass} ${revealClass}`}>
-        {inner}
-      </article>
-    );
   };
 
-  return (
-    <div className="pcd-projects__grid">
-      {renderCard(wideProject, true, wideTick > 0)}
-      {renderCard(tallProject, false, tallTick > 0)}
-    </div>
+  const frameClass = isWide ? 'pcd-project--wide' : 'pcd-project--tall';
+  const className = `pcd-project ${frameClass} pcd-project--crossfade pcd-reveal`;
+  const layers = (
+    <>
+      <div className="pcd-project__layer">{renderInner(current)}</div>
+      {incoming && (
+        <div key={incoming.id} className="pcd-project__layer pcd-project__layer--incoming">
+          {renderInner(incoming)}
+        </div>
+      )}
+    </>
+  );
+
+  return current.modal ? (
+    <Link to={`/proyectos/${current.id}`} className={`${className} pcd-project--clickable`} style={{ textDecoration: 'none' }}>
+      {layers}
+    </Link>
+  ) : (
+    <article className={className}>{layers}</article>
   );
 }
 

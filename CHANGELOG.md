@@ -7,6 +7,13 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Cambiado — Rotación de proyectos del home: crossfade real (antes remontaba la card entera)
+
+- El usuario seguía sintiendo el cambio "fuerte" incluso con el fade más largo (1.8s). Causa real: cada rotación remontaba la card completa (`key={p.id}`) — el proyecto anterior desaparecía de golpe (corte duro) y recién ahí el nuevo empezaba su fade-in desde cero; alargar la duración no arregla un corte, solo lo alarga.
+- Se rediseñó como un componente propio (`RotatingProjectCard`) que NUNCA remonta el nodo de la card. Cuando le toca un proyecto distinto, arma un crossfade real con 2 capas superpuestas: la capa nueva entra en fade-in (0→1 de opacidad) ENCIMA de la vieja, que se sigue viendo completa por debajo durante toda la transición — nunca hay un instante en blanco ni un salto, es una disolución continua.
+- Al terminar la transición (1800ms, sincronizado con la duración de la animación CSS) la capa nueva pasa a ser la "actual" y se descarta la de encima, sin cambio visual perceptible en ese instante.
+- Archivos: `src/pages/ProgramaCreacionDigital.tsx`, `src/styles/programa.css`.
+
 ### Cambiado — Fade de la rotación de proyectos más lento (0.9s -> 1.8s)
 
 - A pedido del usuario, `pcd-project--rotate-in` pasa de 0.9s a 1.8s.
