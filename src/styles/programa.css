@@ -2217,7 +2217,13 @@ body:has(.pcd-docente-modal[open]) {
   margin: 0 0.04em;
 }
 
-/* ── Grid de publicaciones (cuando ya hay contenido) ── */
+/* ── Grid de publicaciones (cuando ya hay contenido) ──
+   Rediseñado a pedido del usuario a partir de una referencia (cards de
+   color sólido, sin foto, más verticales) — se reemplaza la foto de
+   portada por un bloque de color plano usando los 3 colores de marca
+   del programa (mismo ciclo azul/amarillo/rojo que los stickers de
+   docentes, ver BLOG_CARD_COLORS en el TSX), con el número de orden,
+   la categoría/fecha, el título y el resumen adentro del bloque. */
 .pcd-blog-preview__grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -2226,24 +2232,35 @@ body:has(.pcd-docente-modal[open]) {
 .pcd-blog-preview__card {
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   color: var(--pcd-ink);
   text-decoration: none;
   border: 2.5px solid var(--pcd-ink);
   transition: box-shadow 0.25s ease, transform 0.25s ease;
+  /* Más vertical que el layout anterior (foto 16:9 + texto abajo) —
+     ratio de retrato en vez de paisaje, a pedido del usuario. */
+  aspect-ratio: 3 / 4;
+  min-height: 420px;
+  padding: 24px 24px 28px;
 }
 .pcd-blog-preview__card:hover {
   box-shadow: 6px 6px 0 var(--pcd-ink);
   transform: translate(-2px, -2px);
 }
-.pcd-blog-preview__thumb {
-  width: 100%;
-  aspect-ratio: 16 / 9;
-  background-size: cover;
-  background-position: center;
-  background-color: #0d0d0d;
+/* Los 3 colores de marca, mismo ciclo que los stickers de docentes.
+   Texto claro (paper) sobre cobalt/tomato (oscuros/saturados); texto
+   oscuro (ink) sobre acid (claro) — mismo criterio de contraste que ya
+   usan los pills del banner final (.pcd-bullet--1/2/3). */
+.pcd-blog-preview__card--cobalt { background: var(--pcd-cobalt); color: var(--pcd-paper); }
+.pcd-blog-preview__card--acid   { background: var(--pcd-acid); color: var(--pcd-ink); }
+.pcd-blog-preview__card--tomato { background: var(--pcd-tomato); color: var(--pcd-paper); }
+.pcd-blog-preview__index {
+  font-family: var(--pcd-mono);
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  opacity: 0.7;
 }
 .pcd-blog-preview__body {
-  padding: 18px 20px 22px;
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -2256,11 +2273,9 @@ body:has(.pcd-docente-modal[open]) {
   font-size: 10px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--pcd-ink);
-  opacity: 0.5;
+  opacity: 0.7;
 }
 .pcd-blog-preview__meta span:first-child {
-  color: var(--pcd-cobalt);
   opacity: 1;
   font-weight: 700;
 }
@@ -2268,8 +2283,8 @@ body:has(.pcd-docente-modal[open]) {
   font-family: var(--pcd-serif);
   font-style: italic;
   font-weight: 400;
-  font-size: 22px;
-  line-height: 1.15;
+  font-size: 26px;
+  line-height: 1.12;
   letter-spacing: -0.01em;
   margin: 0;
 }
@@ -2277,8 +2292,7 @@ body:has(.pcd-docente-modal[open]) {
   font-family: var(--pcd-sans);
   font-size: 14px;
   line-height: 1.5;
-  color: var(--pcd-ink);
-  opacity: 0.75;
+  opacity: 0.85;
   margin: 0;
 }
 

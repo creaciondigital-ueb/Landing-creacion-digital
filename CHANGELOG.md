@@ -7,6 +7,13 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Cambiado — Cards de blog en el home rediseñadas: color sólido en vez de foto, más verticales
+
+- A pedido del usuario (a partir de una referencia visual), las 3 cards del preview de blog en el home dejaron de mostrar una foto de portada (`.pcd-blog-preview__thumb` eliminado) y ahora son un bloque de color sólido con número de orden ("01"/"02"/"03"), categoría/fecha, título y resumen adentro.
+- Colores: se reutiliza el mismo ciclo de marca azul(cobalt) → amarillo(acid) → rojo(tomato) que ya usan los stickers de docentes (`BLOG_CARD_COLORS` en el TSX), con texto claro (paper) sobre cobalt/tomato y texto oscuro (ink) sobre acid, mismo criterio de contraste que los pills del banner final.
+- Cards más verticales: antes era foto 16:9 + texto abajo (más achatada); ahora `aspect-ratio: 3/4` de bloque completo.
+- Archivos: `src/pages/ProgramaCreacionDigital.tsx`, `src/styles/programa.css`.
+
 ### Cambiado — Preview de proyectos en el home ahora rota, en vez de mostrar siempre los mismos 2
 
 - Antes el home mostraba siempre `PROYECTOS[0]` y `PROYECTOS[1]` (fijos). Ahora, en cada carga de página se sortean 2 proyectos al azar entre los que tengan AMBAS portadas (`image` horizontal + `imageVertical`), ya que cualquiera de los 2 puede tocarle el marco ancho (horizontal) o el marco alto (vertical) según el sorteo.

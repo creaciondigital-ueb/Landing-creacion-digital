@@ -18,6 +18,11 @@ const APLICA_URL = 'https://www.unbosque.edu.co/inscripciones/pregrado';
  * puede tocarle el marco ancho o el marco alto según el sorteo.
  */
 const HOME_PROJECTS_POOL = PROYECTOS.filter((p) => p.image && p.imageVertical);
+
+/** Colores sólidos de las cards del preview de blog en el home — mismo
+ * ciclo azul(cobalt) -> amarillo(acid) -> rojo(tomato) que los stickers
+ * de docentes, para que se sienta consistente con el resto del sitio. */
+const BLOG_CARD_COLORS = ['cobalt', 'acid', 'tomato'] as const;
 function pickHomeProjects(): typeof PROYECTOS {
   // Fallback de seguridad: si en algún momento hay menos de 2 proyectos
   // con ambas portadas, se completa con cualquier proyecto que al menos
@@ -1809,10 +1814,15 @@ export default function ProgramaCreacionDigital() {
 
         {BLOG_POSTS.length > 0 ? (
           <div className="pcd-blog-preview__grid">
-            {BLOG_POSTS.slice(0, 3).map((post) => {
+            {BLOG_POSTS.slice(0, 3).map((post, i) => {
+              // Sin foto: cada card es un bloque de color sólido — se
+              // reutiliza el mismo ciclo azul(cobalt) -> amarillo(acid) ->
+              // rojo(tomato) que ya usamos en los stickers de docentes,
+              // para que se sienta consistente con el resto del sitio.
+              const cardColor = BLOG_CARD_COLORS[i % BLOG_CARD_COLORS.length];
               const inner = (
                 <>
-                  <div className="pcd-blog-preview__thumb" style={{ backgroundImage: `url('${post.image}')` }} aria-hidden="true" />
+                  <span className="pcd-blog-preview__index">{String(i + 1).padStart(2, '0')}</span>
                   <div className="pcd-blog-preview__body">
                     <div className="pcd-blog-preview__meta">
                       <span>{(lang === 'en' ? (post.categoryEn ?? post.category) : post.category).toUpperCase()}</span>
@@ -1824,9 +1834,9 @@ export default function ProgramaCreacionDigital() {
                 </>
               );
               return post.detail ? (
-                <Link key={post.id} to={`/blog/${post.id}`} className="pcd-blog-preview__card pcd-reveal">{inner}</Link>
+                <Link key={post.id} to={`/blog/${post.id}`} className={`pcd-blog-preview__card pcd-blog-preview__card--${cardColor} pcd-reveal`}>{inner}</Link>
               ) : (
-                <article key={post.id} className="pcd-blog-preview__card pcd-reveal">{inner}</article>
+                <article key={post.id} className={`pcd-blog-preview__card pcd-blog-preview__card--${cardColor} pcd-reveal`}>{inner}</article>
               );
             })}
           </div>
