@@ -7,6 +7,13 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Cambiado — Ilustración de los stickers de cámara y mando (docentes)
+
+- El usuario mandó 2 nuevas ilustraciones (cámara y mando de videojuegos) para reemplazar el dibujo interno de esos 2 stickers del carrusel de docentes, manteniendo el mismo tamaño y todo lo demás (fondo tipo nube azul/rojo, borde negro, posición, animación de balanceo).
+- Se regeneraron `Camera.webp` y `Controller.webp`: se limpió el ícono viejo del fondo original (dejando solo la "nube" de color + borde negro) y se compuso encima el nuevo dibujo (en blanco, conservando su textura granulada), centrado y escalado a la misma proporción que ocupaba el ícono anterior dentro del fondo.
+- No se tocó código (CSS/TSX) — son los mismos archivos de imagen, mismo nombre y ruta, así que el tamaño en pantalla (100×100px, ver `.pcd-sticker`) no cambia.
+- Archivos: `public/programa/img/Camera.webp`, `public/programa/img/Controller.webp`.
+
 ### Cambiado — Texto de proyectos del home cambia 500ms antes que la imagen
 
 - El texto (categoría/año/bajada) esperaba a que la imagen terminara del todo su crossfade (1800ms) para cambiar, y se sentía atrasado. Ahora tiene su propio timer (`TEXT_SWITCH_MS`, 500ms antes que la imagen) — cambia un poco antes de que la foto termine de asentarse.
