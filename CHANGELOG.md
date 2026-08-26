@@ -7,6 +7,12 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Cambiado — Texto de proyectos del home cambia 500ms antes que la imagen
+
+- El texto (categoría/año/bajada) esperaba a que la imagen terminara del todo su crossfade (1800ms) para cambiar, y se sentía atrasado. Ahora tiene su propio timer (`TEXT_SWITCH_MS`, 500ms antes que la imagen) — cambia un poco antes de que la foto termine de asentarse.
+- El link de la card también sigue al texto (`textProject`) en vez de a la imagen (`current`), para que apunte siempre a lo que el usuario está leyendo en ese momento.
+- Archivos: `src/pages/ProgramaCreacionDigital.tsx`.
+
 ### Cambiado — Crossfade de proyectos del home solo en la imagen, no en el texto
 
 - A pedido del usuario, el fade suave queda solo en la foto de portada; la categoría/año/bajada ya no se desvanecen — cambian directo, en el mismo instante en que la imagen termina su transición y pasa a ser la nueva "actual".

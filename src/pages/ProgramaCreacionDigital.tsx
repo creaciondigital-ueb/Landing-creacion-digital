@@ -124,20 +124,34 @@ function HomeProjectsPreview({ lang }: { lang: 'es' | 'en' }) {
  * descarta la capa de encima — sin salto visual.
  */
 const PROJECT_CROSSFADE_MS = 1800; // debe coincidir con la duración de la animación CSS (pcd-project-crossfade-in)
+// El texto cambia un poco ANTES de que la imagen termine de asentarse
+// (a pedido del usuario, se sentía atrasado) — no espera a que la
+// transición de la foto termine del todo.
+const TEXT_SWITCH_LEAD_MS = 500;
+const TEXT_SWITCH_MS = PROJECT_CROSSFADE_MS - TEXT_SWITCH_LEAD_MS;
 
 function RotatingProjectCard({ slot, project, lang }: { slot: 'wide' | 'tall'; project: Proyecto; lang: 'es' | 'en' }) {
   const isWide = slot === 'wide';
   const [current, setCurrent] = useState(project);
   const [incoming, setIncoming] = useState<Proyecto | null>(null);
+  // Texto (categoría/año/bajada) — se actualiza aparte de la imagen,
+  // más temprano, así que necesita su propio estado.
+  const [textProject, setTextProject] = useState(project);
 
   useEffect(() => {
     if (project.id === current.id) return;
     setIncoming(project);
-    const timeout = setTimeout(() => {
+    const textTimeout = setTimeout(() => {
+      setTextProject(project);
+    }, TEXT_SWITCH_MS);
+    const imgTimeout = setTimeout(() => {
       setCurrent(project);
       setIncoming(null);
     }, PROJECT_CROSSFADE_MS);
-    return () => clearTimeout(timeout);
+    return () => {
+      clearTimeout(textTimeout);
+      clearTimeout(imgTimeout);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [project.id]);
 
@@ -155,15 +169,19 @@ function RotatingProjectCard({ slot, project, lang }: { slot: 'wide' | 'tall'; p
         )}
       </div>
       <div className="pcd-project__meta">
-        <span>{(lang === 'en' ? (current.subjectEn ?? current.subject) : current.subject).toUpperCase()}</span>
-        <span>{current.year}</span>
+        <span>{(lang === 'en' ? (textProject.subjectEn ?? textProject.subject) : textProject.subject).toUpperCase()}</span>
+        <span>{textProject.year}</span>
       </div>
-      <p className="pcd-project__caption">{lang === 'en' ? (current.captionEn ?? current.caption) : current.caption}</p>
+      <p className="pcd-project__caption">{lang === 'en' ? (textProject.captionEn ?? textProject.caption) : textProject.caption}</p>
     </>
   );
 
-  return current.modal ? (
-    <Link to={`/proyectos/${current.id}`} className={`${className} pcd-project--clickable`} style={{ textDecoration: 'none' }}>
+  // El link/hover apunta a lo que el usuario está LEYENDO ahora mismo
+  // (textProject), no a lo que la foto todavía está terminando de
+  // asentar (current) — son lo mismo casi todo el tiempo, solo
+  // difieren durante los ~500ms de TEXT_SWITCH_LEAD_MS.
+  return textProject.modal ? (
+    <Link to={`/proyectos/${textProject.id}`} className={`${className} pcd-project--clickable`} style={{ textDecoration: 'none' }}>
       {content}
     </Link>
   ) : (
