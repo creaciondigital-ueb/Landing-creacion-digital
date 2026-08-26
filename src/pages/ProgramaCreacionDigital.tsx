@@ -19,10 +19,11 @@ const APLICA_URL = 'https://www.unbosque.edu.co/inscripciones/pregrado';
  */
 const HOME_PROJECTS_POOL = PROYECTOS.filter((p) => p.image && p.imageVertical);
 
-/** Colores sólidos de las cards del preview de blog en el home — mismo
- * ciclo azul(cobalt) -> amarillo(acid) -> rojo(tomato) que los stickers
- * de docentes, para que se sienta consistente con el resto del sitio. */
-const BLOG_CARD_COLORS = ['cobalt', 'acid', 'tomato'] as const;
+/** Colores sólidos de las cards del preview de blog en el home — las
+ * primeras 3 siguen el mismo ciclo azul(cobalt) -> amarillo(acid) ->
+ * rojo(tomato) que los stickers de docentes; la 4ta es negra (ink), a
+ * pedido del usuario, para cerrar la fila con contraste. */
+const BLOG_CARD_COLORS = ['cobalt', 'acid', 'tomato', 'ink'] as const;
 function pickHomeProjects(): typeof PROYECTOS {
   // Fallback de seguridad: si en algún momento hay menos de 2 proyectos
   // con ambas portadas, se completa con cualquier proyecto que al menos

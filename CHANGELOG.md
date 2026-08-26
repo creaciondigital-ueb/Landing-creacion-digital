@@ -7,6 +7,12 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Cambiado — 4ta card de blog del home en negro
+
+- A pedido del usuario, la 4ta card del preview de blog ya no repite el primer color del ciclo (cobalt) — ahora es negra (`--pcd-ink`) con texto claro (paper). Se agregó `pcd-blog-preview__card--ink` a `BLOG_CARD_COLORS`.
+- El borde de esa variante se invierte a paper (con el borde ink por defecto se perdería contra un fondo también ink) — mismo criterio ya usado en `.pcd-team--dark .pcd-team__panel`.
+- Archivos: `src/pages/ProgramaCreacionDigital.tsx`, `src/styles/programa.css`.
+
 ### Cambiado — Cards de blog del home más chicas: 4 en fila en vez de 3, menos altas
 
 - Grid del preview de blog: `repeat(3, 1fr)` -> `repeat(4, 1fr)` (`gap` 24px -> 18px), a pedido del usuario. Se agregó un 4to post de ejemplo en `data/blog.ts` (`ejemplo-post-4`) para previsualizar la fila completa.

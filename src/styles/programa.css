@@ -2256,6 +2256,10 @@ body:has(.pcd-docente-modal[open]) {
 .pcd-blog-preview__card--cobalt { background: var(--pcd-cobalt); color: var(--pcd-paper); }
 .pcd-blog-preview__card--acid   { background: var(--pcd-acid); color: var(--pcd-ink); }
 .pcd-blog-preview__card--tomato { background: var(--pcd-tomato); color: var(--pcd-paper); }
+/* Borde invertido a paper: con el borde ink por defecto (2.5px solid
+   var(--pcd-ink)) se perdería contra un fondo también ink — mismo caso
+   ya resuelto en .pcd-team--dark .pcd-team__panel. */
+.pcd-blog-preview__card--ink    { background: var(--pcd-ink); color: var(--pcd-paper); border-color: var(--pcd-paper); }
 .pcd-blog-preview__index {
   font-family: var(--pcd-mono);
   font-size: 12px;
