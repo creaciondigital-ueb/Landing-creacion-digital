@@ -281,9 +281,16 @@ const translations = {
       },
       julian: {
         ariaLabel: "Ver perfil de Julián Bejarano",
-        bio: "Perfil en construcción — pronto vas a conocer su experiencia.",
-        tags: [] as string[],
-        note: "Estamos completando el perfil de Julián Bejarano. ¡Vuelve pronto para conocer más sobre su experiencia!",
+        bio: "Artista Plástico y Visual con más de 17 años de experiencia en fotografía, producción multimedia y formación artística, explorando la relación entre arte, ciencia y tecnología.",
+        tags: ["Fotografía", "Producción multimedia", "Formación artística"],
+        modalTags: ["Fotografía", "Producción multimedia", "Formación artística"],
+        p1: "Soy Artista Plástico y Visual, egresado de la Universidad Nacional de Colombia, con estudios en programación e Ingeniería Mecatrónica y Magíster en Tecnologías de la Información Aplicadas a la Educación. Cuento con más de 17 años de experiencia en fotografía, producción multimedia y procesos de formación artística, explorando la relación entre arte, ciencia y tecnología.",
+        p2: "Mi trayectoria combina la práctica artística con la pedagogía, la investigación y el desarrollo de experiencias digitales. He participado en proyectos de creación, formación y circulación artística, así como en iniciativas que integran tecnologías audiovisuales, video mapping y creación digital.",
+        exp: [
+          { title: "IDARTES", body: "Durante varios años he trabajado como profesional en el Instituto Distrital de las Artes (IDARTES), principalmente en el Programa Crea y la Subdirección de Formación Artística. He liderado y acompañado estrategias pedagógicas y artísticas relacionadas con la creación digital, fortaleciendo procesos de conceptualización, investigación, formación y desarrollo de proyectos que articulan arte y tecnología.", boldParts: null as null | string[] },
+          { title: "Laboratorio Internacional de Cine Colectivo Kino Colombia / Procesos de formación artística", body: "He participado en proyectos de formación e investigación artística, desarrollando procesos pedagógicos alrededor de las artes audiovisuales, la fotografía y la creación digital. Mi experiencia incluye el acompañamiento a comunidades y contextos educativos, así como el diseño de experiencias artísticas con fines pedagógicos.", boldParts: null as null | string[] },
+          { title: "Práctica artística y producción multimedia", body: "Como artista plástico y visual he desarrollado proyectos que exploran la convergencia entre arte, ciencia y tecnología. Mi trayectoria incluye reconocimientos como el primer puesto en el Premio de Fotografía Ciudad de Bogotá, la creación escenográfica con video mapping para una propuesta ganadora de MinCultura y la beca de creación del Ministerio de las Culturas por la obra Cidadã Speculatrix.", boldParts: null as null | string[] },
+        ],
       },
       jaime: {
         ariaLabel: "Ver perfil de Jaime Velásquez",
@@ -675,9 +682,16 @@ const translations = {
       },
       julian: {
         ariaLabel: "View Julián Bejarano profile",
-        bio: "Profile in progress — check back soon to learn about their experience.",
-        tags: [] as string[],
-        note: "We're completing Julián Bejarano's profile. Check back soon to learn more about his experience!",
+        bio: "Visual and Plastic Artist with over 17 years of experience in photography, multimedia production and arts education, exploring the relationship between art, science and technology.",
+        tags: ["Photography", "Multimedia production", "Arts education"],
+        modalTags: ["Photography", "Multimedia production", "Arts education"],
+        p1: "I am a Visual and Plastic Artist, graduated from Universidad Nacional de Colombia, with studies in programming and Mechatronics Engineering and a Master's degree in Information Technologies Applied to Education. I have over 17 years of experience in photography, multimedia production and arts education processes, exploring the relationship between art, science and technology.",
+        p2: "My career combines artistic practice with pedagogy, research and the development of digital experiences. I have taken part in creation, training and artistic circulation projects, as well as initiatives that integrate audiovisual technologies, video mapping and digital creation.",
+        exp: [
+          { title: "IDARTES", body: "For several years I have worked as a professional at the Instituto Distrital de las Artes (IDARTES), mainly within the Crea Program and the Artistic Education Subdirectorate. I have led and supported pedagogical and artistic strategies related to digital creation, strengthening conceptualization, research, training and project development processes that bring together art and technology.", boldParts: null as null | string[] },
+          { title: "Kino Colombia International Collective Film Laboratory / Arts education processes", body: "I have taken part in artistic training and research projects, developing pedagogical processes around audiovisual arts, photography and digital creation. My experience includes working alongside communities and educational settings, as well as designing artistic experiences for pedagogical purposes.", boldParts: null as null | string[] },
+          { title: "Artistic practice and multimedia production", body: "As a visual and plastic artist I have developed projects that explore the convergence between art, science and technology. My career includes recognitions such as first place in the Bogotá City Photography Award, scenographic design with video mapping for an award-winning MinCultura proposal, and a creation grant from the Ministry of Culture for the work Cidadã Speculatrix.", boldParts: null as null | string[] },
+        ],
       },
       jaime: {
         ariaLabel: "View Jaime Velásquez profile",

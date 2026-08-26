@@ -1668,9 +1668,21 @@ export default function ProgramaCreacionDigital() {
         id="julian" active={activeDocente === 'julian'} onClose={closeDocente} onSwipe={onSwipeDocente}
         portrait="" portraitEnd=""
         name={<>Julián<br />Bejarano</>}
-        tags={t.docentes.julian.tags}
+        tags={t.docentes.julian.modalTags}
       >
-        <p className="pcd-docente-modal__p">{t.docentes.julian.note}</p>
+        <h3 className="pcd-docente-modal__heading">{t.docentes.modalPerfil}</h3>
+        <p className="pcd-docente-modal__p">{t.docentes.julian.p1}</p>
+        <p className="pcd-docente-modal__p">{t.docentes.julian.p2}</p>
+        <hr className="pcd-docente-modal__rule" />
+        <h3 className="pcd-docente-modal__heading">{t.docentes.modalExp}</h3>
+        <ul className="pcd-docente-modal__list">
+          {t.docentes.julian.exp.map((item) => (
+            <li key={item.title}>
+              <strong>{item.title}</strong>
+              <span className="pcd-docente-modal__detail-plain">{item.body}</span>
+            </li>
+          ))}
+        </ul>
       </DocenteModal>
 
       <DocenteModal

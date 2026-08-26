@@ -7,6 +7,13 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Cambiado — Perfil completo de Julián Bejarano
+
+- Julián Bejarano tenía una tarjeta mínima (solo nombre, "perfil en construcción") desde que se agregó. El usuario mandó su información completa y se cargó siguiendo el mismo patrón de los docentes con perfil completo (Carlos, Dayana, John, Tatiana, Pilar): bio corta + tags para la tarjeta, y Perfil (2 párrafos) + Experiencia laboral (3 ítems: IDARTES, Laboratorio Kino Colombia, Práctica artística y producción multimedia) para el modal.
+- Sigue sin foto ("por ahora dejalo vacío") — se mantiene `pcd-docente--no-photo` y el placeholder gris en el modal.
+- Traducido también al inglés.
+- Archivos: `src/i18n/translations.ts`, `src/pages/ProgramaCreacionDigital.tsx`.
+
 ### Cambiado — 4ta card de blog del home en negro
 
 - A pedido del usuario, la 4ta card del preview de blog ya no repite el primer color del ciclo (cobalt) — ahora es negra (`--pcd-ink`) con texto claro (paper). Se agregó `pcd-blog-preview__card--ink` a `BLOG_CARD_COLORS`.
