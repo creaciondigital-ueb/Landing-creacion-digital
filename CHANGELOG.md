@@ -7,6 +7,11 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Cambiado — Fade de la rotación de proyectos más lento (0.9s -> 1.8s)
+
+- A pedido del usuario, `pcd-project--rotate-in` pasa de 0.9s a 1.8s.
+- Archivos: `src/styles/programa.css`.
+
 ### Cambiado — Rotación de proyectos del home: a destiempo y con fade suave (antes cambiaban las 2 juntas)
 
 - La rotación anterior avanzaba un solo índice compartido cada 5s, así que las 2 cards cambiaban siempre en el mismo instante — el usuario pidió que no fuera así.

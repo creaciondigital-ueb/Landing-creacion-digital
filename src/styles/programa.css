@@ -2154,7 +2154,7 @@ body:has(.pcd-docente-modal[open]) {
    que el .pcd-reveal normal, para que el cambio se sienta suave y no
    brusco — a pedido del usuario. */
 .pcd-project--rotate-in {
-  animation: pcd-project-rotate-in 0.9s ease;
+  animation: pcd-project-rotate-in 1.8s ease;
 }
 @keyframes pcd-project-rotate-in {
   from { opacity: 0; }
