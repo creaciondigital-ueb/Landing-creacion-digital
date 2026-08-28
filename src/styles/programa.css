@@ -1333,18 +1333,6 @@
 .pcd-docente--no-photo .pcd-docente__blob {
   background: rgba(13,13,13,0.06);
 }
-/* Docentes recién agregados, todavía sin foto — mismo placeholder gris
-   también en el modal (portrait) hasta que lleguen las imágenes reales. */
-.pcd-docente-modal--carlos .pcd-docente-modal__portrait,
-.pcd-docente-modal--dayana .pcd-docente-modal__portrait,
-.pcd-docente-modal--john .pcd-docente-modal__portrait,
-.pcd-docente-modal--tatiana .pcd-docente-modal__portrait,
-.pcd-docente-modal--pilar .pcd-docente-modal__portrait,
-.pcd-docente-modal--rusbel .pcd-docente-modal__portrait,
-.pcd-docente-modal--julian .pcd-docente-modal__portrait,
-.pcd-docente-modal--jaime .pcd-docente-modal__portrait {
-  background: rgba(13,13,13,0.06);
-}
 /* Ilustración de Juan David un poco más grande a pedido, en ambos estados */
 .pcd-docente--juandavid .pcd-docente__blob::before {
   transform: scale(1.15);
@@ -1405,6 +1393,88 @@
    achique por defecto de 0.94 en ::after de hecho INTRODUCIRÍA un salto de
    tamaño que no existe en el arte original, así que se anula. */
 .pcd-docente--daniela .pcd-docente__blob::after {
+  transform: none;
+}
+/* Carlos: mismo caso que Daniela/Pilar — el dibujo "end" (brazos cruzados)
+   está medido al mismo tamaño que el "init" en su lienzo, se anula el
+   achique 0.94. Además el personaje queda ligeramente a la izquierda del
+   centro en el lienzo del "end"; se corrige con un leve corrimiento del
+   encuadre para que no salte al cruzar entre poses. */
+.pcd-docente--carlos .pcd-docente__blob::after {
+  transform: none;
+  background-position: calc(50% + 7px) center;
+}
+/* Dayana: mismo caso que Daniela/Pilar — el dibujo "end" (guiño, mano en
+   los lentes) mide igual que el "init" en su lienzo. La diferencia de
+   ancho del bbox completo es solo el brazo extendido; midiendo nada más
+   la zona de la cabeza, la cara queda en la misma posición en ambas, así
+   que se anula el achique 0.94 sin compensar encuadre. Además, imagen un
+   poco más grande a pedido (mismo escalado en las dos poses). */
+.pcd-docente--dayana .pcd-docente__blob::before {
+  transform: scale(1.08);
+  transform-origin: center center;
+}
+.pcd-docente--dayana .pcd-docente__blob::after {
+  transform: scale(1.08);
+  transform-origin: center center;
+}
+/* Rusbel: mismo caso que Daniela/Pilar/Dayana — el dibujo "end" (seña de
+   "llámame") mide y encuadra igual que el "init" en su lienzo (bbox casi
+   idéntico), se anula el achique 0.94 sin compensar posición. Además,
+   imagen un poco más grande a pedido (mismo escalado en las dos poses). */
+.pcd-docente--rusbel .pcd-docente__blob::before {
+  transform: scale(1.08);
+  transform-origin: center center;
+}
+.pcd-docente--rusbel .pcd-docente__blob::after {
+  transform: scale(1.08);
+  transform-origin: center center;
+}
+/* Julián: mismo caso que Daniela/Pilar/Dayana/Rusbel — el dibujo "end"
+   (seña de rock) mide y encuadra igual que el "init" en su lienzo (bbox
+   casi idéntico, diferencia de centro ~5px = ruido), se anula el achique
+   0.94 sin compensar posición. Nota: las 2 ilustraciones llegaron con
+   fondo blanco opaco (no transparente como el resto) — se limpió con
+   flood-fill desde el borde antes de guardarlas como webp. */
+.pcd-docente--julian .pcd-docente__blob::after {
+  transform: none;
+}
+/* Tatiana: mismo caso que Dayana — el bbox completo del "end" (saludo con
+   la mano) da más ancho, pero es solo el brazo levantado; midiendo nada
+   más la zona de la cabeza, la cara queda igual en tamaño y posición en
+   ambas poses, así que se anula el achique 0.94. Ajuste fino a pedido: el
+   encuadre del "end" se sube 5px, luego se baja 1px y se corre 1px a la
+   izquierda (neto: 4px arriba, 1px izquierda). */
+.pcd-docente--tatiana .pcd-docente__blob::before {
+  transform: scale(1.08);
+  transform-origin: center center;
+}
+.pcd-docente--tatiana .pcd-docente__blob::after {
+  transform: scale(1.08);
+  transform-origin: center center;
+  background-position: calc(50% - 1px) calc(50% - 4px);
+}
+/* Jaime: bbox prácticamente idéntico entre "init" y "end" (779x772 vs
+   778x773, mismo centro), se anula el achique 0.94 sin compensar
+   posición. */
+.pcd-docente--jaime .pcd-docente__blob::after {
+  transform: none;
+}
+/* John: bbox casi idéntico entre "init" y "end" (836x816 vs 826x808,
+   centro con pocos px de diferencia = ruido), se anula el achique 0.94
+   sin compensar posición. */
+.pcd-docente--john .pcd-docente__blob::before {
+  transform: scale(0.92);
+  transform-origin: center center;
+}
+.pcd-docente--john .pcd-docente__blob::after {
+  transform: scale(0.92);
+  transform-origin: center center;
+}
+/* Pilar: mismo caso que Daniela — el dibujo "end" (pose pensativa) está
+   medido al mismo tamaño y encuadre que el "init" en su lienzo, así que se
+   anula el achique 0.94 para que la transición no salte de tamaño. */
+.pcd-docente--pilar .pcd-docente__blob::after {
   transform: none;
 }
 .pcd-docente:hover .pcd-docente__blob::before { opacity: 0; }
@@ -1635,6 +1705,77 @@ body:has(.pcd-docente-modal[open]) {
    a la misma escala que el "init" en el lienzo original, así que se anula
    el achique *0.94 del modal (se deja el 1.08 base para ambos). */
 .pcd-docente-modal--daniela .pcd-docente-modal__portrait-layer--end {
+  transform: scale(1.08);
+}
+
+/* Carlos: mismo hallazgo que en la card — el "end" ya viene a la misma
+   escala que el "init", se anula el achique *0.94 del modal (1.08 base
+   para ambos) y se aplica el mismo leve corrimiento horizontal. */
+.pcd-docente-modal--carlos .pcd-docente-modal__portrait-layer--end {
+  transform: translateX(7px) scale(1.08);
+}
+
+/* Dayana: mismo hallazgo que en la card — el "end" ya viene a la misma
+   escala y encuadre de cara que el "init", se anula el achique *0.94 del
+   modal (1.08 base para ambos), sin corrimiento de posición. Además, un
+   poco más grande a pedido en el modal también (mismo escalado ambas). */
+.pcd-docente-modal--dayana .pcd-docente-modal__portrait-layer--init {
+  transform: scale(calc(1.08 * 1.08));
+}
+.pcd-docente-modal--dayana .pcd-docente-modal__portrait-layer--end {
+  transform: scale(calc(1.08 * 1.08));
+}
+
+/* Rusbel: mismo hallazgo que en la card — el "end" ya viene a la misma
+   escala y encuadre que el "init", se anula el achique *0.94 del modal
+   (1.08 base para ambos), sin corrimiento de posición. Además, un poco
+   más grande a pedido en el modal también (mismo escalado ambas). */
+.pcd-docente-modal--rusbel .pcd-docente-modal__portrait-layer--init {
+  transform: scale(calc(1.08 * 1.08));
+}
+.pcd-docente-modal--rusbel .pcd-docente-modal__portrait-layer--end {
+  transform: scale(calc(1.08 * 1.08));
+}
+
+/* Julián: mismo hallazgo que en la card — el "end" ya viene a la misma
+   escala y encuadre que el "init", se anula el achique *0.94 del modal
+   (1.08 base para ambos), sin corrimiento de posición. */
+.pcd-docente-modal--julian .pcd-docente-modal__portrait-layer--end {
+  transform: scale(1.08);
+}
+
+/* Tatiana: mismo hallazgo que en la card — el "end" ya viene a la misma
+   escala y encuadre de cara que el "init", se anula el achique *0.94 del
+   modal (1.08 base para ambos). Ajuste fino a pedido: sube 5px, luego
+   baja 1px y corre 1px a la izquierda (neto: 4px arriba, 1px izquierda). */
+.pcd-docente-modal--tatiana .pcd-docente-modal__portrait-layer--init {
+  transform: scale(calc(1.08 * 1.08));
+}
+.pcd-docente-modal--tatiana .pcd-docente-modal__portrait-layer--end {
+  transform: translate(-1px, -4px) scale(calc(1.08 * 1.08));
+}
+
+/* Jaime: mismo hallazgo que en la card — el "end" ya viene a la misma
+   escala y encuadre que el "init", se anula el achique *0.94 del modal
+   (1.08 base para ambos), sin corrimiento de posición. */
+.pcd-docente-modal--jaime .pcd-docente-modal__portrait-layer--end {
+  transform: scale(1.08);
+}
+
+/* John: mismo hallazgo que en la card — el "end" ya viene a la misma
+   escala y encuadre que el "init", se anula el achique *0.94 del modal
+   (1.08 base para ambos), sin corrimiento de posición. */
+.pcd-docente-modal--john .pcd-docente-modal__portrait-layer--init {
+  transform: scale(calc(1.08 * 0.92));
+}
+.pcd-docente-modal--john .pcd-docente-modal__portrait-layer--end {
+  transform: scale(calc(1.08 * 0.92));
+}
+
+/* Pilar: mismo hallazgo que en la card — el "end" ya viene a la misma
+   escala que el "init" en el lienzo original, así que se anula el achique
+   *0.94 del modal (se deja el 1.08 base para ambos). */
+.pcd-docente-modal--pilar .pcd-docente-modal__portrait-layer--end {
   transform: scale(1.08);
 }
 .pcd-docente-modal__name {
@@ -2212,11 +2353,16 @@ body:has(.pcd-docente-modal[open]) {
   background: var(--pcd-paper);
   border-top: 1.5px solid rgba(13,13,13,0.1);
 }
+/* Centrado a pedido — mismo criterio que .pcd-team__head (equipo): título
+   y CTA apilados en columna y centrados, en vez del grid a dos columnas
+   (título a la izquierda, botón "Ver blog" pegado a la derecha) que tenía
+   antes. */
 .pcd-blog-preview__head {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  align-items: end;
-  gap: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 24px;
   margin-bottom: 56px;
 }
 .pcd-blog-preview__title {
@@ -2256,7 +2402,6 @@ body:has(.pcd-docente-modal[open]) {
 .pcd-blog-preview__card {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   color: var(--pcd-ink);
   text-decoration: none;
   border: 2.5px solid var(--pcd-ink);
@@ -2266,6 +2411,14 @@ body:has(.pcd-docente-modal[open]) {
   aspect-ratio: 4 / 5;
   min-height: 280px;
   padding: 18px 18px 20px;
+  /* Diagramación rediseñada a pedido: antes el número quedaba arriba,
+     el bloque de color del medio se veía vacío y el título/bajada se
+     quedaban pegados abajo. Ahora el número de orden es un número
+     "fantasma" grande de fondo (ver .pcd-blog-preview__index) y el
+     título+bajada se centran verticalmente en todo el espacio del
+     bloque, para que la card se sienta compuesta en vez de vacía. */
+  position: relative;
+  overflow: hidden;
 }
 .pcd-blog-preview__card:hover {
   box-shadow: 6px 6px 0 var(--pcd-ink);
@@ -2282,37 +2435,47 @@ body:has(.pcd-docente-modal[open]) {
    var(--pcd-ink)) se perdería contra un fondo también ink — mismo caso
    ya resuelto en .pcd-team--dark .pcd-team__panel. */
 .pcd-blog-preview__card--ink    { background: var(--pcd-ink); color: var(--pcd-paper); border-color: var(--pcd-paper); }
+/* Número de orden como cifra "fantasma" grande de fondo — llena el
+   espacio que antes quedaba vacío en la mitad de la card y le da algo de
+   textura/juego a la diagramación (mismo espíritu lúdico que el resto
+   del sitio: fuente --pcd-fun, ligera rotación). No interactivo. */
 .pcd-blog-preview__index {
-  font-family: var(--pcd-mono);
-  font-size: 12px;
-  letter-spacing: 0.08em;
-  opacity: 0.7;
+  position: absolute;
+  top: -0.12em;
+  right: 6px;
+  font-family: var(--pcd-fun);
+  font-size: 108px;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  opacity: 0.16;
+  transform: rotate(-4deg);
+  pointer-events: none;
+  user-select: none;
+  z-index: 0;
 }
 .pcd-blog-preview__body {
+  position: relative;
+  z-index: 1;
+  flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 6px;
-}
-.pcd-blog-preview__meta {
-  display: flex;
-  align-items: center;
+  justify-content: center;
   gap: 10px;
-  font-family: var(--pcd-mono);
-  font-size: 10px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  opacity: 0.7;
 }
-.pcd-blog-preview__meta span:first-child {
-  opacity: 1;
-  font-weight: 700;
-}
+/* Ceja (categoría + fecha) quitada a pedido del usuario — el título pasa
+   a ser lo primero que se lee dentro del bloque. Título con más punch:
+   se cambia de serif itálica (quieta, editorial) a sans bold sin itálica,
+   más grande y con interlineado más apretado, buscando un título más
+   llamativo/dinámico dentro de la card de color sólido. */
+/* Vuelta a la serif itálica (a pedido) para el título — el subtítulo/
+   bajada se queda con la sans normal que ya tenía. Se conserva el
+   tamaño grande (30px) del cambio anterior, solo cambia la tipografía. */
 .pcd-blog-preview__card-title {
   font-family: var(--pcd-serif);
   font-style: italic;
   font-weight: 400;
-  font-size: 19px;
-  line-height: 1.12;
+  font-size: 30px;
+  line-height: 1.05;
   letter-spacing: -0.01em;
   margin: 0;
 }
@@ -2356,7 +2519,6 @@ body:has(.pcd-docente-modal[open]) {
 
 @media (max-width: 980px) {
   .pcd-blog-preview { padding: 24px 24px 56px; }
-  .pcd-blog-preview__head { grid-template-columns: 1fr; }
   .pcd-blog-preview__title { font-size: 56px; }
   /* 2 en vez de 4 en este rango — con 4 columnas fijas las cards
      quedarían demasiado angostas antes de llegar al colapso a 1. */
@@ -2743,6 +2905,72 @@ body:has(.pcd-docente-modal[open]) {
 .pcd-projects__pagination button:hover:not(:disabled) { background: var(--pcd-ink); color: var(--pcd-paper); }
 .pcd-projects__pagination button.is-active { background: var(--pcd-ink); color: var(--pcd-paper); }
 .pcd-projects__pagination button:disabled { opacity: 0.3; }
+
+/* ────────────────────────────────────────────────────────────
+   /blog (listado completo) — reusa la estructura de /proyectos
+   (.pcd-projects-hero, .pcd-projects__filters, .pcd-projects-page__grid)
+   pero con: título del hero centrado, buscador, y cards con el mismo
+   lenguaje visual del blog del home (color de marca + número fantasma,
+   en vez de la miniatura con imagen que usan las cards de /proyectos).
+   Todo scopeado bajo .pcd-blog-listing para no tocar /proyectos, que
+   comparte esas mismas clases base. ──────────────────────────────── */
+.pcd-blog-listing .pcd-projects-hero { justify-content: center; text-align: center; padding-bottom: 88px; }
+/* La palabra "pop" del título ("cuenta") en negro y con la misma
+   tipografía serif itálica del resto del título — a pedido del usuario
+   se sacó el estilo "juguetón" (Rubik Bubbles + rotación) que usa por
+   defecto, además del color tomato, que competía con las cards de abajo. */
+.pcd-blog-listing .pcd-projects-hero__title .pop {
+  font-family: var(--pcd-serif);
+  font-style: italic;
+  color: var(--pcd-ink);
+  transform: none;
+}
+.pcd-blog-listing .pcd-projects-hero__content { flex: none; width: 100%; max-width: 900px; }
+.pcd-blog-listing .pcd-projects-hero__eyebrow-row { justify-content: center; }
+
+.pcd-blog-listing__search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1 1 220px;
+  min-width: 160px;
+  background: var(--pcd-paper);
+  border: 1.5px solid var(--pcd-ink);
+  border-radius: 999px;
+  padding: 9px 16px;
+  color: var(--pcd-ink);
+}
+.pcd-blog-listing__search svg { flex: none; opacity: 0.45; }
+.pcd-blog-listing__search input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-family: var(--pcd-sans);
+  font-size: 14px;
+  color: var(--pcd-ink);
+}
+.pcd-blog-listing__search input::placeholder { color: var(--pcd-ink); opacity: 0.4; }
+
+/* Cards del listado — mismas .pcd-blog-preview__card* del home, con un
+   poco más de aire (el home las diseñó para caber 4 en fila; acá van 3
+   y llevan además la línea de categoría/fecha que el home no muestra). */
+.pcd-blog-listing .pcd-projects-page__grid { margin-top: 44px; }
+.pcd-blog-listing__card {
+  min-height: 320px;
+}
+.pcd-blog-listing__meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--pcd-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  opacity: 0.7;
+  margin-bottom: 4px;
+}
+
 
 @media (max-width: 640px) {
   .pcd-projects-page__grid { grid-template-columns: 1fr; gap: 32px; }

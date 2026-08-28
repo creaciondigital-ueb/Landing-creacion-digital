@@ -24,7 +24,10 @@
   letter-spacing: -0.025em;
   color: var(--pcd-ink);
   margin: 0 0 16px;
-  max-width: 820px;
+  /* Antes tenía max-width: 820px, que lo angostaba y lo hacía envolver
+     en 3 líneas aunque sobraba espacio a la derecha (dentro de un .pdet
+     de 1100px) — a pedido del usuario, ahora ocupa todo el ancho. */
+  max-width: 100%;
 }
 .pdet__subtitle {
   font-family: var(--pcd-sans);
@@ -33,7 +36,9 @@
   color: var(--pcd-ink);
   opacity: 0.6;
   margin: 0 0 52px;
-  max-width: 600px;
+  /* Igual que el título: tenía max-width: 600px, que lo angostaba sin
+     necesidad dentro del .pdet de 1100px — a pedido del usuario. */
+  max-width: 100%;
 }
 
 /* ── Carrusel — ancho completo ── */
@@ -261,6 +266,37 @@
   background-position: center;
   background-color: #0d0d0d;
 }
+
+/* ── Cover de color + número fantasma, para publicaciones del blog que
+   todavía no tienen foto de portada (mismo lenguaje visual que las
+   cards del blog en el home: color de marca + numero grande de fondo,
+   en vez de la caja negra vacía de .pdet__more-thumb). Solo se usa en
+   BlogPostPage cuando post.image === ''. ── */
+.pdet__more-cover {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  position: relative;
+  overflow: hidden;
+}
+.pdet__more-cover--cobalt { background: var(--pcd-cobalt); }
+.pdet__more-cover--acid   { background: var(--pcd-acid); }
+.pdet__more-cover--tomato { background: var(--pcd-tomato); }
+.pdet__more-cover--ink    { background: var(--pcd-ink); }
+.pdet__more-number {
+  position: absolute;
+  top: -0.08em;
+  right: 4px;
+  font-family: var(--pcd-fun);
+  font-size: 72px;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  opacity: 0.22;
+  transform: rotate(-4deg);
+  pointer-events: none;
+  user-select: none;
+  color: var(--pcd-paper);
+}
+.pdet__more-cover--acid .pdet__more-number { color: var(--pcd-ink); }
 .pdet__more-info {
   padding: 16px 16px 18px;
   display: flex;

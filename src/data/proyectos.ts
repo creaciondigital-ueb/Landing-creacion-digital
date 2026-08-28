@@ -158,7 +158,8 @@ export const PROYECTOS: Proyecto[] = [
   },
   {
     id: 'libro-ilustrado-ia-vitiligo-infantil',
-    image: '',
+    image: '/programa/img/vitiligo-infantil.webp',
+    imageVertical: '/programa/img/proyectos/vitiligo-infantil-portada.webp',
     subject: 'Proyecto adicional',
     subjectEn: 'Additional project',
     year: '2026',
@@ -166,7 +167,10 @@ export const PROYECTOS: Proyecto[] = [
     captionEn: 'AI-illustrated book raising awareness about childhood vitiligo',
     student: 'Junior Mejía Méndez',
     modal: {
-      images: [],
+      // Solo la portada horizontal se muestra en la galería del detalle del
+      // proyecto (a pedido) — la vertical (imageVertical, arriba) es
+      // exclusivamente para la portada alta del carrusel rotativo del home.
+      images: ['/programa/img/vitiligo-infantil.webp'],
       titleEs: 'Libro Ilustrado con IA — Vitiligo Infantil',
       titleEn: 'AI-Illustrated Book — Childhood Vitiligo',
       descriptionEs:
@@ -179,7 +183,8 @@ export const PROYECTOS: Proyecto[] = [
   },
   {
     id: 'global-hack-seguros-educativos',
-    image: '',
+    image: '/programa/img/global-hack-seguros-educativos.webp',
+    imageVertical: '/programa/img/proyectos/global-hack-seguros-educativos-portada.webp',
     subject: 'Proyecto adicional',
     subjectEn: 'Additional project',
     year: '2026',
@@ -187,7 +192,10 @@ export const PROYECTOS: Proyecto[] = [
     captionEn: 'Third place at the Global Hack for educational insurance',
     student: 'Danna Bolaños, Mariana Cifuentes y Juliana Sanabria',
     modal: {
-      images: [],
+      // Solo la portada horizontal se muestra en la galería del detalle del
+      // proyecto (a pedido) — la vertical (imageVertical, arriba) es
+      // exclusivamente para la portada alta del carrusel rotativo del home.
+      images: ['/programa/img/global-hack-seguros-educativos.webp'],
       titleEs: 'Global Hack de Seguros Educativos — 3er lugar',
       titleEn: 'Educational Insurance Global Hack — 3rd Place',
       descriptionEs:

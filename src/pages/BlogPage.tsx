@@ -7,6 +7,9 @@ import '../styles/programa.css';
 const IMG = '/programa/img';
 const APLICA_URL = 'https://www.unbosque.edu.co/inscripciones/pregrado';
 const PAGE_SIZE = 9;
+// Mismo ciclo de colores de marca que las cards del blog en el home
+// (ver BLOG_CARD_COLORS en ProgramaCreacionDigital.tsx).
+const BLOG_CARD_COLORS = ['cobalt', 'acid', 'tomato', 'ink'] as const;
 
 type FilterKind = 'year' | 'category';
 interface Chip { kind: FilterKind; value: string; }
@@ -45,6 +48,7 @@ export default function BlogPage() {
   const [selectedYears, setSelectedYears] = useState<string[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [page, setPage] = useState(1);
+  const [search, setSearch] = useState('');
 
   const filtersRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -92,11 +96,17 @@ export default function BlogPage() {
   ];
   const removeChip = (chip: Chip) => (chip.kind === 'year' ? toggleYear(chip.value) : toggleCategory(chip.value));
 
-  const filtered = BLOG_POSTS.filter(
-    (p) =>
-      (selectedYears.length === 0 || selectedYears.includes(p.year)) &&
-      (selectedCategories.length === 0 || selectedCategories.includes(p.category))
-  );
+  const searchNorm = search.trim().toLowerCase();
+  const filtered = BLOG_POSTS.filter((p) => {
+    const matchesYear = selectedYears.length === 0 || selectedYears.includes(p.year);
+    const matchesCategory = selectedCategories.length === 0 || selectedCategories.includes(p.category);
+    const matchesSearch =
+      searchNorm === '' ||
+      [p.title, p.titleEn, p.excerpt, p.excerptEn]
+        .filter(Boolean)
+        .some((s) => (s as string).toLowerCase().includes(searchNorm));
+    return matchesYear && matchesCategory && matchesSearch;
+  });
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   const currentPage = Math.min(page, totalPages);
   const pageItems = filtered.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
@@ -134,7 +144,7 @@ export default function BlogPage() {
   );
 
   return (
-    <div className="pcd-page">
+    <div className="pcd-page pcd-blog-listing">
       <header className="pcd-header">
         <Link to="/" className="pcd-brand" aria-label="Inicio Creación Digital · Universidad El Bosque">
           <img className="pcd-brand__logo" src={`${IMG}/Label_UEB_CreacionDigital_Horizontal.png`} alt="Universidad El Bosque · Creación Digital" />
@@ -186,6 +196,19 @@ export default function BlogPage() {
       <section className="pcd-projects pcd-projects--page">
         {/* ===== FILTROS ===== */}
         <div className="pcd-projects__filters pcd-reveal" ref={filtersRef}>
+          <label className="pcd-blog-listing__search">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <circle cx="11" cy="11" r="7" />
+              <path d="m21 21-4.3-4.3" />
+            </svg>
+            <input
+              type="text"
+              value={search}
+              onChange={(e) => { setSearch(e.target.value); setPage(1); }}
+              placeholder={tb.searchPlaceholder}
+              aria-label={tb.searchPlaceholder}
+            />
+          </label>
           <div className="pcd-projects__filter-dropdown">
             <button
               type="button"
@@ -278,31 +301,34 @@ export default function BlogPage() {
           )}
         </div>
 
-        {/* ===== GRID ===== */}
+        {/* ===== GRID — mismas cards de color + número fantasma que el blog del home ===== */}
         {pageItems.length > 0 ? (
-          <div className="pcd-projects-page__grid">
+          <div className="pcd-projects-page__grid pcd-blog-listing__grid">
             {pageItems.map((p) => {
+              const origIndex = BLOG_POSTS.findIndex((bp) => bp.id === p.id);
+              const cardColor = BLOG_CARD_COLORS[origIndex % BLOG_CARD_COLORS.length];
+              const cat = lang === 'en' ? (p.categoryEn ?? p.category) : p.category;
+              const date = lang === 'en' ? (p.dateEn ?? p.date) : p.date;
+              const cap = lang === 'en' ? (p.titleEn ?? p.title) : p.title;
+              const exc = lang === 'en' ? (p.excerptEn ?? p.excerpt) : p.excerpt;
               const inner = (
                 <>
-                  <div
-                    className="pcd-project__media"
-                    style={{ backgroundImage: `url('${p.image}')` }}
-                    aria-hidden="true"
-                  />
-                  <div className="pcd-project__meta">
-                    <span>{(lang === 'en' ? (p.categoryEn ?? p.category) : p.category).toUpperCase()}</span>
-                    <span>{lang === 'en' ? (p.dateEn ?? p.date) : p.date}</span>
+                  <span className="pcd-blog-preview__index">{String(origIndex + 1).padStart(2, '0')}</span>
+                  <div className="pcd-blog-preview__body">
+                    <div className="pcd-blog-listing__meta">
+                      <span>{cat.toUpperCase()}</span>
+                      <span>{date}</span>
+                    </div>
+                    <p className="pcd-blog-preview__card-title">{cap}</p>
+                    <p className="pcd-blog-preview__excerpt">{exc}</p>
                   </div>
-                  <p className="pcd-project__caption">{lang === 'en' ? (p.titleEn ?? p.title) : p.title}</p>
-                  <p className="pcd-project__description">{lang === 'en' ? (p.excerptEn ?? p.excerpt) : p.excerpt}</p>
                 </>
               );
+              const cls = `pcd-blog-preview__card pcd-blog-preview__card--${cardColor} pcd-blog-listing__card pcd-reveal`;
               return p.detail ? (
-                <Link key={p.id} to={`/blog/${p.id}`} className="pcd-project pcd-project--clickable pcd-reveal" style={{ textDecoration: 'none' }}>
-                  {inner}
-                </Link>
+                <Link key={p.id} to={`/blog/${p.id}`} className={cls}>{inner}</Link>
               ) : (
-                <article key={p.id} className="pcd-project pcd-reveal">{inner}</article>
+                <article key={p.id} className={cls}>{inner}</article>
               );
             })}
           </div>

@@ -1121,10 +1121,11 @@ export default function ProgramaCreacionDigital() {
 
           {/* Rusbel */}
           <article
-            className="pcd-docente pcd-docente--rusbel pcd-docente--no-photo pcd-reveal" tabIndex={0} role="button"
+            className="pcd-docente pcd-docente--rusbel pcd-reveal" tabIndex={0} role="button"
             aria-label={t.docentes.rusbel.ariaLabel}
             onClick={() => onDocenteCardClick('rusbel')}
             onKeyDown={(e) => onCardKey(e, 'rusbel')}
+            style={{ '--docente-init': `url('${IMG}/Rusbel_Init.webp')`, '--docente-end': `url('${IMG}/Rusbel_End.webp')` } as CSSProperties}
           >
             <div className="pcd-docente__blob" aria-hidden="true" />
             <img className="pcd-sticker pcd-sticker--controller" src={`${IMG}/Controller.webp`} alt="" aria-hidden="true" />
@@ -1137,10 +1138,11 @@ export default function ProgramaCreacionDigital() {
 
           {/* Carlos */}
           <article
-            className="pcd-docente pcd-docente--carlos pcd-docente--no-photo pcd-reveal" tabIndex={0} role="button"
+            className="pcd-docente pcd-docente--carlos pcd-reveal" tabIndex={0} role="button"
             aria-label={t.docentes.carlos.ariaLabel}
             onClick={() => onDocenteCardClick('carlos')}
             onKeyDown={(e) => onCardKey(e, 'carlos')}
+            style={{ '--docente-init': `url('${IMG}/Carlos_Init.webp')`, '--docente-end': `url('${IMG}/Carlos_End.webp')` } as CSSProperties}
           >
             <div className="pcd-docente__blob" aria-hidden="true" />
             <img className="pcd-sticker pcd-sticker--star" src={`${IMG}/Star.webp`} alt="" aria-hidden="true" />
@@ -1153,10 +1155,11 @@ export default function ProgramaCreacionDigital() {
 
           {/* Dayana */}
           <article
-            className="pcd-docente pcd-docente--dayana pcd-docente--no-photo pcd-reveal" tabIndex={0} role="button"
+            className="pcd-docente pcd-docente--dayana pcd-reveal" tabIndex={0} role="button"
             aria-label={t.docentes.dayana.ariaLabel}
             onClick={() => onDocenteCardClick('dayana')}
             onKeyDown={(e) => onCardKey(e, 'dayana')}
+            style={{ '--docente-init': `url('${IMG}/Dayana_Init.webp')`, '--docente-end': `url('${IMG}/Dayana_End.webp')` } as CSSProperties}
           >
             <div className="pcd-docente__blob" aria-hidden="true" />
             <img className="pcd-sticker pcd-sticker--computer" src={`${IMG}/Computer.webp`} alt="" aria-hidden="true" />
@@ -1169,10 +1172,11 @@ export default function ProgramaCreacionDigital() {
 
           {/* Julián */}
           <article
-            className="pcd-docente pcd-docente--julian pcd-docente--no-photo pcd-reveal" tabIndex={0} role="button"
+            className="pcd-docente pcd-docente--julian pcd-reveal" tabIndex={0} role="button"
             aria-label={t.docentes.julian.ariaLabel}
             onClick={() => onDocenteCardClick('julian')}
             onKeyDown={(e) => onCardKey(e, 'julian')}
+            style={{ '--docente-init': `url('${IMG}/Julian_Init.webp')`, '--docente-end': `url('${IMG}/Julian_End.webp')` } as CSSProperties}
           >
             <div className="pcd-docente__blob" aria-hidden="true" />
             <img className="pcd-sticker pcd-sticker--love" src={`${IMG}/Love.webp`} alt="" aria-hidden="true" />
@@ -1185,10 +1189,11 @@ export default function ProgramaCreacionDigital() {
 
           {/* John */}
           <article
-            className="pcd-docente pcd-docente--john pcd-docente--no-photo pcd-reveal" tabIndex={0} role="button"
+            className="pcd-docente pcd-docente--john pcd-reveal" tabIndex={0} role="button"
             aria-label={t.docentes.john.ariaLabel}
             onClick={() => onDocenteCardClick('john')}
             onKeyDown={(e) => onCardKey(e, 'john')}
+            style={{ '--docente-init': `url('${IMG}/John_Init.webp')`, '--docente-end': `url('${IMG}/John_End.webp')` } as CSSProperties}
           >
             <div className="pcd-docente__blob" aria-hidden="true" />
             <img className="pcd-sticker pcd-sticker--camera" src={`${IMG}/Camera.webp`} alt="" aria-hidden="true" />
@@ -1201,10 +1206,11 @@ export default function ProgramaCreacionDigital() {
 
           {/* Tatiana */}
           <article
-            className="pcd-docente pcd-docente--tatiana pcd-docente--no-photo pcd-reveal" tabIndex={0} role="button"
+            className="pcd-docente pcd-docente--tatiana pcd-reveal" tabIndex={0} role="button"
             aria-label={t.docentes.tatiana.ariaLabel}
             onClick={() => onDocenteCardClick('tatiana')}
             onKeyDown={(e) => onCardKey(e, 'tatiana')}
+            style={{ '--docente-init': `url('${IMG}/Tatiana_Init.webp')`, '--docente-end': `url('${IMG}/Tatiana_End.webp')` } as CSSProperties}
           >
             <div className="pcd-docente__blob" aria-hidden="true" />
             <img className="pcd-sticker pcd-sticker--idea" src={`${IMG}/Idea.webp`} alt="" aria-hidden="true" />
@@ -1217,10 +1223,11 @@ export default function ProgramaCreacionDigital() {
 
           {/* Pilar */}
           <article
-            className="pcd-docente pcd-docente--pilar pcd-docente--no-photo pcd-reveal" tabIndex={0} role="button"
+            className="pcd-docente pcd-docente--pilar pcd-reveal" tabIndex={0} role="button"
             aria-label={t.docentes.pilar.ariaLabel}
             onClick={() => onDocenteCardClick('pilar')}
             onKeyDown={(e) => onCardKey(e, 'pilar')}
+            style={{ '--docente-init': `url('${IMG}/Pilar_Init.webp')`, '--docente-end': `url('${IMG}/Pilar_End.webp')` } as CSSProperties}
           >
             <div className="pcd-docente__blob" aria-hidden="true" />
             <img className="pcd-sticker pcd-sticker--controller" src={`${IMG}/Controller.webp`} alt="" aria-hidden="true" />
@@ -1233,10 +1240,11 @@ export default function ProgramaCreacionDigital() {
 
           {/* Jaime */}
           <article
-            className="pcd-docente pcd-docente--jaime pcd-docente--no-photo pcd-reveal" tabIndex={0} role="button"
+            className="pcd-docente pcd-docente--jaime pcd-reveal" tabIndex={0} role="button"
             aria-label={t.docentes.jaime.ariaLabel}
             onClick={() => onDocenteCardClick('jaime')}
             onKeyDown={(e) => onCardKey(e, 'jaime')}
+            style={{ '--docente-init': `url('${IMG}/Jaime_Init.webp')`, '--docente-end': `url('${IMG}/Jaime_End.webp')` } as CSSProperties}
           >
             <div className="pcd-docente__blob" aria-hidden="true" />
             <img className="pcd-sticker pcd-sticker--phone" src={`${IMG}/Phone.webp`} alt="" aria-hidden="true" />
@@ -1388,10 +1396,11 @@ export default function ProgramaCreacionDigital() {
 
           {/* Rusbel (clon para loop infinito) */}
           <article
-            className="pcd-docente pcd-docente--rusbel pcd-docente--no-photo pcd-reveal" tabIndex={-1} role="button" aria-hidden="true"
+            className="pcd-docente pcd-docente--rusbel pcd-reveal" tabIndex={-1} role="button" aria-hidden="true"
             aria-label={t.docentes.rusbel.ariaLabel}
             onClick={() => onDocenteCardClick('rusbel')}
             onKeyDown={(e) => onCardKey(e, 'rusbel')}
+            style={{ '--docente-init': `url('${IMG}/Rusbel_Init.webp')`, '--docente-end': `url('${IMG}/Rusbel_End.webp')` } as CSSProperties}
           >
             <div className="pcd-docente__blob" aria-hidden="true" />
             <img className="pcd-sticker pcd-sticker--controller" src={`${IMG}/Controller.webp`} alt="" aria-hidden="true" />
@@ -1404,10 +1413,11 @@ export default function ProgramaCreacionDigital() {
 
           {/* Carlos (clon para loop infinito) */}
           <article
-            className="pcd-docente pcd-docente--carlos pcd-docente--no-photo pcd-reveal" tabIndex={-1} role="button" aria-hidden="true"
+            className="pcd-docente pcd-docente--carlos pcd-reveal" tabIndex={-1} role="button" aria-hidden="true"
             aria-label={t.docentes.carlos.ariaLabel}
             onClick={() => onDocenteCardClick('carlos')}
             onKeyDown={(e) => onCardKey(e, 'carlos')}
+            style={{ '--docente-init': `url('${IMG}/Carlos_Init.webp')`, '--docente-end': `url('${IMG}/Carlos_End.webp')` } as CSSProperties}
           >
             <div className="pcd-docente__blob" aria-hidden="true" />
             <img className="pcd-sticker pcd-sticker--star" src={`${IMG}/Star.webp`} alt="" aria-hidden="true" />
@@ -1420,10 +1430,11 @@ export default function ProgramaCreacionDigital() {
 
           {/* Dayana (clon para loop infinito) */}
           <article
-            className="pcd-docente pcd-docente--dayana pcd-docente--no-photo pcd-reveal" tabIndex={-1} role="button" aria-hidden="true"
+            className="pcd-docente pcd-docente--dayana pcd-reveal" tabIndex={-1} role="button" aria-hidden="true"
             aria-label={t.docentes.dayana.ariaLabel}
             onClick={() => onDocenteCardClick('dayana')}
             onKeyDown={(e) => onCardKey(e, 'dayana')}
+            style={{ '--docente-init': `url('${IMG}/Dayana_Init.webp')`, '--docente-end': `url('${IMG}/Dayana_End.webp')` } as CSSProperties}
           >
             <div className="pcd-docente__blob" aria-hidden="true" />
             <img className="pcd-sticker pcd-sticker--computer" src={`${IMG}/Computer.webp`} alt="" aria-hidden="true" />
@@ -1436,10 +1447,11 @@ export default function ProgramaCreacionDigital() {
 
           {/* Julián (clon para loop infinito) */}
           <article
-            className="pcd-docente pcd-docente--julian pcd-docente--no-photo pcd-reveal" tabIndex={-1} role="button" aria-hidden="true"
+            className="pcd-docente pcd-docente--julian pcd-reveal" tabIndex={-1} role="button" aria-hidden="true"
             aria-label={t.docentes.julian.ariaLabel}
             onClick={() => onDocenteCardClick('julian')}
             onKeyDown={(e) => onCardKey(e, 'julian')}
+            style={{ '--docente-init': `url('${IMG}/Julian_Init.webp')`, '--docente-end': `url('${IMG}/Julian_End.webp')` } as CSSProperties}
           >
             <div className="pcd-docente__blob" aria-hidden="true" />
             <img className="pcd-sticker pcd-sticker--love" src={`${IMG}/Love.webp`} alt="" aria-hidden="true" />
@@ -1452,10 +1464,11 @@ export default function ProgramaCreacionDigital() {
 
           {/* John (clon para loop infinito) */}
           <article
-            className="pcd-docente pcd-docente--john pcd-docente--no-photo pcd-reveal" tabIndex={-1} role="button" aria-hidden="true"
+            className="pcd-docente pcd-docente--john pcd-reveal" tabIndex={-1} role="button" aria-hidden="true"
             aria-label={t.docentes.john.ariaLabel}
             onClick={() => onDocenteCardClick('john')}
             onKeyDown={(e) => onCardKey(e, 'john')}
+            style={{ '--docente-init': `url('${IMG}/John_Init.webp')`, '--docente-end': `url('${IMG}/John_End.webp')` } as CSSProperties}
           >
             <div className="pcd-docente__blob" aria-hidden="true" />
             <img className="pcd-sticker pcd-sticker--camera" src={`${IMG}/Camera.webp`} alt="" aria-hidden="true" />
@@ -1468,10 +1481,11 @@ export default function ProgramaCreacionDigital() {
 
           {/* Tatiana (clon para loop infinito) */}
           <article
-            className="pcd-docente pcd-docente--tatiana pcd-docente--no-photo pcd-reveal" tabIndex={-1} role="button" aria-hidden="true"
+            className="pcd-docente pcd-docente--tatiana pcd-reveal" tabIndex={-1} role="button" aria-hidden="true"
             aria-label={t.docentes.tatiana.ariaLabel}
             onClick={() => onDocenteCardClick('tatiana')}
             onKeyDown={(e) => onCardKey(e, 'tatiana')}
+            style={{ '--docente-init': `url('${IMG}/Tatiana_Init.webp')`, '--docente-end': `url('${IMG}/Tatiana_End.webp')` } as CSSProperties}
           >
             <div className="pcd-docente__blob" aria-hidden="true" />
             <img className="pcd-sticker pcd-sticker--idea" src={`${IMG}/Idea.webp`} alt="" aria-hidden="true" />
@@ -1484,10 +1498,11 @@ export default function ProgramaCreacionDigital() {
 
           {/* Pilar (clon para loop infinito) */}
           <article
-            className="pcd-docente pcd-docente--pilar pcd-docente--no-photo pcd-reveal" tabIndex={-1} role="button" aria-hidden="true"
+            className="pcd-docente pcd-docente--pilar pcd-reveal" tabIndex={-1} role="button" aria-hidden="true"
             aria-label={t.docentes.pilar.ariaLabel}
             onClick={() => onDocenteCardClick('pilar')}
             onKeyDown={(e) => onCardKey(e, 'pilar')}
+            style={{ '--docente-init': `url('${IMG}/Pilar_Init.webp')`, '--docente-end': `url('${IMG}/Pilar_End.webp')` } as CSSProperties}
           >
             <div className="pcd-docente__blob" aria-hidden="true" />
             <img className="pcd-sticker pcd-sticker--controller" src={`${IMG}/Controller.webp`} alt="" aria-hidden="true" />
@@ -1500,10 +1515,11 @@ export default function ProgramaCreacionDigital() {
 
           {/* Jaime (clon para loop infinito) */}
           <article
-            className="pcd-docente pcd-docente--jaime pcd-docente--no-photo pcd-reveal" tabIndex={-1} role="button" aria-hidden="true"
+            className="pcd-docente pcd-docente--jaime pcd-reveal" tabIndex={-1} role="button" aria-hidden="true"
             aria-label={t.docentes.jaime.ariaLabel}
             onClick={() => onDocenteCardClick('jaime')}
             onKeyDown={(e) => onCardKey(e, 'jaime')}
+            style={{ '--docente-init': `url('${IMG}/Jaime_Init.webp')`, '--docente-end': `url('${IMG}/Jaime_End.webp')` } as CSSProperties}
           >
             <div className="pcd-docente__blob" aria-hidden="true" />
             <img className="pcd-sticker pcd-sticker--phone" src={`${IMG}/Phone.webp`} alt="" aria-hidden="true" />
@@ -1701,7 +1717,8 @@ export default function ProgramaCreacionDigital() {
 
       <DocenteModal
         id="carlos" active={activeDocente === 'carlos'} onClose={closeDocente} onSwipe={onSwipeDocente}
-        portrait="" portraitEnd=""
+        portrait={`${IMG}/Carlos_Init.webp`}
+        portraitEnd={`${IMG}/Carlos_End.webp`}
         name={<>Carlos<br />Almeyda</>}
         tags={t.docentes.carlos.modalTags}
       >
@@ -1722,7 +1739,8 @@ export default function ProgramaCreacionDigital() {
 
       <DocenteModal
         id="dayana" active={activeDocente === 'dayana'} onClose={closeDocente} onSwipe={onSwipeDocente}
-        portrait="" portraitEnd=""
+        portrait={`${IMG}/Dayana_Init.webp`}
+        portraitEnd={`${IMG}/Dayana_End.webp`}
         name={<>Dayana<br />González</>}
         tags={t.docentes.dayana.modalTags}
       >
@@ -1743,7 +1761,8 @@ export default function ProgramaCreacionDigital() {
 
       <DocenteModal
         id="john" active={activeDocente === 'john'} onClose={closeDocente} onSwipe={onSwipeDocente}
-        portrait="" portraitEnd=""
+        portrait={`${IMG}/John_Init.webp`}
+        portraitEnd={`${IMG}/John_End.webp`}
         name={<>John<br />Lamprea</>}
         tags={t.docentes.john.modalTags}
       >
@@ -1764,7 +1783,8 @@ export default function ProgramaCreacionDigital() {
 
       <DocenteModal
         id="tatiana" active={activeDocente === 'tatiana'} onClose={closeDocente} onSwipe={onSwipeDocente}
-        portrait="" portraitEnd=""
+        portrait={`${IMG}/Tatiana_Init.webp`}
+        portraitEnd={`${IMG}/Tatiana_End.webp`}
         name={<>Tatiana<br />Flórez</>}
         tags={t.docentes.tatiana.modalTags}
       >
@@ -1785,7 +1805,8 @@ export default function ProgramaCreacionDigital() {
 
       <DocenteModal
         id="pilar" active={activeDocente === 'pilar'} onClose={closeDocente} onSwipe={onSwipeDocente}
-        portrait="" portraitEnd=""
+        portrait={`${IMG}/Pilar_Init.webp`}
+        portraitEnd={`${IMG}/Pilar_End.webp`}
         name={<>Pilar<br />Camargo</>}
         tags={t.docentes.pilar.modalTags}
       >
@@ -1806,16 +1827,30 @@ export default function ProgramaCreacionDigital() {
 
       <DocenteModal
         id="rusbel" active={activeDocente === 'rusbel'} onClose={closeDocente} onSwipe={onSwipeDocente}
-        portrait="" portraitEnd=""
+        portrait={`${IMG}/Rusbel_Init.webp`}
+        portraitEnd={`${IMG}/Rusbel_End.webp`}
         name={<>Rusbel<br />Castillo</>}
-        tags={t.docentes.rusbel.tags}
+        tags={t.docentes.rusbel.modalTags}
       >
-        <p className="pcd-docente-modal__p">{t.docentes.rusbel.note}</p>
+        <h3 className="pcd-docente-modal__heading">{t.docentes.modalPerfil}</h3>
+        <p className="pcd-docente-modal__p">{t.docentes.rusbel.p1}</p>
+        <p className="pcd-docente-modal__p">{t.docentes.rusbel.p2}</p>
+        <hr className="pcd-docente-modal__rule" />
+        <h3 className="pcd-docente-modal__heading">{t.docentes.modalExp}</h3>
+        <ul className="pcd-docente-modal__list">
+          {t.docentes.rusbel.exp.map((item) => (
+            <li key={item.title}>
+              <strong>{item.title}</strong>
+              <span className="pcd-docente-modal__detail-plain">{item.body}</span>
+            </li>
+          ))}
+        </ul>
       </DocenteModal>
 
       <DocenteModal
         id="julian" active={activeDocente === 'julian'} onClose={closeDocente} onSwipe={onSwipeDocente}
-        portrait="" portraitEnd=""
+        portrait={`${IMG}/Julian_Init.webp`}
+        portraitEnd={`${IMG}/Julian_End.webp`}
         name={<>Julián<br />Bejarano</>}
         tags={t.docentes.julian.modalTags}
       >
@@ -1836,11 +1871,24 @@ export default function ProgramaCreacionDigital() {
 
       <DocenteModal
         id="jaime" active={activeDocente === 'jaime'} onClose={closeDocente} onSwipe={onSwipeDocente}
-        portrait="" portraitEnd=""
+        portrait={`${IMG}/Jaime_Init.webp`}
+        portraitEnd={`${IMG}/Jaime_End.webp`}
         name={<>Jaime<br />Velásquez</>}
-        tags={t.docentes.jaime.tags}
+        tags={t.docentes.jaime.modalTags}
       >
-        <p className="pcd-docente-modal__p">{t.docentes.jaime.note}</p>
+        <h3 className="pcd-docente-modal__heading">{t.docentes.modalPerfil}</h3>
+        <p className="pcd-docente-modal__p">{t.docentes.jaime.p1}</p>
+        <p className="pcd-docente-modal__p">{t.docentes.jaime.p2}</p>
+        <hr className="pcd-docente-modal__rule" />
+        <h3 className="pcd-docente-modal__heading">{t.docentes.modalExp}</h3>
+        <ul className="pcd-docente-modal__list">
+          {t.docentes.jaime.exp.map((item) => (
+            <li key={item.title}>
+              <strong>{item.title}</strong>
+              <span className="pcd-docente-modal__detail-plain">{item.body}</span>
+            </li>
+          ))}
+        </ul>
       </DocenteModal>
 
       {/* ===== EQUIPO ===== */}
@@ -1934,8 +1982,7 @@ export default function ProgramaCreacionDigital() {
       <section id="blog" className="pcd-blog-preview">
         <header className="pcd-blog-preview__head pcd-reveal">
           <h2 className="pcd-blog-preview__title">
-            {t.blog.sectionTitleL1}<br />
-            <span className="pop">{t.blog.sectionTitlePop}</span>{t.blog.sectionTitleL2rest}
+            {t.blog.sectionTitleL1} <span className="pop">{t.blog.sectionTitlePop}</span>{t.blog.sectionTitleL2rest}
             {t.blog.sectionTitleL3 && <><br />{t.blog.sectionTitleL3}</>}
           </h2>
           <Link className="pcd-cta-secondary" to="/blog">
@@ -1946,7 +1993,17 @@ export default function ProgramaCreacionDigital() {
 
         {BLOG_POSTS.length > 0 ? (
           <div className="pcd-blog-preview__grid">
-            {BLOG_POSTS.slice(0, 4).map((post, i) => {
+            {/* Últimos 4 posts, del más reciente al más antiguo — se asume
+                que las publicaciones nuevas se agregan al final de
+                BLOG_POSTS (src/data/blog.ts), así que se toman los
+                últimos 4 y se invierten para que el más nuevo salga
+                primero (a pedido del usuario). El número de la cifra
+                fantasma (origIndex) es la posición ORIGINAL del post en
+                BLOG_POSTS, no la posición en pantalla — así la card del
+                post 4 sigue mostrando "04" aunque ahora salga primero
+                (bug reportado: antes usaba el índice del .map ya
+                reordenado y todas las cards se corrían de número). */}
+            {BLOG_POSTS.map((post, origIndex) => ({ post, origIndex })).slice(-4).reverse().map(({ post, origIndex }, i) => {
               // Sin foto: cada card es un bloque de color sólido — se
               // reutiliza el mismo ciclo azul(cobalt) -> amarillo(acid) ->
               // rojo(tomato) que ya usamos en los stickers de docentes,
@@ -1954,12 +2011,8 @@ export default function ProgramaCreacionDigital() {
               const cardColor = BLOG_CARD_COLORS[i % BLOG_CARD_COLORS.length];
               const inner = (
                 <>
-                  <span className="pcd-blog-preview__index">{String(i + 1).padStart(2, '0')}</span>
+                  <span className="pcd-blog-preview__index">{String(origIndex + 1).padStart(2, '0')}</span>
                   <div className="pcd-blog-preview__body">
-                    <div className="pcd-blog-preview__meta">
-                      <span>{(lang === 'en' ? (post.categoryEn ?? post.category) : post.category).toUpperCase()}</span>
-                      <span>{lang === 'en' ? (post.dateEn ?? post.date) : post.date}</span>
-                    </div>
                     <p className="pcd-blog-preview__card-title">{lang === 'en' ? (post.titleEn ?? post.title) : post.title}</p>
                     <p className="pcd-blog-preview__excerpt">{lang === 'en' ? (post.excerptEn ?? post.excerpt) : post.excerpt}</p>
                   </div>

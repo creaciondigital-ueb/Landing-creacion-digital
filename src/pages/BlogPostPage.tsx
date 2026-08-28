@@ -1,6 +1,11 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { Link, useParams, Navigate } from 'react-router-dom';
 import { BLOG_POSTS } from '../data/blog';
+
+// Mismo ciclo de colores de marca que usan las cards del blog en el home
+// (ver BLOG_CARD_COLORS en ProgramaCreacionDigital.tsx) — se usa para el
+// cover con número fantasma cuando una publicación todavía no tiene foto.
+const MORE_CARD_COLORS = ['cobalt', 'acid', 'tomato', 'ink'] as const;
 import { useLang } from '../i18n/LanguageContext';
 import '../styles/programa.css';
 import '../styles/proyecto-detalle.css';
@@ -202,9 +207,18 @@ export default function BlogPostPage() {
               {otrosPosts.map((p) => {
                 const cap = lang === 'en' ? (p.titleEn ?? p.title) : p.title;
                 const cat = lang === 'en' ? (p.categoryEn ?? p.category) : p.category;
+                const origIndex = BLOG_POSTS.findIndex((bp) => bp.id === p.id);
+                const cardColor = MORE_CARD_COLORS[origIndex % MORE_CARD_COLORS.length];
+                const cover = p.image ? (
+                  <div className="pdet__more-thumb" style={{ backgroundImage: `url('${p.image}')` }} />
+                ) : (
+                  <div className={`pdet__more-cover pdet__more-cover--${cardColor}`}>
+                    <span className="pdet__more-number">{String(origIndex + 1).padStart(2, '0')}</span>
+                  </div>
+                );
                 const card = (
                   <>
-                    <div className="pdet__more-thumb" style={{ backgroundImage: `url('${p.image}')` }} />
+                    {cover}
                     <div className="pdet__more-info">
                       <span className="pdet__more-subject">{cat}</span>
                       <p className="pdet__more-caption">{cap}</p>

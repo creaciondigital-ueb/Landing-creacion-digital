@@ -7,6 +7,222 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Cambiado — Palabra "cuenta" del título de /blog con la tipografía del título
+
+- Ya se había puesto en negro; ahora además se le quitó la tipografía "juguetona" (Rubik Bubbles + rotación -2deg) que trae `.pop` por defecto y se le puso la misma serif itálica del resto del título, para que quede integrada en vez de destacar como un elemento aparte.
+- Archivos: `src/styles/programa.css`.
+
+### Cambiado — Palabra "cuenta" del título de /blog en negro
+
+- La palabra destacada del título ("cuenta") usaba el color tomato por defecto; con las cards de abajo ya usando los 4 colores de marca (tomato incluido), competía demasiado. Se cambió a negro (`var(--pcd-ink)`), solo en `/blog`.
+- Archivos: `src/styles/programa.css`.
+
+### Cambiado — Un poco más de aire entre el buscador y las cards en /blog
+
+- Se subió el `margin-top` del grid de cards de 24px a 44px, solo en `/blog` (scopeado con `.pcd-blog-listing`), para separarlo un poco más de la barra de buscador/filtros.
+- Archivos: `src/styles/programa.css`.
+
+### Corregido — Buscador del blog pegado al título
+
+- En `/blog`, el buscador (y los filtros de año/categoría) quedaban pegados justo debajo del título del hero, sin aire — el hero tenía `padding-bottom: 0` porque en `/proyectos` (de donde se heredó el estilo) ese espacio lo daba la ilustración del hero, que `/blog` no tiene. Se le agregó `padding-bottom: 88px` al hero, solo para `/blog` (scopeado con `.pcd-blog-listing`).
+- Archivos: `src/styles/programa.css`.
+
+### Cambiado — Rediseño de la página /blog (listado completo)
+
+- Título del hero ("Historias que cuenta / nuestro programa.") y la ceja de arriba ahora están centrados, en vez de alineados a la izquierda.
+- Se agregó un buscador (pill con ícono de lupa) en la barra de filtros, que busca por título y bajada en ambos idiomas, en tiempo real y sin distinguir mayúsculas/minúsculas; se combina con los filtros de año/categoría que ya existían.
+- Las cards del grid dejaron de usar la miniatura con imagen (que quedaba en negro para las publicaciones sin foto) y ahora usan el mismo lenguaje visual que las cards del blog en el home: color de marca (cobalt/acid/tomato/ink, cíclico según el índice real de cada post) + número de orden "fantasma" grande de fondo. Se les agregó una línea de categoría + fecha arriba del título, que las cards del home no tienen.
+- Todo el cambio quedó scopeado bajo una clase nueva en la página (`pcd-blog-listing`) para no afectar `/proyectos`, que reutiliza varias de las mismas clases base (`.pcd-projects-hero`, `.pcd-project*`, `.pcd-projects-page__grid`).
+- Archivos: `src/pages/BlogPage.tsx`, `src/styles/programa.css`, `src/i18n/translations.ts` (placeholder del buscador, ES/EN).
+
+### Corregido — Subtítulo de la página de detalle (blog/proyecto) angosto sin necesidad
+
+- Mismo caso que el título: el subtítulo (`.pdet__subtitle`) tenía `max-width: 600px`, angostándolo sin necesidad dentro del contenedor `.pdet` (1100px). Se quitó el límite (`max-width: 100%`) para que use todo el ancho disponible, igual que el título.
+- Archivos: `src/styles/proyecto-detalle.css`.
+
+### Corregido — Título de la página de detalle (blog/proyecto) angosto sin necesidad
+
+- El título (`.pdet__title`) tenía `max-width: 820px`, que lo obligaba a envolver en varias líneas aunque sobraba espacio horizontal dentro del contenedor `.pdet` (1100px) — se ve en `/blog/:id` y también en `/proyectos/:id`, que comparten esta clase. Se quitó el límite (`max-width: 100%`) para que el título use todo el ancho disponible.
+- Archivos: `src/styles/proyecto-detalle.css`.
+
+### Cambiado — Fecha de Explora Unbosque y covers de "Más publicaciones" sin foto
+
+- Explora Unbosque en realidad fue 2 días puntuales (miércoles 19 y sábado 22 de agosto), no "desde el 19 de agosto" como se había cargado — se corrigió la fecha (`date`/`dateEn`) y la frase del cuerpo en ambos idiomas.
+- En la página de detalle de una publicación (`/blog/:id`), las cards de "Más publicaciones" mostraban una caja negra vacía para las 3 notas que todavía no tienen foto de portada. Se agregó un cover alternativo (color de marca + número de orden "fantasma" grande, mismo lenguaje visual que las cards del blog en el home) que se usa automáticamente cuando `post.image` está vacío; en cuanto una publicación tenga foto real, vuelve a mostrarse esa imagen sin tocar código.
+- Archivos: `src/data/blog.ts`, `src/pages/BlogPostPage.tsx`, `src/styles/proyecto-detalle.css`.
+
+### Agregado — 3 publicaciones reales del blog (reemplazan el contenido de ejemplo)
+
+- Se cargaron las 3 primeras publicaciones reales del programa, reemplazando por completo los 4 objetos `ejemplo-post-*` que solo existían para previsualizar el diseño de las cards: "Una creadora digital en Paraguay: Ana Salavarrieta vive su experiencia de intercambio", "De Colombia a Alemania: una experiencia creativa junto a Franziska Junge" y "Explora Unbosque: así estamos conociendo a nuestros futuros creadores".
+- Cada publicación incluye título, categoría, fecha, bajada y cuerpo completo en español e inglés (traducción propia, fiel al texto original), además de `tagsEs`/`tagsEn`. Todas quedan con `image: ''` y `detail.images: []` — no se enviaron fotos de portada para estas 3 notas; se agregan cuando lleguen.
+- El orden en el array quedó: Ana Salavarrieta → Franziska Junge → Explora Unbosque (de más antigua a más reciente), para que la vista "más reciente primero" del home muestre primero la de Explora Unbosque, que es la más actual.
+- Se quitó el comentario de cabecera que marcaba el archivo como contenido de ejemplo, ya que ahora tiene publicaciones reales.
+- Archivos: `src/data/blog.ts`.
+
+### Corregido — El número de las cards del blog en el home no coincidía con el post
+
+- Bug reportado: tras invertir el orden (más reciente primero), la card del post 4 ("cuarta tarjeta de prueba") mostraba el número "01" en vez de "04" — el número usaba el índice de la lista ya reordenada en vez de la posición original del post.
+- Se separó el índice original del post (usado para el número, `origIndex`) de la posición en pantalla (usada solo para el color cíclico de la card, `i`), calculando `origIndex` ANTES de invertir el orden. Ahora cada card muestra siempre el número de su propio post sin importar en qué posición salga.
+- Archivos: `src/pages/ProgramaCreacionDigital.tsx`.
+
+### Cambiado — Cards del blog en el home: más reciente primero
+
+- A pedido, las 4 cards del home ahora salen del post más reciente al más antiguo (la que hoy es "04" pasa a ser la primera). Se cambió `BLOG_POSTS.slice(0, 4)` por `BLOG_POSTS.slice(-4).reverse()`: toma los últimos 4 posts del arreglo (asumiendo que las publicaciones nuevas se agregan al final, como pasó con `ejemplo-post-4`) y los invierte para que el más nuevo salga primero.
+- Archivos: `src/pages/ProgramaCreacionDigital.tsx`.
+
+### Cambiado — Título de la sección del blog en 2 líneas
+
+- A pedido, el título pasó de 3 líneas ("Historias que" / "cuenta nuestro" / "programa.") a exactamente 2: "Historias que cuenta" / "nuestro programa." — se movió "nuestro" del segundo tramo al tercero en la traducción ES, y se quitó el salto de línea entre el primer tramo y la palabra destacada ("cuenta") en el JSX. La versión EN ("Stories our program" / "tells.") queda igual de 2 líneas con el mismo cambio de JSX, sin tocar su traducción.
+- Archivos: `src/i18n/translations.ts`, `src/pages/ProgramaCreacionDigital.tsx`.
+
+### Cambiado — Título de la sección del blog centrado
+
+- A pedido, se centró el encabezado de la sección del blog en el home: título y botón "Ver blog" pasan de un grid a dos columnas (título a la izquierda, botón pegado a la derecha) a una columna apilada y centrada — mismo criterio que ya usa `.pcd-team__head` (sección Equipo).
+- Se limpió la regla responsive `grid-template-columns: 1fr` que quedó obsoleta al dejar de ser un grid.
+- Archivos: `src/styles/programa.css`.
+
+### Cambiado — Título de las cards del blog: vuelta a la serif itálica
+
+- A pedido, el título vuelve a la tipografía serif itálica (como estaba originalmente) en vez de la sans bold del cambio anterior; la bajada/excerpt se queda con la sans normal que ya tenía, sin cambios. Se conserva el tamaño grande (30px).
+- Archivos: `src/styles/programa.css`.
+
+### Cambiado — Diagramación de las cards del blog en el home (menos vacía, título centrado y más grande)
+
+- El usuario mostró captura: con `justify-content: space-between`, el número quedaba arriba, el bloque de color de la mitad se veía vacío y el título+bajada quedaban pegados abajo — "aburrida".
+- Rediseño: el número de orden ("01", "02"...) pasa a ser una cifra "fantasma" grande de fondo (108px, fuente `--pcd-fun`, opacidad 0.16, rotada -4deg, no interactiva) que llena el espacio antes vacío en vez de un número chico arriba. El bloque título+bajada (`.pcd-blog-preview__body`) ahora se centra verticalmente en todo el alto de la card (`flex:1; justify-content:center`) en vez de quedar pegado abajo.
+- El título se agrandó de 24px a 30px (mismo peso 800 sans sin itálica del cambio anterior), para que sea lo más llamativo del bloque.
+- Archivos: `src/styles/programa.css`.
+
+### Cambiado — Cards del blog en el home: se quita la ceja, título más dinámico
+
+- Se quitó la "ceja" (categoría + fecha en mayúsculas, arriba del título) de las cards de color sólido del blog en el home — el título pasa a ser lo primero que se lee dentro del bloque.
+- El título se hizo más llamativo/dinámico a pedido: pasó de serif itálica (19px, look editorial-quieto) a sans bold sin itálica (24px, peso 800, interlineado más apretado) — más punch visual dentro del bloque de color sólido.
+- Archivos: `src/pages/ProgramaCreacionDigital.tsx`, `src/styles/programa.css`.
+
+### Agregado — Portadas del proyecto Global Hack de Seguros Educativos
+
+- El proyecto `global-hack-seguros-educativos` no tenía imágenes (`image: ''`, `modal.images: []`). Llegaron 2: una horizontal (banner "¡Estamos en la Global Hack!") y una vertical (misma pieza en formato historia/story).
+- Se guardaron como `public/programa/img/global-hack-seguros-educativos.webp` (horizontal → `image`) y `public/programa/img/proyectos/global-hack-seguros-educativos-portada.webp` (vertical → `imageVertical`), mismo patrón que el resto de proyectos.
+- Igual que con el proyecto de Junior, a pedido la galería del detalle del proyecto (`modal.images`) muestra SOLO la horizontal — la vertical queda reservada para la portada alta del carrusel rotativo del home.
+- Archivos: `src/data/proyectos.ts`, `public/programa/img/global-hack-seguros-educativos.webp`, `public/programa/img/proyectos/global-hack-seguros-educativos-portada.webp`.
+
+### Agregado — Portadas del proyecto de Junior (libro ilustrado con IA, vitiligo infantil)
+
+- El proyecto `libro-ilustrado-ia-vitiligo-infantil` no tenía imágenes (`image: ''`, `modal.images: []`). Llegaron 2: una horizontal (mockup del libro abierto) y una vertical (foto de Junior).
+- Se guardaron como `public/programa/img/vitiligo-infantil.webp` (horizontal → `image`) y `public/programa/img/proyectos/vitiligo-infantil-portada.webp` (vertical → `imageVertical`), mismo patrón de nombres/carpetas que los demás proyectos.
+- A pedido, la galería del detalle del proyecto (`modal.images`) muestra SOLO la horizontal — la vertical queda reservada exclusivamente para la portada alta del carrusel rotativo del home (`HomeProjectsPreview`).
+- Archivos: `src/data/proyectos.ts`, `public/programa/img/vitiligo-infantil.webp`, `public/programa/img/proyectos/vitiligo-infantil-portada.webp`.
+
+### Cambiado — Tamaño de foto de John (más chica) y Tatiana (más grande)
+
+- A pedido, se achicó un ~8% la ilustración de John (card y modal, ambas poses por igual) y se agrandó un ~8% la de Tatiana (card y modal, ambas poses por igual, conservando el corrimiento de encuadre ya aplicado al "end").
+- Archivos: `src/styles/programa.css`.
+
+### Agregado — Foto de John Lamprea (carrusel de docentes + modal)
+
+- Llegaron las 2 ilustraciones de John Lamprea (de frente, y con seña de "ok" guiñando el ojo). Se procesaron y guardaron como `John_Init.webp` (default) y `John_End.webp` (hover), mismo formato/tamaño de lienzo (1000×1000, fondo transparente) que el resto.
+- Bbox de contenido casi idéntico entre las dos poses (836×816 vs 826×808, centro con pocos px de diferencia = ruido), así que se anuló el achique automático (`transform: none` en la card, `scale(1.08)` sin *0.94 en el modal) sin compensar posición.
+- Se quitó `pcd-docente--no-photo` de las 2 cards de John (principal + clon del loop), se agregaron las variables `--docente-init`/`--docente-end` y se completaron `portrait`/`portraitEnd` en el modal con las rutas reales. Ya tenía la bio completa (Perfil/Experiencia laboral) de un mensaje anterior, así que con esto su ficha queda completa.
+- Se eliminó la regla `.pcd-docente-modal--john .pcd-docente-modal__portrait { background: rgba(13,13,13,0.06); }` (placeholder gris del modal): John era el último docente que la necesitaba, así que **con esto ya no queda ningún docente sin foto**.
+- Archivos: `src/pages/ProgramaCreacionDigital.tsx`, `src/styles/programa.css`, `public/programa/img/John_Init.webp`, `public/programa/img/John_End.webp`.
+
+### Agregado — Perfil completo de Jaime Velásquez (docente)
+
+- Se cargó la bio completa que mandó el usuario (Perfil + Experiencia laboral), en español y traducida al inglés, siguiendo el mismo patrón ya usado con Rusbel y el resto de docentes: `bio`/`tags` cortos para la card, `p1`/`p2` (Perfil) y `exp` (3 entradas: DISEIM 3D, Plan A, Sportstech) para el modal.
+- El modal de Jaime pasó del placeholder de "perfil en construcción" (`note`) al patrón completo Perfil/Experiencia laboral. Ya tenía foto (agregada en el mensaje anterior), así que con esto su ficha queda completa.
+- Archivos: `src/i18n/translations.ts` (bloques ES y EN de `docentes.jaime`), `src/pages/ProgramaCreacionDigital.tsx` (modal de Jaime).
+
+### Agregado — Foto de Jaime Velásquez (carrusel de docentes + modal)
+
+- Llegaron las 2 ilustraciones de Jaime Velásquez (de frente, y con seña de paz). Se procesaron y guardaron como `Jaime_Init.webp` (default) y `Jaime_End.webp` (hover), mismo formato/tamaño de lienzo (1000×1000, fondo transparente) que el resto.
+- Bbox de contenido prácticamente idéntico entre las dos poses (779×772 vs 778×773, mismo centro) — el caso más parejo medido hasta ahora — así que se anuló el achique automático (`transform: none` en la card, `scale(1.08)` sin *0.94 en el modal) sin compensar posición.
+- Se quitó `pcd-docente--no-photo` de las 2 cards de Jaime (principal + clon del loop) y se agregaron las variables `--docente-init`/`--docente-end`; se quitó `jaime` de la lista de placeholders grises del modal y se completaron `portrait`/`portraitEnd` con las rutas reales. El texto del modal sigue con el placeholder de "perfil en construcción" (`note`) — solo se pidió resolver las fotos por ahora.
+- Archivos: `src/pages/ProgramaCreacionDigital.tsx`, `src/styles/programa.css`, `public/programa/img/Jaime_Init.webp`, `public/programa/img/Jaime_End.webp`.
+
+### Cambiado — Ajuste fino de encuadre de la foto "end" de Tatiana (2)
+
+- A pedido, se bajó 1px y se corrió 1px a la izquierda el encuadre de la pose de saludo de Tatiana (neto acumulado: 4px arriba, 1px izquierda desde el original), tanto en la card como en el modal.
+- Archivos: `src/styles/programa.css`.
+
+### Cambiado — Ajuste fino de encuadre de la foto "end" de Tatiana (saludo)
+
+- A pedido, se subió 5px el encuadre de la segunda pose de Tatiana (saludando con la mano), tanto en la card (`background-position: center calc(50% - 5px)`) como en el modal (`translateY(-5px)`).
+- Archivos: `src/styles/programa.css`.
+
+### Agregado — Foto de Tatiana Flórez (carrusel de docentes + modal)
+
+- Llegaron las 2 ilustraciones de Tatiana Flórez (de frente, y saludando con la mano). Se procesaron y guardaron como `Tatiana_Init.webp` (default) y `Tatiana_End.webp` (hover), mismo formato/tamaño de lienzo (1000×1000, fondo transparente) que el resto.
+- El bbox completo del "end" da más ancho que el "init" (681 vs 645px), pero es solo por la mano levantada saludando — igual que con Dayana, se midió aparte solo la franja de la cabeza y la cara queda en el mismo tamaño y posición en ambas poses. Se aplicó el mismo criterio: se anula el achique automático (`transform: none` en la card, `scale(1.08)` sin *0.94 en el modal), sin corrimiento de encuadre.
+- Se quitó `pcd-docente--no-photo` de las 2 cards de Tatiana (principal + clon del loop) y se agregaron las variables `--docente-init`/`--docente-end`; se quitó `tatiana` de la lista de placeholders grises del modal y se completaron `portrait`/`portraitEnd` con las rutas reales.
+- Archivos: `src/pages/ProgramaCreacionDigital.tsx`, `src/styles/programa.css`, `public/programa/img/Tatiana_Init.webp`, `public/programa/img/Tatiana_End.webp`.
+
+### Agregado — Foto de Julián Bejarano (carrusel de docentes + modal)
+
+- Llegaron las 2 ilustraciones de Julián Bejarano (de frente, y con la seña de rock/"I love you"). A diferencia de todos los docentes anteriores, las 2 imágenes llegaron con fondo blanco OPACO (no transparente) — se detectó al medir el bbox de contenido (daba casi el lienzo completo, 999×999). Se limpiaron con flood-fill desde el borde (solo se vuelve transparente la región blanca conectada al borde, sin tocar blancos internos del dibujo) y se verificaron visualmente sobre un fondo de color antes de guardarlas, sin halo ni recorte duro en los bordes.
+- Ya limpias, se guardaron como `Julian_Init.webp` (default) y `Julian_End.webp` (hover), mismo formato de lienzo (1000×1000) que el resto. El bbox de contenido quedó casi idéntico entre las dos poses (745×785 vs 751×788, centro con ~5px de diferencia = ruido), así que se anuló el achique automático (`transform: none` en la card, `scale(1.08)` sin *0.94 en el modal) sin compensar encuadre — mismo criterio que Daniela/Pilar/Dayana/Rusbel.
+- Se quitó `pcd-docente--no-photo` de las 2 cards de Julián (principal + clon del loop) y se agregaron las variables `--docente-init`/`--docente-end`; se quitó `julian` de la lista de placeholders grises del modal y se completaron `portrait`/`portraitEnd` con las rutas reales.
+- Archivos: `src/pages/ProgramaCreacionDigital.tsx`, `src/styles/programa.css`, `public/programa/img/Julian_Init.webp`, `public/programa/img/Julian_End.webp`.
+
+### Cambiado — Foto de Rusbel un poco más grande (card y modal)
+
+- A pedido, se agrandó la ilustración de Rusbel un ~8% tanto en la card del carrusel como en el modal, en las dos poses por igual (init y end), mismo criterio ya aplicado con Dayana.
+- Archivos: `src/styles/programa.css`.
+
+### Agregado — Foto de Rusbel Castillo (carrusel de docentes + modal)
+
+- Llegaron las 2 ilustraciones de Rusbel Castillo (de frente, y con la seña de "llámame"/"shaka"). Se procesaron y guardaron como `Rusbel_Init.webp` (default) y `Rusbel_End.webp` (hover), mismo formato/tamaño de lienzo (1000×1000, fondo transparente) que el resto de docentes.
+- Se midió el recuadro de contenido de ambas ilustraciones: quedan prácticamente idénticas en tamaño y encuadre dentro de su lienzo (844×768 vs 843×768, mismo centro), así que se anuló el achique automático (`transform: none` en la card, `scale(1.08)` sin *0.94 en el modal) sin necesidad de compensar posición — mismo criterio que Daniela, Pilar y Dayana.
+- Se quitó `pcd-docente--no-photo` de las 2 cards de Rusbel (principal + clon del loop) y se agregaron las variables `--docente-init`/`--docente-end`; se quitó `rusbel` de la lista de placeholders grises del modal y se completaron `portrait`/`portraitEnd` con las rutas reales.
+- Archivos: `src/pages/ProgramaCreacionDigital.tsx`, `src/styles/programa.css`, `public/programa/img/Rusbel_Init.webp`, `public/programa/img/Rusbel_End.webp`.
+
+### Agregado — Perfil completo de Rusbel Castillo (docente)
+
+- Se cargó la bio completa que mandó el usuario (Perfil + Experiencia laboral), en español y traducida al inglés, siguiendo el mismo patrón ya usado con Carlos, Dayana, John, Tatiana, Pilar y Julián: `bio`/`tags` cortos para la card, `p1`/`p2` (Perfil) y `exp` (3 entradas: producción audiovisual y creación de contenido, fotografía y dirección audiovisual, Universidad El Bosque) para el modal.
+- El modal de Rusbel pasó del placeholder de "perfil en construcción" (`note`) al patrón completo Perfil/Experiencia laboral (mismo layout que Julián). Sigue sin foto (`pcd-docente--no-photo` / placeholder gris en el modal).
+- Archivos: `src/i18n/translations.ts` (bloques ES y EN de `docentes.rusbel`), `src/pages/ProgramaCreacionDigital.tsx` (modal de Rusbel).
+
+### Revertido — Corrimiento de la foto "end" de Carlos
+
+- El usuario pidió deshacer el ajuste anterior ("mentira, déjala como estaba"). Se restauró el encuadre de la pose de brazos cruzados de Carlos a los valores previos (`calc(50% + 7px)` en la card, `translateX(7px)` en el modal).
+- Archivos: `src/styles/programa.css`.
+
+### Cambiado — Ajuste fino de encuadre de la foto "end" de Carlos (brazos cruzados)
+
+- A pedido, se corrió 15px más a la izquierda el encuadre de la segunda pose de Carlos (brazos cruzados), tanto en la card (`background-position: calc(50% - 8px)`, antes `+7px`) como en el modal (`translateX(-8px)`, antes `7px`).
+- Archivos: `src/styles/programa.css`.
+
+### Cambiado — Ajuste fino de tamaño de la foto de Dayana
+
+- El agrandado anterior (1.15) quedó grande a los ojos del usuario; se bajó a un punto intermedio (1.08) tanto en la card como en el modal, en ambas poses por igual.
+- Archivos: `src/styles/programa.css`.
+
+### Cambiado — Foto de Dayana un poco más grande (card y modal)
+
+- A pedido, se agrandó la ilustración de Dayana un ~15% tanto en la card del carrusel como en el modal, en las dos poses por igual (init y end), para no reintroducir un salto de tamaño al alternar.
+- Archivos: `src/styles/programa.css`.
+
+### Agregado — Foto de Dayana González (carrusel de docentes + modal)
+
+- Llegaron las 2 ilustraciones de Dayana González (de frente con lentes puestos, y guiñando el ojo mientras se ajusta los lentes). Se procesaron y guardaron como `Dayana_Init.webp` (default) y `Dayana_End.webp` (hover), mismo formato/tamaño de lienzo (1000×1000, fondo transparente) que el resto.
+- El bbox completo del "end" da más ancho que el "init" (713 vs 674px), pero es solo por el brazo extendido hacia los lentes — no indica que el personaje esté más grande ni corrido. Se midió aparte solo la franja del cabello/cabeza (sin el brazo) y la cara queda en la posición y tamaño casi idénticos en ambas poses. Por eso se aplicó el mismo criterio que Daniela/Pilar: se anula el achique automático (`transform: none` en la card, `scale(1.08)` sin *0.94 en el modal), sin ningún corrimiento de encuadre.
+- Se quitó `pcd-docente--no-photo` de las 2 cards de Dayana (principal + clon del loop) y se agregaron las variables `--docente-init`/`--docente-end`; se quitó `dayana` de la lista de placeholders grises del modal y se completaron `portrait`/`portraitEnd` con las rutas reales.
+- Archivos: `src/pages/ProgramaCreacionDigital.tsx`, `src/styles/programa.css`, `public/programa/img/Dayana_Init.webp`, `public/programa/img/Dayana_End.webp`.
+
+### Agregado — Foto de Carlos Almeyda (carrusel de docentes + modal)
+
+- Llegaron las 2 ilustraciones de Carlos Almeyda (pose de frente y pose con los brazos cruzados). Se procesaron y guardaron como `Carlos_Init.webp` (default) y `Carlos_End.webp` (hover), mismo formato/tamaño de lienzo (1000×1000, fondo transparente) que el resto de docentes.
+- Se midió el recuadro de contenido de ambas ilustraciones: quedan al mismo tamaño dentro de su lienzo (722×794 vs 715×800 en 1000px), así que se anuló el achique automático (`transform: none` en la card, `scale(1.08)` sin *0.94 en el modal), mismo criterio ya usado con Daniela y Pilar.
+- A diferencia de Pilar, el personaje en la pose "end" (brazos cruzados) sí queda medido unos ~22px más a la izquierda del centro que en "init" dentro del lienzo de origen — se corrigió con un leve corrimiento horizontal del encuadre (`background-position: calc(50% + 7px) center` en la card, `translateX(7px)` en el modal) para que la cara no salte al alternar entre las dos poses.
+- Se quitó `pcd-docente--no-photo` de las 2 cards de Carlos (principal + clon del loop) y se agregaron las variables `--docente-init`/`--docente-end`; se quitó `carlos` de la lista de placeholders grises del modal y se completaron `portrait`/`portraitEnd` con las rutas reales.
+- Archivos: `src/pages/ProgramaCreacionDigital.tsx`, `src/styles/programa.css`, `public/programa/img/Carlos_Init.webp`, `public/programa/img/Carlos_End.webp`.
+
+### Agregado — Foto de Pilar Camargo (carrusel de docentes + modal)
+
+- Llegaron las 2 ilustraciones de Pilar Camargo (pose sonriendo de frente y pose pensativa con la mano en la barbilla). Se procesaron y guardaron como `Pilar_Init.webp` (default) y `Pilar_End.webp` (hover), mismo formato/tamaño de lienzo (1000×1000, fondo transparente) que el resto de docentes.
+- Se midió el recuadro de contenido (bounding box) de ambas ilustraciones antes de tocar el CSS: quedan prácticamente idénticas en tamaño y encuadre dentro de su lienzo (a diferencia de la mayoría de parejas, donde el dibujo "end" viene ~6% más grande). Por eso se siguió el mismo criterio ya usado con Daniela: se anula el achique automático (`transform: none` en la card, `scale(1.08)` sin *0.94 en el modal) tanto en `.pcd-docente--pilar` como en `.pcd-docente-modal--pilar`, para que la transición entre las dos poses no salte de tamaño y sea casi imperceptible, tal como se pidió.
+- Se quitó `pcd-docente--no-photo` de las 2 cards de Pilar (principal + clon del loop) y se agregaron las variables `--docente-init`/`--docente-end`; se quitó `pilar` de la lista de placeholders grises del modal y se completaron `portrait`/`portraitEnd` con las rutas reales.
+- Archivos: `src/pages/ProgramaCreacionDigital.tsx`, `src/styles/programa.css`, `public/programa/img/Pilar_Init.webp`, `public/programa/img/Pilar_End.webp`.
+
 ### Cambiado — Ilustración de los stickers de cámara y mando (docentes)
 
 - El usuario mandó 2 nuevas ilustraciones (cámara y mando de videojuegos) para reemplazar el dibujo interno de esos 2 stickers del carrusel de docentes, manteniendo el mismo tamaño y todo lo demás (fondo tipo nube azul/rojo, borde negro, posición, animación de balanceo).
