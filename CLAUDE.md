@@ -7,7 +7,7 @@
 ### Mi nombre en este proyecto
 
 **Claude Renard** — Líder de Desarrollo / Tech Lead
-Soy el coordinador del equipo técnico de la Galería 3D. Dirijo las sesiones, presento los equipos al usuario, y soy responsable de que el trabajo se ejecute con calidad.
+Soy el coordinador del equipo técnico de este sitio (landing + proyectos de estudiantes + blog). Dirijo las sesiones, presento los equipos al usuario, y soy responsable de que el trabajo se ejecute con calidad.
 
 ### El equipo de especialistas
 
@@ -120,12 +120,9 @@ FLUJO DE DEPLOY (manual, sin CI):
    b. git merge develop --ff-only   (linear history requerida)
    c. git tag -a vX.Y.Z -m "Release vX.Y.Z"
    d. git push origin main --tags
-   e. DEPLOY MANUAL del frontend:
-      - git stash push -- vite.config.ts   (si hay override local de API_TARGET)
+   e. DEPLOY MANUAL del frontend (sitio 100% estático, sin backend):
       - npm run build
       - scp -r dist/* root@159.203.189.167:/var/www/galeria-frontend/
-      - git stash pop
-      (backend NO se redeploya si no hubo cambios en server.js)
 3. VOLVER INMEDIATAMENTE a develop:
    a. git checkout develop
    b. git merge main   (sync)
@@ -280,7 +277,6 @@ Claude Renard (yo): "Para esta feature propongo convocar a:
 | ❌ Cambios grandes sin commits | Pérdida de trabajo | Commits cada 15-30 min |
 | ❌ Implementar sin leer código | Rompe patrones | Read tool SIEMPRE primero |
 | ❌ Commit sin actualizar CHANGELOG | Pérdida de historial | Documentar ANTES del commit |
-| ❌ Endpoints Express sin guard JWT/role | Exposición de datos | Verificar `requireAuth`/`requireRole` en server.js |
 | ❌ Commitear en `main` | main = solo deploy | Desarrollo SIEMPRE en develop |
 | ❌ Quedarse en `main` después del deploy | Próximo commit va a producción sin querer | git checkout develop inmediatamente |
 
@@ -300,18 +296,16 @@ Claude Renard (yo): "Para esta feature propongo convocar a:
 
 ## CONTEXTO DEL PROYECTO
 
-- **Framework**: Vite 6 + React 19 + TypeScript strict
-- **Backend**: Express propio en Node 22 + PostgreSQL + JWT (NO Supabase)
-- **Storage de archivos pesados**: DigitalOcean Spaces (bucket `galeria-3d-files`, región nyc3, con CDN)
-- **Frontend**: CSS custom editorial v3.4.0 (paper/ink/cobalt/acid/magenta/tomato) + model-viewer + Marmoset Viewer
+- **Qué es**: landing del pregrado en Creación Digital (Universidad El Bosque) + galería de proyectos de estudiantes (`/proyectos`) + blog de noticias (`/blog`). 5 rutas, sin contar la de repuesto (404).
+- **Sin backend**: no hay API, no hay base de datos, no hay autenticación. El contenido (proyectos, posts) vive a mano en `src/data/proyectos.ts` y `src/data/blog.ts`. La carpeta `backend/` (Express + PostgreSQL de un proyecto anterior, "Galería 3D") se eliminó del repo en sep. 2026 — si alguna documentación vieja todavía la menciona como si existiera, está desactualizada.
+- **Framework**: Vite 6 + React 19 + React Router 7 + TypeScript strict
+- **Frontend**: CSS custom editorial v3.4.0 (paper/ink/cobalt/acid/tomato) con tipografías DM Serif Text + Zalando Sans + Rubik Bubbles + JetBrains Mono
 - **Deploy**: DigitalOcean Droplet (`159.203.189.167`) — `npm run build` local + `scp -r dist/* root@...:/var/www/galeria-frontend/`. NO hay GitHub Actions ni GitHub Pages.
-- **Dominio**: `ceopacademia.org` (Hostinger es solo registrador; NS apuntan a DO; SSL Let's Encrypt)
-- **Repo**: `github.com/Karlvolsung88/LandingCreacionDigital` (renombrado desde `galeria-3d-clase` — pendiente avisar a colaborador)
+- **Dominio**: `creaciondigital.online` (Hostinger es solo registrador; NS apuntan a DO; SSL Let's Encrypt). `ceopacademia.org` es el dominio anterior, deprecado — no usarlo en nada nuevo.
+- **Repo**: `github.com/Karlvolsung88/LandingCreacionDigital`
 - **Build**: `npm run build`
-- **Dev**: `npm run dev` (Vite con proxy de `/api` y `/cdn` configurable en `vite.config.ts`)
-- **Modelos**: GLB/GLTF/MVIEW en DO Spaces servidos vía Nginx con resolver dinámico
-- **Tablas PostgreSQL**: `profiles`, `models`, `likes`, `comments`, `student_skills`
-- **Detalle completo**: ver `docs/deploy.md` (infra, credenciales, runbook, endpoints)
+- **Dev**: `npm run dev`
+- **Detalle completo de infra/deploy**: ver `docs/deploy.md`
 
 ---
 

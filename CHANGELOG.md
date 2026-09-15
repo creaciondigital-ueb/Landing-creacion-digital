@@ -7,6 +7,20 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Eliminado — Restos de Galería 3D/backend en el repo
+
+El usuario confirmó que la Galería 3D y su backend ya no existen como parte del proyecto — el sitio actual es solo la landing + `/proyectos` + `/blog`, 100% estático. La ronda anterior de correcciones de la auditoría había dejado esto pendiente porque los archivos seguían presentes; ahora se limpiaron:
+
+- **`backend/`** eliminado del repo por completo (`server.js`, `package.json`, `package-lock.json`, `set-cors.js`, `.env.example`) — Express + PostgreSQL + JWT que ya no se usa ni se despliega.
+- **`public/marmoset.js`** (241 KB) eliminado — visor 3D de la Galería 3D, ya confirmado como peso muerto sin ninguna referencia en el código en la auditoría anterior.
+- **`vite.config.ts`** simplificado — se quitó el proxy de dev de `/api` y `/cdn` hacia `ceopacademia.org` (backend inexistente + dominio deprecado).
+- **`package.json`**: `name` cambiado de `galeria-3d` a `landing-creacion-digital`, para que coincida con lo que el proyecto es hoy.
+- **`README.md`** reescrito de cero — describía un producto que ya no existe (galería 3D con Three.js, auth JWT, roles, likes/comentarios). Ahora documenta el sitio real: landing, `/proyectos`, `/blog`, sin backend.
+- **`docs/deploy.md`** recortado — se quitaron las secciones que ya no aplican (deploy del backend, tablas de PostgreSQL, endpoints de la API, monitoreo de PM2); quedó solo la infraestructura y el proceso de deploy que sí sigue existiendo (Nginx sirviendo el build estático). También se corrigió el dominio de ejemplo en la config de Nginx documentada (`ceopacademia.org` → `creaciondigital.online`) y se dejó marcado con 🔍 que la config real del servidor todavía necesita verificarse en vivo.
+- **`CLAUDE.md`**: se corrigieron las menciones a la Galería 3D como si siguiera activa (identidad del equipo, paso de deploy del backend, anti-patrón de endpoints Express) y se reescribió el bloque "CONTEXTO DEL PROYECTO" para reflejar el sitio real.
+- Build verificado con `npm run build` después de los cambios — compila limpio.
+- Archivos: `backend/*` (eliminado), `public/marmoset.js` (eliminado), `vite.config.ts`, `package.json`, `README.md`, `docs/deploy.md`, `CLAUDE.md`.
+
 ### Corregido — Hallazgos de la auditoría técnica de sep. 2026
 
 Serie de correcciones de código a partir de la auditoría integral del sitio (SEO técnico, manejo de errores, performance, accesibilidad y dependencias). No se tocó nada visual — todo lo de abajo es funcional o de infraestructura de código. Quedan fuera de esta ronda, por decisión explícita del usuario: los hallazgos relacionados con `ceopacademia.org` (dominio que ya no es de este sitio) y con CORS/helmet/rate-limiting/vulnerabilidades del backend (el backend y la Galería 3D ya no existen como parte del proyecto).
