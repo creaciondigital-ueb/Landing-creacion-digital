@@ -2,11 +2,17 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { PROYECTOS } from '../data/proyectos';
 import { useLang } from '../i18n/LanguageContext';
+import { useSeo } from '../hooks/useSeo';
 import '../styles/programa.css';
 
 const IMG = '/programa/img';
 const APLICA_URL = 'https://www.unbosque.edu.co/inscripciones/pregrado';
 const PAGE_SIZE = 9;
+
+const PROYECTOS_DESCRIPTION = {
+  es: 'Descubre los proyectos creados por estudiantes del programa de Creación Digital de la Universidad El Bosque: investigación, identidad de marca, UX y más.',
+  en: 'Discover the projects built by Digital Creation students at Universidad El Bosque: research, brand identity, UX and more.',
+};
 
 type FilterKind = 'year' | 'subject';
 interface Chip { kind: FilterKind; value: string; }
@@ -18,6 +24,14 @@ interface Chip { kind: FilterKind; value: string; }
 export default function ProyectosPage() {
   const { lang, setLang, t } = useLang();
   const tp = t.proyectosPage;
+
+  useSeo({
+    title: lang === 'en'
+      ? 'Student Projects · Digital Creation · Universidad El Bosque'
+      : 'Proyectos de estudiantes · Creación Digital · Universidad El Bosque',
+    description: PROYECTOS_DESCRIPTION[lang],
+    path: '/proyectos',
+  });
 
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -182,13 +196,13 @@ export default function ProyectosPage() {
         </div>
         <div className="pcd-projects-hero__illustration">
           <span className="pcd-projects-hero__globo-wrap pcd-projects-hero__globo-wrap--cen">
-            <img className="pcd-projects-hero__globo pcd-projects-hero__globo--cen" src={`${IMG}/globo-cen.webp`} alt="" aria-hidden="true" />
+            <img className="pcd-projects-hero__globo pcd-projects-hero__globo--cen" src={`${IMG}/globo-cen.webp`} alt="" aria-hidden="true" loading="lazy" />
           </span>
           <span className="pcd-projects-hero__globo-wrap pcd-projects-hero__globo-wrap--izq">
-            <img className="pcd-projects-hero__globo pcd-projects-hero__globo--izq" src={`${IMG}/globo-izq.webp`} alt="" aria-hidden="true" />
+            <img className="pcd-projects-hero__globo pcd-projects-hero__globo--izq" src={`${IMG}/globo-izq.webp`} alt="" aria-hidden="true" loading="lazy" />
           </span>
           <span className="pcd-projects-hero__globo-wrap pcd-projects-hero__globo-wrap--der">
-            <img className="pcd-projects-hero__globo pcd-projects-hero__globo--der" src={`${IMG}/globo-der.webp`} alt="" aria-hidden="true" />
+            <img className="pcd-projects-hero__globo pcd-projects-hero__globo--der" src={`${IMG}/globo-der.webp`} alt="" aria-hidden="true" loading="lazy" />
           </span>
           <img className="pcd-projects-hero__people" src={`${IMG}/proyectos-imagen.webp`} alt="Estudiantes de Creación Digital conversando" />
         </div>

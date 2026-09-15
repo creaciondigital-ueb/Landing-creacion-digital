@@ -9,6 +9,7 @@ const ProyectosPage = lazy(() => import('./pages/ProyectosPage'));
 const ProyectoDetallePage = lazy(() => import('./pages/ProyectoDetallePage'));
 const BlogPage = lazy(() => import('./pages/BlogPage'));
 const BlogPostPage = lazy(() => import('./pages/BlogPostPage'));
+const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
 
 /**
  * React Router no resetea el scroll al navegar entre rutas (a diferencia de
@@ -68,6 +69,19 @@ export default function App() {
           element={
             <Suspense fallback={<div className="pcd-loading">Cargando…</div>}>
               <BlogPostPage />
+            </Suspense>
+          }
+        />
+        {/* Ruta de repuesto (catch-all) — antes, cualquier URL fuera de
+            las 5 rutas de arriba no hacía match con nada y <Routes>
+            no renderizaba nada (pantalla en blanco, código 200 porque
+            Nginx sirve index.html para cualquier ruta). Hallazgo de la
+            auditoría de sep. 2026. */}
+        <Route
+          path="*"
+          element={
+            <Suspense fallback={<div className="pcd-loading">Cargando…</div>}>
+              <NotFoundPage />
             </Suspense>
           }
         />

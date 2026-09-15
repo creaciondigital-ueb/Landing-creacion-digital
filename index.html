@@ -4,10 +4,19 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="Pregrado en Creación Digital. No vinimos a dictar clase: vinimos a crear. Universidad El Bosque, Bogotá." />
+  <link rel="canonical" href="https://creaciondigital.online/" />
 
+  <meta property="og:site_name" content="Creación Digital · Universidad El Bosque" />
   <meta property="og:title" content="Creación Digital · Universidad El Bosque" />
   <meta property="og:description" content="Pregrado en Creación Digital. No vinimos a dictar clase: vinimos a crear. Universidad El Bosque, Bogotá." />
   <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://creaciondigital.online/" />
+  <meta property="og:image" content="https://creaciondigital.online/programa/img/Label_UEB_CreacionDigital_Horizontal.png" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Creación Digital · Universidad El Bosque" />
+  <meta name="twitter:description" content="Pregrado en Creación Digital. No vinimos a dictar clase: vinimos a crear. Universidad El Bosque, Bogotá." />
+  <meta name="twitter:image" content="https://creaciondigital.online/programa/img/Label_UEB_CreacionDigital_Horizontal.png" />
 
   <link rel="icon" href="/favicon.ico" sizes="any" />
   <link rel="icon" type="image/png" href="/favicon.png" />
@@ -16,9 +25,34 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <!-- Únicas fuentes que el sitio usa de verdad (antes también se cargaban
+       Bebas Neue y DM Sans sin ninguna referencia en el código — peso
+       muerto, detectado en la auditoría de sep. 2026 y eliminado). Antes
+       vivían en un @import dentro de global.css, que es render-blocking;
+       moverlas a un <link> del <head> permite que el navegador las
+       descubra y empiece a bajarlas antes. -->
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Text:ital@0;1&family=Zalando+Sans:ital,wght@0,300..700;1,300..700&family=Rubik+Bubbles&family=JetBrains+Mono:wght@400;500;600&family=Noto+Serif:wght@400&display=swap" rel="stylesheet" />
 
   <title>Creación Digital · Universidad El Bosque</title>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "EducationalOrganization",
+    "name": "Creación Digital · Universidad El Bosque",
+    "url": "https://creaciondigital.online/",
+    "logo": "https://creaciondigital.online/programa/img/Label_UEB_CreacionDigital_Horizontal.png",
+    "sameAs": [
+      "https://www.instagram.com/creaciondigital.ueb/",
+      "https://www.tiktok.com/@creaciondigital.ueb"
+    ],
+    "parentOrganization": {
+      "@type": "CollegeOrUniversity",
+      "name": "Universidad El Bosque",
+      "url": "https://www.unbosque.edu.co/"
+    }
+  }
+  </script>
 
   <!-- ============================================================
        Google Analytics 4 (gtag.js) — G-EMK9RDJD0G

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Generado a mano — el sitio es 100% estático (sin backend), así que no
+  hay forma de generar este archivo automáticamente en cada build. Si se
+  agrega una ruta nueva (otro proyecto, otro post de blog), hay que
+  agregar su <url> acá también. Auditoría sep. 2026.
+-->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://creaciondigital.online/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://creaciondigital.online/proyectos</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://creaciondigital.online/proyectos/chocosapiens-humanismo-digital</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://creaciondigital.online/proyectos/rappi-ux-research</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://creaciondigital.online/proyectos/la-guarida</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://creaciondigital.online/proyectos/libro-ilustrado-ia-vitiligo-infantil</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://creaciondigital.online/proyectos/global-hack-seguros-educativos</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://creaciondigital.online/blog</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://creaciondigital.online/blog/intercambio-paraguay-ana-salavarrieta</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://creaciondigital.online/blog/franziska-junge-alemania</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://creaciondigital.online/blog/explora-unbosque-agosto-2026</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+</urlset>

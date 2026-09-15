@@ -83,6 +83,7 @@ export default function ProyectoModal({ proyecto, lang, onClose }: Props) {
                   className={`proy-modal__slide${i === slide ? ' proy-modal__slide--active' : ''}`}
                   src={src}
                   alt={`${caption} — imagen ${i + 1}`}
+                  loading={i === 0 ? 'eager' : 'lazy'}
                 />
               ))}
               {images.length > 1 && (

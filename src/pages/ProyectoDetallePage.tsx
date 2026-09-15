@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, useCallback } from 'react';
 import { Link, useParams, Navigate } from 'react-router-dom';
 import { PROYECTOS } from '../data/proyectos';
 import { useLang } from '../i18n/LanguageContext';
+import { useSeo } from '../hooks/useSeo';
 import '../styles/programa.css';
 import '../styles/proyecto-detalle.css';
 
@@ -33,6 +34,25 @@ export default function ProyectoDetallePage() {
   }, [menuOpen]);
 
   const proyecto = PROYECTOS.find((p) => p.id === id);
+
+  // useSeo va ANTES del return condicional de abajo — los hooks de React
+  // deben llamarse siempre en el mismo orden, así que no puede depender
+  // de si `proyecto` existe. Por eso arma su propio título/descripción
+  // "seguros" en vez de reusar las constantes que se calculan más abajo.
+  useSeo({
+    title: proyecto?.modal
+      ? `${lang === 'en'
+          ? (proyecto.modal.titleEn ?? proyecto.modal.titleEs ?? proyecto.captionEn ?? proyecto.caption)
+          : (proyecto.modal.titleEs ?? proyecto.caption)} · Creación Digital`
+      : 'Creación Digital · Universidad El Bosque',
+    description: proyecto
+      ? (lang === 'en' ? (proyecto.captionEn ?? proyecto.caption) : proyecto.caption)
+      : '',
+    path: `/proyectos/${id ?? ''}`,
+    image: proyecto?.image,
+    type: 'article',
+  });
+
   if (!proyecto || !proyecto.modal) return <Navigate to="/proyectos" replace />;
 
   const otrosProyectos = PROYECTOS.filter((p) => p.id !== id);
@@ -143,6 +163,7 @@ export default function ProyectoDetallePage() {
                 className={`pdet__slide${i === slide ? ' pdet__slide--active' : ''}`}
                 src={src}
                 alt={`${caption} — imagen ${i + 1}`}
+                loading={i === 0 ? 'eager' : 'lazy'}
               />
             ))}
           </div>

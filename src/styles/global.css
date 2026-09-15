@@ -6,7 +6,12 @@
    Rubik Bubbles + JetBrains Mono.
    ============================================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Text:ital@0;1&family=Zalando+Sans:ital,wght@0,300..700;1,300..700&family=Rubik+Bubbles&family=JetBrains+Mono:wght@400;500;600&family=Noto+Serif:wght@400&display=swap');
+/* Las fuentes (DM Serif Text, Zalando Sans, Rubik Bubbles, JetBrains Mono,
+   Noto Serif) se cargan desde un <link> en index.html, no desde un
+   @import aquí — un @import de CSS es render-blocking y retrasa el
+   pintado del texto. Además index.html cargaba por separado, y sin usar,
+   Bebas Neue y DM Sans: ambos duplicaban esta petición y pesaban muerto.
+   Corregido en la auditoría de sep. 2026. */
 
 :root {
   /* ---------- Surfaces (blanco frío R3) ---------- */

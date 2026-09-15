@@ -2952,6 +2952,14 @@ body:has(.pcd-docente-modal[open]) {
   color: var(--pcd-ink);
 }
 .pcd-blog-listing__search input::placeholder { color: var(--pcd-ink); opacity: 0.4; }
+/* El input renuncia al outline nativo (arriba) para no romper el borde en
+   píldora del contenedor — este :focus-within lo repone en el propio
+   contenedor, visible con navegación por teclado (Tab) y con clic.
+   Corrección de accesibilidad (WCAG 2.4.7), auditoría sep. 2026. */
+.pcd-blog-listing__search:focus-within {
+  outline: 2px solid var(--pcd-cobalt);
+  outline-offset: 2px;
+}
 
 /* Cards del listado — mismas .pcd-blog-preview__card* del home, con un
    poco más de aire (el home las diseñó para caber 4 en fila; acá van 3
@@ -3601,3 +3609,85 @@ body:has(.pcd-docente-modal[open]) {
   .proy-modal__title { font-size: 20px; }
   .proy-modal__close { color: var(--pcd-paper); }
 }
+
+/* ── 404 — ruta de repuesto (catch-all) ──
+   Reutiliza el mismo motivo de "número fantasma" en Rubik Bubbles que
+   ya usan las cards de blog/proyectos sin portada, en vez de inventar
+   un lenguaje visual nuevo. Auditoría sep. 2026. */
+.pcd-404 {
+  min-height: 60vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 80px 24px 100px;
+  position: relative;
+}
+.pcd-404__number {
+  font-family: var(--pcd-fun);
+  font-size: clamp(96px, 22vw, 220px);
+  line-height: 1;
+  color: var(--pcd-ink);
+  opacity: 0.08;
+  position: absolute;
+  top: 24px;
+  left: 50%;
+  transform: translateX(-50%) rotate(-3deg);
+  user-select: none;
+  pointer-events: none;
+}
+.pcd-404__eyebrow {
+  position: relative;
+  font-family: var(--pcd-mono);
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--pcd-cobalt);
+  margin-bottom: 14px;
+}
+.pcd-404__title {
+  position: relative;
+  font-family: var(--pcd-serif);
+  font-size: clamp(28px, 4vw, 42px);
+  color: var(--pcd-ink);
+  margin: 0 0 14px;
+  max-width: 18ch;
+}
+.pcd-404__body {
+  position: relative;
+  font-family: var(--pcd-sans);
+  font-size: 15px;
+  color: var(--pcd-ink);
+  opacity: 0.72;
+  max-width: 46ch;
+  margin: 0 0 32px;
+  line-height: 1.6;
+}
+.pcd-404__actions {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+}
+.pcd-404__cta {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--pcd-mono);
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--pcd-ink);
+  border: 1.5px solid rgba(13, 13, 13, 0.18);
+  border-radius: 999px;
+  padding: 10px 20px;
+  transition: background .15s, color .15s, border-color .15s;
+}
+.pcd-404__cta:hover { border-color: var(--pcd-ink); }
+.pcd-404__cta--primary {
+  background: var(--pcd-ink);
+  color: var(--pcd-paper);
+  border-color: var(--pcd-ink);
+}
+.pcd-404__cta--primary:hover { background: var(--pcd-cobalt); border-color: var(--pcd-cobalt); }
