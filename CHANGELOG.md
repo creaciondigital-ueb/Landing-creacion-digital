@@ -7,6 +7,15 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Cambiado — Título del hero del home: se quita el "No"
+
+El titular animado del home decía "no vinimos / a dictar / clase" (con la palabra "dictar" tachada por animación). Por pedido explícito de la usuaria, se quita la negación para que el titular lea "vinimos / a dictar / clase" ("vinimos a dictar clase").
+
+- **`src/i18n/translations.ts`**: `hero.line1` cambiado de `"no vinimos"` a `"vinimos"` (ES) y de `"we didn't come"` a `"we came"` (EN). El resto del titular (`line2pre`, `line2word`, `line3`) no cambia, igual que la animación de tecleo/tachado.
+- No se tocó la meta description estática de `index.html` ni `HOME_DESCRIPTION` en `ProgramaCreacionDigital.tsx` (usan la frase completa "No vinimos a dictar clase: vinimos a crear", que es un texto distinto al titular y no fue parte de este pedido).
+- Build verificado con `npm run build` — compila limpio.
+- Archivos: `src/i18n/translations.ts`.
+
 ### Eliminado — Restos de Galería 3D/backend en el repo
 
 El usuario confirmó que la Galería 3D y su backend ya no existen como parte del proyecto — el sitio actual es solo la landing + `/proyectos` + `/blog`, 100% estático. La ronda anterior de correcciones de la auditoría había dejado esto pendiente porque los archivos seguían presentes; ahora se limpiaron:
