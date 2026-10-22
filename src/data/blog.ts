@@ -173,4 +173,36 @@ We love meeting our future creators again and starting to imagine, together, eve
       tagsEn: ["Admissions", "Events", "Prospective Students"],
     },
   },
+  {
+    id: "dia-del-unicornio-2026",
+    image: "/programa/img/blog/dia-del-unicornio-2026.webp",
+    category: "Eventos",
+    categoryEn: "Events",
+    year: "2026",
+    date: "15 de octubre de 2026",
+    dateEn: "October 15, 2026",
+    title: "Así vivimos el segundo Día del Unicornio: dos años de Creación Digital",
+    titleEn: "This is how we lived the second Día del Unicornio: two years of Digital Creation",
+    excerpt: "El 15 de octubre celebramos nuestro segundo Día del Unicornio, un encuentro que reunió a creadores de todos los semestres para conmemorar los dos años del programa.",
+    excerptEn: "On October 15 we celebrated our second Día del Unicornio, a gathering that brought together creators from every semester to mark the program's second anniversary.",
+    detail: {
+      images: ["/programa/img/blog/dia-del-unicornio-2026.webp"],
+      descriptionEs: `El pasado 15 de octubre celebramos nuestro segundo Día del Unicornio, el encuentro con el que conmemoramos el segundo aniversario de Creación Digital. Durante esta jornada tan especial, reunimos a creadores de todos los semestres en un mismo espacio para compartir, aprender y celebrar juntos este camino que seguimos construyendo.
+
+A lo largo del encuentro compartimos información sobre el programa y sobre cómo está evolucionando el mundo de la creación digital en la actualidad. También fue un espacio para escuchar testimonios en primera persona: estudiantes que han vivido prácticas, semilleros de investigación e intercambios académicos contaron de viva voz cómo estas experiencias han transformado su manera de crear.
+
+Uno de los momentos más esperados fue el portfolio review, en el que contamos con la participación en vivo de Contra Studio, quienes compartieron comentarios y retroalimentación desde su experiencia como creadores dentro de la industria. De esta actividad salió también un ganador, reconocido con el premio al mejor portafolio de la carrera.
+
+Nos emociona mucho poder compartir con toda nuestra comunidad espacios como este, donde nos encontramos, nos reconocemos y celebramos lo que significa ser creadores digitales. ¡Nos vemos el próximo año en el tercer Día del Unicornio!`,
+      descriptionEn: `On October 15 we celebrated our second Día del Unicornio, the gathering where we mark Digital Creation's second anniversary. During this special day, we brought together creators from every semester in one space to share, learn, and celebrate this journey we keep building together.
+
+Throughout the event we shared updates about the program and about how the world of digital creation is evolving today. It was also a space to hear first-hand testimonials: students who have gone through internships, research groups, and academic exchanges shared how these experiences have shaped the way they create.
+
+One of the most anticipated moments was the portfolio review, where Contra Studio joined us live to share feedback and comments from their experience as creators within the industry. The activity also had a winner, recognized with the award for the program's best portfolio.
+
+We're thrilled to share spaces like this with our whole community, where we come together, recognize each other, and celebrate what it means to be digital creators. See you next year at the third Día del Unicornio!`,
+      tagsEs: ["Eventos", "Comunidad", "Portafolio"],
+      tagsEn: ["Events", "Community", "Portfolio"],
+    },
+  },
 ];

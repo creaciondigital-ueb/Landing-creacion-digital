@@ -7,6 +7,14 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Añadido — Nueva publicación de blog: segundo Día del Unicornio
+
+- Se agregó el post `dia-del-unicornio-2026` a `src/data/blog.ts`: evento del 15 de octubre de 2026 que conmemora el segundo aniversario del programa, con texto redactado a partir del resumen entregado por la usuaria.
+- Portada y carrusel de detalle usan la foto de grupo entregada por la usuaria — convertida a WebP y guardada en `public/programa/img/blog/dia-del-unicornio-2026.webp` (376 KB, antes 1 MB en JPG).
+- `public/sitemap.xml`: se agregó la entrada `/blog/dia-del-unicornio-2026`.
+- Build verificado con `npm run build` — compila limpio.
+- Archivos: `src/data/blog.ts`, `public/programa/img/blog/dia-del-unicornio-2026.webp` (nuevo), `public/sitemap.xml`.
+
 ### Cambiado — Título del hero del home: se quita el "No"
 
 El titular animado del home decía "no vinimos / a dictar / clase" (con la palabra "dictar" tachada por animación). Por pedido explícito de la usuaria, se quita la negación para que el titular lea "vinimos / a dictar / clase" ("vinimos a dictar clase").
