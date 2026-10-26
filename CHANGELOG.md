@@ -7,6 +7,14 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Añadido — Nueva publicación de blog: participación en ARTBO 2026
+
+- Se agregó el post `artbo-2026-identidades-del-futuro` a `src/data/blog.ts`, ubicado antes de `dia-del-unicornio-2026` (cronológicamente corresponde ahí: ARTBO fue del 24 al 27 de septiembre, el Día del Unicornio el 15 de octubre). Texto redactado a partir de 3 posts de LinkedIn que entregó la usuaria sobre la experiencia ARTICULARTE (Facultad de Creación y Comunicación en ARTBO, con Fabian Herrera y Tatiana Flórez): instalación holográfica que construye una "aparición" a partir de las respuestas de cada visitante sobre su percepción de la IA, +1.200 visitantes en 4 días.
+- Portada y carrusel de detalle usan la foto de la instalación entregada por la usuaria — convertida a WebP y guardada en `public/programa/img/blog/artbo-2026.webp`.
+- `public/sitemap.xml`: se agregó la entrada `/blog/artbo-2026-identidades-del-futuro`.
+- Build verificado con `npm run build` — compila limpio.
+- Archivos: `src/data/blog.ts`, `public/programa/img/blog/artbo-2026.webp` (nuevo), `public/sitemap.xml`.
+
 ### Añadido — Ilustración real de Fabian Herrera (Init/End)
 
 - La usuaria envió el par de ilustraciones de Fabian (pose normal y pose "brazos cruzados" para el hover), en el mismo estilo de personaje que el resto de docentes. Se guardaron como `public/programa/img/Fabian_Init.webp` y `Fabian_End.webp` (WEBP con transparencia, mismo lienzo cuadrado 1000×1000 que el resto).

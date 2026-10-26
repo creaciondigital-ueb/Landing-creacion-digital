@@ -174,6 +174,42 @@ We love meeting our future creators again and starting to imagine, together, eve
     },
   },
   {
+    id: "artbo-2026-identidades-del-futuro",
+    image: "/programa/img/blog/artbo-2026.webp",
+    category: "Eventos",
+    categoryEn: "Events",
+    year: "2026",
+    date: "24 al 27 de septiembre de 2026",
+    dateEn: "September 24–27, 2026",
+    title: "ARTBO 2026: así imaginamos las identidades del futuro con inteligencia artificial",
+    titleEn: "ARTBO 2026: this is how we imagined the identities of the future with artificial intelligence",
+    excerpt: "Del 24 al 27 de septiembre llevamos a ARTBO una experiencia que construye identidades holográficas a partir de cómo las personas perciben la inteligencia artificial — más de 1.200 visitantes en 4 días.",
+    excerptEn: "From September 24 to 27 we brought to ARTBO an experience that builds holographic identities from how people perceive artificial intelligence — over 1,200 visitors in 4 days.",
+    detail: {
+      images: ["/programa/img/blog/artbo-2026.webp"],
+      descriptionEs: `Del 24 al 27 de septiembre participamos en ARTBO, dentro de ARTICULARTE, el espacio que la Facultad de Creación y Comunicación de la Universidad El Bosque lleva a la feria. Junto a Fabian Herrera, director del programa, y Tatiana Flórez, coordinadora de Creación Digital, desarrollamos una experiencia que partía de una pregunta: ¿cómo nos imaginamos las identidades del futuro?
+
+Cada visitante respondía siete preguntas sobre su percepción de la inteligencia artificial y compartía un nombre. A partir de esas respuestas nacía una "aparición": un ser de aspecto humano, vestido con bunny suits, construido con hologramas a partir de datos, inteligencia y percepción humana propia de cada persona. Así, quien llegaba como espectador terminaba convertido en creador de una nueva identidad.
+
+La instalación combinó software, mapping, data e imagen, y en solo cuatro días recibió a más de 1.200 visitantes de distintas edades e intereses — desde el asombro y la curiosidad hasta el cuestionamiento frente a la inteligencia artificial.
+
+Más allá de la cifra, lo más valioso fue abrir una conversación: cuestionarnos juntos sobre la IA, la identidad, la creación y el futuro con personas de perspectivas muy distintas. Ese ejercicio conecta directamente con lo que trabajamos en la clase de Humanismo Digital — pensar la tecnología no solo desde lo que puede hacer, sino desde lo que significa para las personas, para diseñar soluciones digitales con impacto, pero también con sentido humano.
+
+Ahora empieza una nueva etapa: analizar los datos recogidos durante la feria para identificar patrones, diferencias y matices que nos ayuden a comprender mejor la relación entre la condición humana y la inteligencia artificial. Desde Creación Digital seguimos explorando la tecnología como una herramienta para imaginar y cuestionar las posibilidades del mundo que estamos creando.`,
+      descriptionEn: `From September 24 to 27 we took part in ARTBO, as part of ARTICULARTE, the space the Universidad El Bosque's Facultad de Creación y Comunicación brings to the fair. Together with Fabian Herrera, director of the program, and Tatiana Flórez, Digital Creation's coordinator, we developed an experience built around one question: how do we imagine the identities of the future?
+
+Each visitor answered seven questions about their perception of artificial intelligence and shared a name. From those answers an "apparition" was born: a human-like figure, dressed in bunny suits, built as a hologram out of each person's own data, intelligence and perception. In this way, whoever arrived as a spectator ended up becoming the creator of a new identity.
+
+The installation combined software, mapping, data and imagery, and welcomed over 1,200 visitors of different ages and interests in just four days — ranging from wonder and curiosity to genuine questioning about artificial intelligence.
+
+Beyond the number, what mattered most was opening a conversation: questioning AI, identity, creation and the future together with people from very different perspectives. That exercise connects directly with what we work on in the Digital Humanism class — thinking about technology not only for what it can do, but for what it means to people, in order to design digital solutions with impact, but also with human meaning.
+
+A new stage now begins: analyzing the data collected during the fair to identify patterns, differences and nuances that help us better understand the relationship between the human condition and artificial intelligence. From Digital Creation, we keep exploring technology as a tool to imagine and question the possibilities of the world we are creating.`,
+      tagsEs: ["Eventos", "Inteligencia Artificial", "ARTBO"],
+      tagsEn: ["Events", "Artificial Intelligence", "ARTBO"],
+    },
+  },
+  {
     id: "dia-del-unicornio-2026",
     image: "/programa/img/blog/dia-del-unicornio-2026.webp",
     category: "Eventos",
