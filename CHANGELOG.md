@@ -7,6 +7,16 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Añadido — Fabian Herrera en el carrusel de docentes
+
+Se agregó a Fabian Herrera (director del pregrado) como nuevo docente en el carrusel del home, justo antes de Paula Lenis, usando la bio que entregó la usuaria como base para la tarjeta y el modal.
+
+- **`src/i18n/translations.ts`**: nueva entrada `docentes.fabian` en ES y EN (`ariaLabel`, `bio`, `tags`, `modalTags`, `p1`, `p2`, `exp` con sus 3 experiencias laborales — Universidad El Bosque, Escuela Nacional de Cine, Emprende con El Arte – IDARTES).
+- **`src/pages/ProgramaCreacionDigital.tsx`**: `DOCENTE_ORDER` ahora empieza en `'fabian'`; se agregó su tarjeta (y la del set duplicado para el loop infinito) y su `<DocenteModal>`.
+- No hay ilustración de personaje (par Init/End) para Fabian todavía — a pedido explícito de la usuaria, la tarjeta y el modal usan el fondo neutro "sin foto" que ya existía en el CSS (`.pcd-docente--no-photo`) en vez de inventar un retrato. Para esto se volvieron opcionales las props `portrait`/`portraitEnd` del componente `DocenteModal` (antes eran obligatorias) y se agregó el estilo `.pcd-docente-modal__portrait--no-photo` para el modal.
+- Build verificado con `npm run build` — compila limpio.
+- Archivos: `src/i18n/translations.ts`, `src/pages/ProgramaCreacionDigital.tsx`, `src/styles/programa.css`.
+
 ### Añadido — Nueva publicación de blog: segundo Día del Unicornio
 
 - Se agregó el post `dia-del-unicornio-2026` a `src/data/blog.ts`: evento del 15 de octubre de 2026 que conmemora el segundo aniversario del programa, con texto redactado a partir del resumen entregado por la usuaria.

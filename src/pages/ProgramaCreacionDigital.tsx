@@ -266,8 +266,10 @@ interface DocenteModalProps {
   active: boolean;
   onClose: () => void;
   onSwipe: (dir: 1 | -1) => void;
-  portrait: string;
-  portraitEnd: string;
+  /** Si no hay ilustración/foto todavía (ej. docente recién agregado sin
+   *  arte), se omiten y el retrato cae al fondo neutro "sin foto". */
+  portrait?: string;
+  portraitEnd?: string;
   name: ReactNode;
   tags: string[];
   children: ReactNode;
@@ -332,14 +334,20 @@ function DocenteModal({ id, active, onClose, onSwipe, portrait, portraitEnd, nam
       <div className="pcd-docente-modal__inner">
         <aside className="pcd-docente-modal__side">
           <div className="pcd-docente-modal__portrait" aria-hidden="true">
-            <div
-              className="pcd-docente-modal__portrait-layer pcd-docente-modal__portrait-layer--init"
-              style={{ backgroundImage: `url('${portrait}')`, opacity: showEndPortrait ? 0 : 1 }}
-            />
-            <div
-              className="pcd-docente-modal__portrait-layer pcd-docente-modal__portrait-layer--end"
-              style={{ backgroundImage: `url('${portraitEnd}')`, opacity: showEndPortrait ? 1 : 0 }}
-            />
+            {portrait && portraitEnd ? (
+              <>
+                <div
+                  className="pcd-docente-modal__portrait-layer pcd-docente-modal__portrait-layer--init"
+                  style={{ backgroundImage: `url('${portrait}')`, opacity: showEndPortrait ? 0 : 1 }}
+                />
+                <div
+                  className="pcd-docente-modal__portrait-layer pcd-docente-modal__portrait-layer--end"
+                  style={{ backgroundImage: `url('${portraitEnd}')`, opacity: showEndPortrait ? 1 : 0 }}
+                />
+              </>
+            ) : (
+              <div className="pcd-docente-modal__portrait--no-photo" />
+            )}
           </div>
           <h2 className="pcd-docente-modal__name" id={`modal-${id}-name`}>{name}</h2>
           <div className="pcd-docente-modal__tags">
@@ -441,7 +449,7 @@ export default function ProgramaCreacionDigital() {
   const openDocente = (id: string) => setActiveDocente(id);
   const closeDocente = () => setActiveDocente(null);
 
-  const DOCENTE_ORDER = ['paula', 'sofia', 'nicolas', 'ximena', 'camilo', 'daniela', 'juandavid', 'vanessa', 'rusbel', 'carlos', 'dayana', 'julian', 'john', 'tatiana', 'pilar', 'jaime'];
+  const DOCENTE_ORDER = ['fabian', 'paula', 'sofia', 'nicolas', 'ximena', 'camilo', 'daniela', 'juandavid', 'vanessa', 'rusbel', 'carlos', 'dayana', 'julian', 'john', 'tatiana', 'pilar', 'jaime'];
   const onSwipeDocente = (dir: 1 | -1) => {
     setActiveDocente((current) => {
       if (!current) return current;
@@ -994,9 +1002,25 @@ export default function ProgramaCreacionDigital() {
           onMouseLeave={onDocentesMouseLeaveWrap}
           onScroll={onDocentesScroll}
         >
-          {/* Paula */}
+          {/* Fabian — sin ilustración todavía, usa el fondo neutro "sin foto" */}
           <article
             ref={docentesFirstCardRef}
+            className="pcd-docente pcd-docente--fabian pcd-docente--no-photo pcd-reveal" tabIndex={0} role="button"
+            aria-label={t.docentes.fabian.ariaLabel}
+            onClick={() => onDocenteCardClick('fabian')}
+            onKeyDown={(e) => onCardKey(e, 'fabian')}
+          >
+            <div className="pcd-docente__blob" aria-hidden="true" />
+            <img loading="lazy" className="pcd-sticker pcd-sticker--like" src={`${IMG}/Like.webp`} alt="" aria-hidden="true" />
+            <h3 className="pcd-docente__name">Fabian<br />Herrera</h3>
+            <p className="pcd-docente__bio">{t.docentes.fabian.bio}</p>
+            <div className="pcd-docente__tags">
+              {t.docentes.fabian.tags.map((tag) => <span key={tag} className="pcd-docente__tag">{tag}</span>)}
+            </div>
+          </article>
+
+          {/* Paula */}
+          <article
             className="pcd-docente pcd-docente--paula pcd-reveal" tabIndex={0} role="button"
             aria-label={t.docentes.paula.ariaLabel}
             onClick={() => onDocenteCardClick('paula')}
@@ -1269,9 +1293,25 @@ export default function ProgramaCreacionDigital() {
 
 
           {/* ── set duplicado: permite el loop infinito del carrusel ── */}
-          {/* Paula (clon para loop infinito) */}
+          {/* Fabian (clon para loop infinito) */}
           <article
             ref={docentesFirstCloneRef}
+            className="pcd-docente pcd-docente--fabian pcd-docente--no-photo pcd-reveal" tabIndex={-1} role="button" aria-hidden="true"
+            aria-label={t.docentes.fabian.ariaLabel}
+            onClick={() => onDocenteCardClick('fabian')}
+            onKeyDown={(e) => onCardKey(e, 'fabian')}
+          >
+            <div className="pcd-docente__blob" aria-hidden="true" />
+            <img loading="lazy" className="pcd-sticker pcd-sticker--like" src={`${IMG}/Like.webp`} alt="" aria-hidden="true" />
+            <h3 className="pcd-docente__name">Fabian<br />Herrera</h3>
+            <p className="pcd-docente__bio">{t.docentes.fabian.bio}</p>
+            <div className="pcd-docente__tags">
+              {t.docentes.fabian.tags.map((tag) => <span key={tag} className="pcd-docente__tag">{tag}</span>)}
+            </div>
+          </article>
+
+          {/* Paula (clon para loop infinito) */}
+          <article
             className="pcd-docente pcd-docente--paula pcd-reveal" tabIndex={-1} role="button" aria-hidden="true"
             aria-label={t.docentes.paula.ariaLabel}
             onClick={() => onDocenteCardClick('paula')}
@@ -1678,6 +1718,26 @@ export default function ProgramaCreacionDigital() {
           {t.docentes.daniela.exp.map((item, idx) => (
             <li key={idx}>
               <span className="pcd-docente-modal__detail-plain">{item.body ?? ''}</span>
+            </li>
+          ))}
+        </ul>
+      </DocenteModal>
+
+      <DocenteModal
+        id="fabian" active={activeDocente === 'fabian'} onClose={closeDocente} onSwipe={onSwipeDocente}
+        name={<>Fabian<br />Herrera</>}
+        tags={t.docentes.fabian.modalTags}
+      >
+        <h3 className="pcd-docente-modal__heading">{t.docentes.modalPerfil}</h3>
+        <p className="pcd-docente-modal__p">{t.docentes.fabian.p1}</p>
+        <p className="pcd-docente-modal__p">{t.docentes.fabian.p2}</p>
+        <hr className="pcd-docente-modal__rule" />
+        <h3 className="pcd-docente-modal__heading">{t.docentes.modalExp}</h3>
+        <ul className="pcd-docente-modal__list">
+          {t.docentes.fabian.exp.map((item) => (
+            <li key={item.title}>
+              <strong>{item.title}</strong>
+              <span className="pcd-docente-modal__detail-plain">{item.body}</span>
             </li>
           ))}
         </ul>

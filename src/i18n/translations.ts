@@ -133,6 +133,19 @@ const translations = {
           { title: "xyz estrategias", body: "Participé como Productora de Montaje en las salas itinerantes de ARTBO 2022, apoyando la producción y montaje de obras para los diferentes espacios de exhibición.", boldParts: null as null | string[] },
         ],
       },
+      fabian: {
+        ariaLabel: "Ver perfil de Fabian Herrera",
+        bio: "Creador digital, diseñador y académico, director del pregrado en Creación Digital. Investiga cómo la inteligencia artificial transforma la cognición, los procesos de creación y las dinámicas empresariales, explorando su impacto en la educación, el diseño y las industrias creativas.",
+        tags: ["Dirección académica", "Inteligencia Artificial", "Innovación educativa"],
+        modalTags: ["Dirección académica", "Inteligencia Artificial", "Innovación educativa"],
+        p1: "Soy creador digital, diseñador y académico, actualmente director del pregrado en Creación Digital. Mi trabajo se centra en investigar cómo la inteligencia artificial reconfigura la cognición, los procesos de creación y las dinámicas empresariales, explorando sus posibilidades para transformar la educación, el diseño y las industrias creativas.",
+        p2: "Mi trayectoria integra la dirección académica, la innovación educativa y la investigación en nuevas tecnologías. Me interesa comprender cómo la inteligencia artificial transforma nuestras formas de pensar, crear y trabajar, impulsando propuestas que conecten el pensamiento de diseño, la tecnología y la creatividad para responder a los desafíos de un entorno digital en constante evolución.",
+        exp: [
+          { title: "Universidad El Bosque", body: "Me desempeño como director del pregrado en Creación Digital, liderando procesos académicos orientados a integrar diseño, tecnología y pensamiento creativo. Mi trayectoria en la institución también incluye la dirección de programas como Diseño Industrial y la Maestría en Diseño para Industrias Creativas y Culturales, así como la docencia y la investigación en innovación educativa. Desde estos roles he contribuido al desarrollo de propuestas formativas interdisciplinarias que conectan la creatividad con los desafíos contemporáneos.", boldParts: null as null | string[] },
+          { title: "Escuela Nacional de Cine", body: "Como docente de Inteligencia Artificial Aplicada, exploro las posibilidades de las nuevas tecnologías en los procesos de creación y producción audiovisual. Mi trabajo se enfoca en acercar estas herramientas a los contextos creativos, promoviendo su comprensión y aplicación crítica en el desarrollo de proyectos y nuevas narrativas.", boldParts: null as null | string[] },
+          { title: "Emprende con El Arte – IDARTES", body: "Como parte de esta iniciativa, participé en procesos de dirección metodológica orientados al fortalecimiento de proyectos creativos y culturales. Esta experiencia me permitió articular metodologías, procesos de formación y herramientas de acompañamiento para impulsar el desarrollo de iniciativas que conectan la creatividad con el emprendimiento y las dinámicas de las industrias culturales.", boldParts: null as null | string[] },
+        ],
+      },
       paula: {
         ariaLabel: "Ver perfil de Paula Lenis",
         bio: "Diseñadora Gráfica y especialista en Experiencia de Usuario (UX), con experiencia en diseño de productos digitales, estrategia UX y liderazgo de equipos en empresas como Rappi e IxDF Colombia.",
@@ -547,6 +560,19 @@ const translations = {
           { title: "Ministry of Culture", body: "As an Audiovisual Filmmaker I participate in the production of content and audiovisual projects linked to the cultural sector, developing pieces that help communicate and make visible the Ministry's initiatives.", boldParts: null as null | string[] },
           { title: "RTVC – Colombian Public Media System", body: "I worked in archive management, supporting processes related to the organization and handling of materials within the public media system.", boldParts: null as null | string[] },
           { title: "xyz estrategias", body: "I participated as Production and Installation Producer at the itinerant halls of ARTBO 2022, supporting the production and mounting of works for the different exhibition spaces.", boldParts: null as null | string[] },
+        ],
+      },
+      fabian: {
+        ariaLabel: "View Fabian Herrera profile",
+        bio: "Digital creator, designer and academic, director of the Digital Creation undergraduate program. He researches how artificial intelligence is transforming cognition, creative processes and business dynamics, exploring its impact on education, design and the creative industries.",
+        tags: ["Academic Leadership", "Artificial Intelligence", "Educational Innovation"],
+        modalTags: ["Academic Leadership", "Artificial Intelligence", "Educational Innovation"],
+        p1: "I am a digital creator, designer and academic, currently director of the Digital Creation undergraduate program. My work focuses on researching how artificial intelligence is reshaping cognition, creative processes and business dynamics, exploring its potential to transform education, design and the creative industries.",
+        p2: "My career integrates academic leadership, educational innovation and research into new technologies. I am interested in understanding how AI is transforming the way we think, create and work, driving proposals that connect design thinking, technology and creativity to address the challenges of a constantly evolving digital environment.",
+        exp: [
+          { title: "Universidad El Bosque", body: "I currently serve as director of the Digital Creation undergraduate program, leading academic processes aimed at integrating design, technology and creative thinking. My career at the institution also includes directing programs such as Industrial Design and the Master's in Design for Creative and Cultural Industries, as well as teaching and research in educational innovation. Through these roles I have contributed to developing interdisciplinary academic proposals that connect creativity with contemporary challenges.", boldParts: null as null | string[] },
+          { title: "National Film School", body: "As a professor of Applied Artificial Intelligence, I explore the possibilities of new technologies in audiovisual creation and production processes. My work focuses on bringing these tools closer to creative contexts, promoting their understanding and critical application in the development of projects and new narratives.", boldParts: null as null | string[] },
+          { title: "Emprende con El Arte – IDARTES", body: "As part of this initiative, I took part in methodological leadership processes aimed at strengthening creative and cultural projects. This experience allowed me to bring together methodologies, training processes and support tools to drive the development of initiatives that connect creativity with entrepreneurship and the dynamics of the cultural industries.", boldParts: null as null | string[] },
         ],
       },
       paula: {

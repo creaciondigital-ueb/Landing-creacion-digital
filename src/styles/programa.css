@@ -1651,6 +1651,13 @@ body:has(.pcd-docente-modal[open]) {
      las cards del carrusel) — sin esto, el personaje "crece" al alternar. */
   transform: scale(calc(1.08 * 0.94));
 }
+/* Docente sin ilustración/foto todavía (ej. recién agregado) — mismo fondo
+   neutro que .pcd-docente--no-photo en las cards del carrusel. */
+.pcd-docente-modal__portrait--no-photo {
+  position: absolute;
+  inset: 0;
+  background: rgba(13,13,13,0.06);
+}
 /* Encuadre de imagen por docente (lo único que varía entre cards).
    Juan David: ajuste fino ya aprobado, no tocar sin que lo pidan puntualmente. */
 .pcd-docente-modal--juandavid .pcd-docente-modal__portrait-layer--end {
