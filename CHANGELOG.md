@@ -7,6 +7,15 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Añadido — Ilustración real de Fabian Herrera (Init/End)
+
+- La usuaria envió el par de ilustraciones de Fabian (pose normal y pose "brazos cruzados" para el hover), en el mismo estilo de personaje que el resto de docentes. Se guardaron como `public/programa/img/Fabian_Init.webp` y `Fabian_End.webp` (WEBP con transparencia, mismo lienzo cuadrado 1000×1000 que el resto).
+- Se quitó la clase `pcd-docente--no-photo` de la card de Fabian (set + clon) y se le agregaron las variables `--docente-init`/`--docente-end`, igual que al resto de docentes con ilustración. El `<DocenteModal>` de Fabian ahora recibe `portrait`/`portraitEnd` en vez de caer al fondo neutro.
+- **Alineación del crossfade** (para que la animación hover se vea fluida, sin saltos de tamaño ni de posición): se midió el bounding box real de ambas ilustraciones — el alto del personaje es casi idéntico entre "init" y "end" (787px vs 790px, ~0.4% de diferencia), y la diferencia de ancho (792px vs 723px) es solo por la pose de brazos cruzados, no por escala de dibujo. Con eso, se anuló el achique del 0.94 que se aplica por defecto al estado "end" (pensado para ilustraciones que SÍ vienen más grandes en su lienzo) tanto en la card (`.pcd-docente--fabian .pcd-docente__blob::after`) como en el modal (`.pcd-docente-modal--fabian .pcd-docente-modal__portrait-layer--end`), siguiendo el mismo criterio ya usado con Daniela/Carlos/Julián/Pilar.
+- Se detectó y corrigió de paso un desfase: las reglas `.pcd-docente:nth-child(n)` de z-index (controlan que el sticker de cada card no quede tapado por la siguiente) solo llegaban hasta 32 — correcto para 16 docentes × 2 (set + clon), pero con Fabian ahora son 17 × 2 = 34 cards. Se extendieron hasta `nth-child(34)`.
+- Build verificado con `npm run build` — compila limpio.
+- Archivos: `public/programa/img/Fabian_Init.webp` (nuevo), `public/programa/img/Fabian_End.webp` (nuevo), `src/pages/ProgramaCreacionDigital.tsx`, `src/styles/programa.css`.
+
 ### Cambiado — Pill de Fabian: "Inteligencia Artificial" → "IA"
 
 - A pedido de la usuaria, la pill del medio en la tarjeta y el modal de Fabian Herrera pasa de "Inteligencia Artificial" a "IA" (ES) / "Artificial Intelligence" a "AI" (EN). Solo la pill — el texto corrido (bio corta, perfil del modal) sigue usando el término completo, igual que en el resto de docentes que lo mencionan en prosa (Nicolás, Paula, Daniela, Carlos, Tatiana), así que no se tocó.

@@ -1254,6 +1254,8 @@
 .pcd-docente:nth-child(30) { z-index: -9; }
 .pcd-docente:nth-child(31) { z-index: -10; }
 .pcd-docente:nth-child(32) { z-index: -11; }
+.pcd-docente:nth-child(33) { z-index: -12; }
+.pcd-docente:nth-child(34) { z-index: -13; }
 .pcd-docente:hover {
   /* Sin z-index propio: el orden descendente por :nth-child ya garantiza
      que cada card quede por encima de la siguiente en todo momento; subir
@@ -1332,6 +1334,13 @@
 }
 .pcd-docente--no-photo .pcd-docente__blob {
   background: rgba(13,13,13,0.06);
+}
+/* Fabian: el dibujo "end" (brazos cruzados) mide casi igual de alto que
+   el "init" en su lienzo (787x790px, medido) — el ancho del bbox cambia
+   solo por la pose de brazos cruzados, no por escala de dibujo — se anula
+   el achique 0.94 por defecto para que la transición no salte de tamaño. */
+.pcd-docente--fabian .pcd-docente__blob::after {
+  transform: none;
 }
 /* Ilustración de Juan David un poco más grande a pedido, en ambos estados */
 .pcd-docente--juandavid .pcd-docente__blob::before {
@@ -1657,6 +1666,12 @@ body:has(.pcd-docente-modal[open]) {
   position: absolute;
   inset: 0;
   background: rgba(13,13,13,0.06);
+}
+/* Fabian: mismo caso que Daniela/Carlos/Julián/Pilar — el dibujo "end"
+   mide igual que el "init" en su lienzo (ver nota en .pcd-docente--fabian
+   más arriba), se anula el achique 0.94. */
+.pcd-docente-modal--fabian .pcd-docente-modal__portrait-layer--end {
+  transform: scale(1.08);
 }
 /* Encuadre de imagen por docente (lo único que varía entre cards).
    Juan David: ajuste fino ya aprobado, no tocar sin que lo pidan puntualmente. */

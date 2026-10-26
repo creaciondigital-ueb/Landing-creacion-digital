@@ -1002,13 +1002,14 @@ export default function ProgramaCreacionDigital() {
           onMouseLeave={onDocentesMouseLeaveWrap}
           onScroll={onDocentesScroll}
         >
-          {/* Fabian — sin ilustración todavía, usa el fondo neutro "sin foto" */}
+          {/* Fabian */}
           <article
             ref={docentesFirstCardRef}
-            className="pcd-docente pcd-docente--fabian pcd-docente--no-photo pcd-reveal" tabIndex={0} role="button"
+            className="pcd-docente pcd-docente--fabian pcd-reveal" tabIndex={0} role="button"
             aria-label={t.docentes.fabian.ariaLabel}
             onClick={() => onDocenteCardClick('fabian')}
             onKeyDown={(e) => onCardKey(e, 'fabian')}
+            style={{ '--docente-init': `url('${IMG}/Fabian_Init.webp')`, '--docente-end': `url('${IMG}/Fabian_End.webp')` } as CSSProperties}
           >
             <div className="pcd-docente__blob" aria-hidden="true" />
             <img loading="lazy" className="pcd-sticker pcd-sticker--like" src={`${IMG}/Like.webp`} alt="" aria-hidden="true" />
@@ -1296,10 +1297,11 @@ export default function ProgramaCreacionDigital() {
           {/* Fabian (clon para loop infinito) */}
           <article
             ref={docentesFirstCloneRef}
-            className="pcd-docente pcd-docente--fabian pcd-docente--no-photo pcd-reveal" tabIndex={-1} role="button" aria-hidden="true"
+            className="pcd-docente pcd-docente--fabian pcd-reveal" tabIndex={-1} role="button" aria-hidden="true"
             aria-label={t.docentes.fabian.ariaLabel}
             onClick={() => onDocenteCardClick('fabian')}
             onKeyDown={(e) => onCardKey(e, 'fabian')}
+            style={{ '--docente-init': `url('${IMG}/Fabian_Init.webp')`, '--docente-end': `url('${IMG}/Fabian_End.webp')` } as CSSProperties}
           >
             <div className="pcd-docente__blob" aria-hidden="true" />
             <img loading="lazy" className="pcd-sticker pcd-sticker--like" src={`${IMG}/Like.webp`} alt="" aria-hidden="true" />
@@ -1725,6 +1727,8 @@ export default function ProgramaCreacionDigital() {
 
       <DocenteModal
         id="fabian" active={activeDocente === 'fabian'} onClose={closeDocente} onSwipe={onSwipeDocente}
+        portrait={`${IMG}/Fabian_Init.webp`}
+        portraitEnd={`${IMG}/Fabian_End.webp`}
         name={<>Fabian<br />Herrera</>}
         tags={t.docentes.fabian.modalTags}
       >
