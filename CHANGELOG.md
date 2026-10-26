@@ -7,6 +7,12 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Cambiado — Pill de Fabian: "Inteligencia Artificial" → "IA"
+
+- A pedido de la usuaria, la pill del medio en la tarjeta y el modal de Fabian Herrera pasa de "Inteligencia Artificial" a "IA" (ES) / "Artificial Intelligence" a "AI" (EN). Solo la pill — el texto corrido (bio corta, perfil del modal) sigue usando el término completo, igual que en el resto de docentes que lo mencionan en prosa (Nicolás, Paula, Daniela, Carlos, Tatiana), así que no se tocó.
+- Build verificado con `npm run build` — compila limpio.
+- Archivos: `src/i18n/translations.ts`.
+
 ### Cambiado — Ciclo de color de los stickers reiniciado en Fabian + bio de Fabian acortada a 3 líneas
 
 - A pedido de la usuaria, Fabian Herrera queda como primera card del carrusel con ícono azul (`like`), y el ciclo azul→amarillo→rojo se reinicia a partir de ahí. Se reasignó el ícono de los 15 docentes siguientes a Fabian (Paula a Pilar) para que el ciclo quede perfecto en toda la vuelta, sin repetir color en ningún par de cards consecutivas — incluida la costura del loop infinito (Jaime, amarillo → Fabian, azul). Jaime mantiene su ícono (`phone`, amarillo) porque ya le correspondía en el nuevo ciclo.
