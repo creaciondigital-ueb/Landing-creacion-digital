@@ -37,6 +37,15 @@ export default function BlogPage() {
     path: '/blog',
   });
 
+  // BLOG_POSTS está en orden cronológico ascendente (el más antiguo primero,
+  // mismo criterio que se usa al agregar posts nuevos al final/donde
+  // corresponda). El listado se muestra en orden descendente (el más
+  // reciente primero), así que se invierte una sola vez acá — origIndex
+  // de cada card (número fantasma + color) se calcula sobre este orden ya
+  // invertido, no sobre BLOG_POSTS, para que "01" sea siempre la primera
+  // card visible en pantalla.
+  const POSTS_DESC = useMemo(() => [...BLOG_POSTS].reverse(), []);
+
   const [menuOpen, setMenuOpen] = useState(false);
 
   // Cierra el menú mobile al hacer clic/tocar fuera de él (no solo con la X).
@@ -111,7 +120,7 @@ export default function BlogPage() {
   const removeChip = (chip: Chip) => (chip.kind === 'year' ? toggleYear(chip.value) : toggleCategory(chip.value));
 
   const searchNorm = search.trim().toLowerCase();
-  const filtered = BLOG_POSTS.filter((p) => {
+  const filtered = POSTS_DESC.filter((p) => {
     const matchesYear = selectedYears.length === 0 || selectedYears.includes(p.year);
     const matchesCategory = selectedCategories.length === 0 || selectedCategories.includes(p.category);
     const matchesSearch =
@@ -197,7 +206,6 @@ export default function BlogPage() {
             <Link to="/" className="pcd-projects-hero__back">
               {tb.back}
             </Link>
-            <span className="pcd-projects-hero__eyebrow">{tb.eyebrow}</span>
           </div>
           <h1 className="pcd-projects-hero__title">
             {tb.titleL1}<br className="pcd-projects-hero__title-break" /> <span className="pop">{tb.titlePop}</span><br />
@@ -319,7 +327,7 @@ export default function BlogPage() {
         {pageItems.length > 0 ? (
           <div className="pcd-projects-page__grid pcd-blog-listing__grid">
             {pageItems.map((p) => {
-              const origIndex = BLOG_POSTS.findIndex((bp) => bp.id === p.id);
+              const origIndex = POSTS_DESC.findIndex((bp) => bp.id === p.id);
               const cardColor = BLOG_CARD_COLORS[origIndex % BLOG_CARD_COLORS.length];
               const cat = lang === 'en' ? (p.categoryEn ?? p.category) : p.category;
               const date = lang === 'en' ? (p.dateEn ?? p.date) : p.date;

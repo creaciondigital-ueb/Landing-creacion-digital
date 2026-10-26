@@ -7,6 +7,19 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Cambiado — /blog: se quita la ceja "NOTICIAS DEL PROGRAMA", botón "Volver al inicio" centrado, y listado en orden descendente
+
+- Se quitó el `<span>` de la ceja ("NOTICIAS DEL PROGRAMA" / su equivalente EN) junto al botón "← Volver al inicio" en el hero de `/blog`. El CSS `.pcd-blog-listing .pcd-projects-hero__eyebrow-row { justify-content: center; }` ya existía scopeado a esta página (no toca `/proyectos`, que comparte la clase base pero no `.pcd-blog-listing`), así que al quedar el botón como único hijo de esa fila queda centrado automáticamente, sin tocar CSS.
+- El listado de publicaciones ahora se muestra en orden descendente (la más reciente primero) en vez de orden ascendente. `BLOG_POSTS` sigue en orden cronológico ascendente en `src/data/blog.ts` (así se agregan los posts nuevos); `BlogPage.tsx` arma un `POSTS_DESC` invertido una sola vez (`useMemo`) y lo usa tanto para filtrar/paginar como para calcular el número fantasma y el color cíclico de cada card, para que "01" sea siempre la primera card visible en pantalla sin importar el orden real de `BLOG_POSTS`.
+- Build verificado con `npm run build` — compila limpio.
+- Archivos: `src/pages/BlogPage.tsx`.
+
+### Cambiado — Post de ARTBO: tercera persona en vez de primera + se agrega a Maria Paula Vasquez
+
+- A pedido de la usuaria, se reescribió el post `artbo-2026-identidades-del-futuro` (título, bajada y perfil completo, ES y EN) de primera persona plural ("participamos", "desarrollamos", "nos imaginamos"...) a tercera persona ("el programa participó", "el equipo desarrolló", "cómo se imaginan..."), porque la redacción en primera persona sonaba como si fuera la propia usuaria narrando el post, sin estarlo.
+- Se agregó a Maria Paula Vasquez al equipo mencionado en el primer párrafo, junto a Fabian Herrera (director del programa) y Tatiana Flórez (coordinadora de Creación Digital) — antes solo se mencionaba a estos dos.
+- Archivos: `src/data/blog.ts`.
+
 ### Cambiado — Post de ARTBO: quitada la mención a la clase de Humanismo Digital
 
 - A pedido de la usuaria, se quitó la referencia a "la clase de Humanismo Digital" del último párrafo del post `artbo-2026-identidades-del-futuro` (ES y EN) — se mantuvo la idea de pensar la tecnología desde lo que significa para las personas, sin nombrar la clase.
