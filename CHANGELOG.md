@@ -7,6 +7,13 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Cambiado — Ciclo de color de los stickers reiniciado en Fabian + bio de Fabian acortada a 3 líneas
+
+- A pedido de la usuaria, Fabian Herrera queda como primera card del carrusel con ícono azul (`like`), y el ciclo azul→amarillo→rojo se reinicia a partir de ahí. Se reasignó el ícono de los 15 docentes siguientes a Fabian (Paula a Pilar) para que el ciclo quede perfecto en toda la vuelta, sin repetir color en ningún par de cards consecutivas — incluida la costura del loop infinito (Jaime, amarillo → Fabian, azul). Jaime mantiene su ícono (`phone`, amarillo) porque ya le correspondía en el nuevo ciclo.
+- La `bio` de la tarjeta de Fabian (no el perfil del modal) se acortó de ~282 a ~187 caracteres para que ocupe 3 líneas igual que el resto de las cards del carrusel — el perfil completo del modal (`p1`/`p2`/experiencia) no cambió.
+- Build verificado con `npm run build` — compila limpio.
+- Archivos: `src/i18n/translations.ts`, `src/pages/ProgramaCreacionDigital.tsx`.
+
 ### Añadido — Fabian Herrera en el carrusel de docentes
 
 Se agregó a Fabian Herrera (director del pregrado) como nuevo docente en el carrusel del home, justo antes de Paula Lenis, usando la bio que entregó la usuaria como base para la tarjeta y el modal.

@@ -135,7 +135,7 @@ const translations = {
       },
       fabian: {
         ariaLabel: "Ver perfil de Fabian Herrera",
-        bio: "Creador digital, diseñador y académico, director del pregrado en Creación Digital. Investiga cómo la inteligencia artificial transforma la cognición, los procesos de creación y las dinámicas empresariales, explorando su impacto en la educación, el diseño y las industrias creativas.",
+        bio: "Creador digital, diseñador y académico, director del pregrado en Creación Digital. Investiga cómo la inteligencia artificial transforma la educación, el diseño y las industrias creativas.",
         tags: ["Dirección académica", "Inteligencia Artificial", "Innovación educativa"],
         modalTags: ["Dirección académica", "Inteligencia Artificial", "Innovación educativa"],
         p1: "Soy creador digital, diseñador y académico, actualmente director del pregrado en Creación Digital. Mi trabajo se centra en investigar cómo la inteligencia artificial reconfigura la cognición, los procesos de creación y las dinámicas empresariales, explorando sus posibilidades para transformar la educación, el diseño y las industrias creativas.",
@@ -564,7 +564,7 @@ const translations = {
       },
       fabian: {
         ariaLabel: "View Fabian Herrera profile",
-        bio: "Digital creator, designer and academic, director of the Digital Creation undergraduate program. He researches how artificial intelligence is transforming cognition, creative processes and business dynamics, exploring its impact on education, design and the creative industries.",
+        bio: "Digital creator, designer and academic, director of the Digital Creation undergraduate program. He researches how artificial intelligence is transforming education, design and the creative industries.",
         tags: ["Academic Leadership", "Artificial Intelligence", "Educational Innovation"],
         modalTags: ["Academic Leadership", "Artificial Intelligence", "Educational Innovation"],
         p1: "I am a digital creator, designer and academic, currently director of the Digital Creation undergraduate program. My work focuses on researching how artificial intelligence is reshaping cognition, creative processes and business dynamics, exploring its potential to transform education, design and the creative industries.",
