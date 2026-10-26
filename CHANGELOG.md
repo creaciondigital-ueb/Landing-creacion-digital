@@ -7,6 +7,13 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Cambiado — Post de ARTBO: tildes en María Paula Vásquez y sin cargos de Fabian/Tatiana
+
+- A pedido de la usuaria, se corrigió "Maria Paula Vasquez" a "María Paula Vásquez" (con tildes) en la frase que presenta al equipo del post `artbo-2026-identidades-del-futuro` (ES y EN).
+- Se quitaron los cargos entre paréntesis de Fabian Herrera ("director del programa") y Tatiana Flórez ("coordinadora de Creación Digital") en esa misma frase, dejando solo los tres nombres.
+- Build verificado con `npm run build` — compila limpio.
+- Archivos: `src/data/blog.ts`.
+
 ### Cambiado — Post de ARTBO: se quitan los guiones largos (—) del texto
 
 - A pedido de la usuaria, se reemplazaron los 6 guiones largos (—) del post `artbo-2026-identidades-del-futuro` (excerpt y perfil, ES y EN) por coma, paréntesis o la frase reestructurada según el caso, sin cambiar el contenido. No se tocaron los guiones largos que ya existían en comentarios de código del archivo (no son contenido visible) ni en otros posts o docentes, que no fueron parte de este pedido.
