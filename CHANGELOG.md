@@ -7,6 +7,11 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Cambiado — Post de ARTBO: quitada la mención a la clase de Humanismo Digital
+
+- A pedido de la usuaria, se quitó la referencia a "la clase de Humanismo Digital" del último párrafo del post `artbo-2026-identidades-del-futuro` (ES y EN) — se mantuvo la idea de pensar la tecnología desde lo que significa para las personas, sin nombrar la clase.
+- Archivos: `src/data/blog.ts`.
+
 ### Añadido — Nueva publicación de blog: participación en ARTBO 2026
 
 - Se agregó el post `artbo-2026-identidades-del-futuro` a `src/data/blog.ts`, ubicado antes de `dia-del-unicornio-2026` (cronológicamente corresponde ahí: ARTBO fue del 24 al 27 de septiembre, el Día del Unicornio el 15 de octubre). Texto redactado a partir de 3 posts de LinkedIn que entregó la usuaria sobre la experiencia ARTICULARTE (Facultad de Creación y Comunicación en ARTBO, con Fabian Herrera y Tatiana Flórez): instalación holográfica que construye una "aparición" a partir de las respuestas de cada visitante sobre su percepción de la IA, +1.200 visitantes en 4 días.

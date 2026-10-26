@@ -193,7 +193,7 @@ Cada visitante respondía siete preguntas sobre su percepción de la inteligenci
 
 La instalación combinó software, mapping, data e imagen, y en solo cuatro días recibió a más de 1.200 visitantes de distintas edades e intereses — desde el asombro y la curiosidad hasta el cuestionamiento frente a la inteligencia artificial.
 
-Más allá de la cifra, lo más valioso fue abrir una conversación: cuestionarnos juntos sobre la IA, la identidad, la creación y el futuro con personas de perspectivas muy distintas. Ese ejercicio conecta directamente con lo que trabajamos en la clase de Humanismo Digital — pensar la tecnología no solo desde lo que puede hacer, sino desde lo que significa para las personas, para diseñar soluciones digitales con impacto, pero también con sentido humano.
+Más allá de la cifra, lo más valioso fue abrir una conversación: cuestionarnos juntos sobre la IA, la identidad, la creación y el futuro con personas de perspectivas muy distintas, pensando la tecnología no solo desde lo que puede hacer, sino desde lo que significa para las personas, para diseñar soluciones digitales con impacto, pero también con sentido humano.
 
 Ahora empieza una nueva etapa: analizar los datos recogidos durante la feria para identificar patrones, diferencias y matices que nos ayuden a comprender mejor la relación entre la condición humana y la inteligencia artificial. Desde Creación Digital seguimos explorando la tecnología como una herramienta para imaginar y cuestionar las posibilidades del mundo que estamos creando.`,
       descriptionEn: `From September 24 to 27 we took part in ARTBO, as part of ARTICULARTE, the space the Universidad El Bosque's Facultad de Creación y Comunicación brings to the fair. Together with Fabian Herrera, director of the program, and Tatiana Flórez, Digital Creation's coordinator, we developed an experience built around one question: how do we imagine the identities of the future?
@@ -202,7 +202,7 @@ Each visitor answered seven questions about their perception of artificial intel
 
 The installation combined software, mapping, data and imagery, and welcomed over 1,200 visitors of different ages and interests in just four days — ranging from wonder and curiosity to genuine questioning about artificial intelligence.
 
-Beyond the number, what mattered most was opening a conversation: questioning AI, identity, creation and the future together with people from very different perspectives. That exercise connects directly with what we work on in the Digital Humanism class — thinking about technology not only for what it can do, but for what it means to people, in order to design digital solutions with impact, but also with human meaning.
+Beyond the number, what mattered most was opening a conversation: questioning AI, identity, creation and the future together with people from very different perspectives, thinking about technology not only for what it can do, but for what it means to people, in order to design digital solutions with impact, but also with human meaning.
 
 A new stage now begins: analyzing the data collected during the fair to identify patterns, differences and nuances that help us better understand the relationship between the human condition and artificial intelligence. From Digital Creation, we keep exploring technology as a tool to imagine and question the possibilities of the world we are creating.`,
       tagsEs: ["Eventos", "Inteligencia Artificial", "ARTBO"],
