@@ -7,6 +7,11 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Cambiado — Post de ARTBO: se quitan los guiones largos (—) del texto
+
+- A pedido de la usuaria, se reemplazaron los 6 guiones largos (—) del post `artbo-2026-identidades-del-futuro` (excerpt y perfil, ES y EN) por coma, paréntesis o la frase reestructurada según el caso, sin cambiar el contenido. No se tocaron los guiones largos que ya existían en comentarios de código del archivo (no son contenido visible) ni en otros posts o docentes, que no fueron parte de este pedido.
+- Archivos: `src/data/blog.ts`.
+
 ### Cambiado — /blog: se quita la ceja "NOTICIAS DEL PROGRAMA", botón "Volver al inicio" centrado, y listado en orden descendente
 
 - Se quitó el `<span>` de la ceja ("NOTICIAS DEL PROGRAMA" / su equivalente EN) junto al botón "← Volver al inicio" en el hero de `/blog`. El CSS `.pcd-blog-listing .pcd-projects-hero__eyebrow-row { justify-content: center; }` ya existía scopeado a esta página (no toca `/proyectos`, que comparte la clase base pero no `.pcd-blog-listing`), así que al quedar el botón como único hijo de esa fila queda centrado automáticamente, sin tocar CSS.

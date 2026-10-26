@@ -183,24 +183,24 @@ We love meeting our future creators again and starting to imagine, together, eve
     dateEn: "September 24–27, 2026",
     title: "ARTBO 2026: así se imaginaron las identidades del futuro con inteligencia artificial",
     titleEn: "ARTBO 2026: this is how the identities of the future were imagined with artificial intelligence",
-    excerpt: "Del 24 al 27 de septiembre, Creación Digital llevó a ARTBO una experiencia que construye identidades holográficas a partir de cómo las personas perciben la inteligencia artificial — más de 1.200 visitantes en 4 días.",
-    excerptEn: "From September 24 to 27, Digital Creation brought to ARTBO an experience that builds holographic identities from how people perceive artificial intelligence — over 1,200 visitors in 4 days.",
+    excerpt: "Del 24 al 27 de septiembre, Creación Digital llevó a ARTBO una experiencia que construye identidades holográficas a partir de cómo las personas perciben la inteligencia artificial, con más de 1.200 visitantes en 4 días.",
+    excerptEn: "From September 24 to 27, Digital Creation brought to ARTBO an experience that builds holographic identities from how people perceive artificial intelligence, with over 1,200 visitors in 4 days.",
     detail: {
       images: ["/programa/img/blog/artbo-2026.webp"],
-      descriptionEs: `Del 24 al 27 de septiembre, el programa de Creación Digital de la Universidad El Bosque participó en ARTBO, dentro de ARTICULARTE, el espacio que la Facultad de Creación y Comunicación lleva a la feria. El equipo — conformado por Fabian Herrera, director del programa; Tatiana Flórez, coordinadora de Creación Digital; y Maria Paula Vasquez — desarrolló una experiencia que partía de una pregunta: ¿cómo se imaginan las identidades del futuro?
+      descriptionEs: `Del 24 al 27 de septiembre, el programa de Creación Digital de la Universidad El Bosque participó en ARTBO, dentro de ARTICULARTE, el espacio que la Facultad de Creación y Comunicación lleva a la feria. El equipo, conformado por Fabian Herrera (director del programa), Tatiana Flórez (coordinadora de Creación Digital) y Maria Paula Vasquez, desarrolló una experiencia que partía de una pregunta: ¿cómo se imaginan las identidades del futuro?
 
 Cada visitante respondía siete preguntas sobre su percepción de la inteligencia artificial y compartía un nombre. A partir de esas respuestas nacía una "aparición": un ser de aspecto humano, vestido con bunny suits, construido con hologramas a partir de datos, inteligencia y percepción humana propia de cada persona. Así, quien llegaba como espectador terminaba convertido en creador de una nueva identidad.
 
-La instalación combinó software, mapping, data e imagen, y en solo cuatro días recibió a más de 1.200 visitantes de distintas edades e intereses — desde el asombro y la curiosidad hasta el cuestionamiento frente a la inteligencia artificial.
+La instalación combinó software, mapping, data e imagen, y en solo cuatro días recibió a más de 1.200 visitantes de distintas edades e intereses, desde el asombro y la curiosidad hasta el cuestionamiento frente a la inteligencia artificial.
 
 Más allá de la cifra, lo más valioso fue abrir una conversación sobre la IA, la identidad, la creación y el futuro con personas de perspectivas muy distintas, pensando la tecnología no solo desde lo que puede hacer, sino desde lo que significa para las personas, para diseñar soluciones digitales con impacto, pero también con sentido humano.
 
 Ahora empieza una nueva etapa: analizar los datos recogidos durante la feria para identificar patrones, diferencias y matices que ayuden a comprender mejor la relación entre la condición humana y la inteligencia artificial. Desde Creación Digital, el programa sigue explorando la tecnología como una herramienta para imaginar y cuestionar las posibilidades del mundo que se está creando.`,
-      descriptionEn: `From September 24 to 27, Universidad El Bosque's Digital Creation program took part in ARTBO, as part of ARTICULARTE, the space the Facultad de Creación y Comunicación brings to the fair. The team — made up of Fabian Herrera, director of the program; Tatiana Flórez, Digital Creation's coordinator; and Maria Paula Vasquez — developed an experience built around one question: how do people imagine the identities of the future?
+      descriptionEn: `From September 24 to 27, Universidad El Bosque's Digital Creation program took part in ARTBO, as part of ARTICULARTE, the space the Facultad de Creación y Comunicación brings to the fair. The team, made up of Fabian Herrera (director of the program), Tatiana Flórez (Digital Creation's coordinator) and Maria Paula Vasquez, developed an experience built around one question: how do people imagine the identities of the future?
 
 Each visitor answered seven questions about their perception of artificial intelligence and shared a name. From those answers an "apparition" was born: a human-like figure, dressed in bunny suits, built as a hologram out of each person's own data, intelligence and perception. In this way, whoever arrived as a spectator ended up becoming the creator of a new identity.
 
-The installation combined software, mapping, data and imagery, and welcomed over 1,200 visitors of different ages and interests in just four days — ranging from wonder and curiosity to genuine questioning about artificial intelligence.
+The installation combined software, mapping, data and imagery, and welcomed over 1,200 visitors of different ages and interests in just four days, ranging from wonder and curiosity to genuine questioning about artificial intelligence.
 
 Beyond the number, what mattered most was opening a conversation about AI, identity, creation and the future with people from very different perspectives, thinking about technology not only for what it can do, but for what it means to people, in order to design digital solutions with impact, but also with human meaning.
 
