@@ -646,6 +646,44 @@ export default function ProgramaCreacionDigital() {
   // que la 5ta siempre sobra un poco visible invitando a arrastrar.
   const blogGridRef = useRef<HTMLDivElement>(null);
   const blogDragState = useRef({ isDown: false, startX: 0, startScroll: 0, moved: false });
+  // Índice de la card "activa" (la más cercana al scroll actual) — solo se
+  // usa para resaltar el puntito correspondiente en mobile (ver los
+  // puntitos debajo del carrusel, a pedido de la usuaria). El carrusel en
+  // sí sigue funcionando por scrollLeft/ref, sin depender de este estado.
+  const [blogSlide, setBlogSlide] = useState(0);
+
+  // Ancho de una card + el gap entre cards, leído del DOM/CSS en vivo (no
+  // hardcodeado) — lo comparten goToNext (autoavance), el handler de
+  // scroll manual y el click en los puntitos, para no repetir la cuenta.
+  const getBlogStep = (grid: HTMLDivElement) => {
+    const card = grid.children[0] as HTMLElement | undefined;
+    if (!card) return 0;
+    const gap = parseFloat(window.getComputedStyle(grid).columnGap || '18') || 18;
+    return card.getBoundingClientRect().width + gap;
+  };
+
+  // Mantiene blogSlide sincronizado cuando el usuario arrastra con mouse o
+  // hace scroll nativo (touch/trackpad) — sin esto, los puntitos solo se
+  // actualizarían con el autoavance y no reflejarían un arrastre manual.
+  const onBlogGridScroll = () => {
+    const grid = blogGridRef.current;
+    if (!grid) return;
+    const step = getBlogStep(grid);
+    if (step <= 0) return;
+    const idx = Math.round(grid.scrollLeft / step);
+    setBlogSlide((prev) => (prev === idx ? prev : idx));
+  };
+
+  // Click en un puntito: salta directo a esa card.
+  const goToBlogSlide = (i: number) => {
+    const grid = blogGridRef.current;
+    if (!grid) return;
+    const step = getBlogStep(grid);
+    if (step <= 0) return;
+    const maxScroll = grid.scrollWidth - grid.clientWidth;
+    grid.scrollTo({ left: Math.min(i * step, maxScroll), behavior: 'smooth' });
+    setBlogSlide(i);
+  };
 
   const onBlogMouseDown = (e: React.MouseEvent) => {
     const grid = blogGridRef.current;
@@ -687,11 +725,9 @@ export default function ProgramaCreacionDigital() {
       const grid = blogGridRef.current;
       // No interrumpe un arrastre activo del usuario.
       if (!grid || blogDragState.current.isDown) return;
-      const cards = grid.children;
-      if (cards.length === 0) return;
-      const card = cards[0] as HTMLElement;
-      const gap = parseFloat(window.getComputedStyle(grid).columnGap || '18') || 18;
-      const step = card.getBoundingClientRect().width + gap;
+      const cardCount = grid.children.length;
+      if (cardCount === 0) return;
+      const step = getBlogStep(grid);
       if (step <= 0) return;
       const maxScroll = grid.scrollWidth - grid.clientWidth;
       // Se calcula desde la card MÁS CERCANA a la posición actual (en vez
@@ -703,9 +739,10 @@ export default function ProgramaCreacionDigital() {
       // a la card más cercana en cada tick, el autoavance se realinea solo
       // sin importar dónde haya quedado el scroll manual.
       const currentIndex = Math.round(grid.scrollLeft / step);
-      const nextIndex = currentIndex + 1 >= cards.length ? 0 : currentIndex + 1;
+      const nextIndex = currentIndex + 1 >= cardCount ? 0 : currentIndex + 1;
       const target = Math.min(nextIndex * step, maxScroll);
       grid.scrollTo({ left: target, behavior: 'smooth' });
+      setBlogSlide(nextIndex);
     };
 
     const applyForMode = (matches: boolean) => {
@@ -2156,9 +2193,11 @@ export default function ProgramaCreacionDigital() {
         </header>
 
         {BLOG_POSTS.length > 0 ? (
+          <>
           <div
             className="pcd-blog-preview__grid"
             ref={blogGridRef}
+            onScroll={onBlogGridScroll}
             onMouseDown={onBlogMouseDown}
             onMouseMove={onBlogMouseMove}
             onMouseUp={endBlogDrag}
@@ -2206,6 +2245,22 @@ export default function ProgramaCreacionDigital() {
               );
             })}
           </div>
+          {/* Puntitos — solo visibles en mobile (ver @media en programa.css),
+              donde el carrusel muestra 1 card a la vez (manual + autoavance).
+              En desktop/tablet se ven varias cards a la vez, así que un
+              puntito por card no tendría sentido ahí y quedan ocultos. */}
+          <div className="pcd-blog-preview__dots">
+            {BLOG_POSTS.map((_, i) => (
+              <button
+                key={i}
+                type="button"
+                className={`pcd-blog-preview__dot${i === blogSlide ? ' pcd-blog-preview__dot--active' : ''}`}
+                aria-label={`${i + 1}`}
+                onClick={() => goToBlogSlide(i)}
+              />
+            ))}
+          </div>
+          </>
         ) : (
           <div className="pcd-blog-preview__empty pcd-reveal">
             <span className="pcd-blog-preview__empty-eyebrow">{t.blog.emptyEyebrow}</span>

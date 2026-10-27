@@ -2588,6 +2588,34 @@ body:has(.pcd-docente-modal[open]) {
   .pcd-blog-preview__card { flex: 0 0 100%; }
 }
 
+/* Puntitos del carrusel de blog — ocultos por defecto (en desktop/tablet
+   se ven varias cards a la vez, un puntito por card no tiene sentido ahí)
+   y visibles solo en mobile, donde el carrusel muestra 1 card a la vez
+   (ver @media arriba). A pedido de la usuaria. */
+.pcd-blog-preview__dots {
+  display: none;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 20px;
+}
+.pcd-blog-preview__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  border: none;
+  background: rgba(13,13,13,0.25);
+  padding: 0;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+.pcd-blog-preview__dot--active {
+  background: var(--pcd-ink);
+  transform: scale(1.3);
+}
+@media (max-width: 560px) {
+  .pcd-blog-preview__dots { display: flex; }
+}
+
 /* ────────────────────────────────────────────────────────────
    /proyectos — hero
    ──────────────────────────────────────────────────────────── */

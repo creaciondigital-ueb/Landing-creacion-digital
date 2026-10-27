@@ -7,6 +7,14 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Agregado — Home: puntitos de paginación bajo el carrusel de blog en mobile
+
+- A pedido de la usuaria, se agregaron puntitos (uno por publicación) debajo del carrusel de blog, visibles SOLO en mobile (≤560px, donde se ve 1 card a la vez) — en desktop/tablet se ven varias cards a la vez, así que un puntito por card no tendría sentido ahí y quedan ocultos (`display:none` por defecto, `flex` dentro del mismo `@media (max-width: 560px)` que ya angosta las cards a `flex:0 0 100%`).
+- Se agregó `blogSlide` (estado) para saber cuál puntito resaltar: se sincroniza solo con el autoavance (`goToNext` ahora también llama `setBlogSlide`) y con cualquier scroll manual del usuario (mouse-drag o touch/trackpad nativo) vía un nuevo `onScroll={onBlogGridScroll}` en la grilla, que redondea a la card más cercana. Clickear un puntito salta directo a esa card (`goToBlogSlide`).
+- Se extrajo `getBlogStep(grid)` (ancho de card + gap, leído en vivo del DOM/CSS) como helper compartido entre el autoavance, el scroll manual y el click en los puntitos, en vez de repetir esa cuenta en cada uno.
+- Build verificado con `npm run build` y `tsc --noEmit` — compila limpio.
+- Archivos: `src/pages/ProgramaCreacionDigital.tsx`, `src/styles/programa.css`.
+
 ### Arreglado — Home: el autoavance del carrusel de blog en mobile se desalineaba con scroll manual
 
 - Bug reportado por la usuaria: si el usuario arrastraba/hacía scroll nativo (touch) en el carrusel de blog en mobile, el autoavance quedaba "dañado" — las cards se mostraban a medias (cortadas) en vez de una card completa a la vez.
