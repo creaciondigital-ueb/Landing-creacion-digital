@@ -7,6 +7,14 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Arreglado — Home: el autoavance del carrusel de blog en mobile se desalineaba con scroll manual
+
+- Bug reportado por la usuaria: si el usuario arrastraba/hacía scroll nativo (touch) en el carrusel de blog en mobile, el autoavance quedaba "dañado" — las cards se mostraban a medias (cortadas) en vez de una card completa a la vez.
+- Causa: `goToNext()` sumaba `step` (ancho de card + gap) directo a `grid.scrollLeft`, así que si el scroll manual dejaba la posición en cualquier punto intermedio entre dos cards, ese desfase se arrastraba para siempre en cada tick.
+- Se corrigió para calcular la card MÁS CERCANA a la posición actual (`Math.round(grid.scrollLeft / step)`) y avanzar a la siguiente desde ahí, en vez de sumar `step` a ciegas — así el autoavance se realinea solo en el siguiente tick sin importar dónde haya quedado el scroll manual. De paso, el gap ya no queda hardcodeado (`18`) sino leído con `getComputedStyle(grid).columnGap`.
+- Build verificado con `npm run build` y `tsc --noEmit` — compila limpio.
+- Archivos: `src/pages/ProgramaCreacionDigital.tsx`.
+
 ### Agregado — Home: en mobile, el carrusel de blog avanza solo (1 noticia a la vez, cada 3s, loop infinito)
 
 - A pedido de la usuaria, en el breakpoint mobile (≤560px) la card del carrusel de blog pasa de `flex: 0 0 86%` (casi toda la card + peek de la siguiente) a `flex: 0 0 100%` — ahora se ve una sola noticia a pantalla completa, sin peek.

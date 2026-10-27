@@ -687,13 +687,25 @@ export default function ProgramaCreacionDigital() {
       const grid = blogGridRef.current;
       // No interrumpe un arrastre activo del usuario.
       if (!grid || blogDragState.current.isDown) return;
+      const cards = grid.children;
+      if (cards.length === 0) return;
+      const card = cards[0] as HTMLElement;
+      const gap = parseFloat(window.getComputedStyle(grid).columnGap || '18') || 18;
+      const step = card.getBoundingClientRect().width + gap;
+      if (step <= 0) return;
       const maxScroll = grid.scrollWidth - grid.clientWidth;
-      if (maxScroll <= 0) return;
-      const card = grid.children[0] as HTMLElement | undefined;
-      const step = card ? card.getBoundingClientRect().width + 18 /* gap */ : grid.clientWidth;
-      const next = grid.scrollLeft + step;
-      // Si ya no entra una card más completa, vuelve al inicio (loop).
-      grid.scrollTo({ left: next > maxScroll + 4 ? 0 : next, behavior: 'smooth' });
+      // Se calcula desde la card MÁS CERCANA a la posición actual (en vez
+      // de sumar `step` a scrollLeft tal cual) — bug reportado por la
+      // usuaria: si el usuario arrastra/hace scroll nativo a mano (touch),
+      // scrollLeft queda en cualquier punto intermedio entre dos cards, y
+      // sumarle `step` directo mantenía ese desfase para siempre (las
+      // cards quedaban mostrándose a medias, nunca alineadas). Redondeando
+      // a la card más cercana en cada tick, el autoavance se realinea solo
+      // sin importar dónde haya quedado el scroll manual.
+      const currentIndex = Math.round(grid.scrollLeft / step);
+      const nextIndex = currentIndex + 1 >= cards.length ? 0 : currentIndex + 1;
+      const target = Math.min(nextIndex * step, maxScroll);
+      grid.scrollTo({ left: target, behavior: 'smooth' });
     };
 
     const applyForMode = (matches: boolean) => {
