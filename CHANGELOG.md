@@ -7,13 +7,24 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Arreglado — Home: los puntitos del carrusel de blog eran invisibles (reset global de `<button>` les pisaba el color)
+
+- Tras la entrada anterior (extracción de `BlogCarousel` para arreglar el parpadeo en blanco), la usuaria confirmó que el parpadeo ya no pasa, pero seguía sin ver los puntitos.
+- Se depuró con Playwright (build de producción servido localmente, viewport mobile 390px) en vez de seguir adivinando por captura de pantalla: se confirmó que los 6 `<button>` de los puntitos SÍ estaban en el DOM, con `display:flex` en el contenedor y `visibility:visible` — o sea, no era un problema de React ni de que no se montaran. El problema real apareció al inspeccionar el `background-color` calculado de cada puntito: daba `rgba(0, 0, 0, 0)` (transparente) en vez del `rgba(13,13,13,0.25)` declarado.
+- Causa real: existe un reset global en este mismo archivo, `.pcd-page button { background: transparent; border: 0; ... }` (línea ~53), pensado para quitarle el estilo nativo del navegador a TODOS los `<button>` del sitio. Por especificidad CSS, `.pcd-page button` (una clase + un elemento) le gana a `.pcd-blog-preview__dot` (una sola clase) aunque esta última esté declarada después en el archivo — mismo tipo de bug que ya está documentado y resuelto para el botón `.pcd-axis__switch` más arriba en este archivo (ver su comentario: "para ganarle en especificidad al reset global"). Los puntitos quedaban con `background: transparent` sin que nada se viera mal en el HTML, el JS o el resto del CSS — por eso costó encontrarlo mirando solo capturas de pantalla.
+- Se corrigió calificando los selectores con el contenedor padre, `.pcd-blog-preview__dots .pcd-blog-preview__dot` y `.pcd-blog-preview__dots .pcd-blog-preview__dot--active` (dos clases en vez de una), ganándole en especificidad al reset — mismo patrón ya usado para `.pcd-axis__switch`.
+- Verificado visualmente con Playwright tras el fix: el puntito activo calcula `rgb(13, 13, 13)` y los inactivos `rgba(13, 13, 13, 0.25)`, como se esperaba; screenshot confirma los 6 puntitos visibles debajo del carrusel.
+- La entrada anterior (re-render aislado en `BlogCarousel`) seguía siendo necesaria y correcta para el parpadeo en blanco — este es un segundo bug, independiente, que afectaba solo al color de los puntitos.
+- Build verificado con `npx tsc --noEmit` y `npm run build` — compila limpio.
+- Archivos: `src/styles/programa.css`.
+
 ### Arreglado — Home: los puntitos no se veían y el carrusel de blog quedaba en blanco un momento al avanzar
 
 - Bug reportado por la usuaria tras la entrada anterior (puntitos de paginación): "no se ven los 3 puntos y ahora cuando avanza, se queda blanco un tiempo y luego si se muestra".
 - Causa: `blogSlide` (el estado que resalta el puntito activo) vivía directo dentro del componente gigante `ProgramaCreacionDigital`, junto con el resto del estado de toda la página (hero, proyectos, docentes, etc.). Ese estado cambia cada ~3s por el autoavance en mobile, y también en cada evento de scroll/drag manual — cada uno de esos cambios forzaba un re-render de TODA la página, no solo del carrusel. Ese re-render es lo bastante costoso como para notarse como un parpadeo/pantalla en blanco justo al avanzar, y muy probablemente el mismo motivo por el que los puntitos no llegaban a pintarse bien.
 - Este mismo problema ya estaba resuelto una vez en este archivo para el typewriter del hero: `HeroTitle` es un componente aparte que aísla su propio estado "para no re-renderizar toda la página en cada tick de la animación" (ver comentario junto a su definición). Se aplicó exactamente el mismo patrón acá.
 - Se extrajo todo el carrusel de blog (ref del grid, estado de drag, `blogSlide`, `getBlogStep`, los handlers de mouse/scroll, el `useEffect` del autoavance y el render del grid + puntitos + estado vacío) a un nuevo componente standalone `BlogCarousel`, definido justo después de `HeroTitle` y antes de `export default function ProgramaCreacionDigital()`. Llama a `useLang()` por su cuenta (mismo patrón ya usado por otro componente standalone de este archivo), así que no necesita props. El componente padre ahora solo renderiza `<BlogCarousel />` en el lugar donde antes estaba toda la lógica — y como `blogSlide` ya no existe en `ProgramaCreacionDigital`, sus cambios solo re-renderizan el carrusel, no la página completa.
-- La CSS de los puntitos (`.pcd-blog-preview__dots`/`__dot`/`__dot--active`) no tenía ningún error — se verificó que ya estaba correcta en `programa.css`; el problema era enteramente de React (el re-render), no de estilos.
+- La CSS de los puntitos (`.pcd-blog-preview__dots`/`__dot`/`__dot--active`) no tenía errores de sintaxis — se verificó que estaba bien escrita en `programa.css`. Sí tenía, en cambio, un problema de *especificidad* contra un reset global que la dejaba sin color (invisible) — ver la entrada de más arriba, encontrada y corregida después de esta.
 - Build verificado con `npx tsc --noEmit` y `npm run build` — compila limpio.
 - Archivos: `src/pages/ProgramaCreacionDigital.tsx`.
 
