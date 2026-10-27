@@ -7,6 +7,16 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Arreglado — Home: los puntitos no se veían y el carrusel de blog quedaba en blanco un momento al avanzar
+
+- Bug reportado por la usuaria tras la entrada anterior (puntitos de paginación): "no se ven los 3 puntos y ahora cuando avanza, se queda blanco un tiempo y luego si se muestra".
+- Causa: `blogSlide` (el estado que resalta el puntito activo) vivía directo dentro del componente gigante `ProgramaCreacionDigital`, junto con el resto del estado de toda la página (hero, proyectos, docentes, etc.). Ese estado cambia cada ~3s por el autoavance en mobile, y también en cada evento de scroll/drag manual — cada uno de esos cambios forzaba un re-render de TODA la página, no solo del carrusel. Ese re-render es lo bastante costoso como para notarse como un parpadeo/pantalla en blanco justo al avanzar, y muy probablemente el mismo motivo por el que los puntitos no llegaban a pintarse bien.
+- Este mismo problema ya estaba resuelto una vez en este archivo para el typewriter del hero: `HeroTitle` es un componente aparte que aísla su propio estado "para no re-renderizar toda la página en cada tick de la animación" (ver comentario junto a su definición). Se aplicó exactamente el mismo patrón acá.
+- Se extrajo todo el carrusel de blog (ref del grid, estado de drag, `blogSlide`, `getBlogStep`, los handlers de mouse/scroll, el `useEffect` del autoavance y el render del grid + puntitos + estado vacío) a un nuevo componente standalone `BlogCarousel`, definido justo después de `HeroTitle` y antes de `export default function ProgramaCreacionDigital()`. Llama a `useLang()` por su cuenta (mismo patrón ya usado por otro componente standalone de este archivo), así que no necesita props. El componente padre ahora solo renderiza `<BlogCarousel />` en el lugar donde antes estaba toda la lógica — y como `blogSlide` ya no existe en `ProgramaCreacionDigital`, sus cambios solo re-renderizan el carrusel, no la página completa.
+- La CSS de los puntitos (`.pcd-blog-preview__dots`/`__dot`/`__dot--active`) no tenía ningún error — se verificó que ya estaba correcta en `programa.css`; el problema era enteramente de React (el re-render), no de estilos.
+- Build verificado con `npx tsc --noEmit` y `npm run build` — compila limpio.
+- Archivos: `src/pages/ProgramaCreacionDigital.tsx`.
+
 ### Agregado — Home: puntitos de paginación bajo el carrusel de blog en mobile
 
 - A pedido de la usuaria, se agregaron puntitos (uno por publicación) debajo del carrusel de blog, visibles SOLO en mobile (≤560px, donde se ve 1 card a la vez) — en desktop/tablet se ven varias cards a la vez, así que un puntito por card no tendría sentido ahí y quedan ocultos (`display:none` por defecto, `flex` dentro del mismo `@media (max-width: 560px)` que ya angosta las cards a `flex:0 0 100%`).
