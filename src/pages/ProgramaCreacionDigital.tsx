@@ -673,6 +673,43 @@ export default function ProgramaCreacionDigital() {
     }
   };
 
+  // Autoavance del carrusel de blog SOLO en mobile (≤560px, el breakpoint
+  // donde cada card ocupa el 100% del ancho — ver .pcd-blog-preview__card
+  // en programa.css): a pedido de la usuaria, ahí se ve una sola noticia a
+  // la vez y pasa sola a la siguiente cada 3s, en loop infinito (de la
+  // última vuelve a la primera). En desktop/tablet el carrusel sigue
+  // siendo solo manual (drag), sin autoavance.
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 560px)');
+    let intervalId: ReturnType<typeof setInterval> | null = null;
+
+    const goToNext = () => {
+      const grid = blogGridRef.current;
+      // No interrumpe un arrastre activo del usuario.
+      if (!grid || blogDragState.current.isDown) return;
+      const maxScroll = grid.scrollWidth - grid.clientWidth;
+      if (maxScroll <= 0) return;
+      const card = grid.children[0] as HTMLElement | undefined;
+      const step = card ? card.getBoundingClientRect().width + 18 /* gap */ : grid.clientWidth;
+      const next = grid.scrollLeft + step;
+      // Si ya no entra una card más completa, vuelve al inicio (loop).
+      grid.scrollTo({ left: next > maxScroll + 4 ? 0 : next, behavior: 'smooth' });
+    };
+
+    const applyForMode = (matches: boolean) => {
+      if (intervalId) { clearInterval(intervalId); intervalId = null; }
+      if (matches) intervalId = setInterval(goToNext, 3000);
+    };
+    applyForMode(mq.matches);
+    const onChange = (e: MediaQueryListEvent) => applyForMode(e.matches);
+    mq.addEventListener('change', onChange);
+
+    return () => {
+      if (intervalId) clearInterval(intervalId);
+      mq.removeEventListener('change', onChange);
+    };
+  }, []);
+
   /** Toggle visual ES | EN */
   const LangToggle = () => (
     <button

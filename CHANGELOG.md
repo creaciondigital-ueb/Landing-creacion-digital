@@ -7,6 +7,13 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Agregado — Home: en mobile, el carrusel de blog avanza solo (1 noticia a la vez, cada 3s, loop infinito)
+
+- A pedido de la usuaria, en el breakpoint mobile (≤560px) la card del carrusel de blog pasa de `flex: 0 0 86%` (casi toda la card + peek de la siguiente) a `flex: 0 0 100%` — ahora se ve una sola noticia a pantalla completa, sin peek.
+- Se agregó un `useEffect` en `ProgramaCreacionDigital.tsx` que, SOLO mientras `window.matchMedia('(max-width: 560px)')` matchea, avanza el carrusel una card cada 3 segundos (`grid.scrollTo({ left, behavior: 'smooth' })`), y al llegar a la última vuelve a la primera (loop infinito). Si el usuario está arrastrando manualmente en ese momento, el tick se salta (no pelea con el drag). Se escucha el cambio de breakpoint (`mq.addEventListener('change', ...)`) para prender/apagar el intervalo si la ventana cruza los 560px en vivo. En desktop/tablet el carrusel sigue siendo 100% manual (drag), sin autoavance — tal como pidió la usuaria, esto es solo para mobile.
+- Build verificado con `npm run build` y `tsc --noEmit` — compila limpio.
+- Archivos: `src/pages/ProgramaCreacionDigital.tsx`, `src/styles/programa.css`.
+
 ### Agregado — Post de primeros practicantes: foto de Andrea y Johan
 
 - A pedido de la usuaria, se agregó la foto de Andrea Rozo y Johan Ospina al post `primeros-practicantes-creacion-digital` (provista por la usuaria, convertida a WEBP calidad 82). Ya no queda con el bloque de color/número fantasma — ahora usa `object-fit: cover` sin barras grises, igual que el resto de fotos del blog (ver entrada de más arriba sobre `.pdet__carousel--blog`).

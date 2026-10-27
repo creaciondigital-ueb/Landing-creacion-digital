@@ -2579,9 +2579,13 @@ body:has(.pcd-docente-modal[open]) {
   .pcd-blog-preview__empty { padding: 40px 28px; }
 }
 @media (max-width: 560px) {
-  /* 1 card casi completa + peek de la siguiente, para que en mobile
-     siga sintiéndose como carrusel arrastrable y no como una lista. */
-  .pcd-blog-preview__card { flex: 0 0 86%; }
+  /* 1 sola card a pantalla completa (sin peek de la siguiente) — a pedido
+     de la usuaria, en mobile el carrusel pasa a ser automático (ver el
+     useEffect de autoplay en ProgramaCreacionDigital.tsx, cada 3s, loop
+     infinito), así que ya no hace falta la pista visual de "hay más, arrastra"
+     que daba el peek: ahora avanza solo. El usuario igual puede arrastrar
+     manualmente si quiere adelantarse. */
+  .pcd-blog-preview__card { flex: 0 0 100%; }
 }
 
 /* ────────────────────────────────────────────────────────────
