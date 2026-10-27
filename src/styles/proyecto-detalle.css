@@ -65,6 +65,24 @@
   transition: opacity 0.5s ease;
 }
 .pdet__slide--active { opacity: 1; }
+/* A pedido de la usuaria: en las fotos del BLOG (no en /proyectos, que no
+   se tocó) se veían barras grises a los lados — las fotos reales (ARTBO
+   1.5:1, Día del Unicornio 1.63:1) son más "cuadradas" que el contenedor
+   fijo 16:9 (1.78:1) del carrusel, y con object-fit:contain el navegador
+   las encoge para que quepan completas, dejando ese espacio vacío a los
+   costados. Modificador .pdet__carousel--blog (solo en BlogPostPage.tsx)
+   para no afectar /proyectos/:id, que reusa el mismo carrusel y cuyas
+   fotos no se reportaron con este problema: cover llena todo el recuadro
+   sin barras, recortando apenas arriba/abajo (~8-16% del alto según la
+   foto) en vez de a los lados. */
+.pdet__carousel--blog .pdet__slide { object-fit: cover; }
+/* El recuadro 16:9 (heredado de .pdet__carousel, pensado para /proyectos)
+   es más panorámico que las fotos reales del blog (ARTBO 1.5:1, Día del
+   Unicornio 1.63:1, Franziska 1.33:1, Explora Unbosque 1.62:1) — con
+   object-fit:cover de todas formas no deja barras, pero recortaba más de
+   lo necesario. 3:2 (1.5) calza casi exacto con la mayoría (recorte
+   mínimo o nulo) y reduce el recorte en las demás. */
+.pdet__carousel--blog { aspect-ratio: 3 / 2; }
 
 /* Flechas — esquina inferior izquierda, juntas */
 .pdet__nav {
@@ -332,6 +350,10 @@
   .pdet__skills { align-items: center; }
   .pdet__skill { align-self: center; }
   .pdet__carousel { aspect-ratio: 16 / 9; }
+  /* Repetido acá porque la regla de arriba (misma especificidad, pero
+     fuera de este @media) perdía contra esta en mobile y volvían las
+     barras grises en el blog. */
+  .pdet__carousel--blog { aspect-ratio: 3 / 2; }
   .pdet__title { font-size: clamp(28px, 7vw, 48px); }
 
   /* Flechas ocultas en mobile — se navega con swipe */

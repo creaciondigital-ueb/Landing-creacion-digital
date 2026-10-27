@@ -1,0 +1,2153 @@
+import { useEffect, useState, useRef, type ReactNode, type CSSProperties } from 'react';
+import { Link } from 'react-router-dom';
+import { PROYECTOS, type Proyecto } from '../data/proyectos';
+import { BLOG_POSTS } from '../data/blog';
+import { useLang } from '../i18n/LanguageContext';
+import { useSeo } from '../hooks/useSeo';
+import '../styles/programa.css';
+
+const HOME_DESCRIPTION = {
+  es: 'Pregrado en Creación Digital. No vinimos a dictar clase: vinimos a crear. Universidad El Bosque, Bogotá.',
+  en: "Digital Creation undergraduate program. We didn't come to teach a class — we came to create. Universidad El Bosque, Bogotá.",
+};
+
+const IMG = '/programa/img';
+const VIDEO = '/programa/video';
+const APLICA_URL = 'https://www.unbosque.edu.co/inscripciones/pregrado';
+
+/**
+ * Preview de proyectos en el home: en vez de mostrar siempre los mismos
+ * 2 (los primeros del array), se sortean 2 al azar en cada carga de
+ * página, para variar con el resto de proyectos ("que se roten"). Solo
+ * participan los que tienen AMBAS portadas (horizontal + vertical) —
+ * ver comentario en data/proyectos.ts — porque cualquiera de los 2
+ * puede tocarle el marco ancho o el marco alto según el sorteo.
+ */
+const HOME_PROJECTS_POOL = PROYECTOS.filter((p) => p.image && p.imageVertical);
+
+/** Colores sólidos de las cards del preview de blog en el home — las
+ * primeras 3 siguen el mismo ciclo azul(cobalt) -> amarillo(acid) ->
+ * rojo(tomato) que los stickers de docentes; la 4ta es negra (ink), a
+ * pedido del usuario, para cerrar la fila con contraste. */
+const BLOG_CARD_COLORS = ['cobalt', 'acid', 'tomato', 'ink'] as const;
+function shuffleArray<T>(arr: T[]): T[] {
+  const out = [...arr];
+  for (let i = out.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [out[i], out[j]] = [out[j], out[i]];
+  }
+  return out;
+}
+
+/**
+ * Preview de proyectos del home — componente aparte a propósito (mismo
+ * motivo que HeroTitle más abajo): rota con sus propios setInterval, y
+ * si ese estado viviera en ProgramaCreacionDigital (TODA la página)
+ * cada tick re-renderizaría el árbol completo para siempre mientras la
+ * página esté abierta. Aislado acá, el tick solo re-renderiza estas 2
+ * cards.
+ *
+ * Mecánica de la rotación — a pedido del usuario, NO las 2 al mismo
+ * tiempo: cada card (wide/tall) tiene su PROPIO timer de 5s, pero el
+ * de la card alta arranca desfasado 2.5s respecto al de la ancha, así
+ * nunca caen en el mismo instante — se ve una cosa a la vez cambiando,
+ * no un salto doble. Cada una recorre el mismo orden ya barajado con
+ * un offset relativo de 1 (para no empezar mostrando el mismo
+ * proyecto); por las dudas (por si el desfase algún día coincidiera,
+ * ej. con un pool de exactamente 2 proyectos) se valida en cada
+ * render que nunca terminen mostrando el mismo proyecto las dos a la
+ * vez.
+ */
+/**
+ * Preview de proyectos del home — componente aparte a propósito (mismo
+ * motivo que HeroTitle más abajo): rota con sus propios setInterval, y
+ * si ese estado viviera en ProgramaCreacionDigital (TODA la página)
+ * cada tick re-renderizaría el árbol completo para siempre mientras la
+ * página esté abierta. Aislado acá, el tick solo re-renderiza estas 2
+ * cards.
+ *
+ * Mecánica de la rotación — a pedido del usuario, NO las 2 al mismo
+ * tiempo: cada card (wide/tall) tiene su PROPIO timer de 5s, pero el
+ * de la card alta arranca desfasado 2.5s respecto al de la ancha, así
+ * nunca caen en el mismo instante. Cada una recorre el mismo orden ya
+ * barajado con un offset relativo de 1 (para no empezar mostrando el
+ * mismo proyecto); por las dudas se valida en cada render que nunca
+ * terminen mostrando el mismo proyecto las dos a la vez.
+ */
+function HomeProjectsPreview({ lang }: { lang: 'es' | 'en' }) {
+  const [order] = useState(() => {
+    const pool = HOME_PROJECTS_POOL.length >= 2 ? HOME_PROJECTS_POOL : PROYECTOS.filter((p) => p.image);
+    return shuffleArray(pool);
+  });
+  const [wideTick, setWideTick] = useState(0);
+  const [tallTick, setTallTick] = useState(0);
+
+  useEffect(() => {
+    if (order.length < 2) return;
+    const wideInterval = setInterval(() => setWideTick((v) => v + 1), 5000);
+    // La card alta arranca 2.5s desfasada — así su primer cambio cae
+    // justo a mitad de camino entre 2 cambios de la card ancha.
+    let tallInterval: ReturnType<typeof setInterval> | undefined;
+    const tallStart = setTimeout(() => {
+      setTallTick((v) => v + 1);
+      tallInterval = setInterval(() => setTallTick((v) => v + 1), 5000);
+    }, 2500);
+    return () => {
+      clearInterval(wideInterval);
+      clearTimeout(tallStart);
+      if (tallInterval) clearInterval(tallInterval);
+    };
+  }, [order.length]);
+
+  if (order.length === 0) return null;
+  const n = order.length;
+  const wideProject = order[wideTick % n];
+  let tallIdx = (tallTick + 1) % n;
+  if (order[tallIdx] === wideProject) tallIdx = (tallIdx + 1) % n; // nunca las 2 iguales a la vez
+  const tallProject = order[tallIdx];
+
+  return (
+    <div className="pcd-projects__grid">
+      <RotatingProjectCard slot="wide" project={wideProject} lang={lang} />
+      <RotatingProjectCard slot="tall" project={tallProject} lang={lang} />
+    </div>
+  );
+}
+
+/**
+ * Una card del preview de proyectos del home. El NODO nunca se
+ * remonta al rotar (antes se hacía key={p.id}, lo que causaba un corte
+ * duro). El crossfade suave es SOLO de la imagen — a pedido del
+ * usuario, el texto (categoría/año/bajada) no se desvanece, cambia
+ * directo apenas le toca al proyecto nuevo, en sincronía con el
+ * momento en que la imagen termina su transición.
+ *
+ * La imagen nueva entra en una capa superpuesta ("incoming") que se
+ * desvanece hacia adentro (opacity 0 -> 1) EN VIVO sobre la imagen
+ * vieja ("current", que se ve completa todo el tiempo por debajo). Al
+ * terminar la transición, la capa "incoming" pasa a ser la nueva
+ * "current" (imagen Y texto se actualizan juntos en ese instante) y se
+ * descarta la capa de encima — sin salto visual.
+ */
+const PROJECT_CROSSFADE_MS = 1800; // debe coincidir con la duración de la animación CSS (pcd-project-crossfade-in)
+// El texto cambia un poco ANTES de que la imagen termine de asentarse
+// (a pedido del usuario, se sentía atrasado) — no espera a que la
+// transición de la foto termine del todo.
+const TEXT_SWITCH_LEAD_MS = 500;
+const TEXT_SWITCH_MS = PROJECT_CROSSFADE_MS - TEXT_SWITCH_LEAD_MS;
+
+function RotatingProjectCard({ slot, project, lang }: { slot: 'wide' | 'tall'; project: Proyecto; lang: 'es' | 'en' }) {
+  const isWide = slot === 'wide';
+  const [current, setCurrent] = useState(project);
+  const [incoming, setIncoming] = useState<Proyecto | null>(null);
+  // Texto (categoría/año/bajada) — se actualiza aparte de la imagen,
+  // más temprano, así que necesita su propio estado.
+  const [textProject, setTextProject] = useState(project);
+
+  useEffect(() => {
+    if (project.id === current.id) return;
+    setIncoming(project);
+    const textTimeout = setTimeout(() => {
+      setTextProject(project);
+    }, TEXT_SWITCH_MS);
+    const imgTimeout = setTimeout(() => {
+      setCurrent(project);
+      setIncoming(null);
+    }, PROJECT_CROSSFADE_MS);
+    return () => {
+      clearTimeout(textTimeout);
+      clearTimeout(imgTimeout);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [project.id]);
+
+  const mediaClass = (p: Proyecto) => `pcd-project__media${p.id === 'chocosapiens-humanismo-digital' ? ' pcd-project__media--contain' : ''}`;
+  const imgSrc = (p: Proyecto) => (isWide ? p.image : (p.imageVertical ?? p.image));
+
+  const frameClass = isWide ? 'pcd-project--wide' : 'pcd-project--tall';
+  const className = `pcd-project ${frameClass} pcd-reveal`;
+  const content = (
+    <>
+      <div className="pcd-project__media-wrap">
+        <div className={mediaClass(current)} style={{ backgroundImage: `url('${imgSrc(current)}')` }} aria-hidden="true" />
+        {incoming && (
+          <div key={incoming.id} className={`${mediaClass(incoming)} pcd-project__media--incoming`} style={{ backgroundImage: `url('${imgSrc(incoming)}')` }} aria-hidden="true" />
+        )}
+      </div>
+      <div className="pcd-project__meta">
+        <span>{(lang === 'en' ? (textProject.subjectEn ?? textProject.subject) : textProject.subject).toUpperCase()}</span>
+        <span>{textProject.year}</span>
+      </div>
+      <p className="pcd-project__caption">{lang === 'en' ? (textProject.captionEn ?? textProject.caption) : textProject.caption}</p>
+    </>
+  );
+
+  // El link/hover apunta a lo que el usuario está LEYENDO ahora mismo
+  // (textProject), no a lo que la foto todavía está terminando de
+  // asentar (current) — son lo mismo casi todo el tiempo, solo
+  // difieren durante los ~500ms de TEXT_SWITCH_LEAD_MS.
+  return textProject.modal ? (
+    <Link to={`/proyectos/${textProject.id}`} className={`${className} pcd-project--clickable`} style={{ textDecoration: 'none' }}>
+      {content}
+    </Link>
+  ) : (
+    <article className={className}>{content}</article>
+  );
+}
+
+/**
+ * Equipo — 5 personas en el video loop, en el mismo orden en que aparecen
+ * caminando de izquierda a derecha en el video (Estefany > Juan > Paula >
+ * Tatiana > Fabian). `left`/`width` son porcentajes del ancho del frame
+ * que delimitan la zona "clicable" de cada persona.
+ *
+ * Al principio se midieron a partir de la oscuridad por columna de un
+ * frame real del video, pero eso dejaba a Estefany con una zona (25.8%)
+ * notoriamente más ancha que las demás (~15-18%) — pedido explícito del
+ * usuario: "la card de estefany es un poco más grande, déjala del mismo
+ * tamaño que las otras". Ahora las 5 zonas son parejas (20% cada una),
+ * a costa de perder algo de precisión contra los bordes reales de cada
+ * figura en el video.
+ */
+const TEAM = [
+  { id: 'estefany', photo: `${IMG}/equipo/estefany.webp`, left: 0, width: 20 },
+  { id: 'juan', photo: `${IMG}/equipo/juan.webp`, left: 20, width: 20 },
+  { id: 'paulav', photo: `${IMG}/equipo/paula-v.webp`, left: 40, width: 20 },
+  { id: 'tatiana', photo: `${IMG}/equipo/tatiana.webp`, left: 60, width: 20 },
+  { id: 'fabian', photo: `${IMG}/equipo/fabian.webp`, left: 80, width: 20 },
+] as const;
+
+/** Herramientas del dock — modo "Contenido" del eje 01. */
+const CONTENIDO_DOCK = [
+  { name: 'Higgsfield', icon: `${IMG}/dock/higgsfield.png` },
+  { name: 'ChatGPT', icon: `${IMG}/dock/chatgpt.png` },
+  { name: 'Runway', icon: `${IMG}/dock/runway.png` },
+  { name: 'CapCut', icon: `${IMG}/dock/capcut.png` },
+  { name: 'DaVinci Resolve', icon: `${IMG}/dock/davinci-resolve.png` },
+  { name: 'Adobe', icon: `${IMG}/dock/adobe.png` },
+  { name: 'Affinity', icon: `${IMG}/dock/affinity.png` },
+];
+
+/** Herramientas del dock — modo "Contenido" del eje 02 (mundo 3d). */
+const MUNDO_DOCK = [
+  { name: 'Blender', icon: `${IMG}/dock/blender.png` },
+  { name: 'Unity', icon: `${IMG}/dock/unity.png` },
+  { name: 'Unreal Engine', icon: `${IMG}/dock/unreal-engine.png` },
+  { name: 'Cascadeur', icon: `${IMG}/dock/cascadeur.png` },
+];
+
+/** Herramientas del dock — modo "Contenido" del eje 03 (producto). */
+const PRODUCTO_DOCK = [
+  { name: 'Claude', icon: `${IMG}/dock/claude.png` },
+  { name: 'Figma', icon: `${IMG}/dock/figma.png` },
+  { name: 'GitHub', icon: `${IMG}/dock/github.png` },
+  { name: 'Visual Studio Code', icon: `${IMG}/dock/vscode.png` },
+];
+
+/**
+ * Convierte un string con **frases resaltadas** (marcadas entre doble
+ * asterisco, estilo markdown liviano) en nodos React con <strong> en vez
+ * de texto plano — para poder resaltar palabras clave dentro de un párrafo
+ * de traducción sin partirlo en múltiples keys de i18n.
+ */
+function renderAccented(text: string): ReactNode[] {
+  return text.split(/\*\*(.+?)\*\*/g).map((chunk, i) =>
+    i % 2 === 1 ? <strong className="pcd-accent-text" key={i}>{chunk}</strong> : chunk
+  );
+}
+
+/**
+ * Landing pública del Programa Creación Digital (Universidad El Bosque).
+ * Soporta ES / EN mediante el contexto LanguageContext + hook useLang().
+ */
+
+interface DocenteModalProps {
+  id: string;
+  active: boolean;
+  onClose: () => void;
+  onSwipe: (dir: 1 | -1) => void;
+  /** Si no hay ilustración/foto todavía (ej. docente recién agregado sin
+   *  arte), se omiten y el retrato cae al fondo neutro "sin foto". */
+  portrait?: string;
+  portraitEnd?: string;
+  name: ReactNode;
+  tags: string[];
+  children: ReactNode;
+}
+
+const DOCENTE_SWIPE_THRESHOLD = 50;
+
+function DocenteModal({ id, active, onClose, onSwipe, portrait, portraitEnd, name, tags, children }: DocenteModalProps) {
+  const { t } = useLang();
+  const ref = useRef<HTMLDialogElement>(null);
+  const touchStartX = useRef<number | null>(null);
+  const didSwipeRef = useRef(false);
+  const onTouchStart = (e: React.TouchEvent) => { touchStartX.current = e.touches[0].clientX; };
+  const onTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX.current === null) return;
+    const dx = e.changedTouches[0].clientX - touchStartX.current;
+    touchStartX.current = null;
+    if (Math.abs(dx) < DOCENTE_SWIPE_THRESHOLD) return;
+    didSwipeRef.current = true;
+    onSwipe(dx < 0 ? 1 : -1);
+  };
+
+  const skipNextCloseEvent = useRef(false);
+  useEffect(() => {
+    const dlg = ref.current;
+    if (!dlg) return;
+    if (active && !dlg.open) {
+      try { dlg.showModal(); } catch { dlg.setAttribute('open', ''); }
+    } else if (!active && dlg.open) {
+      skipNextCloseEvent.current = true;
+      dlg.close();
+    }
+  }, [active]);
+
+  const handleNativeClose = () => {
+    if (skipNextCloseEvent.current) { skipNextCloseEvent.current = false; return; }
+    onClose();
+  };
+
+  const [showEndPortrait, setShowEndPortrait] = useState(false);
+  useEffect(() => {
+    if (!active) { setShowEndPortrait(false); return; }
+    const interval = setInterval(() => setShowEndPortrait((v) => !v), 1500);
+    return () => clearInterval(interval);
+  }, [active]);
+
+  return (
+    <dialog
+      ref={ref}
+      className={`pcd-docente-modal pcd-docente-modal--${id}`}
+      id={`modal-${id}`}
+      aria-labelledby={`modal-${id}-name`}
+      onClose={handleNativeClose}
+      onClick={(e) => {
+        if (didSwipeRef.current) { didSwipeRef.current = false; return; }
+        if (e.target === ref.current) onClose();
+      }}
+      onTouchStart={onTouchStart}
+      onTouchEnd={onTouchEnd}
+    >
+      <button className="pcd-docente-modal__close" type="button" aria-label={t.docentes.cerrar} onClick={onClose}>X</button>
+      <div className="pcd-docente-modal__inner">
+        <aside className="pcd-docente-modal__side">
+          <div className="pcd-docente-modal__portrait" aria-hidden="true">
+            {portrait && portraitEnd ? (
+              <>
+                <div
+                  className="pcd-docente-modal__portrait-layer pcd-docente-modal__portrait-layer--init"
+                  style={{ backgroundImage: `url('${portrait}')`, opacity: showEndPortrait ? 0 : 1 }}
+                />
+                <div
+                  className="pcd-docente-modal__portrait-layer pcd-docente-modal__portrait-layer--end"
+                  style={{ backgroundImage: `url('${portraitEnd}')`, opacity: showEndPortrait ? 1 : 0 }}
+                />
+              </>
+            ) : (
+              <div className="pcd-docente-modal__portrait--no-photo" />
+            )}
+          </div>
+          <h2 className="pcd-docente-modal__name" id={`modal-${id}-name`}>{name}</h2>
+          <div className="pcd-docente-modal__tags">
+            {tags.map((tag) => <span key={tag} className="pcd-docente__tag">{tag}</span>)}
+          </div>
+        </aside>
+        <div className="pcd-docente-modal__content">
+          {children}
+        </div>
+      </div>
+    </dialog>
+  );
+}
+
+/**
+ * Título del hero con efecto máquina de escribir — extraído como
+ * componente aparte a propósito. Antes este estado (heroTypedChars)
+ * vivía en ProgramaCreacionDigital y se actualizaba cada 100ms con
+ * setInterval: como ese componente es TODA la página (docentes,
+ * equipo, proyectos, blog...), cada uno de esos ticks re-renderizaba
+ * el árbol entero mientras el texto se escribía (varios segundos),
+ * saturando el hilo principal y haciendo que clics en esos segundos
+ * (ej. el toggle ES|EN) se sintieran "bloqueados" hasta que la
+ * animación terminaba. Aislando el estado acá, el tick de cada 100ms
+ * solo re-renderiza este componente chico — el resto de la página
+ * (y sus botones) queda libre para responder de inmediato en todo
+ * momento, incluso mientras el texto se sigue escribiendo.
+ */
+function HeroTitle({ line1, line2pre, line2word, line3 }: { line1: string; line2pre: string; line2word: string; line3: string }) {
+  const [typedChars, setTypedChars] = useState(0);
+  const [strikeActive, setStrikeActive] = useState(false);
+
+  // Reinicia la animación cuando cambia el texto (ej. cambio de idioma)
+  useEffect(() => {
+    const total = line1.length + line2pre.length + line2word.length + line3.length;
+
+    setTypedChars(0);
+    setStrikeActive(false);
+
+    const typeInterval = setInterval(() => {
+      setTypedChars((prev) => {
+        if (prev >= total) { clearInterval(typeInterval); return prev; }
+        return prev + 1;
+      });
+    }, 100);
+    return () => clearInterval(typeInterval);
+  }, [line1, line2pre, line2word, line3]);
+
+  const totalChars = line1.length + line2pre.length + line2word.length + line3.length;
+
+  useEffect(() => {
+    if (typedChars < totalChars) return;
+    const strikeTimeout = setTimeout(() => setStrikeActive(true), 300);
+    return () => clearTimeout(strikeTimeout);
+  }, [typedChars, totalChars]);
+
+  const line1Visible = line1.slice(0, Math.min(line1.length, typedChars));
+  const line2PreVisible = line2pre.slice(0, Math.max(0, Math.min(line2pre.length, typedChars - line1.length)));
+  const line2WordVisible = line2word.slice(0, Math.max(0, Math.min(line2word.length, typedChars - line1.length - line2pre.length)));
+  const line3Visible = line3.slice(0, Math.max(0, Math.min(line3.length, typedChars - line1.length - line2pre.length - line2word.length)));
+  const typingDone = typedChars >= totalChars;
+
+  const row2Total = line2pre.length + line2word.length;
+  const row1Active = typedChars < line1.length;
+  const row2Active = !row1Active && typedChars < line1.length + row2Total;
+  const row3Active = !row1Active && !row2Active && !typingDone;
+
+  return (
+    <h1 className="pcd-hero__title">
+      <span className="row">
+        {line1Visible}
+        {row1Active && <span className="pcd-hero__cursor" aria-hidden="true" />}
+      </span>
+      <span className="row row--shift1">
+        {line2PreVisible}
+        <span className={`pcd-hero__dictar${strikeActive ? ' is-struck' : ''}`}>{line2WordVisible}</span>
+        {row2Active && <span className="pcd-hero__cursor" aria-hidden="true" />}
+      </span>
+      <span className="row row--shift2">
+        {line3Visible}
+        <span className={`blob${typingDone ? ' is-visible' : ''}`}>.</span>
+        {row3Active && <span className="pcd-hero__cursor" aria-hidden="true" />}
+      </span>
+    </h1>
+  );
+}
+
+export default function ProgramaCreacionDigital() {
+  const { lang, setLang, t } = useLang();
+
+  useSeo({
+    title: 'Creación Digital · Universidad El Bosque',
+    description: HOME_DESCRIPTION[lang],
+    path: '/',
+  });
+
+  // Modal de docente activo
+  const [activeDocente, setActiveDocente] = useState<string | null>(null);
+  const openDocente = (id: string) => setActiveDocente(id);
+  const closeDocente = () => setActiveDocente(null);
+
+  const DOCENTE_ORDER = ['fabian', 'paula', 'sofia', 'nicolas', 'ximena', 'camilo', 'daniela', 'juandavid', 'vanessa', 'rusbel', 'carlos', 'dayana', 'julian', 'john', 'tatiana', 'pilar', 'jaime'];
+  const onSwipeDocente = (dir: 1 | -1) => {
+    setActiveDocente((current) => {
+      if (!current) return current;
+      const idx = DOCENTE_ORDER.indexOf(current);
+      if (idx === -1) return current;
+      const nextIdx = (idx + dir + DOCENTE_ORDER.length) % DOCENTE_ORDER.length;
+      return DOCENTE_ORDER[nextIdx];
+    });
+  };
+
+  // Menú hamburguer
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  // Cierra el menú mobile al hacer clic/tocar fuera de él (no solo con la X).
+  const mobileNavRef = useRef<HTMLElement>(null);
+  const hamburgerRef = useRef<HTMLButtonElement>(null);
+  useEffect(() => {
+    if (!menuOpen) return;
+    const onOutsidePointerDown = (e: MouseEvent | TouchEvent) => {
+      const target = e.target as Node;
+      if (mobileNavRef.current?.contains(target)) return;
+      if (hamburgerRef.current?.contains(target)) return;
+      setMenuOpen(false);
+    };
+    document.addEventListener('mousedown', onOutsidePointerDown);
+    document.addEventListener('touchstart', onOutsidePointerDown);
+    return () => {
+      document.removeEventListener('mousedown', onOutsidePointerDown);
+      document.removeEventListener('touchstart', onOutsidePointerDown);
+    };
+  }, [menuOpen]);
+
+  // Equipo: persona seleccionada para la ficha técnica (Fabian por
+  // defecto — pedido explícito del usuario — para que el panel nunca se
+  // vea vacío al llegar).
+  const [activeTeam, setActiveTeam] = useState<typeof TEAM[number]['id']>('fabian');
+
+  const activeTeamMember = t.equipo[activeTeam];
+
+
+  // Toggle Definición / Contenido — eje 01 (sección "contenido")
+  const [axis01Mode, setAxis01Mode] = useState<'definicion' | 'contenido'>('definicion');
+  // Toggle Definición / Contenido — eje 02 (sección "mundo 3d")
+  const [axis02Mode, setAxis02Mode] = useState<'definicion' | 'contenido'>('definicion');
+  // Toggle Definición / Contenido — eje 03 (sección "producto")
+  const [axis03Mode, setAxis03Mode] = useState<'definicion' | 'contenido'>('definicion');
+
+  // Hero typewriter: ver componente HeroTitle (arriba) — el estado se
+  // aisló ahí a propósito para no re-renderizar toda la página en cada
+  // tick de la animación.
+
+  const onCardKey = (e: React.KeyboardEvent, id: string) => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openDocente(id); }
+  };
+
+  // Animaciones scroll reveal
+  useEffect(() => {
+    const els = document.querySelectorAll('.pcd-reveal');
+    if (!els.length) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.15 }
+    );
+    els.forEach((el) => observer.observe(el));
+    return () => observer.disconnect();
+  }, []);
+
+  // Carrusel de docentes: drag-to-pan + loop infinito (el set de cards se
+  // duplica una vez en el DOM; al cruzar el borde entre el set original y
+  // el duplicado, restamos ese mismo ancho — visualmente idéntico, así que
+  // el salto es imperceptible) + autoavance continuo hacia la izquierda.
+  //
+  // docentesScrollRef es la ÚNICA fuente de verdad de la posición: nunca se
+  // vuelve a leer grid.scrollLeft para acumular sobre él. Esto es clave —
+  // `grid.scrollLeft += x` es un read-modify-write, y los navegadores
+  // redondean scrollLeft a píxeles enteros al leerlo; con incrementos
+  // menores a 1px por frame (32px/s a 60fps ≈ 0.5px/frame) cada lectura
+  // descartaba la parte fraccionaria antes de que pudiera acumularse, así
+  // que el carrusel quedaba efectivamente congelado para siempre (por eso
+  // "no avanza nunca continuo"). Acumulando en una variable de JS en punto
+  // flotante y solo escribiendo hacia el DOM, nada se pierde entre frames.
+  const docentesGridRef = useRef<HTMLDivElement>(null);
+  const docentesFirstCardRef = useRef<HTMLElement>(null);
+  const docentesFirstCloneRef = useRef<HTMLElement>(null);
+  const docentesScrollRef = useRef(0);
+  const docentesHoverPausedRef = useRef(false);
+  const dragState = useRef({ isDown: false, startX: 0, startOffset: 0, moved: false });
+
+  const setDocentesScroll = (value: number) => {
+    const grid = docentesGridRef.current;
+    if (!grid) return;
+    let v = value;
+    const a = docentesFirstCardRef.current;
+    const b = docentesFirstCloneRef.current;
+    if (a && b) {
+      const period = b.getBoundingClientRect().left - a.getBoundingClientRect().left;
+      if (period > 0) v = ((v % period) + period) % period; // siempre en [0, period)
+    }
+    docentesScrollRef.current = v;
+    grid.scrollLeft = v;
+  };
+
+  // Salvavidas para el drag NATIVO por touch en móvil (el navegador mueve
+  // scrollLeft directamente vía swipe, sin pasar por setDocentesScroll):
+  // aplica el mismo loop infinito y mantiene docentesScrollRef sincronizado
+  // para que el autoavance retome desde ahí al soltar.
+  const onDocentesScroll = () => {
+    const grid = docentesGridRef.current;
+    const a = docentesFirstCardRef.current;
+    const b = docentesFirstCloneRef.current;
+    if (!grid || !a || !b) return;
+    const period = b.getBoundingClientRect().left - a.getBoundingClientRect().left;
+    if (period > 0) {
+      if (grid.scrollLeft >= period) grid.scrollLeft -= period;
+      else if (grid.scrollLeft < 0) grid.scrollLeft += period;
+    }
+    docentesScrollRef.current = grid.scrollLeft;
+  };
+
+  const onDocentesMouseDown = (e: React.MouseEvent) => {
+    dragState.current = { isDown: true, startX: e.pageX, startOffset: docentesScrollRef.current, moved: false };
+    docentesGridRef.current?.classList.add('is-dragging');
+  };
+  const onDocentesMouseMove = (e: React.MouseEvent) => {
+    if (!dragState.current.isDown) return;
+    const dx = e.pageX - dragState.current.startX;
+    if (Math.abs(dx) > 4) dragState.current.moved = true;
+    setDocentesScroll(dragState.current.startOffset - dx);
+  };
+  const endDocentesDrag = () => {
+    docentesGridRef.current?.classList.remove('is-dragging');
+    dragState.current.isDown = false;
+  };
+  const onDocenteCardClick = (id: string) => {
+    if (dragState.current.moved) { dragState.current.moved = false; return; }
+    openDocente(id);
+  };
+  const onDocentesMouseEnter = () => { docentesHoverPausedRef.current = true; };
+  const onDocentesMouseLeaveWrap = () => {
+    docentesHoverPausedRef.current = false;
+    endDocentesDrag();
+  };
+
+  // Autoavance continuo hacia la izquierda. Solo se detiene mientras se
+  // arrastra activamente. Al cambiar de ventana/pestaña, requestAnimationFrame
+  // se pausa; al volver, el próximo frame llega con un "time" que saltó
+  // varios segundos — se limita el dt máximo por frame y se resetea
+  // lastTime en 'visibilitychange' para que ese primer frame de vuelta no
+  // cuente tiempo de más.
+  useEffect(() => {
+    const grid = docentesGridRef.current;
+    if (!grid) return;
+    docentesScrollRef.current = grid.scrollLeft;
+
+    const SPEED_PX_PER_SEC = 40;
+    const MAX_DT = 1 / 30;
+    let rafId = 0;
+    let lastTime: number | null = null;
+
+    const step = (time: number) => {
+      if (lastTime === null) lastTime = time;
+      const dt = Math.min((time - lastTime) / 1000, MAX_DT);
+      lastTime = time;
+      if (!dragState.current.isDown && !docentesHoverPausedRef.current) {
+        setDocentesScroll(docentesScrollRef.current + SPEED_PX_PER_SEC * dt);
+      }
+      rafId = requestAnimationFrame(step);
+    };
+    const onVisibilityChange = () => { lastTime = null; };
+    document.addEventListener('visibilitychange', onVisibilityChange);
+    rafId = requestAnimationFrame(step);
+    return () => {
+      cancelAnimationFrame(rafId);
+      document.removeEventListener('visibilitychange', onVisibilityChange);
+    };
+  }, []);
+
+  /** Toggle visual ES | EN */
+  const LangToggle = () => (
+    <button
+      type="button"
+      className="pcd-lang-toggle"
+      aria-label={t.nav.langLabel}
+      onClick={() => setLang(lang === 'es' ? 'en' : 'es')}
+    >
+      <span className={`pcd-lang-toggle__opt${lang === 'es' ? ' pcd-lang-toggle__opt--active' : ''}`}>ES</span>
+      <span className="pcd-lang-toggle__sep">|</span>
+      <span className={`pcd-lang-toggle__opt${lang === 'en' ? ' pcd-lang-toggle__opt--active' : ''}`}>EN</span>
+    </button>
+  );
+
+  return (
+    <div className="pcd-page">
+
+      {/* ===== HEADER ===== */}
+      <header className="pcd-header">
+        <a href="#top" className="pcd-brand" aria-label="Inicio Creación Digital · Universidad El Bosque">
+          <img className="pcd-brand__logo" src={`${IMG}/Label_UEB_CreacionDigital_Horizontal.png`} alt="Universidad El Bosque · Creación Digital" />
+        </a>
+        <nav ref={mobileNavRef} className={`pcd-nav${menuOpen ? ' is-open' : ''}`} aria-label="Principal">
+          <a className="pcd-nav__link" href="#programa" onClick={() => setMenuOpen(false)}>{t.nav.programa}</a>
+          <a className="pcd-nav__link" href="#docentes" onClick={() => setMenuOpen(false)}>{t.nav.docentes}</a>
+          <a className="pcd-nav__link" href="#equipo" onClick={() => setMenuOpen(false)}>{t.nav.equipo}</a>
+          <a className="pcd-nav__link" href="#proyectos" onClick={() => setMenuOpen(false)}>{t.nav.proyectos}</a>
+          <a className="pcd-nav__link" href="#blog" onClick={() => setMenuOpen(false)}>{t.nav.blog}</a>
+          <LangToggle />
+        </nav>
+        <div className="pcd-header__actions">
+          <LangToggle />
+          <a className="pcd-cta-pill" href={APLICA_URL} target="_blank" rel="noopener">
+            <span>{t.nav.aplicaAhora}</span>
+            <span className="pcd-cta-pill__arrow" aria-hidden="true">→</span>
+          </a>
+        </div>
+        <button
+          ref={hamburgerRef}
+          type="button"
+          className={`pcd-hamburger${menuOpen ? ' is-open' : ''}`}
+          aria-label={t.nav.menu}
+          aria-expanded={menuOpen}
+          onClick={() => setMenuOpen((v) => !v)}
+        >
+          <span aria-hidden="true" /><span aria-hidden="true" /><span aria-hidden="true" />
+        </button>
+      </header>
+
+      {/* ===== HERO ===== */}
+      <section id="top" className={`pcd-hero${lang === 'en' ? ' pcd-hero--en' : ''}`}>
+        <div className="pcd-hero__meta">
+          <span><b>{t.hero.meta.tipo}</b> · <span className="pcd-hero__meta-value">{t.hero.meta.duracion}</span></span>
+          <span className="center">
+            {t.hero.meta.ciudad} ·{' '}
+            <span className="pcd-hero__meta-value">
+              <span className="pcd-hero__meta-full">{t.hero.meta.uni}</span>
+              <span className="pcd-hero__meta-short">{t.hero.meta.uniShort}</span>
+            </span>
+          </span>
+          <span className="right"><b>{t.hero.meta.snies}</b> · <span className="pcd-hero__meta-value">116265</span></span>
+        </div>
+
+        <HeroTitle
+          line1={t.hero.line1}
+          line2pre={t.hero.line2pre}
+          line2word={t.hero.line2word}
+          line3={t.hero.line3}
+        />
+
+        <div className="pcd-hero__bottom">
+          <div className="pcd-hero__floor-line" aria-hidden="true" />
+          <div className="pcd-hero__floor-line--right" aria-hidden="true" />
+
+          <div className="pcd-hero__quienes-row">
+            <span className="pcd-hero__quienes-label">
+              {t.hero.quienesLabel.split('\n').map((line, i) => (
+                <span key={i}>{line}{i === 0 && <br />}</span>
+              ))}
+            </span>
+          </div>
+          <p className="pcd-hero__quienes-body pcd-hero__quienes-body-desktop">
+            {lang === 'es' ? <>Creamos en medio del ruido, la velocidad{' '.repeat(17)}y{' '.repeat(10)} el cambio. En un mundo donde las ideas evolucionan todos los días{' '.repeat(14)} y las formas de crear ya no caben en una sola disciplina. Como{' '.repeat(17)} Creadores Digitales, aprendemos a pensar críticamente, experimentar sin miedo y convertir la curiosidad en acción.</> : <>We create amid the noise, speed and{' '.repeat(32)} change. In a world where ideas evolve every day and the ways of{' '.repeat(15)} creating no longer fit within a single discipline. As Digital Creators,{' '.repeat(15)} we learn to think critically, experiment fearlessly, and turn curiosity into action.</>}
+          </p>
+          <p className="pcd-hero__quienes-body pcd-hero__quienes-body-mobile">
+            {t.hero.quienesBody}
+          </p>
+
+          <div className="pcd-hero__logos-row">
+            <div className="pcd-hero__brand">
+              <img
+                className="pcd-hero__brand-logo"
+                src={lang === 'en'
+                  ? `${IMG}/Label_UEB_CreacionDigital_EN.png`
+                  : `${IMG}/LogoUEB_CreacionDigital.png`}
+                alt={lang === 'en'
+                  ? 'Universidad El Bosque · Creación Digital · Bachelor Degree | 8 Semesters'
+                  : 'Universidad El Bosque · Creación Digital · Pregrado | 8 Semestres'}
+              />
+            </div>
+            <a className="pcd-hero__cta-mobile" href={APLICA_URL} target="_blank" rel="noopener">
+              <span>{t.nav.aplicaAhora}</span>
+              <span aria-hidden="true">&#8594;</span>
+            </a>
+          </div>
+
+          <div className="pcd-hero__photo" aria-hidden="true" />
+        </div>
+      </section>
+
+      {/* ===== MARQUEE · aprenderás ===== */}
+      <div id="programa" className="pcd-marquee" aria-hidden="true">
+        <div className="pcd-marquee__track">
+          <span>
+            {t.marquee1} <span className="pcd-marquee__star">✺</span>
+            {t.marquee1} <span className="pcd-marquee__star">✺</span>
+            {t.marquee1} <span className="pcd-marquee__star">✺</span>
+          </span>
+          <span>
+            {t.marquee1} <span className="pcd-marquee__star">✺</span>
+            {t.marquee1} <span className="pcd-marquee__star">✺</span>
+            {t.marquee1} <span className="pcd-marquee__star">✺</span>
+          </span>
+        </div>
+      </div>
+
+      {/* ===== AXIS 01 · CONTENIDO ===== */}
+      <section className="pcd-axis pcd-axis--contenido">
+        <div className="pcd-axis__left">
+          <button
+            type="button"
+            className="pcd-axis__switch pcd-reveal"
+            aria-label={axis01Mode === 'definicion' ? t.axis01.toggleToContenido : t.axis01.toggleToDefinicion}
+            onClick={() => setAxis01Mode(axis01Mode === 'definicion' ? 'contenido' : 'definicion')}
+          >
+            {axis01Mode === 'definicion' ? t.axis01.toggleToContenido : t.axis01.toggleToDefinicion}
+          </button>
+          <h2 className="pcd-axis__word pcd-reveal">
+            <span className="pcd-axis__word-desktop">
+              {t.axis01.wordLine1}
+              {t.axis01.wordLine2 && <><br />{t.axis01.wordLine2}</>}
+            </span>
+            <span className="pcd-axis__word-mobile">{t.axis01.wordFull}</span>
+          </h2>
+          <p className="pcd-axis__caption pcd-reveal">{t.axis01.caption}</p>
+          <div className="pcd-axis__image pcd-reveal" style={{ backgroundImage: `url('${IMG}/proyecto-3.webp')` }} aria-hidden="true" />
+        </div>
+        <div className="pcd-axis__right">
+          {axis01Mode === 'definicion' ? (
+            <>
+              <article className="pcd-vs">
+                <span className="pcd-vs__idx">1.1</span>
+                <div>
+                  <h3 className="pcd-vs__title">{t.axis01.vs11title} <span className="pcd-vs__accent">{t.axis01.vs11accent}</span></h3>
+                  <p className="pcd-vs__body">{t.axis01.vs11body}</p>
+                </div>
+              </article>
+              <hr className="pcd-axis__divider" />
+              <article className="pcd-vs">
+                <span className="pcd-vs__idx">1.2</span>
+                <div>
+                  <h3 className="pcd-vs__title">{t.axis01.vs12title} <span className="pcd-vs__accent">{t.axis01.vs12accent}</span></h3>
+                  <p className="pcd-vs__body">{t.axis01.vs12body}</p>
+                </div>
+              </article>
+              <hr className="pcd-axis__divider" />
+              <article className="pcd-vs">
+                <span className="pcd-vs__idx">1.3</span>
+                <div>
+                  <h3 className="pcd-vs__title">{t.axis01.vs13title} <span className="pcd-vs__accent">{t.axis01.vs13accent}</span></h3>
+                  <p className="pcd-vs__body">{t.axis01.vs13body}</p>
+                </div>
+              </article>
+            </>
+          ) : (
+            <>
+              <h3 className="pcd-content-title">{t.axis01.contenidoTitle}</h3>
+              <p className="pcd-content-copy">{renderAccented(t.axis01.contenidoBody)}</p>
+              <div className="pcd-content-dock">
+                <span className="pcd-content-dock__label">{t.axis01.dockLabel}</span>
+                <div className="pcd-content-dock__row">
+                  {CONTENIDO_DOCK.map((tool) => (
+                    <div className="pcd-content-dock__item" key={tool.name} title={tool.name}>
+                      <div className="pcd-content-dock__icon" style={{ backgroundImage: `url('${tool.icon}')` }} aria-hidden="true" />
+                      <span className="pcd-content-dock__name">{tool.name}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </>
+          )}
+        </div>
+      </section>
+
+      {/* ===== AXIS 02 · MUNDO 3D ===== */}
+      <section className={`pcd-axis pcd-axis--mundo${lang === 'en' ? ' pcd-axis--mundo-en' : ''}`}>
+        <div className="pcd-axis__left">
+          <button
+            type="button"
+            className="pcd-axis__switch pcd-reveal"
+            aria-label={axis02Mode === 'definicion' ? t.axis02.toggleToContenido : t.axis02.toggleToDefinicion}
+            onClick={() => setAxis02Mode(axis02Mode === 'definicion' ? 'contenido' : 'definicion')}
+          >
+            {axis02Mode === 'definicion' ? t.axis02.toggleToContenido : t.axis02.toggleToDefinicion}
+          </button>
+          <h2 className="pcd-axis__word pcd-reveal">
+            <span className="pcd-axis__word-desktop">
+              {t.axis02.wordLine1}
+              {t.axis02.wordLine2 && <><br />{t.axis02.wordLine2}</>}
+            </span>
+            <span className="pcd-axis__word-mobile">{t.axis02.wordFull}</span>
+          </h2>
+          <p className="pcd-axis__caption pcd-reveal">{t.axis02.caption}</p>
+          <div className="pcd-axis__image pcd-reveal" style={{ backgroundImage: `url('${IMG}/proyecto-5.webp')` }} aria-hidden="true" />
+        </div>
+        <div className="pcd-axis__right">
+          {axis02Mode === 'definicion' ? (
+            <>
+              <article className="pcd-vs">
+                <span className="pcd-vs__idx">2.1</span>
+                <div>
+                  <h3 className="pcd-vs__title">{t.axis02.vs21title} <span className="pcd-vs__accent">{t.axis02.vs21accent}</span></h3>
+                  <p className="pcd-vs__body">{t.axis02.vs21body}</p>
+                </div>
+              </article>
+              <hr className="pcd-axis__divider" />
+              <article className="pcd-vs">
+                <span className="pcd-vs__idx">2.2</span>
+                <div>
+                  <h3 className="pcd-vs__title">{t.axis02.vs22title} <span className="pcd-vs__accent">{t.axis02.vs22accent}</span></h3>
+                  <p className="pcd-vs__body">{t.axis02.vs22body}</p>
+                </div>
+              </article>
+              <hr className="pcd-axis__divider" />
+              <article className="pcd-vs">
+                <span className="pcd-vs__idx">2.3</span>
+                <div>
+                  <h3 className="pcd-vs__title">{t.axis02.vs23title} <span className="pcd-vs__accent">{t.axis02.vs23accent}</span></h3>
+                  <p className="pcd-vs__body">{t.axis02.vs23body}</p>
+                </div>
+              </article>
+            </>
+          ) : (
+            <>
+              <h3 className="pcd-content-title">{t.axis02.contenidoTitle}</h3>
+              <p className="pcd-content-copy">{renderAccented(t.axis02.contenidoBody)}</p>
+              <div className="pcd-content-dock">
+                <span className="pcd-content-dock__label">{t.axis02.dockLabel}</span>
+                <div className="pcd-content-dock__row">
+                  {MUNDO_DOCK.map((tool) => (
+                    <div className="pcd-content-dock__item" key={tool.name} title={tool.name}>
+                      <div className="pcd-content-dock__icon" style={{ backgroundImage: `url('${tool.icon}')` }} aria-hidden="true" />
+                      <span className="pcd-content-dock__name">{tool.name}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </>
+          )}
+        </div>
+      </section>
+
+      {/* ===== AXIS 03 · PRODUCTO ===== */}
+      <section className="pcd-axis pcd-axis--producto">
+        <div className="pcd-axis__left">
+          <button
+            type="button"
+            className="pcd-axis__switch pcd-reveal"
+            aria-label={axis03Mode === 'definicion' ? t.axis03.toggleToContenido : t.axis03.toggleToDefinicion}
+            onClick={() => setAxis03Mode(axis03Mode === 'definicion' ? 'contenido' : 'definicion')}
+          >
+            {axis03Mode === 'definicion' ? t.axis03.toggleToContenido : t.axis03.toggleToDefinicion}
+          </button>
+          <h2 className="pcd-axis__word pcd-reveal">
+            <span className="pcd-axis__word-desktop">
+              {t.axis03.wordLine1}
+              {t.axis03.wordLine2 && <><br />{t.axis03.wordLine2}</>}
+            </span>
+            <span className="pcd-axis__word-mobile">{t.axis03.wordFull}</span>
+          </h2>
+          <p className="pcd-axis__caption pcd-reveal">{t.axis03.caption}</p>
+          <div className="pcd-axis__image pcd-reveal" style={{ backgroundImage: `url('${IMG}/proyecto-6.webp')` }} aria-hidden="true" />
+        </div>
+        <div className="pcd-axis__right">
+          {axis03Mode === 'definicion' ? (
+            <>
+              <article className="pcd-vs">
+                <span className="pcd-vs__idx">3.1</span>
+                <div>
+                  <h3 className="pcd-vs__title">{t.axis03.vs31title} <span className="pcd-vs__accent">{t.axis03.vs31accent}</span></h3>
+                  <p className="pcd-vs__body">{t.axis03.vs31body}</p>
+                </div>
+              </article>
+              <hr className="pcd-axis__divider" />
+              <article className="pcd-vs">
+                <span className="pcd-vs__idx">3.2</span>
+                <div>
+                  <h3 className="pcd-vs__title">{t.axis03.vs32title} <span className="pcd-vs__accent">{t.axis03.vs32accent}</span></h3>
+                  <p className="pcd-vs__body">{t.axis03.vs32body}</p>
+                </div>
+              </article>
+              <hr className="pcd-axis__divider" />
+              <article className="pcd-vs">
+                <span className="pcd-vs__idx">3.3</span>
+                <div>
+                  <h3 className="pcd-vs__title">{t.axis03.vs33title} <span className="pcd-vs__accent">{t.axis03.vs33accent}</span></h3>
+                  <p className="pcd-vs__body">{t.axis03.vs33body}</p>
+                </div>
+              </article>
+            </>
+          ) : (
+            <>
+              <h3 className="pcd-content-title">{t.axis03.contenidoTitle}</h3>
+              <p className="pcd-content-copy">{renderAccented(t.axis03.contenidoBody)}</p>
+              <div className="pcd-content-dock">
+                <span className="pcd-content-dock__label">{t.axis03.dockLabel}</span>
+                <div className="pcd-content-dock__row">
+                  {PRODUCTO_DOCK.map((tool) => (
+                    <div className="pcd-content-dock__item" key={tool.name} title={tool.name}>
+                      <div className="pcd-content-dock__icon" style={{ backgroundImage: `url('${tool.icon}')` }} aria-hidden="true" />
+                      <span className="pcd-content-dock__name">{tool.name}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </>
+          )}
+        </div>
+      </section>
+
+      {/* ===== MARQUEE · docentes ===== */}
+      <div id="docentes" className="pcd-marquee" aria-hidden="true">
+        <div className="pcd-marquee__track">
+          <span>
+            {t.marquee2} <span className="pcd-marquee__star">✺</span>
+            {t.marquee2} <span className="pcd-marquee__star">✺</span>
+            {t.marquee2} <span className="pcd-marquee__star">✺</span>
+            {t.marquee2} <span className="pcd-marquee__star">✺</span>
+          </span>
+          <span>
+            {t.marquee2} <span className="pcd-marquee__star">✺</span>
+            {t.marquee2} <span className="pcd-marquee__star">✺</span>
+            {t.marquee2} <span className="pcd-marquee__star">✺</span>
+            {t.marquee2} <span className="pcd-marquee__star">✺</span>
+          </span>
+        </div>
+      </div>
+
+      {/* ===== DOCENTES ===== */}
+      <section className="pcd-docentes">
+        <header className="pcd-docentes__head pcd-reveal">
+          <h2 className="pcd-docentes__title">
+            {t.docentes.sectionTitleL1}<br />
+            <span className="pcd-docentes__title-pop">{t.docentes.sectionTitleL2Pop}</span>{t.docentes.sectionTitleL2Rest}
+          </h2>
+          <p className="pcd-docentes__sub">{t.docentes.sectionSub}</p>
+        </header>
+        <div className="pcd-docentes__grid-wrap">
+        <div
+          className="pcd-docentes__grid"
+          ref={docentesGridRef}
+          onMouseDown={onDocentesMouseDown}
+          onMouseMove={onDocentesMouseMove}
+          onMouseUp={endDocentesDrag}
+          onMouseEnter={onDocentesMouseEnter}
+          onMouseLeave={onDocentesMouseLeaveWrap}
+          onScroll={onDocentesScroll}
+        >
+          {/* Fabian — sin ilustración todavía, usa el fondo neutro "sin foto" */}
+          <article
+            ref={docentesFirstCardRef}
+            className="pcd-docente pcd-docente--fabian pcd-docente--no-photo pcd-reveal" tabIndex={0} role="button"
+            aria-label={t.docentes.fabian.ariaLabel}
+            onClick={() => onDocenteCardClick('fabian')}
+            onKeyDown={(e) => onCardKey(e, 'fabian')}
+          >
+            <div className="pcd-docente__blob" aria-hidden="true" />
+            <img loading="lazy" className="pcd-sticker pcd-sticker--like" src={`${IMG}/Like.webp`} alt="" aria-hidden="true" />
+            <h3 className="pcd-docente__name">Fabian<br />Herrera</h3>
+            <p className="pcd-docente__bio">{t.docentes.fabian.bio}</p>
+            <div className="pcd-docente__tags">
+              {t.docentes.fabian.tags.map((tag) => <span key={tag} className="pcd-docente__tag">{tag}</span>)}
+            </div>
+          </article>
+
+          {/* Paula */}
+          <article
+            className="pcd-docente pcd-docente--paula pcd-reveal" tabIndex={0} role="button"
+            aria-label={t.docentes.paula.ariaLabel}
+            onClick={() => onDocenteCardClick('paula')}
+            onKeyDown={(e) => onCardKey(e, 'paula')}
+            style={{ '--docente-init': `url('${IMG}/Paula_Init.webp')`, '--docente-end': `url('${IMG}/Paula_End.webp')` } as CSSProperties}
+          >
+            <div className="pcd-docente__blob" aria-hidden="true" />
+            <img loading="lazy" className="pcd-sticker pcd-sticker--star" src={`${IMG}/Star.webp`} alt="" aria-hidden="true" />
+            <h3 className="pcd-docente__name">Paula<br />Lenis</h3>
+            <p className="pcd-docente__bio">{t.docentes.paula.bio}</p>
+            <div className="pcd-docente__tags">
+              {t.docentes.paula.tags.map((tag) => <span key={tag} className="pcd-docente__tag">{tag}</span>)}
+            </div>
+          </article>
+
+          {/* Sofía */}
+          <article
+            className="pcd-docente pcd-docente--sofia pcd-reveal" tabIndex={0} role="button"
+            aria-label={t.docentes.sofia.ariaLabel}
+            onClick={() => onDocenteCardClick('sofia')}
+            onKeyDown={(e) => onCardKey(e, 'sofia')}
+            style={{ '--docente-init': `url('${IMG}/Sofia_Init.webp')`, '--docente-end': `url('${IMG}/Sofia_End.webp')` } as CSSProperties}
+          >
+            <div className="pcd-docente__blob" aria-hidden="true" />
+            <img loading="lazy" className="pcd-sticker pcd-sticker--computer" src={`${IMG}/Computer.webp`} alt="" aria-hidden="true" />
+            <h3 className="pcd-docente__name">Sofía<br />Jiménez</h3>
+            <p className="pcd-docente__bio">{t.docentes.sofia.bio}</p>
+            <div className="pcd-docente__tags">
+              {t.docentes.sofia.tags.map((tag) => <span key={tag} className="pcd-docente__tag">{tag}</span>)}
+            </div>
+          </article>
+
+          {/* Nicolás */}
+          <article
+            className="pcd-docente pcd-docente--nicolas pcd-reveal" tabIndex={0} role="button"
+            aria-label={t.docentes.nicolas.ariaLabel}
+            onClick={() => onDocenteCardClick('nicolas')}
+            onKeyDown={(e) => onCardKey(e, 'nicolas')}
+            style={{ '--docente-init': `url('${IMG}/Nicolas_Init.webp')`, '--docente-end': `url('${IMG}/Nicolas_End.webp')` } as CSSProperties}
+          >
+            <div className="pcd-docente__blob" aria-hidden="true" />
+            <img loading="lazy" className="pcd-sticker pcd-sticker--love" src={`${IMG}/Love.webp`} alt="" aria-hidden="true" />
+            <h3 className="pcd-docente__name">Nicolás<br />Bartolo</h3>
+            <p className="pcd-docente__bio">{t.docentes.nicolas.bio}</p>
+            <div className="pcd-docente__tags">
+              {t.docentes.nicolas.tags.map((tag) => <span key={tag} className="pcd-docente__tag">{tag}</span>)}
+            </div>
+          </article>
+
+          {/* Ximena */}
+          <article
+            className="pcd-docente pcd-docente--ximena pcd-reveal" tabIndex={0} role="button"
+            aria-label={t.docentes.ximena.ariaLabel}
+            onClick={() => onDocenteCardClick('ximena')}
+            onKeyDown={(e) => onCardKey(e, 'ximena')}
+            style={{ '--docente-init': `url('${IMG}/Ximena_Init.webp')`, '--docente-end': `url('${IMG}/Ximena_End.webp')` } as CSSProperties}
+          >
+            <div className="pcd-docente__blob" aria-hidden="true" />
+            <img loading="lazy" className="pcd-sticker pcd-sticker--camera" src={`${IMG}/Camera.webp`} alt="" aria-hidden="true" />
+            <h3 className="pcd-docente__name">Ximena<br />Tovar</h3>
+            <p className="pcd-docente__bio">{t.docentes.ximena.bio}</p>
+            <div className="pcd-docente__tags">
+              {t.docentes.ximena.tags.map((tag) => <span key={tag} className="pcd-docente__tag">{tag}</span>)}
+            </div>
+          </article>
+
+          {/* Camilo */}
+          <article
+            className="pcd-docente pcd-docente--camilo pcd-reveal" tabIndex={0} role="button"
+            aria-label={t.docentes.camilo.ariaLabel}
+            onClick={() => onDocenteCardClick('camilo')}
+            onKeyDown={(e) => onCardKey(e, 'camilo')}
+            style={{ '--docente-init': `url('${IMG}/Camilo_Init.webp')`, '--docente-end': `url('${IMG}/Camilo_End.webp')` } as CSSProperties}
+          >
+            <div className="pcd-docente__blob" aria-hidden="true" />
+            <img loading="lazy" className="pcd-sticker pcd-sticker--idea" src={`${IMG}/Idea.webp`} alt="" aria-hidden="true" />
+            <h3 className="pcd-docente__name">Camilo<br />Cardozo</h3>
+            <p className="pcd-docente__bio">{t.docentes.camilo.bio}</p>
+            <div className="pcd-docente__tags">
+              {t.docentes.camilo.tags.map((tag) => <span key={tag} className="pcd-docente__tag">{tag}</span>)}
+            </div>
+          </article>
+
+          {/* Daniela */}
+          <article
+            className="pcd-docente pcd-docente--daniela pcd-reveal" tabIndex={0} role="button"
+            aria-label={t.docentes.daniela.ariaLabel}
+            onClick={() => onDocenteCardClick('daniela')}
+            onKeyDown={(e) => onCardKey(e, 'daniela')}
+            style={{ '--docente-init': `url('${IMG}/Daniela_Init.webp')`, '--docente-end': `url('${IMG}/Daniela_End.webp')` } as CSSProperties}
+          >
+            <div className="pcd-docente__blob" aria-hidden="true" />
+            <img loading="lazy" className="pcd-sticker pcd-sticker--controller" src={`${IMG}/Controller.webp`} alt="" aria-hidden="true" />
+            <h3 className="pcd-docente__name">Daniela<br />Meza</h3>
+            <p className="pcd-docente__bio">{t.docentes.daniela.bio}</p>
+            <div className="pcd-docente__tags">
+              {t.docentes.daniela.tags.map((tag) => <span key={tag} className="pcd-docente__tag">{tag}</span>)}
+            </div>
+          </article>
+
+          {/* Juan David */}
+          <article
+            className="pcd-docente pcd-docente--juandavid pcd-reveal" tabIndex={0} role="button"
+            aria-label={t.docentes.juandavid.ariaLabel}
+            onClick={() => onDocenteCardClick('juandavid')}
+            onKeyDown={(e) => onCardKey(e, 'juandavid')}
+            style={{ '--docente-init': `url('${IMG}/JuanDavid_Init.webp')`, '--docente-end': `url('${IMG}/JuanDavid_End.webp')` } as CSSProperties}
+          >
+            <div className="pcd-docente__blob" aria-hidden="true" />
+            <img loading="lazy" className="pcd-sticker pcd-sticker--like" src={`${IMG}/Like.webp`} alt="" aria-hidden="true" />
+            <h3 className="pcd-docente__name">Juan David<br />Aristizabal</h3>
+            <p className="pcd-docente__bio">{t.docentes.juandavid.bio}</p>
+            <div className="pcd-docente__tags">
+              {t.docentes.juandavid.tags.map((tag) => <span key={tag} className="pcd-docente__tag">{tag}</span>)}
+            </div>
+          </article>
+
+          {/* Vanessa */}
+          <article
+            className="pcd-docente pcd-docente--vanessa pcd-reveal" tabIndex={0} role="button"
+            aria-label={t.docentes.vanessa.ariaLabel}
+            onClick={() => onDocenteCardClick('vanessa')}
+            onKeyDown={(e) => onCardKey(e, 'vanessa')}
+            style={{ '--docente-init': `url('${IMG}/Vanessa_Init.webp')`, '--docente-end': `url('${IMG}/Vanessa_End.webp')` } as CSSProperties}
+          >
+            <div className="pcd-docente__blob" aria-hidden="true" />
+            <img loading="lazy" className="pcd-sticker pcd-sticker--phone" src={`${IMG}/Phone.webp`} alt="" aria-hidden="true" />
+            <h3 className="pcd-docente__name">Vanessa<br />Tovar</h3>
+            <p className="pcd-docente__bio">{t.docentes.vanessa.bio}</p>
+            <div className="pcd-docente__tags">
+              {t.docentes.vanessa.tags.map((tag) => <span key={tag} className="pcd-docente__tag">{tag}</span>)}
+            </div>
+          </article>
+
+          {/* Rusbel */}
+          <article
+            className="pcd-docente pcd-docente--rusbel pcd-reveal" tabIndex={0} role="button"
+            aria-label={t.docentes.rusbel.ariaLabel}
+            onClick={() => onDocenteCardClick('rusbel')}
+            onKeyDown={(e) => onCardKey(e, 'rusbel')}
+            style={{ '--docente-init': `url('${IMG}/Rusbel_Init.webp')`, '--docente-end': `url('${IMG}/Rusbel_End.webp')` } as CSSProperties}
+          >
+            <div className="pcd-docente__blob" aria-hidden="true" />
+            <img loading="lazy" className="pcd-sticker pcd-sticker--controller" src={`${IMG}/Controller.webp`} alt="" aria-hidden="true" />
+            <h3 className="pcd-docente__name">Rusbel<br />Castillo</h3>
+            <p className="pcd-docente__bio">{t.docentes.rusbel.bio}</p>
+            <div className="pcd-docente__tags">
+              {t.docentes.rusbel.tags.map((tag) => <span key={tag} className="pcd-docente__tag">{tag}</span>)}
+            </div>
+          </article>
+
+          {/* Carlos */}
+          <article
+            className="pcd-docente pcd-docente--carlos pcd-reveal" tabIndex={0} role="button"
+            aria-label={t.docentes.carlos.ariaLabel}
+            onClick={() => onDocenteCardClick('carlos')}
+            onKeyDown={(e) => onCardKey(e, 'carlos')}
+            style={{ '--docente-init': `url('${IMG}/Carlos_Init.webp')`, '--docente-end': `url('${IMG}/Carlos_End.webp')` } as CSSProperties}
+          >
+            <div className="pcd-docente__blob" aria-hidden="true" />
+            <img loading="lazy" className="pcd-sticker pcd-sticker--star" src={`${IMG}/Star.webp`} alt="" aria-hidden="true" />
+            <h3 className="pcd-docente__name">Carlos<br />Almeyda</h3>
+            <p className="pcd-docente__bio">{t.docentes.carlos.bio}</p>
+            <div className="pcd-docente__tags">
+              {t.docentes.carlos.tags.map((tag) => <span key={tag} className="pcd-docente__tag">{tag}</span>)}
+            </div>
+          </article>
+
+          {/* Dayana */}
+          <article
+            className="pcd-docente pcd-docente--dayana pcd-reveal" tabIndex={0} role="button"
+            aria-label={t.docentes.dayana.ariaLabel}
+            onClick={() => onDocenteCardClick('dayana')}
+            onKeyDown={(e) => onCardKey(e, 'dayana')}
+            style={{ '--docente-init': `url('${IMG}/Dayana_Init.webp')`, '--docente-end': `url('${IMG}/Dayana_End.webp')` } as CSSProperties}
+          >
+            <div className="pcd-docente__blob" aria-hidden="true" />
+            <img loading="lazy" className="pcd-sticker pcd-sticker--computer" src={`${IMG}/Computer.webp`} alt="" aria-hidden="true" />
+            <h3 className="pcd-docente__name">Dayana<br />González</h3>
+            <p className="pcd-docente__bio">{t.docentes.dayana.bio}</p>
+            <div className="pcd-docente__tags">
+              {t.docentes.dayana.tags.map((tag) => <span key={tag} className="pcd-docente__tag">{tag}</span>)}
+            </div>
+          </article>
+
+          {/* Julián */}
+          <article
+            className="pcd-docente pcd-docente--julian pcd-reveal" tabIndex={0} role="button"
+            aria-label={t.docentes.julian.ariaLabel}
+            onClick={() => onDocenteCardClick('julian')}
+            onKeyDown={(e) => onCardKey(e, 'julian')}
+            style={{ '--docente-init': `url('${IMG}/Julian_Init.webp')`, '--docente-end': `url('${IMG}/Julian_End.webp')` } as CSSProperties}
+          >
+            <div className="pcd-docente__blob" aria-hidden="true" />
+            <img loading="lazy" className="pcd-sticker pcd-sticker--love" src={`${IMG}/Love.webp`} alt="" aria-hidden="true" />
+            <h3 className="pcd-docente__name">Julián<br />Bejarano</h3>
+            <p className="pcd-docente__bio">{t.docentes.julian.bio}</p>
+            <div className="pcd-docente__tags">
+              {t.docentes.julian.tags.map((tag) => <span key={tag} className="pcd-docente__tag">{tag}</span>)}
+            </div>
+          </article>
+
+          {/* John */}
+          <article
+            className="pcd-docente pcd-docente--john pcd-reveal" tabIndex={0} role="button"
+            aria-label={t.docentes.john.ariaLabel}
+            onClick={() => onDocenteCardClick('john')}
+            onKeyDown={(e) => onCardKey(e, 'john')}
+            style={{ '--docente-init': `url('${IMG}/John_Init.webp')`, '--docente-end': `url('${IMG}/John_End.webp')` } as CSSProperties}
+          >
+            <div className="pcd-docente__blob" aria-hidden="true" />
+            <img loading="lazy" className="pcd-sticker pcd-sticker--camera" src={`${IMG}/Camera.webp`} alt="" aria-hidden="true" />
+            <h3 className="pcd-docente__name">John<br />Lamprea</h3>
+            <p className="pcd-docente__bio">{t.docentes.john.bio}</p>
+            <div className="pcd-docente__tags">
+              {t.docentes.john.tags.map((tag) => <span key={tag} className="pcd-docente__tag">{tag}</span>)}
+            </div>
+          </article>
+
+          {/* Tatiana */}
+          <article
+            className="pcd-docente pcd-docente--tatiana pcd-reveal" tabIndex={0} role="button"
+            aria-label={t.docentes.tatiana.ariaLabel}
+            onClick={() => onDocenteCardClick('tatiana')}
+            onKeyDown={(e) => onCardKey(e, 'tatiana')}
+            style={{ '--docente-init': `url('${IMG}/Tatiana_Init.webp')`, '--docente-end': `url('${IMG}/Tatiana_End.webp')` } as CSSProperties}
+          >
+            <div className="pcd-docente__blob" aria-hidden="true" />
+            <img loading="lazy" className="pcd-sticker pcd-sticker--idea" src={`${IMG}/Idea.webp`} alt="" aria-hidden="true" />
+            <h3 className="pcd-docente__name">Tatiana<br />Flórez</h3>
+            <p className="pcd-docente__bio">{t.docentes.tatiana.bio}</p>
+            <div className="pcd-docente__tags">
+              {t.docentes.tatiana.tags.map((tag) => <span key={tag} className="pcd-docente__tag">{tag}</span>)}
+            </div>
+          </article>
+
+          {/* Pilar */}
+          <article
+            className="pcd-docente pcd-docente--pilar pcd-reveal" tabIndex={0} role="button"
+            aria-label={t.docentes.pilar.ariaLabel}
+            onClick={() => onDocenteCardClick('pilar')}
+            onKeyDown={(e) => onCardKey(e, 'pilar')}
+            style={{ '--docente-init': `url('${IMG}/Pilar_Init.webp')`, '--docente-end': `url('${IMG}/Pilar_End.webp')` } as CSSProperties}
+          >
+            <div className="pcd-docente__blob" aria-hidden="true" />
+            <img loading="lazy" className="pcd-sticker pcd-sticker--controller" src={`${IMG}/Controller.webp`} alt="" aria-hidden="true" />
+            <h3 className="pcd-docente__name">Pilar<br />Camargo</h3>
+            <p className="pcd-docente__bio">{t.docentes.pilar.bio}</p>
+            <div className="pcd-docente__tags">
+              {t.docentes.pilar.tags.map((tag) => <span key={tag} className="pcd-docente__tag">{tag}</span>)}
+            </div>
+          </article>
+
+          {/* Jaime */}
+          <article
+            className="pcd-docente pcd-docente--jaime pcd-reveal" tabIndex={0} role="button"
+            aria-label={t.docentes.jaime.ariaLabel}
+            onClick={() => onDocenteCardClick('jaime')}
+            onKeyDown={(e) => onCardKey(e, 'jaime')}
+            style={{ '--docente-init': `url('${IMG}/Jaime_Init.webp')`, '--docente-end': `url('${IMG}/Jaime_End.webp')` } as CSSProperties}
+          >
+            <div className="pcd-docente__blob" aria-hidden="true" />
+            <img loading="lazy" className="pcd-sticker pcd-sticker--phone" src={`${IMG}/Phone.webp`} alt="" aria-hidden="true" />
+            <h3 className="pcd-docente__name">Jaime<br />Velásquez</h3>
+            <p className="pcd-docente__bio">{t.docentes.jaime.bio}</p>
+            <div className="pcd-docente__tags">
+              {t.docentes.jaime.tags.map((tag) => <span key={tag} className="pcd-docente__tag">{tag}</span>)}
+            </div>
+          </article>
+
+
+          {/* ── set duplicado: permite el loop infinito del carrusel ── */}
+          {/* Fabian (clon para loop infinito) */}
+          <article
+            ref={docentesFirstCloneRef}
+            className="pcd-docente pcd-docente--fabian pcd-docente--no-photo pcd-reveal" tabIndex={-1} role="button" aria-hidden="true"
+            aria-label={t.docentes.fabian.ariaLabel}
+            onClick={() => onDocenteCardClick('fabian')}
+            onKeyDown={(e) => onCardKey(e, 'fabian')}
+          >
+            <div className="pcd-docente__blob" aria-hidden="true" />
+            <img loading="lazy" className="pcd-sticker pcd-sticker--like" src={`${IMG}/Like.webp`} alt="" aria-hidden="true" />
+            <h3 className="pcd-docente__name">Fabian<br />Herrera</h3>
+            <p className="pcd-docente__bio">{t.docentes.fabian.bio}</p>
+            <div className="pcd-docente__tags">
+              {t.docentes.fabian.tags.map((tag) => <span key={tag} className="pcd-docente__tag">{tag}</span>)}
+            </div>
+          </article>
+
+          {/* Paula (clon para loop infinito) */}
+          <article
+            className="pcd-docente pcd-docente--paula pcd-reveal" tabIndex={-1} role="button" aria-hidden="true"
+            aria-label={t.docentes.paula.ariaLabel}
+            onClick={() => onDocenteCardClick('paula')}
+            onKeyDown={(e) => onCardKey(e, 'paula')}
+            style={{ '--docente-init': `url('${IMG}/Paula_Init.webp')`, '--docente-end': `url('${IMG}/Paula_End.webp')` } as CSSProperties}
+          >
+            <div className="pcd-docente__blob" aria-hidden="true" />
+            <img loading="lazy" className="pcd-sticker pcd-sticker--star" src={`${IMG}/Star.webp`} alt="" aria-hidden="true" />
+            <h3 className="pcd-docente__name">Paula<br />Lenis</h3>
+            <p className="pcd-docente__bio">{t.docentes.paula.bio}</p>
+            <div className="pcd-docente__tags">
+              {t.docentes.paula.tags.map((tag) => <span key={tag} className="pcd-docente__tag">{tag}</span>)}
+            </div>
+          </article>
+
+          {/* Sofía (clon para loop infinito) */}
+          <article
+            className="pcd-docente pcd-docente--sofia pcd-reveal" tabIndex={-1} role="button" aria-hidden="true"
+            aria-label={t.docentes.sofia.ariaLabel}
+            onClick={() => onDocenteCardClick('sofia')}
+            onKeyDown={(e) => onCardKey(e, 'sofia')}
+            style={{ '--docente-init': `url('${IMG}/Sofia_Init.webp')`, '--docente-end': `url('${IMG}/Sofia_End.webp')` } as CSSProperties}
+          >
+            <div className="pcd-docente__blob" aria-hidden="true" />
+            <img loading="lazy" className="pcd-sticker pcd-sticker--computer" src={`${IMG}/Computer.webp`} alt="" aria-hidden="true" />
+            <h3 className="pcd-docente__name">Sofía<br />Jiménez</h3>
+            <p className="pcd-docente__bio">{t.docentes.sofia.bio}</p>
+            <div className="pcd-docente__tags">
+              {t.docentes.sofia.tags.map((tag) => <span key={tag} className="pcd-docente__tag">{tag}</span>)}
+            </div>
+          </article>
+
+          {/* Nicolás (clon para loop infinito) */}
+          <article
+            className="pcd-docente pcd-docente--nicolas pcd-reveal" tabIndex={-1} role="button" aria-hidden="true"
+            aria-label={t.docentes.nicolas.ariaLabel}
+            onClick={() => onDocenteCardClick('nicolas')}
+            onKeyDown={(e) => onCardKey(e, 'nicolas')}
+            style={{ '--docente-init': `url('${IMG}/Nicolas_Init.webp')`, '--docente-end': `url('${IMG}/Nicolas_End.webp')` } as CSSProperties}
+          >
+            <div className="pcd-docente__blob" aria-hidden="true" />
+            <img loading="lazy" className="pcd-sticker pcd-sticker--love" src={`${IMG}/Love.webp`} alt="" aria-hidden="true" />
+            <h3 className="pcd-docente__name">Nicolás<br />Bartolo</h3>
+            <p className="pcd-docente__bio">{t.docentes.nicolas.bio}</p>
+            <div className="pcd-docente__tags">
+              {t.docentes.nicolas.tags.map((tag) => <span key={tag} className="pcd-docente__tag">{tag}</span>)}
+            </div>
+          </article>
+
+          {/* Ximena (clon para loop infinito) */}
+          <article
+            className="pcd-docente pcd-docente--ximena pcd-reveal" tabIndex={-1} role="button" aria-hidden="true"
+            aria-label={t.docentes.ximena.ariaLabel}
+            onClick={() => onDocenteCardClick('ximena')}
+            onKeyDown={(e) => onCardKey(e, 'ximena')}
+            style={{ '--docente-init': `url('${IMG}/Ximena_Init.webp')`, '--docente-end': `url('${IMG}/Ximena_End.webp')` } as CSSProperties}
+          >
+            <div className="pcd-docente__blob" aria-hidden="true" />
+            <img loading="lazy" className="pcd-sticker pcd-sticker--camera" src={`${IMG}/Camera.webp`} alt="" aria-hidden="true" />
+            <h3 className="pcd-docente__name">Ximena<br />Tovar</h3>
+            <p className="pcd-docente__bio">{t.docentes.ximena.bio}</p>
+            <div className="pcd-docente__tags">
+              {t.docentes.ximena.tags.map((tag) => <span key={tag} className="pcd-docente__tag">{tag}</span>)}
+            </div>
+          </article>
+
+          {/* Camilo (clon para loop infinito) */}
+          <article
+            className="pcd-docente pcd-docente--camilo pcd-reveal" tabIndex={-1} role="button" aria-hidden="true"
+            aria-label={t.docentes.camilo.ariaLabel}
+            onClick={() => onDocenteCardClick('camilo')}
+            onKeyDown={(e) => onCardKey(e, 'camilo')}
+            style={{ '--docente-init': `url('${IMG}/Camilo_Init.webp')`, '--docente-end': `url('${IMG}/Camilo_End.webp')` } as CSSProperties}
+          >
+            <div className="pcd-docente__blob" aria-hidden="true" />
+            <img loading="lazy" className="pcd-sticker pcd-sticker--idea" src={`${IMG}/Idea.webp`} alt="" aria-hidden="true" />
+            <h3 className="pcd-docente__name">Camilo<br />Cardozo</h3>
+            <p className="pcd-docente__bio">{t.docentes.camilo.bio}</p>
+            <div className="pcd-docente__tags">
+              {t.docentes.camilo.tags.map((tag) => <span key={tag} className="pcd-docente__tag">{tag}</span>)}
+            </div>
+          </article>
+
+          {/* Daniela (clon para loop infinito) */}
+          <article
+            className="pcd-docente pcd-docente--daniela pcd-reveal" tabIndex={-1} role="button" aria-hidden="true"
+            aria-label={t.docentes.daniela.ariaLabel}
+            onClick={() => onDocenteCardClick('daniela')}
+            onKeyDown={(e) => onCardKey(e, 'daniela')}
+            style={{ '--docente-init': `url('${IMG}/Daniela_Init.webp')`, '--docente-end': `url('${IMG}/Daniela_End.webp')` } as CSSProperties}
+          >
+            <div className="pcd-docente__blob" aria-hidden="true" />
+            <img loading="lazy" className="pcd-sticker pcd-sticker--controller" src={`${IMG}/Controller.webp`} alt="" aria-hidden="true" />
+            <h3 className="pcd-docente__name">Daniela<br />Meza</h3>
+            <p className="pcd-docente__bio">{t.docentes.daniela.bio}</p>
+            <div className="pcd-docente__tags">
+              {t.docentes.daniela.tags.map((tag) => <span key={tag} className="pcd-docente__tag">{tag}</span>)}
+            </div>
+          </article>
+
+          {/* Juan David (clon para loop infinito) */}
+          <article
+            className="pcd-docente pcd-docente--juandavid pcd-reveal" tabIndex={-1} role="button" aria-hidden="true"
+            aria-label={t.docentes.juandavid.ariaLabel}
+            onClick={() => onDocenteCardClick('juandavid')}
+            onKeyDown={(e) => onCardKey(e, 'juandavid')}
+            style={{ '--docente-init': `url('${IMG}/JuanDavid_Init.webp')`, '--docente-end': `url('${IMG}/JuanDavid_End.webp')` } as CSSProperties}
+          >
+            <div className="pcd-docente__blob" aria-hidden="true" />
+            <img loading="lazy" className="pcd-sticker pcd-sticker--like" src={`${IMG}/Like.webp`} alt="" aria-hidden="true" />
+            <h3 className="pcd-docente__name">Juan David<br />Aristizabal</h3>
+            <p className="pcd-docente__bio">{t.docentes.juandavid.bio}</p>
+            <div className="pcd-docente__tags">
+              {t.docentes.juandavid.tags.map((tag) => <span key={tag} className="pcd-docente__tag">{tag}</span>)}
+            </div>
+          </article>
+
+          {/* Vanessa (clon para loop infinito) */}
+          <article
+            className="pcd-docente pcd-docente--vanessa pcd-reveal" tabIndex={-1} role="button" aria-hidden="true"
+            aria-label={t.docentes.vanessa.ariaLabel}
+            onClick={() => onDocenteCardClick('vanessa')}
+            onKeyDown={(e) => onCardKey(e, 'vanessa')}
+            style={{ '--docente-init': `url('${IMG}/Vanessa_Init.webp')`, '--docente-end': `url('${IMG}/Vanessa_End.webp')` } as CSSProperties}
+          >
+            <div className="pcd-docente__blob" aria-hidden="true" />
+            <img loading="lazy" className="pcd-sticker pcd-sticker--phone" src={`${IMG}/Phone.webp`} alt="" aria-hidden="true" />
+            <h3 className="pcd-docente__name">Vanessa<br />Tovar</h3>
+            <p className="pcd-docente__bio">{t.docentes.vanessa.bio}</p>
+            <div className="pcd-docente__tags">
+              {t.docentes.vanessa.tags.map((tag) => <span key={tag} className="pcd-docente__tag">{tag}</span>)}
+            </div>
+          </article>
+
+          {/* Rusbel (clon para loop infinito) */}
+          <article
+            className="pcd-docente pcd-docente--rusbel pcd-reveal" tabIndex={-1} role="button" aria-hidden="true"
+            aria-label={t.docentes.rusbel.ariaLabel}
+            onClick={() => onDocenteCardClick('rusbel')}
+            onKeyDown={(e) => onCardKey(e, 'rusbel')}
+            style={{ '--docente-init': `url('${IMG}/Rusbel_Init.webp')`, '--docente-end': `url('${IMG}/Rusbel_End.webp')` } as CSSProperties}
+          >
+            <div className="pcd-docente__blob" aria-hidden="true" />
+            <img loading="lazy" className="pcd-sticker pcd-sticker--controller" src={`${IMG}/Controller.webp`} alt="" aria-hidden="true" />
+            <h3 className="pcd-docente__name">Rusbel<br />Castillo</h3>
+            <p className="pcd-docente__bio">{t.docentes.rusbel.bio}</p>
+            <div className="pcd-docente__tags">
+              {t.docentes.rusbel.tags.map((tag) => <span key={tag} className="pcd-docente__tag">{tag}</span>)}
+            </div>
+          </article>
+
+          {/* Carlos (clon para loop infinito) */}
+          <article
+            className="pcd-docente pcd-docente--carlos pcd-reveal" tabIndex={-1} role="button" aria-hidden="true"
+            aria-label={t.docentes.carlos.ariaLabel}
+            onClick={() => onDocenteCardClick('carlos')}
+            onKeyDown={(e) => onCardKey(e, 'carlos')}
+            style={{ '--docente-init': `url('${IMG}/Carlos_Init.webp')`, '--docente-end': `url('${IMG}/Carlos_End.webp')` } as CSSProperties}
+          >
+            <div className="pcd-docente__blob" aria-hidden="true" />
+            <img loading="lazy" className="pcd-sticker pcd-sticker--star" src={`${IMG}/Star.webp`} alt="" aria-hidden="true" />
+            <h3 className="pcd-docente__name">Carlos<br />Almeyda</h3>
+            <p className="pcd-docente__bio">{t.docentes.carlos.bio}</p>
+            <div className="pcd-docente__tags">
+              {t.docentes.carlos.tags.map((tag) => <span key={tag} className="pcd-docente__tag">{tag}</span>)}
+            </div>
+          </article>
+
+          {/* Dayana (clon para loop infinito) */}
+          <article
+            className="pcd-docente pcd-docente--dayana pcd-reveal" tabIndex={-1} role="button" aria-hidden="true"
+            aria-label={t.docentes.dayana.ariaLabel}
+            onClick={() => onDocenteCardClick('dayana')}
+            onKeyDown={(e) => onCardKey(e, 'dayana')}
+            style={{ '--docente-init': `url('${IMG}/Dayana_Init.webp')`, '--docente-end': `url('${IMG}/Dayana_End.webp')` } as CSSProperties}
+          >
+            <div className="pcd-docente__blob" aria-hidden="true" />
+            <img loading="lazy" className="pcd-sticker pcd-sticker--computer" src={`${IMG}/Computer.webp`} alt="" aria-hidden="true" />
+            <h3 className="pcd-docente__name">Dayana<br />González</h3>
+            <p className="pcd-docente__bio">{t.docentes.dayana.bio}</p>
+            <div className="pcd-docente__tags">
+              {t.docentes.dayana.tags.map((tag) => <span key={tag} className="pcd-docente__tag">{tag}</span>)}
+            </div>
+          </article>
+
+          {/* Julián (clon para loop infinito) */}
+          <article
+            className="pcd-docente pcd-docente--julian pcd-reveal" tabIndex={-1} role="button" aria-hidden="true"
+            aria-label={t.docentes.julian.ariaLabel}
+            onClick={() => onDocenteCardClick('julian')}
+            onKeyDown={(e) => onCardKey(e, 'julian')}
+            style={{ '--docente-init': `url('${IMG}/Julian_Init.webp')`, '--docente-end': `url('${IMG}/Julian_End.webp')` } as CSSProperties}
+          >
+            <div className="pcd-docente__blob" aria-hidden="true" />
+            <img loading="lazy" className="pcd-sticker pcd-sticker--love" src={`${IMG}/Love.webp`} alt="" aria-hidden="true" />
+            <h3 className="pcd-docente__name">Julián<br />Bejarano</h3>
+            <p className="pcd-docente__bio">{t.docentes.julian.bio}</p>
+            <div className="pcd-docente__tags">
+              {t.docentes.julian.tags.map((tag) => <span key={tag} className="pcd-docente__tag">{tag}</span>)}
+            </div>
+          </article>
+
+          {/* John (clon para loop infinito) */}
+          <article
+            className="pcd-docente pcd-docente--john pcd-reveal" tabIndex={-1} role="button" aria-hidden="true"
+            aria-label={t.docentes.john.ariaLabel}
+            onClick={() => onDocenteCardClick('john')}
+            onKeyDown={(e) => onCardKey(e, 'john')}
+            style={{ '--docente-init': `url('${IMG}/John_Init.webp')`, '--docente-end': `url('${IMG}/John_End.webp')` } as CSSProperties}
+          >
+            <div className="pcd-docente__blob" aria-hidden="true" />
+            <img loading="lazy" className="pcd-sticker pcd-sticker--camera" src={`${IMG}/Camera.webp`} alt="" aria-hidden="true" />
+            <h3 className="pcd-docente__name">John<br />Lamprea</h3>
+            <p className="pcd-docente__bio">{t.docentes.john.bio}</p>
+            <div className="pcd-docente__tags">
+              {t.docentes.john.tags.map((tag) => <span key={tag} className="pcd-docente__tag">{tag}</span>)}
+            </div>
+          </article>
+
+          {/* Tatiana (clon para loop infinito) */}
+          <article
+            className="pcd-docente pcd-docente--tatiana pcd-reveal" tabIndex={-1} role="button" aria-hidden="true"
+            aria-label={t.docentes.tatiana.ariaLabel}
+            onClick={() => onDocenteCardClick('tatiana')}
+            onKeyDown={(e) => onCardKey(e, 'tatiana')}
+            style={{ '--docente-init': `url('${IMG}/Tatiana_Init.webp')`, '--docente-end': `url('${IMG}/Tatiana_End.webp')` } as CSSProperties}
+          >
+            <div className="pcd-docente__blob" aria-hidden="true" />
+            <img loading="lazy" className="pcd-sticker pcd-sticker--idea" src={`${IMG}/Idea.webp`} alt="" aria-hidden="true" />
+            <h3 className="pcd-docente__name">Tatiana<br />Flórez</h3>
+            <p className="pcd-docente__bio">{t.docentes.tatiana.bio}</p>
+            <div className="pcd-docente__tags">
+              {t.docentes.tatiana.tags.map((tag) => <span key={tag} className="pcd-docente__tag">{tag}</span>)}
+            </div>
+          </article>
+
+          {/* Pilar (clon para loop infinito) */}
+          <article
+            className="pcd-docente pcd-docente--pilar pcd-reveal" tabIndex={-1} role="button" aria-hidden="true"
+            aria-label={t.docentes.pilar.ariaLabel}
+            onClick={() => onDocenteCardClick('pilar')}
+            onKeyDown={(e) => onCardKey(e, 'pilar')}
+            style={{ '--docente-init': `url('${IMG}/Pilar_Init.webp')`, '--docente-end': `url('${IMG}/Pilar_End.webp')` } as CSSProperties}
+          >
+            <div className="pcd-docente__blob" aria-hidden="true" />
+            <img loading="lazy" className="pcd-sticker pcd-sticker--controller" src={`${IMG}/Controller.webp`} alt="" aria-hidden="true" />
+            <h3 className="pcd-docente__name">Pilar<br />Camargo</h3>
+            <p className="pcd-docente__bio">{t.docentes.pilar.bio}</p>
+            <div className="pcd-docente__tags">
+              {t.docentes.pilar.tags.map((tag) => <span key={tag} className="pcd-docente__tag">{tag}</span>)}
+            </div>
+          </article>
+
+          {/* Jaime (clon para loop infinito) */}
+          <article
+            className="pcd-docente pcd-docente--jaime pcd-reveal" tabIndex={-1} role="button" aria-hidden="true"
+            aria-label={t.docentes.jaime.ariaLabel}
+            onClick={() => onDocenteCardClick('jaime')}
+            onKeyDown={(e) => onCardKey(e, 'jaime')}
+            style={{ '--docente-init': `url('${IMG}/Jaime_Init.webp')`, '--docente-end': `url('${IMG}/Jaime_End.webp')` } as CSSProperties}
+          >
+            <div className="pcd-docente__blob" aria-hidden="true" />
+            <img loading="lazy" className="pcd-sticker pcd-sticker--phone" src={`${IMG}/Phone.webp`} alt="" aria-hidden="true" />
+            <h3 className="pcd-docente__name">Jaime<br />Velásquez</h3>
+            <p className="pcd-docente__bio">{t.docentes.jaime.bio}</p>
+            <div className="pcd-docente__tags">
+              {t.docentes.jaime.tags.map((tag) => <span key={tag} className="pcd-docente__tag">{tag}</span>)}
+            </div>
+          </article>
+        </div>
+        </div>
+      </section>
+
+      {/* ===== MODALES DOCENTES ===== */}
+      <DocenteModal
+        id="nicolas" active={activeDocente === 'nicolas'} onClose={closeDocente} onSwipe={onSwipeDocente}
+        portrait={`${IMG}/Nicolas_Init.webp`}
+        portraitEnd={`${IMG}/Nicolas_End.webp`}
+        name={<>Nicolás<br />Bartolo</>}
+        tags={t.docentes.nicolas.modalTags}
+      >
+        <h3 className="pcd-docente-modal__heading">{t.docentes.modalPerfil}</h3>
+        <p className="pcd-docente-modal__p">{t.docentes.nicolas.p1}</p>
+        <p className="pcd-docente-modal__p">{t.docentes.nicolas.p2}</p>
+        <hr className="pcd-docente-modal__rule" />
+        <h3 className="pcd-docente-modal__heading">{t.docentes.modalExp}</h3>
+        <ul className="pcd-docente-modal__list">
+          {t.docentes.nicolas.exp.map((item) => (
+            <li key={item.title}>
+              <strong>{item.title}</strong>
+              <span className="pcd-docente-modal__detail-plain">{item.body}</span>
+            </li>
+          ))}
+        </ul>
+      </DocenteModal>
+
+      <DocenteModal
+        id="sofia" active={activeDocente === 'sofia'} onClose={closeDocente} onSwipe={onSwipeDocente}
+        portrait={`${IMG}/Sofia_Init.webp`}
+        portraitEnd={`${IMG}/Sofia_End.webp`}
+        name={<>Sofía<br />Jiménez</>}
+        tags={t.docentes.sofia.modalTags}
+      >
+        <h3 className="pcd-docente-modal__heading">{t.docentes.modalPerfil}</h3>
+        <p className="pcd-docente-modal__p">{t.docentes.sofia.p1}</p>
+        <p className="pcd-docente-modal__p">{t.docentes.sofia.p2}</p>
+        <hr className="pcd-docente-modal__rule" />
+        <h3 className="pcd-docente-modal__heading">{t.docentes.modalExp}</h3>
+        <ul className="pcd-docente-modal__list">
+          {t.docentes.sofia.exp.map((item) => (
+            <li key={item.title}>
+              <strong>{item.title}</strong>
+              <span className="pcd-docente-modal__detail-plain">{item.body}</span>
+            </li>
+          ))}
+        </ul>
+      </DocenteModal>
+      <DocenteModal
+        id="juandavid" active={activeDocente === 'juandavid'} onClose={closeDocente} onSwipe={onSwipeDocente}
+        portrait={`${IMG}/JuanDavid_Init.webp`}
+        portraitEnd={`${IMG}/JuanDavid_End.webp`}
+        name={<>Juan David<br />Aristizabal</>}
+        tags={t.docentes.juandavid.modalTags}
+      >
+        <h3 className="pcd-docente-modal__heading">{t.docentes.modalPerfil}</h3>
+        <p className="pcd-docente-modal__p">{t.docentes.juandavid.p1}</p>
+        <p className="pcd-docente-modal__p">{t.docentes.juandavid.p2}</p>
+        <hr className="pcd-docente-modal__rule" />
+        <h3 className="pcd-docente-modal__heading">{t.docentes.modalExp}</h3>
+        <ul className="pcd-docente-modal__list">
+          {t.docentes.juandavid.exp.map((item) => (
+            <li key={item.title}>
+              <strong>{item.title}</strong>
+              <span className="pcd-docente-modal__detail-plain">{item.body}</span>
+            </li>
+          ))}
+        </ul>
+      </DocenteModal>
+
+      <DocenteModal
+        id="vanessa" active={activeDocente === 'vanessa'} onClose={closeDocente} onSwipe={onSwipeDocente}
+        portrait={`${IMG}/Vanessa_Init.webp`}
+        portraitEnd={`${IMG}/Vanessa_End.webp`}
+        name={<>Vanessa<br />Tovar</>}
+        tags={t.docentes.vanessa.modalTags}
+      >
+        <h3 className="pcd-docente-modal__heading">{t.docentes.modalPerfil}</h3>
+        <p className="pcd-docente-modal__p">{t.docentes.vanessa.p1}</p>
+        <p className="pcd-docente-modal__p">{t.docentes.vanessa.p2}</p>
+        <hr className="pcd-docente-modal__rule" />
+        <h3 className="pcd-docente-modal__heading">{t.docentes.modalExp}</h3>
+        <ul className="pcd-docente-modal__list">
+          {t.docentes.vanessa.exp.map((item) => (
+            <li key={item.title}>
+              <strong>{item.title}</strong>
+              <span className="pcd-docente-modal__detail-plain">{item.body}</span>
+            </li>
+          ))}
+        </ul>
+      </DocenteModal>
+
+      <DocenteModal
+        id="camilo" active={activeDocente === 'camilo'} onClose={closeDocente} onSwipe={onSwipeDocente}
+        portrait={`${IMG}/Camilo_Init.webp`}
+        portraitEnd={`${IMG}/Camilo_End.webp`}
+        name={<>Camilo<br />Cardozo</>}
+        tags={t.docentes.camilo.modalTags}
+      >
+        <h3 className="pcd-docente-modal__heading">{t.docentes.modalPerfil}</h3>
+        <p className="pcd-docente-modal__p">{t.docentes.camilo.p1}</p>
+        <p className="pcd-docente-modal__p">{t.docentes.camilo.p2}</p>
+        <hr className="pcd-docente-modal__rule" />
+        <h3 className="pcd-docente-modal__heading">{t.docentes.modalExp}</h3>
+        <ul className="pcd-docente-modal__list">
+          {t.docentes.camilo.exp.map((item, idx) => (
+            <li key={idx}>
+              {item.boldParts !== null ? (
+                <span className="pcd-docente-modal__detail-plain">
+                  {item.boldParts![0]}<strong>{item.boldParts![1]}</strong>
+                  {item.boldParts![2]}<strong>{item.boldParts![3]}</strong>
+                  {item.boldParts![4]}
+                </span>
+              ) : (
+                <span className="pcd-docente-modal__detail-plain">{item.body ?? ''}</span>
+              )}
+            </li>
+          ))}
+        </ul>
+      </DocenteModal>
+
+      <DocenteModal
+        id="daniela" active={activeDocente === 'daniela'} onClose={closeDocente} onSwipe={onSwipeDocente}
+        portrait={`${IMG}/Daniela_Init.webp`}
+        portraitEnd={`${IMG}/Daniela_End.webp`}
+        name={<>Daniela<br />Meza</>}
+        tags={t.docentes.daniela.modalTags}
+      >
+        <h3 className="pcd-docente-modal__heading">{t.docentes.modalPerfil}</h3>
+        <p className="pcd-docente-modal__p">{t.docentes.daniela.p1}</p>
+        <p className="pcd-docente-modal__p">{t.docentes.daniela.p2}</p>
+        <hr className="pcd-docente-modal__rule" />
+        <h3 className="pcd-docente-modal__heading">{t.docentes.modalExp}</h3>
+        <ul className="pcd-docente-modal__list">
+          {t.docentes.daniela.exp.map((item, idx) => (
+            <li key={idx}>
+              <span className="pcd-docente-modal__detail-plain">{item.body ?? ''}</span>
+            </li>
+          ))}
+        </ul>
+      </DocenteModal>
+
+      <DocenteModal
+        id="fabian" active={activeDocente === 'fabian'} onClose={closeDocente} onSwipe={onSwipeDocente}
+        name={<>Fabian<br />Herrera</>}
+        tags={t.docentes.fabian.modalTags}
+      >
+        <h3 className="pcd-docente-modal__heading">{t.docentes.modalPerfil}</h3>
+        <p className="pcd-docente-modal__p">{t.docentes.fabian.p1}</p>
+        <p className="pcd-docente-modal__p">{t.docentes.fabian.p2}</p>
+        <hr className="pcd-docente-modal__rule" />
+        <h3 className="pcd-docente-modal__heading">{t.docentes.modalExp}</h3>
+        <ul className="pcd-docente-modal__list">
+          {t.docentes.fabian.exp.map((item) => (
+            <li key={item.title}>
+              <strong>{item.title}</strong>
+              <span className="pcd-docente-modal__detail-plain">{item.body}</span>
+            </li>
+          ))}
+        </ul>
+      </DocenteModal>
+
+      <DocenteModal
+        id="paula" active={activeDocente === 'paula'} onClose={closeDocente} onSwipe={onSwipeDocente}
+        portrait={`${IMG}/Paula_Init.webp`}
+        portraitEnd={`${IMG}/Paula_End.webp`}
+        name={<>Paula<br />Lenis</>}
+        tags={t.docentes.paula.modalTags}
+      >
+        <h3 className="pcd-docente-modal__heading">{t.docentes.modalPerfil}</h3>
+        <p className="pcd-docente-modal__p">{t.docentes.paula.p1}</p>
+        <p className="pcd-docente-modal__p">{t.docentes.paula.p2}</p>
+        <hr className="pcd-docente-modal__rule" />
+        <h3 className="pcd-docente-modal__heading">{t.docentes.modalExp}</h3>
+        <ul className="pcd-docente-modal__list">
+          {t.docentes.paula.exp.map((item) => (
+            <li key={item.title}>
+              <strong>{item.title}</strong>
+              <span className="pcd-docente-modal__detail-plain">{item.body}</span>
+            </li>
+          ))}
+        </ul>
+      </DocenteModal>
+
+      <DocenteModal
+        id="ximena" active={activeDocente === 'ximena'} onClose={closeDocente} onSwipe={onSwipeDocente}
+        portrait={`${IMG}/Ximena_Init.webp`}
+        portraitEnd={`${IMG}/Ximena_End.webp`}
+        name={<>Ximena<br />Tovar</>}
+        tags={t.docentes.ximena.modalTags}
+      >
+        <h3 className="pcd-docente-modal__heading">{t.docentes.modalPerfil}</h3>
+        <p className="pcd-docente-modal__p">{t.docentes.ximena.p1}</p>
+        <p className="pcd-docente-modal__p">{t.docentes.ximena.p2}</p>
+        <hr className="pcd-docente-modal__rule" />
+        <h3 className="pcd-docente-modal__heading">{t.docentes.modalExp}</h3>
+        <ul className="pcd-docente-modal__list">
+          {t.docentes.ximena.exp.map((item) => (
+            <li key={item.title}>
+              <strong>{item.title}</strong>
+              <span className="pcd-docente-modal__detail-plain">{item.body}</span>
+            </li>
+          ))}
+        </ul>
+      </DocenteModal>
+
+      <DocenteModal
+        id="carlos" active={activeDocente === 'carlos'} onClose={closeDocente} onSwipe={onSwipeDocente}
+        portrait={`${IMG}/Carlos_Init.webp`}
+        portraitEnd={`${IMG}/Carlos_End.webp`}
+        name={<>Carlos<br />Almeyda</>}
+        tags={t.docentes.carlos.modalTags}
+      >
+        <h3 className="pcd-docente-modal__heading">{t.docentes.modalPerfil}</h3>
+        <p className="pcd-docente-modal__p">{t.docentes.carlos.p1}</p>
+        <p className="pcd-docente-modal__p">{t.docentes.carlos.p2}</p>
+        <hr className="pcd-docente-modal__rule" />
+        <h3 className="pcd-docente-modal__heading">{t.docentes.modalExp}</h3>
+        <ul className="pcd-docente-modal__list">
+          {t.docentes.carlos.exp.map((item) => (
+            <li key={item.title}>
+              <strong>{item.title}</strong>
+              <span className="pcd-docente-modal__detail-plain">{item.body}</span>
+            </li>
+          ))}
+        </ul>
+      </DocenteModal>
+
+      <DocenteModal
+        id="dayana" active={activeDocente === 'dayana'} onClose={closeDocente} onSwipe={onSwipeDocente}
+        portrait={`${IMG}/Dayana_Init.webp`}
+        portraitEnd={`${IMG}/Dayana_End.webp`}
+        name={<>Dayana<br />González</>}
+        tags={t.docentes.dayana.modalTags}
+      >
+        <h3 className="pcd-docente-modal__heading">{t.docentes.modalPerfil}</h3>
+        <p className="pcd-docente-modal__p">{t.docentes.dayana.p1}</p>
+        <p className="pcd-docente-modal__p">{t.docentes.dayana.p2}</p>
+        <hr className="pcd-docente-modal__rule" />
+        <h3 className="pcd-docente-modal__heading">{t.docentes.modalExp}</h3>
+        <ul className="pcd-docente-modal__list">
+          {t.docentes.dayana.exp.map((item) => (
+            <li key={item.title}>
+              <strong>{item.title}</strong>
+              <span className="pcd-docente-modal__detail-plain">{item.body}</span>
+            </li>
+          ))}
+        </ul>
+      </DocenteModal>
+
+      <DocenteModal
+        id="john" active={activeDocente === 'john'} onClose={closeDocente} onSwipe={onSwipeDocente}
+        portrait={`${IMG}/John_Init.webp`}
+        portraitEnd={`${IMG}/John_End.webp`}
+        name={<>John<br />Lamprea</>}
+        tags={t.docentes.john.modalTags}
+      >
+        <h3 className="pcd-docente-modal__heading">{t.docentes.modalPerfil}</h3>
+        <p className="pcd-docente-modal__p">{t.docentes.john.p1}</p>
+        <p className="pcd-docente-modal__p">{t.docentes.john.p2}</p>
+        <hr className="pcd-docente-modal__rule" />
+        <h3 className="pcd-docente-modal__heading">{t.docentes.modalExp}</h3>
+        <ul className="pcd-docente-modal__list">
+          {t.docentes.john.exp.map((item) => (
+            <li key={item.title}>
+              <strong>{item.title}</strong>
+              <span className="pcd-docente-modal__detail-plain">{item.body}</span>
+            </li>
+          ))}
+        </ul>
+      </DocenteModal>
+
+      <DocenteModal
+        id="tatiana" active={activeDocente === 'tatiana'} onClose={closeDocente} onSwipe={onSwipeDocente}
+        portrait={`${IMG}/Tatiana_Init.webp`}
+        portraitEnd={`${IMG}/Tatiana_End.webp`}
+        name={<>Tatiana<br />Flórez</>}
+        tags={t.docentes.tatiana.modalTags}
+      >
+        <h3 className="pcd-docente-modal__heading">{t.docentes.modalPerfil}</h3>
+        <p className="pcd-docente-modal__p">{t.docentes.tatiana.p1}</p>
+        <p className="pcd-docente-modal__p">{t.docentes.tatiana.p2}</p>
+        <hr className="pcd-docente-modal__rule" />
+        <h3 className="pcd-docente-modal__heading">{t.docentes.modalExp}</h3>
+        <ul className="pcd-docente-modal__list">
+          {t.docentes.tatiana.exp.map((item) => (
+            <li key={item.title}>
+              <strong>{item.title}</strong>
+              <span className="pcd-docente-modal__detail-plain">{item.body}</span>
+            </li>
+          ))}
+        </ul>
+      </DocenteModal>
+
+      <DocenteModal
+        id="pilar" active={activeDocente === 'pilar'} onClose={closeDocente} onSwipe={onSwipeDocente}
+        portrait={`${IMG}/Pilar_Init.webp`}
+        portraitEnd={`${IMG}/Pilar_End.webp`}
+        name={<>Pilar<br />Camargo</>}
+        tags={t.docentes.pilar.modalTags}
+      >
+        <h3 className="pcd-docente-modal__heading">{t.docentes.modalPerfil}</h3>
+        <p className="pcd-docente-modal__p">{t.docentes.pilar.p1}</p>
+        <p className="pcd-docente-modal__p">{t.docentes.pilar.p2}</p>
+        <hr className="pcd-docente-modal__rule" />
+        <h3 className="pcd-docente-modal__heading">{t.docentes.modalExp}</h3>
+        <ul className="pcd-docente-modal__list">
+          {t.docentes.pilar.exp.map((item) => (
+            <li key={item.title}>
+              <strong>{item.title}</strong>
+              <span className="pcd-docente-modal__detail-plain">{item.body}</span>
+            </li>
+          ))}
+        </ul>
+      </DocenteModal>
+
+      <DocenteModal
+        id="rusbel" active={activeDocente === 'rusbel'} onClose={closeDocente} onSwipe={onSwipeDocente}
+        portrait={`${IMG}/Rusbel_Init.webp`}
+        portraitEnd={`${IMG}/Rusbel_End.webp`}
+        name={<>Rusbel<br />Castillo</>}
+        tags={t.docentes.rusbel.modalTags}
+      >
+        <h3 className="pcd-docente-modal__heading">{t.docentes.modalPerfil}</h3>
+        <p className="pcd-docente-modal__p">{t.docentes.rusbel.p1}</p>
+        <p className="pcd-docente-modal__p">{t.docentes.rusbel.p2}</p>
+        <hr className="pcd-docente-modal__rule" />
+        <h3 className="pcd-docente-modal__heading">{t.docentes.modalExp}</h3>
+        <ul className="pcd-docente-modal__list">
+          {t.docentes.rusbel.exp.map((item) => (
+            <li key={item.title}>
+              <strong>{item.title}</strong>
+              <span className="pcd-docente-modal__detail-plain">{item.body}</span>
+            </li>
+          ))}
+        </ul>
+      </DocenteModal>
+
+      <DocenteModal
+        id="julian" active={activeDocente === 'julian'} onClose={closeDocente} onSwipe={onSwipeDocente}
+        portrait={`${IMG}/Julian_Init.webp`}
+        portraitEnd={`${IMG}/Julian_End.webp`}
+        name={<>Julián<br />Bejarano</>}
+        tags={t.docentes.julian.modalTags}
+      >
+        <h3 className="pcd-docente-modal__heading">{t.docentes.modalPerfil}</h3>
+        <p className="pcd-docente-modal__p">{t.docentes.julian.p1}</p>
+        <p className="pcd-docente-modal__p">{t.docentes.julian.p2}</p>
+        <hr className="pcd-docente-modal__rule" />
+        <h3 className="pcd-docente-modal__heading">{t.docentes.modalExp}</h3>
+        <ul className="pcd-docente-modal__list">
+          {t.docentes.julian.exp.map((item) => (
+            <li key={item.title}>
+              <strong>{item.title}</strong>
+              <span className="pcd-docente-modal__detail-plain">{item.body}</span>
+            </li>
+          ))}
+        </ul>
+      </DocenteModal>
+
+      <DocenteModal
+        id="jaime" active={activeDocente === 'jaime'} onClose={closeDocente} onSwipe={onSwipeDocente}
+        portrait={`${IMG}/Jaime_Init.webp`}
+        portraitEnd={`${IMG}/Jaime_End.webp`}
+        name={<>Jaime<br />Velásquez</>}
+        tags={t.docentes.jaime.modalTags}
+      >
+        <h3 className="pcd-docente-modal__heading">{t.docentes.modalPerfil}</h3>
+        <p className="pcd-docente-modal__p">{t.docentes.jaime.p1}</p>
+        <p className="pcd-docente-modal__p">{t.docentes.jaime.p2}</p>
+        <hr className="pcd-docente-modal__rule" />
+        <h3 className="pcd-docente-modal__heading">{t.docentes.modalExp}</h3>
+        <ul className="pcd-docente-modal__list">
+          {t.docentes.jaime.exp.map((item) => (
+            <li key={item.title}>
+              <strong>{item.title}</strong>
+              <span className="pcd-docente-modal__detail-plain">{item.body}</span>
+            </li>
+          ))}
+        </ul>
+      </DocenteModal>
+
+      {/* ===== EQUIPO ===== */}
+      <section id="equipo" className="pcd-team pcd-team--dark">
+        <header className="pcd-team__head pcd-reveal">
+          <h2 className="pcd-team__title">
+            {t.equipo.sectionTitleL1Pre}<span className="pcd-team__title-pop">{t.equipo.sectionTitleL1Pop}</span><br />
+            {t.equipo.sectionTitleL2}
+          </h2>
+          <p className="pcd-team__sub">{t.equipo.sectionSub}</p>
+        </header>
+
+        <div className="pcd-team__body pcd-reveal">
+          <div className="pcd-team__stage">
+            <video
+              className="pcd-team__video"
+              src={`${VIDEO}/equipo.mp4`}
+              poster={`${IMG}/equipo/equipo-poster.webp`}
+              autoPlay
+              loop
+              muted
+              playsInline
+              aria-hidden="true"
+            />
+            {TEAM.map((person) => (
+              <button
+                key={person.id}
+                type="button"
+                className={`pcd-team__hotspot${activeTeam === person.id ? ' is-active' : ''}`}
+                style={{ left: `${person.left}%`, width: `${person.width}%` }}
+                onClick={() => setActiveTeam(person.id)}
+                aria-pressed={activeTeam === person.id}
+                aria-label={t.equipo[person.id].nombre}
+              >
+                <span className="pcd-team__tag">{t.equipo[person.id].nombre}</span>
+              </button>
+            ))}
+          </div>
+
+          <aside className="pcd-team__panel" aria-live="polite">
+            <div
+              className="pcd-team__panel-photo"
+              style={{ backgroundImage: `url('${TEAM.find((p) => p.id === activeTeam)!.photo}')` }}
+              aria-hidden="true"
+            />
+            <div className="pcd-team__panel-body">
+              <h3 className="pcd-team__panel-name">{activeTeamMember.nombre}</h3>
+              <p className="pcd-team__panel-role">{activeTeamMember.profesion} · {activeTeamMember.rol}</p>
+              <p className="pcd-team__panel-desc">{activeTeamMember.descripcion}</p>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      {/* ===== PROYECTOS ===== */}
+      <section id="proyectos" className="pcd-projects">
+        <header className="pcd-projects__head pcd-reveal">
+          <h2 className="pcd-projects__title">
+            {t.projects.sectionTitleL1}<br />
+            <span className="pop">{t.projects.sectionTitlePop}</span>{t.projects.sectionTitleL2rest}
+            {t.projects.sectionTitleL3 && <><br />{t.projects.sectionTitleL3}</>}
+          </h2>
+          <Link className="pcd-cta-secondary" to="/proyectos">
+            <span>{t.projects.cta}</span>
+            <span aria-hidden="true">→</span>
+          </Link>
+        </header>
+
+        <HomeProjectsPreview lang={lang} />
+      </section>
+
+      {/* ===== MARQUEE · lo que sucede ===== */}
+      <div className="pcd-marquee" aria-hidden="true">
+        <div className="pcd-marquee__track">
+          <span>
+            {t.marquee3} <span className="pcd-marquee__star">✺</span>
+            {t.marquee3} <span className="pcd-marquee__star">✺</span>
+            {t.marquee3} <span className="pcd-marquee__star">✺</span>
+            {t.marquee3} <span className="pcd-marquee__star">✺</span>
+          </span>
+          <span>
+            {t.marquee3} <span className="pcd-marquee__star">✺</span>
+            {t.marquee3} <span className="pcd-marquee__star">✺</span>
+            {t.marquee3} <span className="pcd-marquee__star">✺</span>
+            {t.marquee3} <span className="pcd-marquee__star">✺</span>
+          </span>
+        </div>
+      </div>
+
+      {/* ===== BLOG ===== */}
+      <section id="blog" className="pcd-blog-preview">
+        <header className="pcd-blog-preview__head pcd-reveal">
+          <h2 className="pcd-blog-preview__title">
+            {t.blog.sectionTitleL1} <span className="pop">{t.blog.sectionTitlePop}</span>{t.blog.sectionTitleL2rest}
+            {t.blog.sectionTitleL3 && <><br />{t.blog.sectionTitleL3}</>}
+          </h2>
+          <Link className="pcd-cta-secondary" to="/blog">
+            <span>{t.blog.cta}</span>
+            <span aria-hidden="true">→</span>
+          </Link>
+        </header>
+
+        {BLOG_POSTS.length > 0 ? (
+          <div className="pcd-blog-preview__grid">
+            {/* Últimos 4 posts, del más reciente al más antiguo — se asume
+                que las publicaciones nuevas se agregan al final de
+                BLOG_POSTS (src/data/blog.ts), así que se toman los
+                últimos 4 y se invierten para que el más nuevo salga
+                primero (a pedido del usuario). El número de la cifra
+                fantasma (origIndex) es la posición ORIGINAL del post en
+                BLOG_POSTS, no la posición en pantalla — así la card del
+                post 4 sigue mostrando "04" aunque ahora salga primero
+                (bug reportado: antes usaba el índice del .map ya
+                reordenado y todas las cards se corrían de número). */}
+            {BLOG_POSTS.map((post, origIndex) => ({ post, origIndex })).slice(-4).reverse().map(({ post, origIndex }, i) => {
+              // Sin foto: cada card es un bloque de color sólido — se
+              // reutiliza el mismo ciclo azul(cobalt) -> amarillo(acid) ->
+              // rojo(tomato) que ya usamos en los stickers de docentes,
+              // para que se sienta consistente con el resto del sitio.
+              const cardColor = BLOG_CARD_COLORS[i % BLOG_CARD_COLORS.length];
+              const inner = (
+                <>
+                  <span className="pcd-blog-preview__index">{String(origIndex + 1).padStart(2, '0')}</span>
+                  <div className="pcd-blog-preview__body">
+                    <p className="pcd-blog-preview__card-title">{lang === 'en' ? (post.titleEn ?? post.title) : post.title}</p>
+                    <p className="pcd-blog-preview__excerpt">{lang === 'en' ? (post.excerptEn ?? post.excerpt) : post.excerpt}</p>
+                  </div>
+                </>
+              );
+              return post.detail ? (
+                <Link key={post.id} to={`/blog/${post.id}`} className={`pcd-blog-preview__card pcd-blog-preview__card--${cardColor} pcd-reveal`}>{inner}</Link>
+              ) : (
+                <article key={post.id} className={`pcd-blog-preview__card pcd-blog-preview__card--${cardColor} pcd-reveal`}>{inner}</article>
+              );
+            })}
+          </div>
+        ) : (
+          <div className="pcd-blog-preview__empty pcd-reveal">
+            <span className="pcd-blog-preview__empty-eyebrow">{t.blog.emptyEyebrow}</span>
+            <p className="pcd-blog-preview__empty-body">{t.blog.emptyBody}</p>
+          </div>
+        )}
+      </section>
+
+      {/* ===== ESTUDIA / CTA FINAL ===== */}
+      <section id="aplica" className="pcd-estudia">
+        <div className="pcd-estudia__copy">
+          <span className="pcd-estudia__eyebrow pcd-reveal">{t.estudia.eyebrow}</span>
+          <h2 className="pcd-estudia__title pcd-reveal">
+            {t.estudia.title}<br />
+            <span className="neon">{t.estudia.titleNeon}</span>
+            {t.estudia.titleEnd}
+          </h2>
+          <p className="pcd-estudia__body pcd-reveal">{t.estudia.body}</p>
+          <a className="pcd-estudia__cta pcd-reveal" href={APLICA_URL} target="_blank" rel="noopener">
+            <span>{t.estudia.cta}</span>
+            <span aria-hidden="true">→</span>
+          </a>
+        </div>
+        <div className="pcd-estudia__photo pcd-reveal">
+          <span className="pcd-bullet pcd-bullet--1">{t.estudia.bullet1}</span>
+          <span className="pcd-bullet pcd-bullet--2">{t.estudia.bullet2}</span>
+          <span className="pcd-bullet pcd-bullet--3">{t.estudia.bullet3}</span>
+        </div>
+      </section>
+
+      {/* ===== FOOTER ===== */}
+      <footer className="pcd-footer" id="contacto">
+        <div className="pcd-footer__columns">
+          <div className="pcd-footer__col pcd-reveal">
+            <span className="pcd-footer__title">{t.footer.colPrograma}</span>
+            <a className="pcd-footer__link" href="https://www.unbosque.edu.co/programas-academicos/facultad-creacion-comunicacion/creacion-digital" target="_blank" rel="noopener">{t.footer.info}</a>
+            <a className="pcd-footer__link" href="/programa/pdf/Manifiesto-CREADIG.pdf" target="_blank" rel="noopener">{t.footer.manifiesto}</a>
+          </div>
+          <div className="pcd-footer__col pcd-reveal">
+            <span className="pcd-footer__title">{t.footer.colComunidad}</span>
+            <a className="pcd-footer__link" href="https://www.instagram.com/creaciondigital.ueb/" target="_blank" rel="noopener">Instagram</a>
+            <a className="pcd-footer__link" href="https://www.tiktok.com/@creaciondigital.ueb" target="_blank" rel="noopener">TikTok</a>
+          </div>
+          <div className="pcd-footer__col pcd-reveal">
+            <span className="pcd-footer__title">{t.footer.colUniversidad}</span>
+            <a className="pcd-footer__link" href="https://www.unbosque.edu.co/" target="_blank" rel="noopener">Universidad El Bosque</a>
+            <a className="pcd-footer__link" href="https://www.unbosque.edu.co/programas-academicos/facultad-creacion-comunicacion" target="_blank" rel="noopener">FACyC</a>
+          </div>
+        </div>
+        <p className="pcd-footer__legal">{t.footer.legal}</p>
+      </footer>
+    </div>
+  );
+}

@@ -43,7 +43,7 @@ export interface BlogPost {
 export const BLOG_POSTS: BlogPost[] = [
   {
     id: "intercambio-paraguay-ana-salavarrieta",
-    image: "",
+    image: "/programa/img/blog/paraguay-ana-salavarrieta.webp",
     category: "Logros",
     categoryEn: "Achievements",
     year: "2026",
@@ -54,7 +54,7 @@ export const BLOG_POSTS: BlogPost[] = [
     excerpt: "Nuestra estudiante Ana Salavarrieta vive un intercambio académico en la Universidad Nacional de Asunción, Paraguay, poniendo en práctica su formación como creadora digital.",
     excerptEn: "Our student Ana Salavarrieta is doing an academic exchange at the Universidad Nacional de Asunción in Paraguay, putting her training as a digital creator into practice.",
     detail: {
-      images: [],
+      images: ["/programa/img/blog/paraguay-ana-salavarrieta.webp"],
       descriptionEs: `La creación digital también se construye explorando nuevos lugares, culturas y formas de entender el mundo. Este semestre, nuestra estudiante Ana Salavarrieta, de cuarto semestre de Creación Digital, lleva su talento y su mirada creativa hasta Paraguay, donde realiza un intercambio académico en la Universidad Nacional de Asunción.
 
 Esta oportunidad fue posible gracias a una beca a la que Ana decidió postularse después de conocer la convocatoria a través del programa. Motivada por la posibilidad de vivir una experiencia académica internacional, dio el paso, se presentó y fue seleccionada como beneficiaria.
@@ -87,7 +87,7 @@ Because being a digital creator also means having the ability to take your ideas
   },
   {
     id: "franziska-junge-alemania",
-    image: "",
+    image: "/programa/img/blog/franziska-junge.webp",
     category: "Eventos",
     categoryEn: "Events",
     year: "2026",
@@ -98,7 +98,7 @@ Because being a digital creator also means having the ability to take your ideas
     excerpt: "Durante dos semanas, la artista alemana Franziska Junge visitó el programa para explorar con nuestros creadores nuevas formas de narrar y crear.",
     excerptEn: "For two weeks, German artist Franziska Junge visited the program to explore new ways of storytelling and creating with our students.",
     detail: {
-      images: [],
+      images: ["/programa/img/blog/franziska-junge.webp"],
       descriptionEs: `Del 11 al 24 de agosto vivimos una experiencia internacional que nos permitió explorar nuevas formas de crear, narrar y experimentar con lo digital. Durante estas dos semanas contamos con la visita de Franziska Junge, artista visual, ilustradora y profesora de Diseño en la HAWK University of Applied Sciences and Arts, en Hildesheim, Alemania.
 
 Su visita fue una oportunidad para que nuestros creadores se acercaran a diferentes lenguajes y procesos de creación. A lo largo de los talleres exploramos la construcción de personajes, la creación de narrativas y el storytelling, combinando técnicas de dibujo análogo y digital con herramientas de animación y videomapping.
@@ -131,18 +131,18 @@ We come away with new learning, new stories, and the certainty that creation has
   },
   {
     id: "explora-unbosque-agosto-2026",
-    image: "",
+    image: "/programa/img/blog/explora-unbosque.webp",
     category: "Eventos",
     categoryEn: "Events",
     year: "2026",
     date: "19 y 22 de agosto de 2026",
     dateEn: "August 19 & 22, 2026",
-    title: "Explora Unbosque: así estamos conociendo a nuestros futuros creadores",
-    titleEn: "Explora Unbosque: this is how we are getting to know our future creators",
+    title: "Explora Unbosque: conociendo a nuestros futuros creadores",
+    titleEn: "Explora Unbosque: getting to know our future creators",
     excerpt: "Así vivimos Explora Unbosque: un espacio para que futuros estudiantes descubran al creador digital que llevan dentro.",
     excerptEn: "This is how we experienced Explora Unbosque: a space for future students to discover the digital creator within.",
     detail: {
-      images: [],
+      images: ["/programa/img/blog/explora-unbosque.webp"],
       descriptionEs: `¿Quién es el creador digital que llevas dentro? Esa fue una de las preguntas que nos acompañó durante nuestra participación en Explora Unbosque, un espacio en el que, el miércoles 19 y el sábado 22 de agosto, tuvimos la oportunidad de encontrarnos con futuros estudiantes y sus familias.
 
 Durante estas jornadas recibimos a estudiantes de diferentes colegios y los invitamos a acercarse al mundo de la Creación Digital de una manera diferente: a través de la experiencia, la exploración y, por supuesto, la creatividad.
@@ -181,8 +181,8 @@ We love meeting our future creators again and starting to imagine, together, eve
     year: "2026",
     date: "24 al 27 de septiembre de 2026",
     dateEn: "September 24–27, 2026",
-    title: "ARTBO 2026: así se imaginaron las identidades del futuro con inteligencia artificial",
-    titleEn: "ARTBO 2026: this is how the identities of the future were imagined with artificial intelligence",
+    title: "ARTBO 2026: imaginando las identidades del futuro con IA",
+    titleEn: "ARTBO 2026: imagining the identities of the future with AI",
     excerpt: "Del 24 al 27 de septiembre, Creación Digital llevó a ARTBO una experiencia que construye identidades holográficas a partir de cómo las personas perciben la inteligencia artificial, con más de 1.200 visitantes en 4 días.",
     excerptEn: "From September 24 to 27, Digital Creation brought to ARTBO an experience that builds holographic identities from how people perceive artificial intelligence, with over 1,200 visitors in 4 days.",
     detail: {
@@ -239,6 +239,46 @@ One of the most anticipated moments was the portfolio review, where Contra Studi
 We're thrilled to share spaces like this with our whole community, where we come together, recognize each other, and celebrate what it means to be digital creators. See you next year at the third Día del Unicornio!`,
       tagsEs: ["Eventos", "Comunidad", "Portafolio"],
       tagsEn: ["Events", "Community", "Portfolio"],
+    },
+  },
+  {
+    // La usuaria ya mandó el texto (testimonios en primera persona de
+    // Andrea y Johan, transcritos/pasados por ella). A pedido de la
+    // usuaria, Samuel Parada se quita del post por el momento (ya no se
+    // lo menciona) — si después se vuelve a agregar, usar su testimonio
+    // real cuando lo mande, sin inventar nada. Falta la FOTO (sigue sin
+    // `image`/`images`, bloque de color con el número fantasma mientras
+    // tanto) y la fecha exacta (`date`/`dateEn` siguen en "2026" a falta
+    // de confirmarla).
+    id: "primeros-practicantes-creacion-digital",
+    image: "/programa/img/blog/primeros-practicantes.webp",
+    category: "Logros",
+    categoryEn: "Achievements",
+    year: "2026",
+    date: "2026",
+    dateEn: "2026",
+    title: "¿Qué cuentan los primeros practicantes de Creación Digital?",
+    titleEn: "What do Digital Creation's first interns have to say?",
+    excerpt: "Andrea Rozo y Johan Ospina, estudiantes de quinto semestre, son dos de los primeros practicantes de Creación Digital.",
+    excerptEn: "Andrea Rozo and Johan Ospina, fifth-semester students, are two of Digital Creation's first interns.",
+    detail: {
+      images: ["/programa/img/blog/primeros-practicantes.webp"],
+      descriptionEs: `Andrea Rozo y Johan Ospina, estudiantes de quinto semestre de Creación Digital, son dos de los primeros practicantes de la carrera. Así cuentan, en primera persona, cómo ha sido esta primera experiencia laboral.
+
+Andrea Rozo hace sus prácticas en el HUB iEX de la Universidad El Bosque, en el área de comunicaciones: "Desde primer semestre nos estaban insistiendo mucho con tener un buen portafolio, tener unas buenas bases y, sobre todo, mostrar al mundo lo que sabemos hacer como creadores digitales, que es una carrera nueva. En la práctica he hecho demasiadas cosas: piezas para posts de Instagram, carruseles, landing pages. Empezar mis prácticas me ha ayudado a entender cómo funciona realmente una empresa y cómo es el ambiente laboral. A los demás creadores digitales los invito a tener muy bien preparado su portafolio, a estar pendientes de las ofertas laborales y a inscribirse lo antes posible para vivir esta experiencia. Siempre hay que estar seguros de lo que son, de sus capacidades y, sobre todo, de mostrar las habilidades que tienen en su portafolio y como persona."
+
+Johan Ospina hace sus prácticas en Fractales, de la Vicerrectoría de Investigaciones: "Me contactaron por correo para decirme que hiciera una entrevista, que les había gustado mucho mi portafolio, y en la entrevista me preguntaron sobre Creación Digital. Lo que he hecho en la práctica es literalmente ser un creador digital: página web, fotografía, creación de contenido, piezas gráficas para redes sociales, cobertura de eventos, un poco de todo. Al principio uno normalmente tiene miedo, pero la cosa es arriesgarse: si te ponen a hacer algo, hacerlo sin miedo, porque nosotros tenemos las bases fundamentales para esa tarea. Para que ustedes también vayan a prácticas: tengan un portafolio diferente a los demás, muestren su trabajo, escuchen opiniones sobre él y no le tengan miedo a arriesgarse."
+
+Desde Creación Digital celebramos que Andrea y Johan sean parte de los primeros en dar este paso, y nos sumamos a su invitación: prepara tu portafolio, confía en lo que sabes hacer y atrévete a dar el salto a tu primera experiencia laboral.`,
+      descriptionEn: `Andrea Rozo and Johan Ospina, fifth-semester students of Digital Creation, are two of the program's first interns. Here's how they describe, in their own words, this first work experience.
+
+Andrea Rozo is doing her internship at Universidad El Bosque's HUB iEX, in the communications area: "Since first semester they kept insisting we build a good portfolio, have solid foundations and, above all, show the world what we can do as digital creators, which is a new career. In my internship I've done so many things: pieces for Instagram posts, carousels, landing pages. Starting my internship has helped me understand how a company really works and what the work environment is like. I invite other digital creators to have their portfolio well prepared, to keep an eye on job openings and to apply as soon as possible to have this experience. You always have to be sure of who you are, of your abilities and, above all, of showing the skills you have in your portfolio and as a person."
+
+Johan Ospina is doing his internship at Fractales, under the Vice-Rectory for Research: "They contacted me by email to ask me to do an interview, saying they really liked my portfolio, and in the interview they asked me about Digital Creation. What I've done in my internship is literally being a digital creator: website work, photography, content creation, graphic pieces for social media, event coverage, a bit of everything. At first you're usually scared, but the thing is to take the risk: if they ask you to do something, do it without fear, because we have the core foundations for that task. For you to also go on internships: have a portfolio that's different from the rest, show your work, listen to feedback on it and don't be afraid to take the risk."
+
+At Digital Creation we celebrate that Andrea and Johan are part of the first to take this step, and we join their invitation: prepare your portfolio, trust what you know how to do, and dare to take the leap into your first work experience.`,
+      tagsEs: ["Logros", "Prácticas", "Testimonios"],
+      tagsEn: ["Achievements", "Internships", "Testimonials"],
     },
   },
 ];

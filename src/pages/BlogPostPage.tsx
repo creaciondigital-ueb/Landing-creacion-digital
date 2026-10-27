@@ -174,7 +174,7 @@ export default function BlogPostPage() {
 
         {/* CARRUSEL — ancho completo */}
         {images.length > 0 && (
-          <div className="pdet__carousel" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
+          <div className="pdet__carousel pdet__carousel--blog" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
             <div className="pdet__carousel-track">
               {images.map((src, i) => (
                 <img

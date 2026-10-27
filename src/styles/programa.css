@@ -2414,13 +2414,37 @@ body:has(.pcd-docente-modal[open]) {
    del programa (mismo ciclo azul/amarillo/rojo que los stickers de
    docentes, ver BLOG_CARD_COLORS en el TSX), con el número de orden,
    la categoría/fecha, el título y el resumen adentro del bloque. */
+/* Carrusel arrastrable (no infinito) — a pedido del usuario: antes era un
+   grid fijo de 4 columnas que mostraba solo las últimas 4 publicaciones;
+   ahora se muestran TODAS (ver BLOG_POSTS.map(...).reverse() en el TSX,
+   sin .slice(-4)) en una fila que se puede arrastrar con el mouse
+   (onBlogMouseDown/Move en el TSX) o con touch/trackpad (scroll nativo,
+   overflow-x:auto). Mismo patrón que .pcd-docentes__grid pero SIN loop
+   infinito: acá el navegador limita scrollLeft solo, no hay que clonar
+   cards ni restar un "period" al cruzar un borde. El ancho de cada card
+   (ver .pcd-blog-preview__card flex-basis más abajo) se calcula un poco
+   más angosto que 1/4 del contenedor a propósito, para que la 5ta card
+   siempre asome ("peek") en el borde derecho e invite a arrastrar.
+   SIN scroll-snap a propósito (mismo motivo que .pcd-docentes__grid, ver
+   su comentario): con scroll-snap activo, cada vez que onBlogMouseMove
+   escribe scrollLeft a mano, el navegador lo interpretaba como fin de
+   gesto y lo "tironeaba" de vuelta al punto de snap más cercano — el
+   arrastre se sentía a tirones/en bloque en vez de seguir el mouse 1:1
+   (bug reportado por la usuaria). */
 .pcd-blog-preview__grid {
-  display: grid;
-  /* 4 en vez de 3 — a pedido del usuario, para que las cards queden
-     más chicas (más angostas por columna) además de menos altas. */
-  grid-template-columns: repeat(4, 1fr);
+  display: flex;
   gap: 18px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  padding-bottom: 4px; /* evita que el translate(-2px,-2px) del hover recorte la card */
+  cursor: grab;
+  user-select: none;
 }
+.pcd-blog-preview__grid::-webkit-scrollbar { display: none; }
+.pcd-blog-preview__grid.is-dragging { cursor: grabbing; }
 .pcd-blog-preview__card {
   display: flex;
   flex-direction: column;
@@ -2432,6 +2456,13 @@ body:has(.pcd-docente-modal[open]) {
      3/4 + min-height 420px) — a pedido del usuario. */
   aspect-ratio: 4 / 5;
   min-height: 280px;
+  /* Ancho fijo por card (antes era 1fr de grid-template-columns: repeat(4,1fr)).
+     23% en vez de un prolijo 25% (100%/4) a propósito: con 5 cards en fila
+     a 23% + gaps de 18px, las primeras 4 llenan casi todo el contenedor y
+     la 5ta queda asomando ("peek") en el borde derecho — ver comentario en
+     .pcd-blog-preview__grid. flex-shrink:0 evita que el flex las achique
+     para "hacerlas caber" todas, que es justo lo que no queremos. */
+  flex: 0 0 23%;
   padding: 18px 18px 20px;
   /* Diagramación rediseñada a pedido: antes el número quedaba arriba,
      el bloque de color del medio se veía vacío y el título/bajada se
@@ -2542,13 +2573,15 @@ body:has(.pcd-docente-modal[open]) {
 @media (max-width: 980px) {
   .pcd-blog-preview { padding: 24px 24px 56px; }
   .pcd-blog-preview__title { font-size: 56px; }
-  /* 2 en vez de 4 en este rango — con 4 columnas fijas las cards
-     quedarían demasiado angostas antes de llegar al colapso a 1. */
-  .pcd-blog-preview__grid { grid-template-columns: repeat(2, 1fr); }
+  /* 2 cards visibles en vez de 4 en este rango (47% en vez de 23%) —
+     mismo criterio de "peek" de la siguiente card en el borde derecho. */
+  .pcd-blog-preview__card { flex: 0 0 47%; }
   .pcd-blog-preview__empty { padding: 40px 28px; }
 }
 @media (max-width: 560px) {
-  .pcd-blog-preview__grid { grid-template-columns: 1fr; }
+  /* 1 card casi completa + peek de la siguiente, para que en mobile
+     siga sintiéndose como carrusel arrastrable y no como una lista. */
+  .pcd-blog-preview__card { flex: 0 0 86%; }
 }
 
 /* ────────────────────────────────────────────────────────────

@@ -634,6 +634,45 @@ export default function ProgramaCreacionDigital() {
     };
   }, []);
 
+  // Carrusel de blog (home): mismo patrón de drag-to-pan (mouse) que el
+  // carrusel de docentes, pero SIN loop infinito ni autoavance — a pedido
+  // del usuario, acá se muestran todas las publicaciones (no solo las
+  // últimas 4) y el scroll queda acotado por el navegador entre 0 y el
+  // final real del contenido, así que al arrastrar del todo hacia la
+  // derecha se llega a la última card y se queda ahí (sin saltar/loopear).
+  // El "peek" de esa última card asomando en el borde derecho es puramente
+  // CSS (ver .pcd-blog-preview__card flex-basis en programa.css): las
+  // cards se dimensionan un poco más angostas que 1/4 del contenedor, así
+  // que la 5ta siempre sobra un poco visible invitando a arrastrar.
+  const blogGridRef = useRef<HTMLDivElement>(null);
+  const blogDragState = useRef({ isDown: false, startX: 0, startScroll: 0, moved: false });
+
+  const onBlogMouseDown = (e: React.MouseEvent) => {
+    const grid = blogGridRef.current;
+    if (!grid) return;
+    blogDragState.current = { isDown: true, startX: e.pageX, startScroll: grid.scrollLeft, moved: false };
+    grid.classList.add('is-dragging');
+  };
+  const onBlogMouseMove = (e: React.MouseEvent) => {
+    const grid = blogGridRef.current;
+    if (!grid || !blogDragState.current.isDown) return;
+    const dx = e.pageX - blogDragState.current.startX;
+    if (Math.abs(dx) > 4) blogDragState.current.moved = true;
+    grid.scrollLeft = blogDragState.current.startScroll - dx;
+  };
+  const endBlogDrag = () => {
+    blogGridRef.current?.classList.remove('is-dragging');
+    blogDragState.current.isDown = false;
+  };
+  // Si hubo arrastre, se cancela la navegación del <Link> al soltar (mismo
+  // criterio que onDocenteCardClick): un click real sí navega, un drag no.
+  const onBlogCardClick = (e: React.MouseEvent) => {
+    if (blogDragState.current.moved) {
+      e.preventDefault();
+      blogDragState.current.moved = false;
+    }
+  };
+
   /** Toggle visual ES | EN */
   const LangToggle = () => (
     <button
@@ -2068,18 +2107,27 @@ export default function ProgramaCreacionDigital() {
         </header>
 
         {BLOG_POSTS.length > 0 ? (
-          <div className="pcd-blog-preview__grid">
-            {/* Últimos 4 posts, del más reciente al más antiguo — se asume
-                que las publicaciones nuevas se agregan al final de
-                BLOG_POSTS (src/data/blog.ts), así que se toman los
-                últimos 4 y se invierten para que el más nuevo salga
-                primero (a pedido del usuario). El número de la cifra
-                fantasma (origIndex) es la posición ORIGINAL del post en
+          <div
+            className="pcd-blog-preview__grid"
+            ref={blogGridRef}
+            onMouseDown={onBlogMouseDown}
+            onMouseMove={onBlogMouseMove}
+            onMouseUp={endBlogDrag}
+            onMouseLeave={endBlogDrag}
+          >
+            {/* Todas las publicaciones, del más reciente al más antiguo —
+                se asume que las publicaciones nuevas se agregan al final
+                de BLOG_POSTS (src/data/blog.ts), así que se invierte el
+                array completo (antes se tomaban solo los últimos 4; a
+                pedido del usuario ahora se ven todas, en un carrusel
+                arrastrable — ver blogGridRef/onBlogMouseDown y el CSS de
+                .pcd-blog-preview__grid). El número de la cifra fantasma
+                (origIndex) es la posición ORIGINAL del post en
                 BLOG_POSTS, no la posición en pantalla — así la card del
-                post 4 sigue mostrando "04" aunque ahora salga primero
+                post 4 sigue mostrando "04" aunque no salga primero
                 (bug reportado: antes usaba el índice del .map ya
                 reordenado y todas las cards se corrían de número). */}
-            {BLOG_POSTS.map((post, origIndex) => ({ post, origIndex })).slice(-4).reverse().map(({ post, origIndex }, i) => {
+            {BLOG_POSTS.map((post, origIndex) => ({ post, origIndex })).reverse().map(({ post, origIndex }, i) => {
               // Sin foto: cada card es un bloque de color sólido — se
               // reutiliza el mismo ciclo azul(cobalt) -> amarillo(acid) ->
               // rojo(tomato) que ya usamos en los stickers de docentes,
@@ -2095,7 +2143,15 @@ export default function ProgramaCreacionDigital() {
                 </>
               );
               return post.detail ? (
-                <Link key={post.id} to={`/blog/${post.id}`} className={`pcd-blog-preview__card pcd-blog-preview__card--${cardColor} pcd-reveal`}>{inner}</Link>
+                <Link
+                  key={post.id}
+                  to={`/blog/${post.id}`}
+                  className={`pcd-blog-preview__card pcd-blog-preview__card--${cardColor} pcd-reveal`}
+                  onClick={onBlogCardClick}
+                  onDragStart={(e) => e.preventDefault()}
+                >
+                  {inner}
+                </Link>
               ) : (
                 <article key={post.id} className={`pcd-blog-preview__card pcd-blog-preview__card--${cardColor} pcd-reveal`}>{inner}</article>
               );

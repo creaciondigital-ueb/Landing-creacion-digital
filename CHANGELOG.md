@@ -7,6 +7,89 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Agregado — Post de primeros practicantes: foto de Andrea y Johan
+
+- A pedido de la usuaria, se agregó la foto de Andrea Rozo y Johan Ospina al post `primeros-practicantes-creacion-digital` (provista por la usuaria, convertida a WEBP calidad 82). Ya no queda con el bloque de color/número fantasma — ahora usa `object-fit: cover` sin barras grises, igual que el resto de fotos del blog (ver entrada de más arriba sobre `.pdet__carousel--blog`).
+- Sigue pendiente solo la fecha exacta del post (`date`/`dateEn` quedan en "2026" a falta de confirmarla).
+- Build verificado con `npm run build` — compila limpio.
+- Archivos: `src/data/blog.ts`, `public/programa/img/blog/primeros-practicantes.webp` (nuevo).
+
+### Arreglado — /blog: el número fantasma de las tarjetas salía al revés
+
+- Bug reportado por la usuaria: en `/blog`, el post más reciente (primeros practicantes) mostraba el número fantasma "01" en vez del número más alto. La causa era que `origIndex` se calculaba con `POSTS_DESC.findIndex(...)` (la lista YA invertida para mostrar primero lo más nuevo) en vez de con `BLOG_POSTS.findIndex(...)` (la posición original, ascendente) — así que el número también quedaba invertido (el más nuevo con el número más chico) en vez de ser la posición cronológica real del post (el más nuevo con el número más alto), que es como ya funciona correctamente en la sección de blog del home.
+- Se corrigió `BlogPage.tsx` para usar `BLOG_POSTS.findIndex(...)`, igual que en `ProgramaCreacionDigital.tsx`. No afecta el color de las tarjetas (ver entrada de más abajo), que ya usaba la posición en pantalla (`i`) y no `origIndex`.
+- Build verificado con `npm run build` y `tsc --noEmit` — compila limpio.
+- Archivos: `src/pages/BlogPage.tsx`.
+
+### Cambiado — Post de primeros practicantes: título más largo (3 líneas, igual que las demás)
+
+- A pedido de la usuaria, se alargó el título (ES y EN) de `primeros-practicantes-creacion-digital` para que ocupe 3 líneas en la tarjeta, igual que el resto de publicaciones (antes quedaba en 2 líneas y se veía distinto al resto). Primero a "Andrea Rozo y Johan Ospina: los primeros practicantes de Creación Digital", y después (segundo ajuste, también a pedido de la usuaria) al título final: "¿Qué cuentan los primeros practicantes de Creación Digital?" (EN: "What do Digital Creation's first interns have to say?").
+- Build verificado con `npm run build` — compila limpio.
+- Archivos: `src/data/blog.ts`.
+
+### Cambiado — Post de primeros practicantes: se quita a Samuel Parada por el momento
+
+- A pedido de la usuaria, se quitó a Samuel Parada de todo el texto visible del post `primeros-practicantes-creacion-digital` (título, excerpt ES/EN, descripción ES/EN) — queda solo con Andrea Rozo y Johan Ospina. El título y el id no se tocaron porque no nombran a nadie en particular ("Los primeros practicantes..."/`primeros-practicantes-creacion-digital`, siguen siendo válidos con 2 o más personas).
+- Si Samuel se vuelve a agregar más adelante, hacerlo con su testimonio real cuando lo mande, sin inventar nada por él.
+- Build verificado con `npm run build` — compila limpio.
+- Archivos: `src/data/blog.ts`.
+
+### Agregado — Post de primeros practicantes: texto completo con los testimonios de Andrea y Johan
+
+- A pedido de la usuaria, se reemplazó la descripción placeholder del post `primeros-practicantes-creacion-digital` por el texto completo (ES y EN), armado a partir de los testimonios en primera persona que mandó de Andrea Rozo (practicante en el HUB iEX, área de comunicaciones) y Johan Ospina (practicante en Fractales, Vicerrectoría de Investigaciones) — se usan como citas textuales, con una limpieza ligera de muletillas orales ("pues", "la verdad", "o sea") típicas de una transcripción, sin cambiar el sentido ni agregar nada que no haya dicho cada uno.
+- Samuel Parada sigue mencionado como uno de los 3 primeros practicantes (así lo pidió la usuaria desde el principio), pero todavía no mandó su testimonio — no se inventó nada para él, solo se lo nombra como parte del grupo en la intro y el cierre.
+- Sigue pendiente la FOTO del post (la usuaria todavía no la manda) y la fecha exacta (`date`/`dateEn` siguen en "2026" a falta de confirmarla) — mientras tanto se ve con el bloque de color y el número fantasma, igual que los demás posts sin foto.
+- Se agregó el tag "Testimonios"/"Testimonials" (ES/EN) ya que el post pasó a ser justamente eso.
+- Build verificado con `npm run build` y `tsc --noEmit` — compila limpio.
+- Archivos: `src/data/blog.ts`.
+
+### Cambiado — /blog: colores de las tarjetas en patrón diagonal por fila, no fijos por columna
+
+- A pedido de la usuaria: en el listado de `/blog`, con 4 tarjetas por fila, el color dependía de `origIndex % 4` — como esto coincidía con la columna (columna 1 siempre caía en el mismo resto), cada columna quedaba siempre con el mismo color en todas las filas (columna 1 siempre azul, columna 2 siempre amarillo, etc.), que se veía repetitivo.
+- Ahora el color usa la posición real en la grilla ya renderizada (`i`, el índice del `.map()`, afectado por filtro/búsqueda) en vez de `origIndex` (que es la posición fija del post en `BLOG_POSTS` y sigue usándose sin cambios para el número fantasma): `col = i % 4`, `row = Math.floor(i / 4)`, color = `BLOG_CARD_COLORS[(col + row) % 4]`. Así cada fila arranca un color más adelante en el ciclo — fila 0: azul/amarillo/rojo/negro, fila 1: amarillo/rojo/negro/azul, fila 2: rojo/negro/azul/amarillo, fila 3: negro/azul/amarillo/rojo, y vuelve a empezar — exactamente el patrón que pidió la usuaria.
+- Asume 4 columnas por fila (el ancho típico de escritorio de este grid, que es `auto-fill minmax(320px,1fr)` y no un `repeat(4,...)` fijo); en anchos donde el navegador arma menos o más columnas el patrón diagonal puede no calzar perfecto con las filas reales, igual que ya pasaba antes con `origIndex % 4`.
+- Build verificado con `npm run build` y `tsc --noEmit` — compila limpio.
+- Archivos: `src/pages/BlogPage.tsx`.
+
+### Agregado — Blog: tarjeta placeholder de "Los primeros practicantes de Creación Digital"
+
+- A pedido de la usuaria, se crea la publicación `primeros-practicantes-creacion-digital` (después de "Día del Unicornio", que sigue siendo el post anterior más reciente) sobre Andrea Rozo, Johan Ospina y Samuel Parada, estudiantes de quinto semestre y primeros practicantes de la carrera.
+- Es un PLACEHOLDER a propósito: la usuaria todavía no mandó el texto completo ni la foto, así que por ahora solo tiene los 3 datos que ya confirmó (nombres, semestre, que son los primeros) — sin foto (`image: ""`, el carrusel de detalle no se muestra con `images: []`, igual que ya pasa con otros posts sin foto) y con una descripción corta de 2 líneas que no inventa nada más (ni empresa/lugar de práctica, ni fecha exacta — el campo `date`/`dateEn` queda en "2026" nada más, a falta de un mes/día confirmado). Se actualiza cuando lleguen el texto y la foto reales.
+- Se agregó también su URL a `sitemap.xml`.
+- Build verificado con `npm run build` y `tsc --noEmit` — compila limpio.
+- Archivos: `src/data/blog.ts`, `public/sitemap.xml`.
+
+### Cambiado — Post de ARTBO: nuevo título ("imaginando... con IA")
+
+- A pedido de la usuaria, se cambió el título (ES y EN) de `artbo-2026-identidades-del-futuro`: de "ARTBO 2026: así se imaginaron las identidades del futuro con inteligencia artificial" a "ARTBO 2026: imaginando las identidades del futuro con IA" (EN: "ARTBO 2026: imagining the identities of the future with AI"). Minúscula después de los dos puntos y "IA" en vez de "inteligencia artificial", igual al resto del sitio.
+- Build verificado con `npm run build` — compila limpio.
+- Archivos: `src/data/blog.ts`.
+
+### Cambiado — Post de Explora Unbosque: título sin "así" para no repetir con los otros
+
+- A pedido de la usuaria: con el carrusel de blog del home ahora mostrando las 5 publicaciones a la vez (ver entrada de abajo), quedó visible que el título de "Explora Unbosque" repetía el mismo arranque con "así" que los títulos de ARTBO ("...así se imaginaron...") y Día del Unicornio ("Así vivimos..."), y se veía repetitivo al verlas juntas.
+- Se reescribió el título (ES y EN) de `explora-unbosque-agosto-2026` quitando el "así": de "Explora Unbosque: así estamos conociendo a nuestros futuros creadores" a "Explora Unbosque: conociendo a nuestros futuros creadores" (EN: de "...this is how we are getting to know..." a "...getting to know..."). Los otros dos títulos y el resto del contenido del post no se tocaron.
+- Build verificado con `npm run build` — compila limpio.
+- Archivos: `src/data/blog.ts`.
+
+### Cambiado — Home: sección de blog pasa a carrusel arrastrable con las 5 publicaciones
+
+- A pedido de la usuaria, la sección de blog del home (`#blog`) ya no muestra solo las últimas 4 publicaciones en un grid fijo de 4 columnas: ahora muestra TODAS las publicaciones (`BLOG_POSTS.map(...).reverse()`, sin `.slice(-4)`) en una fila horizontal arrastrable, igual en espíritu al carrusel de docentes pero SIN loop infinito ni autoavance — son pocas cards y lo que se pidió fue poder arrastrar una sola vez hasta el final.
+- Arrastre con mouse: `blogGridRef` + `onBlogMouseDown/Move` mueven `scrollLeft` directamente (mismo patrón que el carrusel de docentes, sin la lógica de "period"/loop porque acá el navegador ya limita el scroll entre 0 y el final real del contenido). En touch/trackpad funciona con el scroll nativo (`overflow-x: auto`). Si hubo arrastre, se cancela el click de navegación del `<Link>` al soltar (`onBlogCardClick`), igual que ya se hacía en los docentes.
+- Cada card pasa de `1fr` (grid) a un ancho fijo (`flex: 0 0 23%` en desktop, `47%` en tablet, `86%` en mobile) un poco más angosto que "cards visibles exactas", a propósito: así la última card siempre asoma un poco ("peek") en el borde derecho del contenedor, invitando a arrastrar para verla completa — se corrigió el bug donde la 5ta publicación (la más antigua de las 5 actuales) nunca se mostraba en el home.
+- Sin `scroll-snap` a propósito (mismo motivo que `.pcd-docentes__grid`): la usuaria reportó que el arrastre se sentía "a tirones/en bloque" en vez de seguir el mouse de forma fluida — era `scroll-snap-type`/`scroll-snap-align` peleando con cada escritura manual de `scrollLeft` en `onBlogMouseMove`, el navegador la interpretaba como fin de gesto y tironeaba de vuelta al punto de snap más cercano. Se quitó por completo, igual que en el carrusel de docentes.
+- Build verificado con `npm run build` y `tsc --noEmit` — compila limpio.
+- Archivos: `src/pages/ProgramaCreacionDigital.tsx`, `src/styles/programa.css`.
+
+### Cambiado — Blog: las fotos de las publicaciones ya no muestran barras grises a los lados
+
+- A pedido de la usuaria, se quitaron las barras grises que se veían a los costados de la foto en las publicaciones del blog (`/blog/:id`) — el carrusel de imagen tiene un recuadro fijo, y las fotos reales son más "cuadradas" que eso, así que con `object-fit: contain` el navegador las encogía para que cupieran completas, dejando ese espacio vacío a los lados.
+- Se agregó el modificador `.pdet__carousel--blog` (solo en `BlogPostPage.tsx`) que cambia `object-fit` a `cover` para que la foto llene todo el recuadro sin barras, recortando los bordes que sobran en vez de dejarlos en blanco. No se tocó `/proyectos/:id`, que reusa el mismo carrusel compartido (`.pdet__carousel`/`.pdet__slide` en `proyecto-detalle.css`) pero cuyas fotos no se reportaron con este problema — sigue con `object-fit: contain` igual que antes.
+- El recuadro del carrusel de blog también pasa de 16:9 a 3:2 (`.pdet__carousel--blog`, en desktop y en el @media de 880px) — las fotos reales (ARTBO 1.5:1, Explora Unbosque y Franziska 1.6:1, Día del Unicornio 1.63:1, Franziska Junge 1.33:1) están todas más cerca de 3:2 que de 16:9, así que el recorte de `cover` queda mínimo (casi nulo en ARTBO) en vez de recortar de más por el panorámico.
+- Se agregaron las fotos que faltaban en las tres publicaciones que todavía no tenían ("De Colombia a Alemania... Franziska Junge", "Explora Unbosque" e "Intercambio Paraguay — Ana Salavarrieta"), todas provistas por la usuaria y convertidas a WEBP (calidad 82).
+- Build verificado con `npm run build` y `tsc --noEmit` — compila limpio.
+- Archivos: `src/pages/BlogPostPage.tsx`, `src/styles/proyecto-detalle.css`, `src/data/blog.ts`, `public/programa/img/blog/franziska-junge.webp` (nuevo), `public/programa/img/blog/explora-unbosque.webp` (nuevo), `public/programa/img/blog/paraguay-ana-salavarrieta.webp` (nuevo).
+
 ### Cambiado — Post de ARTBO: tildes en María Paula Vásquez y sin cargos de Fabian/Tatiana
 
 - A pedido de la usuaria, se corrigió "Maria Paula Vasquez" a "María Paula Vásquez" (con tildes) en la frase que presenta al equipo del post `artbo-2026-identidades-del-futuro` (ES y EN).

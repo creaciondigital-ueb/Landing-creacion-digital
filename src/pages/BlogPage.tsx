@@ -326,9 +326,34 @@ export default function BlogPage() {
         {/* ===== GRID — mismas cards de color + número fantasma que el blog del home ===== */}
         {pageItems.length > 0 ? (
           <div className="pcd-projects-page__grid pcd-blog-listing__grid">
-            {pageItems.map((p) => {
-              const origIndex = POSTS_DESC.findIndex((bp) => bp.id === p.id);
-              const cardColor = BLOG_CARD_COLORS[origIndex % BLOG_CARD_COLORS.length];
+            {pageItems.map((p, i) => {
+              // BLOG_POSTS (no POSTS_DESC) a propósito: origIndex debe ser
+              // la posición ORIGINAL ascendente del post (bug reportado
+              // por la usuaria — con POSTS_DESC, que ya está invertido
+              // para mostrar primero el más reciente, el número fantasma
+              // salía también invertido: el post más reciente mostraba
+              // "01" en vez del número más alto). Mismo criterio que ya
+              // usa correctamente el home (ProgramaCreacionDigital.tsx).
+              const origIndex = BLOG_POSTS.findIndex((bp) => bp.id === p.id);
+              // Color por posición en la grilla (fila/columna), no por
+              // origIndex — a pedido de la usuaria: con origIndex%4 cada
+              // columna quedaba siempre con el mismo color (columna 1
+              // siempre azul, columna 2 siempre amarillo, etc.), por ser
+              // esta grilla de 4 en fila. Ahora cada fila arranca un color
+              // más adelante en el ciclo (fila 0: azul/amarillo/rojo/negro,
+              // fila 1: amarillo/rojo/negro/azul, ...), así no se repite la
+              // misma columna=mismo color siempre. Usa `i` (posición real
+              // en la grilla ya renderizada, afectada por filtro/búsqueda)
+              // y NO origIndex (que es la posición fija en BLOG_POSTS y
+              // sigue usándose solo para el número fantasma, sin cambios).
+              // Asume 4 columnas por fila — coincide con el ancho típico
+              // de escritorio de este grid (auto-fill minmax(320px,1fr));
+              // en anchos donde el navegador arma menos o más columnas el
+              // patrón diagonal puede no calzar perfecto con las filas
+              // reales, igual que ya pasaba antes con origIndex%4.
+              const col = i % 4;
+              const row = Math.floor(i / 4);
+              const cardColor = BLOG_CARD_COLORS[(col + row) % BLOG_CARD_COLORS.length];
               const cat = lang === 'en' ? (p.categoryEn ?? p.category) : p.category;
               const date = lang === 'en' ? (p.dateEn ?? p.date) : p.date;
               const cap = lang === 'en' ? (p.titleEn ?? p.title) : p.title;
