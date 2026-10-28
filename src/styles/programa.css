@@ -310,7 +310,8 @@
 /* El renglón del remate guarda su alto aunque esté vacío, para que el hero
    no salte mientras el texto se escribe y se borra. */
 .pcd-hero__title .row--reserve { min-height: 0.88em; }
-.pcd-hero__ending { color: var(--pcd-acid); }
+.pcd-hero__ending { color: var(--pcd-cobalt-alt); }
+.pcd-hero__title.pcd-hero__title--two-rows .blob { color: var(--pcd-acid); }
 .pcd-hero__title .blob {
   font-family: var(--pcd-fun);
   font-style: normal;

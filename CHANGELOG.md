@@ -7,6 +7,12 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Cambiado — Home: dos remates menos y colores invertidos (frases en azul, punto en verde)
+
+- Se quitan los remates "romper casillas" y "ser nosotros" (y en EN "break the mold" y "be ourselves"); quedan 8.
+- Las frases rotativas pasan de `--pcd-acid` a `--pcd-cobalt-alt` (#1a3cff, el azul que tenía el blob) y el blob pasa a `--pcd-acid` (#d1ff22). El selector del blob usa tres clases para ganarle a `.pcd-hero__title .blob`, declarado después.
+- Archivos: `src/i18n/translations.ts`, `src/styles/programa.css`.
+
 ### Cambiado — Home: la ilustración de la chica queda por encima de las frases del hero, y las frases van en verde
 
 - Con el título en dos líneas, las frases largas del remate ("explorarlo todo", "explore everything") pasaban por debajo de la cabeza de la ilustración. Además, la ilustración original (`proyecto-1.webp`) solo tiene trazos opacos — el interior del cuerpo es transparente — así que aunque quedara encima, las letras se veían a través de ella.
