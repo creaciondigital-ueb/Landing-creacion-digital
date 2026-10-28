@@ -7,6 +7,15 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Cambiado — Home: el título del hero pasa a "vinimos a ~~clase~~ …" con remates que rotan
+
+- Antes: "vinimos / a ~~dictar~~ / clase." Ahora se escribe "vinimos / a clase", se tacha "clase" y debajo se escriben y borran en loop diez remates: crear mundos, ser libres, jugar en serio, inventarnos, vivir creando, romper casillas, ser nosotros, hacerlo realidad, explorarlo todo, ser felices.
+- En inglés: "we came / to ~~class~~" + create worlds, be free, play for real, invent ourselves, live to create, break the mold, be ourselves, make it real, explore everything, be happy.
+- Cada remate se parte en dos renglones en el primer espacio ("crear / mundos.") y el blob azul aparece al terminar de escribirse. Los dos renglones reservan su alto aunque estén vacíos, para que la página no salte.
+- En escritorio (>1050px) esos dos renglones van al 80% del tamaño y con la sangría de la línea 2, porque "inventarnos" a tamaño completo se salía del ancho. En móvil van a tamaño completo, centrados.
+- `line3` se reemplaza por `endings` (array) en `translations.ts`. El `<h1>` lleva `aria-label` fijo ("vinimos a crear mundos") para que el lector de pantalla no lea el texto que cambia.
+- Archivos: `src/i18n/translations.ts`, `src/pages/ProgramaCreacionDigital.tsx`, `src/styles/programa.css`.
+
 ### Arreglado — Home: los puntitos del carrusel de blog eran invisibles (reset global de `<button>` les pisaba el color)
 
 - Tras la entrada anterior (extracción de `BlogCarousel` para arreglar el parpadeo en blanco), la usuaria confirmó que el parpadeo ya no pasa, pero seguía sin ver los puntitos.

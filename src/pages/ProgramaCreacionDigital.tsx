@@ -376,16 +376,26 @@ function DocenteModal({ id, active, onClose, onSwipe, portrait, portraitEnd, nam
  * (y sus botones) queda libre para responder de inmediato en todo
  * momento, incluso mientras el texto se sigue escribiendo.
  */
-function HeroTitle({ line1, line2pre, line2word, line3 }: { line1: string; line2pre: string; line2word: string; line3: string }) {
+function HeroTitle({ line1, line2pre, line2word, endings }: { line1: string; line2pre: string; line2word: string; endings: string[] }) {
   const [typedChars, setTypedChars] = useState(0);
   const [strikeActive, setStrikeActive] = useState(false);
+  // Remates rotativos (líneas 3-4): se escriben, se sostienen, se borran
+  // y pasa el siguiente — en loop, una vez tachada line2word.
+  const [loopActive, setLoopActive] = useState(false);
+  const [endingIdx, setEndingIdx] = useState(0);
+  const [endingChars, setEndingChars] = useState(0);
+  const [deleting, setDeleting] = useState(false);
 
   // Reinicia la animación cuando cambia el texto (ej. cambio de idioma)
   useEffect(() => {
-    const total = line1.length + line2pre.length + line2word.length + line3.length;
+    const total = line1.length + line2pre.length + line2word.length;
 
     setTypedChars(0);
     setStrikeActive(false);
+    setLoopActive(false);
+    setEndingIdx(0);
+    setEndingChars(0);
+    setDeleting(false);
 
     const typeInterval = setInterval(() => {
       setTypedChars((prev) => {
@@ -394,42 +404,75 @@ function HeroTitle({ line1, line2pre, line2word, line3 }: { line1: string; line2
       });
     }, 100);
     return () => clearInterval(typeInterval);
-  }, [line1, line2pre, line2word, line3]);
+  }, [line1, line2pre, line2word, endings]);
 
-  const totalChars = line1.length + line2pre.length + line2word.length + line3.length;
+  const totalChars = line1.length + line2pre.length + line2word.length;
 
   useEffect(() => {
     if (typedChars < totalChars) return;
     const strikeTimeout = setTimeout(() => setStrikeActive(true), 300);
-    return () => clearTimeout(strikeTimeout);
+    const loopTimeout = setTimeout(() => setLoopActive(true), 1100);
+    return () => { clearTimeout(strikeTimeout); clearTimeout(loopTimeout); };
   }, [typedChars, totalChars]);
+
+  const ending = endings[endingIdx] ?? '';
+
+  useEffect(() => {
+    if (!loopActive) return;
+    let timeout: ReturnType<typeof setTimeout>;
+    if (!deleting && endingChars < ending.length) {
+      timeout = setTimeout(() => setEndingChars((c) => c + 1), 100);
+    } else if (!deleting) {
+      timeout = setTimeout(() => setDeleting(true), 2200);
+    } else if (endingChars > 0) {
+      timeout = setTimeout(() => setEndingChars((c) => c - 1), 45);
+    } else {
+      timeout = setTimeout(() => {
+        setEndingIdx((i) => (i + 1) % endings.length);
+        setDeleting(false);
+      }, 300);
+    }
+    return () => clearTimeout(timeout);
+  }, [loopActive, deleting, endingChars, ending, endings.length]);
 
   const line1Visible = line1.slice(0, Math.min(line1.length, typedChars));
   const line2PreVisible = line2pre.slice(0, Math.max(0, Math.min(line2pre.length, typedChars - line1.length)));
   const line2WordVisible = line2word.slice(0, Math.max(0, Math.min(line2word.length, typedChars - line1.length - line2pre.length)));
-  const line3Visible = line3.slice(0, Math.max(0, Math.min(line3.length, typedChars - line1.length - line2pre.length - line2word.length)));
   const typingDone = typedChars >= totalChars;
 
-  const row2Total = line2pre.length + line2word.length;
   const row1Active = typedChars < line1.length;
-  const row2Active = !row1Active && typedChars < line1.length + row2Total;
-  const row3Active = !row1Active && !row2Active && !typingDone;
+  const row2Active = !row1Active && !typingDone;
+
+  // El remate se parte en dos renglones en el primer espacio
+  // ("crear / mundos") para que quepa con la letra grande del hero.
+  const splitAt = ending.indexOf(' ');
+  const twoRows = splitAt >= 0;
+  const line3Visible = ending.slice(0, twoRows ? Math.min(endingChars, splitAt) : endingChars);
+  const line4Visible = twoRows ? ending.slice(splitAt + 1, Math.max(splitAt + 1, endingChars)) : '';
+  const cursorInRow4 = twoRows && endingChars > splitAt;
+  const endingDone = loopActive && !deleting && endingChars >= ending.length;
+  const blob = <span className={`blob${endingDone ? ' is-visible' : ''}`}>.</span>;
 
   return (
-    <h1 className="pcd-hero__title">
-      <span className="row">
+    <h1 className="pcd-hero__title" aria-label={`${line1} ${line2pre}${endings[0] ?? line2word}`}>
+      <span className="row" aria-hidden="true">
         {line1Visible}
-        {row1Active && <span className="pcd-hero__cursor" aria-hidden="true" />}
+        {row1Active && <span className="pcd-hero__cursor" />}
       </span>
-      <span className="row row--shift1">
+      <span className="row row--shift1" aria-hidden="true">
         {line2PreVisible}
         <span className={`pcd-hero__dictar${strikeActive ? ' is-struck' : ''}`}>{line2WordVisible}</span>
-        {row2Active && <span className="pcd-hero__cursor" aria-hidden="true" />}
+        {row2Active && <span className="pcd-hero__cursor" />}
       </span>
-      <span className="row row--shift2">
+      <span className="row row--shift2 row--reserve" aria-hidden="true">
         {line3Visible}
-        <span className={`blob${typingDone ? ' is-visible' : ''}`}>.</span>
-        {row3Active && <span className="pcd-hero__cursor" aria-hidden="true" />}
+        {!twoRows && blob}
+        {loopActive && !cursorInRow4 && <span className="pcd-hero__cursor" />}
+      </span>
+      <span className="row row--shift2 row--reserve" aria-hidden="true">
+        {line4Visible}
+        {twoRows && blob}
+        {loopActive && cursorInRow4 && <span className="pcd-hero__cursor" />}
       </span>
     </h1>
   );
@@ -930,7 +973,7 @@ export default function ProgramaCreacionDigital() {
           line1={t.hero.line1}
           line2pre={t.hero.line2pre}
           line2word={t.hero.line2word}
-          line3={t.hero.line3}
+          endings={t.hero.endings}
         />
 
         <div className="pcd-hero__bottom">

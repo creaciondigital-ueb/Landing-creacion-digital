@@ -302,6 +302,15 @@
 .pcd-hero__title .row { display: block; }
 .pcd-hero__title .row--shift1 { padding-left: clamp(40px, 8vw, 115px); }
 .pcd-hero__title .row--shift2 { padding-left: clamp(110px, 22vw, 316px); position: relative; }
+/* Las líneas 3-4 (remates rotativos) guardan su alto aunque estén vacías,
+   para que el hero no salte mientras el texto se escribe y se borra. En
+   escritorio van algo más chicas y con menos sangría que row--shift2 para
+   que quepa la palabra más larga ("inventarnos", "everything"). */
+.pcd-hero__title .row--reserve {
+  min-height: 0.88em;
+  font-size: 0.8em;
+  padding-left: clamp(40px, 8vw, 115px);
+}
 .pcd-hero__title .blob {
   font-family: var(--pcd-fun);
   font-style: normal;
@@ -529,6 +538,7 @@
   .pcd-hero__title { font-size: clamp(64px, 16.5vw, 158px); text-align: center; }
   .pcd-hero__title .row--shift1,
   .pcd-hero__title .row--shift2 { padding-left: 0; }
+  .pcd-hero__title .row--reserve { font-size: 1em; }
   /* Tachado de "dictar" un poco más arriba en móvil */
   .pcd-hero__dictar::after { transform: translateY(calc(-50% + 8px)); }
   /* Aspectos (Pregrado/Bogotá/SNIES) más pequeños en móvil, cada uno en
