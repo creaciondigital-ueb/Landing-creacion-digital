@@ -7,6 +7,13 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Cambiado — Home: nuevo orden de los ejes y "¿Qué aprenderás?" por defecto
+
+- Orden de las tres secciones del programa: mundo 3D → contenido → producto (antes contenido → mundo 3D → producto). Se movió el bloque JSX completo de mundo 3D antes del de contenido; los nombres internos (`axis01`/`axis02`) no cambian.
+- Los índices de las comparaciones se renumeran según el nuevo orden: mundo 3D usa 1.1–1.3 y contenido 2.1–2.3.
+- Las tres secciones abren en la vista "¿Qué aprenderás?" (`axisXXMode` inicia en `'contenido'`); el botón ("Ver definición") muestra la otra vista.
+- Archivos: `src/pages/ProgramaCreacionDigital.tsx`.
+
 ### Cambiado — Home: dos remates menos y colores invertidos (frases en azul, punto en verde)
 
 - Se quitan los remates "romper casillas" y "ser nosotros" (y en EN "break the mold" y "be ourselves"); quedan 8.

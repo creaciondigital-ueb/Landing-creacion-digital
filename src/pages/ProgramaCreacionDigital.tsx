@@ -742,11 +742,11 @@ export default function ProgramaCreacionDigital() {
 
 
   // Toggle Definición / Contenido — eje 01 (sección "contenido")
-  const [axis01Mode, setAxis01Mode] = useState<'definicion' | 'contenido'>('definicion');
+  const [axis01Mode, setAxis01Mode] = useState<'definicion' | 'contenido'>('contenido');
   // Toggle Definición / Contenido — eje 02 (sección "mundo 3d")
-  const [axis02Mode, setAxis02Mode] = useState<'definicion' | 'contenido'>('definicion');
+  const [axis02Mode, setAxis02Mode] = useState<'definicion' | 'contenido'>('contenido');
   // Toggle Definición / Contenido — eje 03 (sección "producto")
-  const [axis03Mode, setAxis03Mode] = useState<'definicion' | 'contenido'>('definicion');
+  const [axis03Mode, setAxis03Mode] = useState<'definicion' | 'contenido'>('contenido');
 
   // Hero typewriter: ver componente HeroTitle (arriba) — el estado se
   // aisló ahí a propósito para no re-renderizar toda la página en cada
@@ -1016,74 +1016,6 @@ export default function ProgramaCreacionDigital() {
         </div>
       </div>
 
-      {/* ===== AXIS 01 · CONTENIDO ===== */}
-      <section className="pcd-axis pcd-axis--contenido">
-        <div className="pcd-axis__left">
-          <button
-            type="button"
-            className="pcd-axis__switch pcd-reveal"
-            aria-label={axis01Mode === 'definicion' ? t.axis01.toggleToContenido : t.axis01.toggleToDefinicion}
-            onClick={() => setAxis01Mode(axis01Mode === 'definicion' ? 'contenido' : 'definicion')}
-          >
-            {axis01Mode === 'definicion' ? t.axis01.toggleToContenido : t.axis01.toggleToDefinicion}
-          </button>
-          <h2 className="pcd-axis__word pcd-reveal">
-            <span className="pcd-axis__word-desktop">
-              {t.axis01.wordLine1}
-              {t.axis01.wordLine2 && <><br />{t.axis01.wordLine2}</>}
-            </span>
-            <span className="pcd-axis__word-mobile">{t.axis01.wordFull}</span>
-          </h2>
-          <p className="pcd-axis__caption pcd-reveal">{t.axis01.caption}</p>
-          <div className="pcd-axis__image pcd-reveal" style={{ backgroundImage: `url('${IMG}/proyecto-3.webp')` }} aria-hidden="true" />
-        </div>
-        <div className="pcd-axis__right">
-          {axis01Mode === 'definicion' ? (
-            <>
-              <article className="pcd-vs">
-                <span className="pcd-vs__idx">1.1</span>
-                <div>
-                  <h3 className="pcd-vs__title">{t.axis01.vs11title} <span className="pcd-vs__accent">{t.axis01.vs11accent}</span></h3>
-                  <p className="pcd-vs__body">{t.axis01.vs11body}</p>
-                </div>
-              </article>
-              <hr className="pcd-axis__divider" />
-              <article className="pcd-vs">
-                <span className="pcd-vs__idx">1.2</span>
-                <div>
-                  <h3 className="pcd-vs__title">{t.axis01.vs12title} <span className="pcd-vs__accent">{t.axis01.vs12accent}</span></h3>
-                  <p className="pcd-vs__body">{t.axis01.vs12body}</p>
-                </div>
-              </article>
-              <hr className="pcd-axis__divider" />
-              <article className="pcd-vs">
-                <span className="pcd-vs__idx">1.3</span>
-                <div>
-                  <h3 className="pcd-vs__title">{t.axis01.vs13title} <span className="pcd-vs__accent">{t.axis01.vs13accent}</span></h3>
-                  <p className="pcd-vs__body">{t.axis01.vs13body}</p>
-                </div>
-              </article>
-            </>
-          ) : (
-            <>
-              <h3 className="pcd-content-title">{t.axis01.contenidoTitle}</h3>
-              <p className="pcd-content-copy">{renderAccented(t.axis01.contenidoBody)}</p>
-              <div className="pcd-content-dock">
-                <span className="pcd-content-dock__label">{t.axis01.dockLabel}</span>
-                <div className="pcd-content-dock__row">
-                  {CONTENIDO_DOCK.map((tool) => (
-                    <div className="pcd-content-dock__item" key={tool.name} title={tool.name}>
-                      <div className="pcd-content-dock__icon" style={{ backgroundImage: `url('${tool.icon}')` }} aria-hidden="true" />
-                      <span className="pcd-content-dock__name">{tool.name}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </>
-          )}
-        </div>
-      </section>
-
       {/* ===== AXIS 02 · MUNDO 3D ===== */}
       <section className={`pcd-axis pcd-axis--mundo${lang === 'en' ? ' pcd-axis--mundo-en' : ''}`}>
         <div className="pcd-axis__left">
@@ -1109,7 +1041,7 @@ export default function ProgramaCreacionDigital() {
           {axis02Mode === 'definicion' ? (
             <>
               <article className="pcd-vs">
-                <span className="pcd-vs__idx">2.1</span>
+                <span className="pcd-vs__idx">1.1</span>
                 <div>
                   <h3 className="pcd-vs__title">{t.axis02.vs21title} <span className="pcd-vs__accent">{t.axis02.vs21accent}</span></h3>
                   <p className="pcd-vs__body">{t.axis02.vs21body}</p>
@@ -1117,7 +1049,7 @@ export default function ProgramaCreacionDigital() {
               </article>
               <hr className="pcd-axis__divider" />
               <article className="pcd-vs">
-                <span className="pcd-vs__idx">2.2</span>
+                <span className="pcd-vs__idx">1.2</span>
                 <div>
                   <h3 className="pcd-vs__title">{t.axis02.vs22title} <span className="pcd-vs__accent">{t.axis02.vs22accent}</span></h3>
                   <p className="pcd-vs__body">{t.axis02.vs22body}</p>
@@ -1125,7 +1057,7 @@ export default function ProgramaCreacionDigital() {
               </article>
               <hr className="pcd-axis__divider" />
               <article className="pcd-vs">
-                <span className="pcd-vs__idx">2.3</span>
+                <span className="pcd-vs__idx">1.3</span>
                 <div>
                   <h3 className="pcd-vs__title">{t.axis02.vs23title} <span className="pcd-vs__accent">{t.axis02.vs23accent}</span></h3>
                   <p className="pcd-vs__body">{t.axis02.vs23body}</p>
@@ -1140,6 +1072,74 @@ export default function ProgramaCreacionDigital() {
                 <span className="pcd-content-dock__label">{t.axis02.dockLabel}</span>
                 <div className="pcd-content-dock__row">
                   {MUNDO_DOCK.map((tool) => (
+                    <div className="pcd-content-dock__item" key={tool.name} title={tool.name}>
+                      <div className="pcd-content-dock__icon" style={{ backgroundImage: `url('${tool.icon}')` }} aria-hidden="true" />
+                      <span className="pcd-content-dock__name">{tool.name}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </>
+          )}
+        </div>
+      </section>
+
+      {/* ===== AXIS 01 · CONTENIDO ===== */}
+      <section className="pcd-axis pcd-axis--contenido">
+        <div className="pcd-axis__left">
+          <button
+            type="button"
+            className="pcd-axis__switch pcd-reveal"
+            aria-label={axis01Mode === 'definicion' ? t.axis01.toggleToContenido : t.axis01.toggleToDefinicion}
+            onClick={() => setAxis01Mode(axis01Mode === 'definicion' ? 'contenido' : 'definicion')}
+          >
+            {axis01Mode === 'definicion' ? t.axis01.toggleToContenido : t.axis01.toggleToDefinicion}
+          </button>
+          <h2 className="pcd-axis__word pcd-reveal">
+            <span className="pcd-axis__word-desktop">
+              {t.axis01.wordLine1}
+              {t.axis01.wordLine2 && <><br />{t.axis01.wordLine2}</>}
+            </span>
+            <span className="pcd-axis__word-mobile">{t.axis01.wordFull}</span>
+          </h2>
+          <p className="pcd-axis__caption pcd-reveal">{t.axis01.caption}</p>
+          <div className="pcd-axis__image pcd-reveal" style={{ backgroundImage: `url('${IMG}/proyecto-3.webp')` }} aria-hidden="true" />
+        </div>
+        <div className="pcd-axis__right">
+          {axis01Mode === 'definicion' ? (
+            <>
+              <article className="pcd-vs">
+                <span className="pcd-vs__idx">2.1</span>
+                <div>
+                  <h3 className="pcd-vs__title">{t.axis01.vs11title} <span className="pcd-vs__accent">{t.axis01.vs11accent}</span></h3>
+                  <p className="pcd-vs__body">{t.axis01.vs11body}</p>
+                </div>
+              </article>
+              <hr className="pcd-axis__divider" />
+              <article className="pcd-vs">
+                <span className="pcd-vs__idx">2.2</span>
+                <div>
+                  <h3 className="pcd-vs__title">{t.axis01.vs12title} <span className="pcd-vs__accent">{t.axis01.vs12accent}</span></h3>
+                  <p className="pcd-vs__body">{t.axis01.vs12body}</p>
+                </div>
+              </article>
+              <hr className="pcd-axis__divider" />
+              <article className="pcd-vs">
+                <span className="pcd-vs__idx">2.3</span>
+                <div>
+                  <h3 className="pcd-vs__title">{t.axis01.vs13title} <span className="pcd-vs__accent">{t.axis01.vs13accent}</span></h3>
+                  <p className="pcd-vs__body">{t.axis01.vs13body}</p>
+                </div>
+              </article>
+            </>
+          ) : (
+            <>
+              <h3 className="pcd-content-title">{t.axis01.contenidoTitle}</h3>
+              <p className="pcd-content-copy">{renderAccented(t.axis01.contenidoBody)}</p>
+              <div className="pcd-content-dock">
+                <span className="pcd-content-dock__label">{t.axis01.dockLabel}</span>
+                <div className="pcd-content-dock__row">
+                  {CONTENIDO_DOCK.map((tool) => (
                     <div className="pcd-content-dock__item" key={tool.name} title={tool.name}>
                       <div className="pcd-content-dock__icon" style={{ backgroundImage: `url('${tool.icon}')` }} aria-hidden="true" />
                       <span className="pcd-content-dock__name">{tool.name}</span>
