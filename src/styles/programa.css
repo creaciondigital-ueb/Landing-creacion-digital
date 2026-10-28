@@ -302,15 +302,14 @@
 .pcd-hero__title .row { display: block; }
 .pcd-hero__title .row--shift1 { padding-left: clamp(40px, 8vw, 115px); }
 .pcd-hero__title .row--shift2 { padding-left: clamp(110px, 22vw, 316px); position: relative; }
-/* Las líneas 3-4 (remates rotativos) guardan su alto aunque estén vacías,
-   para que el hero no salte mientras el texto se escribe y se borra. En
-   escritorio van algo más chicas y con menos sangría que row--shift2 para
-   que quepa la palabra más larga ("inventarnos", "everything"). */
-.pcd-hero__title .row--reserve {
-  min-height: 0.88em;
-  font-size: 0.8em;
-  padding-left: clamp(40px, 8vw, 115px);
-}
+/* Título en dos líneas ("vinimos a ~~clase~~" / remate rotativo): la letra
+   baja para que el remate más largo ("explore everything.", ~7.3em) quepa
+   en un solo renglón. Dos clases para ganarle al font-size del @media móvil. */
+.pcd-hero__title.pcd-hero__title--two-rows { font-size: clamp(34px, 10vw, 170px); }
+.pcd-hero__title--two-rows .row { white-space: nowrap; }
+/* El renglón del remate guarda su alto aunque esté vacío, para que el hero
+   no salte mientras el texto se escribe y se borra. */
+.pcd-hero__title .row--reserve { min-height: 0.88em; }
 .pcd-hero__title .blob {
   font-family: var(--pcd-fun);
   font-style: normal;
@@ -339,9 +338,10 @@
   width: 0;
   background: var(--pcd-ink);
   transform: translateY(calc(-50% + 20px));
-  transition: width 0.5s ease-out;
+  transition: width 0.35s ease-out;
 }
 .pcd-hero__dictar.is-struck::after { width: 100%; }
+.pcd-hero__title--two-rows .pcd-hero__dictar::after { transform: translateY(calc(-50% + 0.08em)); }
 
 /* Cursor parpadeante del efecto typewriter, solo mientras se escribe */
 .pcd-hero__cursor {
@@ -538,9 +538,9 @@
   .pcd-hero__title { font-size: clamp(64px, 16.5vw, 158px); text-align: center; }
   .pcd-hero__title .row--shift1,
   .pcd-hero__title .row--shift2 { padding-left: 0; }
-  .pcd-hero__title .row--reserve { font-size: 1em; }
   /* Tachado de "dictar" un poco más arriba en móvil */
   .pcd-hero__dictar::after { transform: translateY(calc(-50% + 8px)); }
+  .pcd-hero__title--two-rows .pcd-hero__dictar::after { transform: translateY(calc(-50% + 0.08em)); }
   /* Aspectos (Pregrado/Bogotá/SNIES) más pequeños en móvil, cada uno en
      2 líneas: "Label ·" arriba y el valor abajo. */
   .pcd-hero__meta { font-size: 9px; gap: 12px; }

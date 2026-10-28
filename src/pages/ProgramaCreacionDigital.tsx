@@ -402,7 +402,7 @@ function HeroTitle({ line1, line2pre, line2word, endings }: { line1: string; lin
         if (prev >= total) { clearInterval(typeInterval); return prev; }
         return prev + 1;
       });
-    }, 100);
+    }, 55);
     return () => clearInterval(typeInterval);
   }, [line1, line2pre, line2word, endings]);
 
@@ -410,8 +410,8 @@ function HeroTitle({ line1, line2pre, line2word, endings }: { line1: string; lin
 
   useEffect(() => {
     if (typedChars < totalChars) return;
-    const strikeTimeout = setTimeout(() => setStrikeActive(true), 300);
-    const loopTimeout = setTimeout(() => setLoopActive(true), 1100);
+    const strikeTimeout = setTimeout(() => setStrikeActive(true), 150);
+    const loopTimeout = setTimeout(() => setLoopActive(true), 600);
     return () => { clearTimeout(strikeTimeout); clearTimeout(loopTimeout); };
   }, [typedChars, totalChars]);
 
@@ -440,39 +440,23 @@ function HeroTitle({ line1, line2pre, line2word, endings }: { line1: string; lin
   const line2WordVisible = line2word.slice(0, Math.max(0, Math.min(line2word.length, typedChars - line1.length - line2pre.length)));
   const typingDone = typedChars >= totalChars;
 
-  const row1Active = typedChars < line1.length;
-  const row2Active = !row1Active && !typingDone;
-
-  // El remate se parte en dos renglones en el primer espacio
-  // ("crear / mundos") para que quepa con la letra grande del hero.
-  const splitAt = ending.indexOf(' ');
-  const twoRows = splitAt >= 0;
-  const line3Visible = ending.slice(0, twoRows ? Math.min(endingChars, splitAt) : endingChars);
-  const line4Visible = twoRows ? ending.slice(splitAt + 1, Math.max(splitAt + 1, endingChars)) : '';
-  const cursorInRow4 = twoRows && endingChars > splitAt;
+  const endingVisible = ending.slice(0, endingChars);
   const endingDone = loopActive && !deleting && endingChars >= ending.length;
-  const blob = <span className={`blob${endingDone ? ' is-visible' : ''}`}>.</span>;
 
+  // Dos líneas: "vinimos a ~~clase~~" arriba y el remate abajo.
   return (
-    <h1 className="pcd-hero__title" aria-label={`${line1} ${line2pre}${endings[0] ?? line2word}`}>
+    <h1 className="pcd-hero__title pcd-hero__title--two-rows" aria-label={`${line1} ${line2pre}${endings[0] ?? line2word}`}>
       <span className="row" aria-hidden="true">
         {line1Visible}
-        {row1Active && <span className="pcd-hero__cursor" />}
-      </span>
-      <span className="row row--shift1" aria-hidden="true">
+        {typedChars > line1.length && ' '}
         {line2PreVisible}
         <span className={`pcd-hero__dictar${strikeActive ? ' is-struck' : ''}`}>{line2WordVisible}</span>
-        {row2Active && <span className="pcd-hero__cursor" />}
+        {!typingDone && <span className="pcd-hero__cursor" />}
       </span>
-      <span className="row row--shift2 row--reserve" aria-hidden="true">
-        {line3Visible}
-        {!twoRows && blob}
-        {loopActive && !cursorInRow4 && <span className="pcd-hero__cursor" />}
-      </span>
-      <span className="row row--shift2 row--reserve" aria-hidden="true">
-        {line4Visible}
-        {twoRows && blob}
-        {loopActive && cursorInRow4 && <span className="pcd-hero__cursor" />}
+      <span className="row row--shift1 row--reserve" aria-hidden="true">
+        {endingVisible}
+        <span className={`blob${endingDone ? ' is-visible' : ''}`}>.</span>
+        {loopActive && <span className="pcd-hero__cursor" />}
       </span>
     </h1>
   );

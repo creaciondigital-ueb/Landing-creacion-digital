@@ -7,6 +7,13 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Cambiado — Home: el título del hero queda en dos líneas y la intro es más rápida
+
+- Ahora son dos líneas: "vinimos a ~~clase~~" arriba y el remate rotativo abajo, en un solo renglón (antes eran cuatro: vinimos / a clase / remate partido en dos).
+- La letra baja a `clamp(34px, 10vw, 170px)` para que el remate más largo ("explore everything.") quepa en un renglón de 320px a 1920px.
+- La intro hasta el tachado dura ~1s en vez de ~2s: escritura a 55ms por letra (antes 100ms), el tachado arranca a los 150ms y se dibuja en 0.35s; el primer remate empieza a los 600ms.
+- Archivos: `src/pages/ProgramaCreacionDigital.tsx`, `src/styles/programa.css`.
+
 ### Cambiado — Home: el título del hero pasa a "vinimos a ~~clase~~ …" con remates que rotan
 
 - Antes: "vinimos / a ~~dictar~~ / clase." Ahora se escribe "vinimos / a clase", se tacha "clase" y debajo se escriben y borran en loop diez remates: crear mundos, ser libres, jugar en serio, inventarnos, vivir creando, romper casillas, ser nosotros, hacerlo realidad, explorarlo todo, ser felices.
