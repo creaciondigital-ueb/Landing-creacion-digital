@@ -1110,6 +1110,8 @@
   .pcd-axis__word { font-size: 56px; }
   .pcd-axis__word-desktop { display: none; }
   .pcd-axis__word-mobile { display: inline; white-space: nowrap; }
+  /* "negocios digitales" no cabe en una línea en teléfonos angostos (<375px) */
+  .pcd-axis--producto .pcd-axis__word-mobile { white-space: normal; }
   /* Reset del caption en móvil — scoped por eje para igualar la especificidad
      (0,2,0) de las reglas .pcd-axis--X .pcd-axis__caption y poder anular sus
      top/left/max-width posicionados. Sin esto, mundo 3d quedaba desplazado y

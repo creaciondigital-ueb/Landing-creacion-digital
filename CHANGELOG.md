@@ -7,6 +7,14 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Cambiado — Home: la sección "producto" pasa a llamarse "negocios digitales"
+
+- Palabra grande: "prod-/ucto" → "negocios/digitales" (EN: "prod-/uct" → "digital/business").
+- Bajada: "…UX/UI, análisis de usuarios" → "…UX/UI, análisis de usuarios y mercados digitales" (EN: "…UX/UI, user and digital market analysis").
+- En móvil la palabra de esta sección puede partirse en dos líneas: "negocios digitales" a 56px no cabe en teléfonos de menos de 375px.
+- Las clases CSS y nombres internos (`pcd-axis--producto`, `PRODUCTO_DOCK`) no cambian.
+- Archivos: `src/i18n/translations.ts`, `src/styles/programa.css`.
+
 ### Cambiado — Home: nuevo orden de los ejes y "¿Qué aprenderás?" por defecto
 
 - Orden de las tres secciones del programa: mundo 3D → contenido → producto (antes contenido → mundo 3D → producto). Se movió el bloque JSX completo de mundo 3D antes del de contenido; los nombres internos (`axis01`/`axis02`) no cambian.
