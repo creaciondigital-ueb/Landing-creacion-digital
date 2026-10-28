@@ -490,7 +490,7 @@
   color: var(--pcd-ink);
   z-index: 3;
 }
-/* Dos versiones del párrafo "Creamos en medio del ruido...": la de desktop
+/* Dos versiones del párrafo "¿quiénes somos?": la de desktop
    conserva los espacios (nbsp) que el diseño usa para que la ilustración
    "encaje" en huecos del texto — eso es SOLO para desktop, nunca tocarlo.
    La de móvil es el texto corrido, sin esos huecos. */

@@ -7,6 +7,13 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Cambiado — Home: nuevo texto de "¿quiénes somos?"
+
+- "Creamos en medio del ruido…" se reemplaza por "Estamos construyendo nuestro propio mundo, literal. Con código, imágenes, sonido e ideas que nadie más tuvo…", con su versión en inglés ("We're building our own world, literally…").
+- Versión desktop: se recalcularon los huecos de `&nbsp;` para que el texto nuevo siga esquivando las piernas de la ilustración (medidos en el navegador a 1440px, ES y EN por separado, porque en EN el bloque está desplazado). El texto nuevo ocupa 6 renglones en vez de 4–5.
+- Versión móvil: texto corrido desde `quienesBody` en `translations.ts`.
+- Archivos: `src/pages/ProgramaCreacionDigital.tsx`, `src/i18n/translations.ts`, `src/styles/programa.css` (solo un comentario).
+
 ### Cambiado — Home: el título del hero queda en dos líneas y la intro es más rápida
 
 - Ahora son dos líneas: "vinimos a ~~clase~~" arriba y el remate rotativo abajo, en un solo renglón (antes eran cuatro: vinimos / a clase / remate partido en dos).
