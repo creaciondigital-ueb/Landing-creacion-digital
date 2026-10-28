@@ -454,7 +454,7 @@ function HeroTitle({ line1, line2pre, line2word, endings }: { line1: string; lin
         {!typingDone && <span className="pcd-hero__cursor" />}
       </span>
       <span className="row row--shift1 row--reserve" aria-hidden="true">
-        {endingVisible}
+        <span className="pcd-hero__ending">{endingVisible}</span>
         <span className={`blob${endingDone ? ' is-visible' : ''}`}>.</span>
         {loopActive && <span className="pcd-hero__cursor" />}
       </span>

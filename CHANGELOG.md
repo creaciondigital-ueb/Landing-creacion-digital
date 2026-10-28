@@ -7,6 +7,14 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Cambiado — Home: la ilustración de la chica queda por encima de las frases del hero, y las frases van en verde
+
+- Con el título en dos líneas, las frases largas del remate ("explorarlo todo", "explore everything") pasaban por debajo de la cabeza de la ilustración. Además, la ilustración original (`proyecto-1.webp`) solo tiene trazos opacos — el interior del cuerpo es transparente — así que aunque quedara encima, las letras se veían a través de ella.
+- Nueva `public/programa/img/proyecto-1-relleno.png`: la misma ilustración con el interior relleno del color del papel (#f6f8fb), obtenido con un cierre morfológico (dilatar trazos 22px, flood fill del exterior, erosionar dejando 3px de margen). Fuera de la figura sigue transparente, así que no tapa el párrafo de "¿quiénes somos?".
+- `.pcd-hero__bottom` (que contiene `.pcd-hero__photo`) pasa a `z-index: 2` para pintarse sobre `.pcd-hero__title`.
+- Las frases rotativas van en `var(--pcd-acid)` (#d1ff22) vía `.pcd-hero__ending`; el blob y el cursor no cambian.
+- Archivos: `src/pages/ProgramaCreacionDigital.tsx`, `src/styles/programa.css`, `public/programa/img/proyecto-1-relleno.png`.
+
 ### Cambiado — Home: nuevo texto de "¿quiénes somos?"
 
 - "Creamos en medio del ruido…" se reemplaza por "Estamos construyendo nuestro propio mundo, literal. Con código, imágenes, sonido e ideas que nadie más tuvo…", con su versión en inglés ("We're building our own world, literally…").

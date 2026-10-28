@@ -310,6 +310,7 @@
 /* El renglón del remate guarda su alto aunque esté vacío, para que el hero
    no salte mientras el texto se escribe y se borra. */
 .pcd-hero__title .row--reserve { min-height: 0.88em; }
+.pcd-hero__ending { color: var(--pcd-acid); }
 .pcd-hero__title .blob {
   font-family: var(--pcd-fun);
   font-style: normal;
@@ -430,6 +431,9 @@
      pegado al margen derecho, igual que el resto del hero. No afecta
      pantallas angostas: ahí --hero-bottom-shift da 0. */
   margin-left: var(--hero-bottom-shift);
+  /* Por encima del título: la ilustración (.pcd-hero__photo) vive acá y
+     debe tapar las frases largas del remate rotativo. */
+  z-index: 2;
 }
 .pcd-hero__brand {
   position: absolute;
@@ -522,7 +526,9 @@
   top: -580px;
   width: 664px;
   height: 848px;
-  background-image: url('/programa/img/proyecto-1.webp');
+  /* Versión con el interior relleno del color del papel: la original solo
+     tiene trazos y las frases del título se veían a través del cuerpo. */
+  background-image: url('/programa/img/proyecto-1-relleno.png');
   background-size: contain;
   background-position: right bottom;
   background-repeat: no-repeat;
