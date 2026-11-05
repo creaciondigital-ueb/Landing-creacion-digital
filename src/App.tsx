@@ -1,5 +1,6 @@
 import { lazy, Suspense, useEffect } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
+import { useLang } from './i18n/LanguageContext';
 
 // Landing pública del Programa (Editorial Rebrand v3.4.0) y la galería de
 // proyectos de estudiantes (contenido estático, sin backend). Lazy-loaded
@@ -27,10 +28,27 @@ function ScrollToTop() {
   return null;
 }
 
+const CHARLA_URL = 'https://forms.cloud.microsoft/r/rx1NFDC8v9?origin=lprLink';
+
+/**
+ * Botón flotante "Agenda tu charla informativa": fijo abajo a la derecha
+ * en todas las rutas, para que acompañe la navegación. Estilos en
+ * programa.css (.pcd-charla-fab), que cargan todas las páginas.
+ */
+function CharlaButton() {
+  const { t } = useLang();
+  return (
+    <a className="pcd-charla-fab" href={CHARLA_URL} target="_blank" rel="noopener">
+      {t.nav.charla} <span aria-hidden="true">→</span>
+    </a>
+  );
+}
+
 export default function App() {
   return (
     <>
       <ScrollToTop />
+      <CharlaButton />
       <Routes>
         <Route
           path="/"

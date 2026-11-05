@@ -7,6 +7,13 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Agregado — Botón flotante "Agenda tu charla informativa"
+
+- Botón fijo abajo a la derecha, en todas las rutas (home, proyectos, blog, 404), que abre el formulario de Microsoft Forms de charlas informativas en otra pestaña.
+- Vive en `App.tsx` (componente `CharlaButton`) para que acompañe toda la navegación; texto en `t.nav.charla` (ES "Agenda tu charla informativa", EN "Book an info session").
+- Verde ácido con texto y borde negro: el cobalto se perdía sobre las secciones y tarjetas azules. `z-index: 90`, por debajo del header (100) y de los modales.
+- Archivos: `src/App.tsx`, `src/i18n/translations.ts`, `src/styles/programa.css`.
+
 ### Cambiado — Home: la sección "producto" pasa a llamarse "negocios digitales"
 
 - Palabra grande: "prod-/ucto" → "negocios/digitales" (EN: "prod-/uct" → "digital/business").
