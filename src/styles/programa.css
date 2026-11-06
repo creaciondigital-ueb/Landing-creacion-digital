@@ -157,7 +157,19 @@
   box-shadow: 0 6px 20px rgba(13, 13, 13, 0.25);
   transition: background .15s, transform .12s;
 }
-.pcd-charla-fab:hover { background: var(--pcd-ink); color: var(--pcd-acid); transform: translateY(-2px); }
+.pcd-charla-fab:hover { background: var(--pcd-ink); color: var(--pcd-acid); transform: translateY(-2px); animation: none; }
+/* Titileo: el fondo parpadea entre el verde ácido y el negro, y un anillo
+   verde se expande hacia afuera para llamar la atención. */
+.pcd-charla-fab { animation: pcd-charla-blink 1.6s ease-in-out infinite; }
+@keyframes pcd-charla-blink {
+  0%, 55%, 100% { background: var(--pcd-acid); color: var(--pcd-ink);
+                  box-shadow: 0 6px 20px rgba(13,13,13,.25), 0 0 0 0 rgba(209,255,34,.7); }
+  70%           { background: var(--pcd-ink); color: var(--pcd-acid);
+                  box-shadow: 0 6px 20px rgba(13,13,13,.25), 0 0 0 10px rgba(209,255,34,0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pcd-charla-fab { animation: none; }
+}
 @media (max-width: 600px) {
   .pcd-charla-fab { right: 16px; top: calc(68px + 12px); font-size: 11px; padding: 12px 18px; }
 }

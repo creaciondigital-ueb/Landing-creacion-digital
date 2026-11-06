@@ -7,6 +7,13 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Cambiado — Home: texto de "¿quiénes somos?", mayúscula en el título y botón de charla titilando
+
+- "¿quiénes somos?" (ES): "En la economía digital la rompe quien sabe orquestar código, contenido, narrativa y negocio. Ese profesional se forma en Creación Digital, con profesores de la industria tech y la inteligencia artificial como herramienta diaria." (EN traducido).
+- Título del hero empieza con mayúscula: "Vinimos a ~~clase~~" / "We came to ~~class~~".
+- Botón "Agenda tu charla informativa" titila (`@keyframes pcd-charla-blink`, 1.6s): el fondo pasa de verde ácido a negro con un anillo verde que se expande. Se detiene en hover y con `prefers-reduced-motion`.
+- Archivos: `src/i18n/translations.ts`, `src/styles/programa.css`.
+
 ### Cambiado — Home: nueva ilustración del header (chica con portátil), también en móvil
 
 - La ilustración del hero pasa a ser la chica sentada con el portátil (`public/programa/img/chica-laptop.png`): recortada, con el exterior transparente y el interior relleno del color del papel para que las frases largas del título no se vean a través.
