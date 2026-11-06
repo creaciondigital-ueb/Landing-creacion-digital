@@ -7,6 +7,12 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Corregido — Netlify: /blog, /proyectos y sus páginas daban 404 al entrar directo
+
+- Netlify Analytics mostraba 404 en `/blog`, `/blog/:slug` y `/proyectos/:slug`: el sitio es una SPA y, al entrar directo (enlace compartido, Google, recarga), Netlify buscaba un archivo con esa ruta. El servidor anterior (nginx en DO) tenía el fallback; Netlify no.
+- Nuevo `public/_redirects` con `/* /index.html 200`: si no existe un archivo con la ruta, se sirve la app y React Router resuelve la página (las rutas inexistentes caen en la página 404 de la app). Los archivos reales se sirven igual.
+- Archivos: `public/_redirects`.
+
 ### Cambiado — Docentes: perfil de Fabian Herrera con Platzi, Sovrappensiero y la RAD
 
 - Tarjeta: menciona que lideró procesos académicos en Platzi, trabajó con el estudio de diseño italiano Sovrappensiero y fue miembro del consejo directivo de la RAD (Escuela Nacional de Cine e IDARTES siguen en el perfil completo).

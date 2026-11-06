@@ -1,0 +1,4 @@
+# Netlify: las rutas de la app (/blog, /proyectos, /blog/:slug…) no son
+# archivos; si no existe un archivo con esa ruta, se sirve index.html y
+# React Router resuelve la página. Los archivos reales siguen sirviéndose igual.
+/*    /index.html   200
