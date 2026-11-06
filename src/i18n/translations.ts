@@ -148,7 +148,7 @@ const translations = {
       },
       fabian: {
         ariaLabel: "Ver perfil de Fabian Herrera",
-        bio: "Creador digital, diseñador y académico, director del pregrado en Creación Digital de la Universidad El Bosque y docente de IA aplicada en la Escuela Nacional de Cine. Ha dirigido procesos metodológicos en Emprende con El Arte de IDARTES.",
+        bio: "Creador digital, diseñador y académico, director del pregrado en Creación Digital de la Universidad El Bosque. Ha liderado procesos académicos en Platzi, trabajó con el estudio de diseño italiano Sovrappensiero y fue miembro del consejo directivo de la RAD.",
         tags: ["Dirección académica", "IA", "Innovación educativa"],
         modalTags: ["Dirección académica", "IA", "Innovación educativa"],
         p1: "Soy creador digital, diseñador y académico, actualmente director del pregrado en Creación Digital. Mi trabajo se centra en investigar cómo la inteligencia artificial reconfigura la cognición, los procesos de creación y las dinámicas empresariales, explorando sus posibilidades para transformar la educación, el diseño y las industrias creativas.",
@@ -157,6 +157,9 @@ const translations = {
           { title: "Universidad El Bosque", body: "Me desempeño como director del pregrado en Creación Digital, liderando procesos académicos orientados a integrar diseño, tecnología y pensamiento creativo. Mi trayectoria en la institución también incluye la dirección de programas como Diseño Industrial y la Maestría en Diseño para Industrias Creativas y Culturales, así como la docencia y la investigación en innovación educativa. Desde estos roles he contribuido al desarrollo de propuestas formativas interdisciplinarias que conectan la creatividad con los desafíos contemporáneos.", boldParts: null as null | string[] },
           { title: "Escuela Nacional de Cine", body: "Como docente de Inteligencia Artificial Aplicada, exploro las posibilidades de las nuevas tecnologías en los procesos de creación y producción audiovisual. Mi trabajo se enfoca en acercar estas herramientas a los contextos creativos, promoviendo su comprensión y aplicación crítica en el desarrollo de proyectos y nuevas narrativas.", boldParts: null as null | string[] },
           { title: "Emprende con El Arte – IDARTES", body: "Como parte de esta iniciativa, participé en procesos de dirección metodológica orientados al fortalecimiento de proyectos creativos y culturales. Esta experiencia me permitió articular metodologías, procesos de formación y herramientas de acompañamiento para impulsar el desarrollo de iniciativas que conectan la creatividad con el emprendimiento y las dinámicas de las industrias culturales.", boldParts: null as null | string[] },
+          { title: "Platzi", body: "Lideró procesos académicos para Platzi.", boldParts: null as null | string[] },
+          { title: "Sovrappensiero", body: "Trabajó para Sovrappensiero, estudio de diseño italiano.", boldParts: null as null | string[] },
+          { title: "RAD – Red Académica de Diseño", body: "Fue miembro del consejo directivo de la Red Académica de Diseño (RAD).", boldParts: null as null | string[] },
         ],
       },
       paula: {
@@ -588,7 +591,7 @@ const translations = {
       },
       fabian: {
         ariaLabel: "View Fabian Herrera profile",
-        bio: "Digital creator, designer and academic, director of the Digital Creation program at Universidad El Bosque and Applied AI lecturer at the Escuela Nacional de Cine. He has led methodology for IDARTES' Emprende con El Arte.",
+        bio: "Digital creator, designer and academic, director of the Digital Creation program at Universidad El Bosque. He has led academic processes at Platzi, worked with the Italian design studio Sovrappensiero and served on the board of RAD.",
         tags: ["Academic Leadership", "AI", "Educational Innovation"],
         modalTags: ["Academic Leadership", "AI", "Educational Innovation"],
         p1: "I am a digital creator, designer and academic, currently director of the Digital Creation undergraduate program. My work focuses on researching how artificial intelligence is reshaping cognition, creative processes and business dynamics, exploring its potential to transform education, design and the creative industries.",
@@ -597,6 +600,9 @@ const translations = {
           { title: "Universidad El Bosque", body: "I currently serve as director of the Digital Creation undergraduate program, leading academic processes aimed at integrating design, technology and creative thinking. My career at the institution also includes directing programs such as Industrial Design and the Master's in Design for Creative and Cultural Industries, as well as teaching and research in educational innovation. Through these roles I have contributed to developing interdisciplinary academic proposals that connect creativity with contemporary challenges.", boldParts: null as null | string[] },
           { title: "National Film School", body: "As a professor of Applied Artificial Intelligence, I explore the possibilities of new technologies in audiovisual creation and production processes. My work focuses on bringing these tools closer to creative contexts, promoting their understanding and critical application in the development of projects and new narratives.", boldParts: null as null | string[] },
           { title: "Emprende con El Arte – IDARTES", body: "As part of this initiative, I took part in methodological leadership processes aimed at strengthening creative and cultural projects. This experience allowed me to bring together methodologies, training processes and support tools to drive the development of initiatives that connect creativity with entrepreneurship and the dynamics of the cultural industries.", boldParts: null as null | string[] },
+          { title: "Platzi", body: "He led academic processes for Platzi.", boldParts: null as null | string[] },
+          { title: "Sovrappensiero", body: "He worked for Sovrappensiero, an Italian design studio.", boldParts: null as null | string[] },
+          { title: "RAD – Red Académica de Diseño", body: "He served on the board of directors of the Red Académica de Diseño (RAD), Colombia's academic design network.", boldParts: null as null | string[] },
         ],
       },
       paula: {

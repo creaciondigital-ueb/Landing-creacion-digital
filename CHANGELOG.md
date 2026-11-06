@@ -7,6 +7,12 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Cambiado — Docentes: perfil de Fabian Herrera con Platzi, Sovrappensiero y la RAD
+
+- Tarjeta: menciona que lideró procesos académicos en Platzi, trabajó con el estudio de diseño italiano Sovrappensiero y fue miembro del consejo directivo de la RAD (Escuela Nacional de Cine e IDARTES siguen en el perfil completo).
+- Perfil completo: tres experiencias nuevas (Platzi, Sovrappensiero, RAD – Red Académica de Diseño), ES y EN.
+- Archivos: `src/i18n/translations.ts`.
+
 ### Cambiado — Docentes: el párrafo de cada tarjeta nombra dónde ha trabajado
 
 - Se reescribió el `bio` (párrafo corto de la tarjeta en "Experiencia real convertida en aprendizaje") de 16 docentes para nombrar empresas, empleadores y proyectos concretos tomados de su descripción larga (p. ej. Mercado Libre, Lulo Bank, Rappi, Medtronic, Colsubsidio, Kushki, Meta-Carbon, IDARTES), en ES y EN.
