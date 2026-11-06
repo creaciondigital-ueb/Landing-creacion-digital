@@ -7,6 +7,12 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Cambiado — Docentes: el párrafo de cada tarjeta nombra dónde ha trabajado
+
+- Se reescribió el `bio` (párrafo corto de la tarjeta en "Experiencia real convertida en aprendizaje") de 16 docentes para nombrar empresas, empleadores y proyectos concretos tomados de su descripción larga (p. ej. Mercado Libre, Lulo Bank, Rappi, Medtronic, Colsubsidio, Kushki, Meta-Carbon, IDARTES), en ES y EN.
+- Tatiana Flórez no cambia: su descripción larga solo menciona la Universidad El Bosque, que ya estaba.
+- Archivos: `src/i18n/translations.ts`.
+
 ### Cambiado — Home: títulos de los ejes con mayúscula y agrandado con el scroll; palabras en color en "¿quiénes somos?"
 
 - Títulos de los ejes con mayúscula inicial: "Mundo 3D", "Contenido", "Negocios digitales" (EN: "3D world", "Content", "Digital business").

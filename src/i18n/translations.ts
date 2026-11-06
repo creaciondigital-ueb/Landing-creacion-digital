@@ -122,7 +122,7 @@ const translations = {
       cerrar: "Cerrar",
       nicolas: {
         ariaLabel: "Ver perfil de Nicolás Bartolo",
-        bio: "UX Designer especializado en productos digitales centrados en las personas, el negocio y la tecnología. Local Leader de IxDF Bogotá y referente en Product Thinking en la comunidad de diseño.",
+        bio: "UX Designer en Mercado Libre, donde ha contribuido a productos como Meli+, y antes Product Designer en Lulo Bank. Es Local Leader de IxDF Bogotá y referente en Product Thinking en la comunidad de diseño.",
         tags: ["UX / UI", "Producto", "Comunidad"],
         modalTags: ["UX / UI", "Producto", "Comunidad"],
         p1: "Soy UX Designer especializado en el diseño de productos digitales centrados en las personas, el negocio y la tecnología. Cuento con experiencia liderando procesos de diseño end-to-end, desde la investigación y el descubrimiento hasta la implementación y evolución de soluciones digitales.",
@@ -135,7 +135,7 @@ const translations = {
       },
       sofia: {
         ariaLabel: "Ver perfil de Sofía Jiménez",
-        bio: "Maestra en Artes Visuales y realizadora audiovisual con experiencia en el Ministerio de Cultura, RTVC y la Pontificia Universidad Javeriana. Conecta las artes visuales, el audiovisual y la cultura.",
+        bio: "Maestra en Artes Visuales y realizadora audiovisual en el Ministerio de Cultura, con experiencia en RTVC, la Pontificia Universidad Javeriana y el montaje de ARTBO 2022 con xyz estrategias. Conecta las artes visuales, el audiovisual y la cultura.",
         tags: ["Audiovisual", "Producción", "Arte"],
         modalTags: ["Audiovisual", "Producción", "Arte"],
         p1: "Soy Maestra en Artes Visuales y realizadora audiovisual, con experiencia en producción, edición de video y montaje de proyectos culturales y artísticos. He trabajado en instituciones como el Ministerio de Cultura, RTVC y la Pontificia Universidad Javeriana, participando en proyectos que conectan las artes visuales, el audiovisual y la cultura.",
@@ -148,7 +148,7 @@ const translations = {
       },
       fabian: {
         ariaLabel: "Ver perfil de Fabian Herrera",
-        bio: "Creador digital, diseñador y académico, director del pregrado en Creación Digital. Investiga cómo la inteligencia artificial transforma la educación, el diseño y las industrias creativas.",
+        bio: "Creador digital, diseñador y académico, director del pregrado en Creación Digital de la Universidad El Bosque y docente de IA aplicada en la Escuela Nacional de Cine. Ha dirigido procesos metodológicos en Emprende con El Arte de IDARTES.",
         tags: ["Dirección académica", "IA", "Innovación educativa"],
         modalTags: ["Dirección académica", "IA", "Innovación educativa"],
         p1: "Soy creador digital, diseñador y académico, actualmente director del pregrado en Creación Digital. Mi trabajo se centra en investigar cómo la inteligencia artificial reconfigura la cognición, los procesos de creación y las dinámicas empresariales, explorando sus posibilidades para transformar la educación, el diseño y las industrias creativas.",
@@ -161,7 +161,7 @@ const translations = {
       },
       paula: {
         ariaLabel: "Ver perfil de Paula Lenis",
-        bio: "Diseñadora Gráfica y especialista en Experiencia de Usuario (UX), con experiencia en diseño de productos digitales, estrategia UX y liderazgo de equipos en empresas como Rappi e IxDF Colombia.",
+        bio: "Diseñadora Gráfica y especialista en UX. Ha liderado diseño de producto y equipos de Product Design en Rappi, es Country Manager de IxDF Colombia y mentora en Laboratoria, ADPList y +Mujeres en UX LATAM.",
         tags: ["UX / UI", "Estrategia", "Liderazgo"],
         modalTags: ["UX | UI", "Estrategia", "Liderazgo"],
         p1: "Soy Diseñadora Gráfica y especialista en Experiencia de Usuario (UX), con experiencia en diseño de productos digitales, estrategia UX y liderazgo de equipos. He trabajado creando soluciones centradas en las personas para empresas de tecnología, impulsando experiencias digitales intuitivas, eficientes e innovadoras.",
@@ -174,7 +174,7 @@ const translations = {
       },
       camilo: {
         ariaLabel: "Ver perfil de Camilo Cardozo",
-        bio: "Diseñador gráfico y especialista en marketing digital, con más de 15 años de experiencia en branding, UX/UI, creatividad y transformación digital para marcas y ecosistemas de alto impacto en Latinoamérica.",
+        bio: "Diseñador gráfico y especialista en marketing digital, con más de 15 años en branding, UX/UI y transformación digital para marcas como Banco BHD, dale!, Metrocuadrado, Seguros Alfa, DDB e IPG Mediabrands. Hace parte de ADL Digital Lab de Grupo Aval.",
         tags: ["Branding", "Storytelling", "UX"],
         modalTags: ["Branding", "Storytelling", "UX | UI"],
         p1: "Soy Diseñador Gráfico de la Universidad Jorge Tadeo Lozano, especialista en Gerencia de Mercadeo, Comunicación y Artes, Máster en Marketing Digital y en Educación Superior.",
@@ -186,7 +186,7 @@ const translations = {
       },
       daniela: {
         ariaLabel: "Ver perfil de Daniela Meza",
-        bio: "Diseñadora y líder de producto con formación en Bellas Artes y Gestión Cultural. Ha trabajado en HealthTech, FinTech, GovTech y tecnología humanitaria, incluyendo proyectos con UNICEF en 119 países.",
+        bio: "Diseñadora y líder de producto con formación en Bellas Artes y Gestión Cultural. En Imagine Apps lideró proyectos con UNICEF en 119 países y con el Ministerio de Salud de Ruanda, y fue Directora de Diseño y Comunicaciones de la Galería Casas Riegner.",
         tags: ["UX / UI", "Producto", "Estrategia"],
         modalTags: ["UX / UI", "Producto", "Estrategia"],
         p1: "Soy diseñadora y líder de producto con formación en Bellas Artes y Gestión Cultural, y experiencia en diseño UX/UI, estrategia de producto y liderazgo de equipos. He trabajado en proyectos de HealthTech, FinTech, GovTech y tecnología humanitaria, combinando pensamiento estratégico, diseño y gestión para transformar problemas complejos en soluciones reales.",
@@ -199,7 +199,7 @@ const translations = {
       },
       vanessa: {
         ariaLabel: "Ver perfil de Vanessa Tovar",
-        bio: "Diseñadora Industrial y magíster en Customer Experience (CX) con experiencia en UX/UI, estrategia digital y diseño de experiencias para plataformas como Bolsa de Valores de Colombia y Metrocuadrado, desarrollando productos digitales.",
+        bio: "Diseñadora Industrial y magíster en Customer Experience (CX), con experiencia en UX/UI, estrategia digital y diseño de experiencias en la Bolsa de Valores de Colombia y Metrocuadrado.",
         tags: ["UX / UI", "Estrategia", "Research"],
         modalTags: ["UX | UI", "Estrategia", "Research"],
         p1: "Soy Diseñadora Industrial y magíster en Customer Experience (CX), con experiencia en UX/UI, estrategia digital y diseño de experiencias para sectores financieros, inmobiliarios, educativos y de servicios digitales.",
@@ -211,7 +211,7 @@ const translations = {
       },
       juandavid: {
         ariaLabel: "Ver perfil de Juan David Aristizabal",
-        bio: "Director creativo en Meta-Carbon con experiencia en animación 2D/3D, motion graphics, videojuegos y experiencias digitales desarrolladas en WebGL. Ha trabajado en proyectos audiovisuales y de investigación-creación.",
+        bio: "Director creativo en Meta-Carbon, donde lideró la colección Action Beat Club publicada en Crypto.com. Ha hecho modelado, rigging y VFX para una campaña de Wonka y animó Caída Libre, cortometraje ganador de Co-Crea.",
         tags: ["Animación", "Videojuegos", "3D"],
         modalTags: ["Animación", "Videojuegos", "WebGL"],
         p1: "Soy profesional en Publicidad y Diseño Gráfico con énfasis en animación 2D y 3D, y cuento con una Maestría en Animación 3D para las Industrias del Entretenimiento.",
@@ -224,7 +224,7 @@ const translations = {
       },
       ximena: {
         ariaLabel: "Ver perfil de Ximena Tovar",
-        bio: "Diseñadora de Comunicación y Sr. UX Designer en Mercado Libre, con más de 3 años construyendo experiencias digitales escalables para millones de usuarios en Latinoamérica. Voluntaria en +Voces en UX.",
+        bio: "Diseñadora de Comunicación y Sr. UX Designer en Mercado Libre, donde lleva 3 años y medio construyendo experiencias digitales escalables para millones de usuarios en Latinoamérica. Voluntaria en +Voces en UX LATAM.",
         tags: ["UX / UI", "Producto", "Comunidad"],
         modalTags: ["UX | UI", "Producto", "Comunidad"],
         p1: "Soy Diseñadora de Comunicación actualmente Sr. UX Designer en Mercado Libre, donde llevo 3 años y medio construyendo experiencias digitales centradas en las personas. En mi día a día, diseño productos que equilibren las necesidades de los usuarios con los objetivos del negocio, y busco contribuir al crecimiento de la comunidad de diseño a través de espacios colaborativos y de aprendizaje.",
@@ -236,7 +236,7 @@ const translations = {
       },
       carlos: {
         ariaLabel: "Ver perfil de Carlos Almeyda",
-        bio: "Diseñador Industrial y Artista 3D con más de 10 años de experiencia en diseño, fabricación digital y desarrollo de producto, integrando modelado 3D, impresión 3D y nuevas tecnologías.",
+        bio: "Diseñador Industrial y Artista 3D con más de 10 años de experiencia. Director de Diseño y Tecnología en CEOP S.A.S y consultor en Almeroart; en Sodapasta (Buenos Aires) trabajó en proyectos para Volkswagen y Nike.",
         tags: ["Diseño 3D", "Fabricación digital", "Innovación"],
         modalTags: ["Diseño 3D", "Fabricación digital", "Innovación"],
         p1: "Soy Diseñador Industrial, Artista 3D y Docente Universitario con más de 10 años de experiencia en diseño, fabricación digital y desarrollo de productos. Mi trabajo conecta la precisión técnica con la exploración artística y las nuevas tecnologías, especialmente en modelado 3D, impresión 3D y creación de experiencias digitales.",
@@ -249,7 +249,7 @@ const translations = {
       },
       dayana: {
         ariaLabel: "Ver perfil de Dayana González",
-        bio: "Directora de Cine, Guionista y Diseñadora Industrial con experiencia en dirección y producción audiovisual, escritura creativa, gestión de proyectos culturales y docencia en narrativa audiovisual.",
+        bio: "Directora de Cine y Guionista en La Cachaca Films, Directora General del Festival Internacional de Cine Universitario PULSOS y docente de narrativa audiovisual en UNINPAHU. También es Diseñadora Industrial.",
         tags: ["Audiovisual", "Guion", "Dirección"],
         modalTags: ["Audiovisual", "Guion", "Dirección"],
         p1: "Soy Directora de Cine, Guionista, Escritora, Diseñadora Industrial y Docente, con experiencia en dirección y producción audiovisual, escritura creativa, gestión de proyectos culturales y formación académica. Mi trayectoria combina el diseño, las narrativas audiovisuales y la gestión cultural, desarrollando proyectos tanto en el ámbito cinematográfico como educativo.",
@@ -262,7 +262,7 @@ const translations = {
       },
       john: {
         ariaLabel: "Ver perfil de John Lamprea",
-        bio: "Diseñador de Producto con experiencia liderando proyectos digitales end-to-end para startups, empresas de tecnología, e-commerce y organizaciones internacionales.",
+        bio: "Diseñador de Producto, hoy LATAM User Experience Analyst en Medtronic. Lideró la nueva Tienda en Línea de Colsubsidio, que subió 12% la conversión, y diseñó más de 20 productos financieros en Tul.",
         tags: ["UX / UI", "Producto", "Investigación"],
         modalTags: ["UX / UI", "Producto", "Investigación"],
         p1: "Soy Diseñador de Producto con experiencia liderando proyectos digitales end-to-end para startups, empresas de tecnología, e-commerce y organizaciones internacionales. Me especializo en transformar problemas complejos en productos claros, escalables y centrados en las necesidades de los usuarios.",
@@ -288,7 +288,7 @@ const translations = {
       },
       pilar: {
         ariaLabel: "Ver perfil de Pilar Camargo",
-        bio: "Ingeniera Multimedia especializada en UX, UI y desarrollo Front-End, con experiencia creando y optimizando productos digitales para empresas de tecnología, fintech y educación.",
+        bio: "Ingeniera Multimedia especializada en UX, UI y desarrollo Front-End. Ha creado y optimizado productos digitales en la fintech Kushki, en la CUN (CUN 360) y como desarrolladora Front-End en LQN.",
         tags: ["UX / UI", "Front-End", "Producto"],
         modalTags: ["UX / UI", "Front-End", "Producto"],
         p1: "Soy Ingeniera Multimedia especializada en experiencia de usuario (UX), diseño de interfaces (UI) y desarrollo Front-End. Tengo experiencia en la creación y optimización de productos digitales para empresas de tecnología, fintech y educación, combinando conocimientos de diseño y desarrollo para construir experiencias digitales funcionales y centradas en las personas.",
@@ -301,7 +301,7 @@ const translations = {
       },
       rusbel: {
         ariaLabel: "Ver perfil de Rusbel Castillo",
-        bio: "Diseñador Industrial, Fotógrafo y Realizador Audiovisual, docente universitario con experiencia en creación de contenido, producción y dirección de video.",
+        bio: "Diseñador Industrial, Fotógrafo y Realizador Audiovisual, docente de Diseño de Comunicación y Creación Digital en la Universidad El Bosque, con experiencia en creación de contenido, producción y dirección de video.",
         tags: ["Fotografía", "Producción audiovisual", "Dirección audiovisual"],
         modalTags: ["Fotografía", "Producción audiovisual", "Dirección audiovisual"],
         p1: "Soy Diseñador Industrial, Fotógrafo, Realizador Audiovisual y Docente Universitario, con experiencia en creación de contenido, fotografía, producción y edición de video y dirección audiovisual. Mi trayectoria se ha desarrollado alrededor de la construcción de contenidos visuales y narrativas para diferentes públicos, proyectos y plataformas. He trabajado en proyectos para restaurantes, artistas, instituciones educativas y culturales, además de desarrollar propuestas de fotografía para eventos, espacios naturales y diferentes escenarios.",
@@ -314,7 +314,7 @@ const translations = {
       },
       julian: {
         ariaLabel: "Ver perfil de Julián Bejarano",
-        bio: "Artista Plástico y Visual con más de 17 años de experiencia en fotografía, producción multimedia y formación artística, explorando la relación entre arte, ciencia y tecnología.",
+        bio: "Artista Plástico y Visual con más de 17 años en fotografía, producción multimedia y formación artística. Ha trabajado en IDARTES (Programa Crea) y en el Laboratorio Internacional de Cine Colectivo Kino Colombia.",
         tags: ["Fotografía", "Producción multimedia", "Formación artística"],
         modalTags: ["Fotografía", "Producción multimedia", "Formación artística"],
         p1: "Soy Artista Plástico y Visual, egresado de la Universidad Nacional de Colombia, con estudios en programación e Ingeniería Mecatrónica y Magíster en Tecnologías de la Información Aplicadas a la Educación. Cuento con más de 17 años de experiencia en fotografía, producción multimedia y procesos de formación artística, explorando la relación entre arte, ciencia y tecnología.",
@@ -327,7 +327,7 @@ const translations = {
       },
       jaime: {
         ariaLabel: "Ver perfil de Jaime Velásquez",
-        bio: "Diseñador Industrial y Creador Digital, docente universitario con experiencia en desarrollo de producto, modelado 3D, fabricación digital y experiencias inmersivas.",
+        bio: "Diseñador Industrial y Creador Digital. Trabaja en DISEIM 3D en escaneo e impresión 3D y en Plan A con realidad virtual para cirugía, y ha desarrollado experiencias en Unreal Engine para la empresa alemana Sportstech.",
         tags: ["Modelado 3D", "Fabricación digital", "Experiencias inmersivas"],
         modalTags: ["Modelado 3D", "Fabricación digital", "Experiencias inmersivas"],
         p1: "Soy Diseñador Industrial, Creador Digital y Docente Universitario, con experiencia en desarrollo de producto, modelado y visualización 3D, fabricación digital, escaneo 3D y creación de experiencias inmersivas.",
@@ -562,7 +562,7 @@ const translations = {
       cerrar: "Close",
       nicolas: {
         ariaLabel: "View Nicolas Bartolo profile",
-        bio: "UX Designer specialized in digital products centered on people, business and technology. Local Leader of IxDF Bogotá and Product Thinking advocate in the design community.",
+        bio: "UX Designer at Mercado Libre, where he has contributed to products like Meli+, and previously Product Designer at Lulo Bank. Local Leader of IxDF Bogotá and Product Thinking advocate in the design community.",
         tags: ["UX / UI", "Product", "Community"],
         modalTags: ["UX / UI", "Product", "Community"],
         p1: "I am a UX Designer specialized in designing digital products centered on people, business and technology. I have experience leading end-to-end design processes, from research and discovery to the implementation and evolution of digital solutions.",
@@ -575,7 +575,7 @@ const translations = {
       },
       sofia: {
         ariaLabel: "View Sofia Jiménez profile",
-        bio: "Master in Visual Arts and audiovisual filmmaker with experience at the Ministry of Culture, RTVC and Pontificia Universidad Javeriana. Bridges visual arts, audiovisual and culture.",
+        bio: "Master in Visual Arts and audiovisual filmmaker at the Ministry of Culture, with experience at RTVC, Pontificia Universidad Javeriana and the ARTBO 2022 installation with xyz estrategias. Bridges visual arts, audiovisual and culture.",
         tags: ["Audiovisual", "Production", "Art"],
         modalTags: ["Audiovisual", "Production", "Art"],
         p1: "I am a Master in Visual Arts and audiovisual filmmaker, with experience in production, video editing and installation of cultural and artistic projects. I have worked at institutions such as the Ministry of Culture, RTVC and Pontificia Universidad Javeriana, participating in projects that connect visual arts, audiovisual and culture.",
@@ -588,7 +588,7 @@ const translations = {
       },
       fabian: {
         ariaLabel: "View Fabian Herrera profile",
-        bio: "Digital creator, designer and academic, director of the Digital Creation undergraduate program. He researches how artificial intelligence is transforming education, design and the creative industries.",
+        bio: "Digital creator, designer and academic, director of the Digital Creation program at Universidad El Bosque and Applied AI lecturer at the Escuela Nacional de Cine. He has led methodology for IDARTES' Emprende con El Arte.",
         tags: ["Academic Leadership", "AI", "Educational Innovation"],
         modalTags: ["Academic Leadership", "AI", "Educational Innovation"],
         p1: "I am a digital creator, designer and academic, currently director of the Digital Creation undergraduate program. My work focuses on researching how artificial intelligence is reshaping cognition, creative processes and business dynamics, exploring its potential to transform education, design and the creative industries.",
@@ -601,7 +601,7 @@ const translations = {
       },
       paula: {
         ariaLabel: "View Paula Lenis profile",
-        bio: "Graphic Designer and UX specialist with experience in digital product design, UX strategy and team leadership at companies like Rappi and IxDF Colombia.",
+        bio: "Graphic Designer and UX specialist. She has led product design and Product Design teams at Rappi, is Country Manager of IxDF Colombia and a mentor at Laboratoria, ADPList and +Mujeres en UX LATAM.",
         tags: ["UX / UI", "Strategy", "Leadership"],
         modalTags: ["UX | UI", "Strategy", "Leadership"],
         p1: "I am a Graphic Designer and User Experience (UX) specialist, with experience in digital product design, UX strategy and team leadership. I have worked creating people-centered solutions for technology companies, driving intuitive, efficient and innovative digital experiences.",
@@ -614,7 +614,7 @@ const translations = {
       },
       camilo: {
         ariaLabel: "View Camilo Cardozo profile",
-        bio: "Graphic designer and digital marketing specialist, with over 15 years of experience in branding, UX/UI, creativity and digital transformation for high-impact brands across Latin America.",
+        bio: "Graphic designer and digital marketing specialist, with over 15 years in branding, UX/UI and digital transformation for brands like Banco BHD, dale!, Metrocuadrado, Seguros Alfa, DDB and IPG Mediabrands. Part of Grupo Aval's ADL Digital Lab.",
         tags: ["Branding", "Storytelling", "UX"],
         modalTags: ["Branding", "Storytelling", "UX | UI"],
         p1: "I am a Graphic Designer from Universidad Jorge Tadeo Lozano, specialist in Marketing Management, Communication and Arts, with a Master Degree in Digital Marketing and Higher Education.",
@@ -626,7 +626,7 @@ const translations = {
       },
       daniela: {
         ariaLabel: "View Daniela Meza profile",
-        bio: "Designer and product leader with a background in Fine Arts and Cultural Management. Has worked in HealthTech, FinTech, GovTech and humanitarian technology, including UNICEF projects across 119 countries.",
+        bio: "Designer and product leader with a background in Fine Arts and Cultural Management. At Imagine Apps she led projects with UNICEF in 119 countries and Rwanda's Ministry of Health, and was Design and Communications Director at Galería Casas Riegner.",
         tags: ["UX / UI", "Product", "Strategy"],
         modalTags: ["UX / UI", "Product", "Strategy"],
         p1: "I am a designer and product leader with a background in Fine Arts and Cultural Management, and experience in UX/UI design, product strategy and team leadership. I have worked on HealthTech, FinTech, GovTech and humanitarian technology projects, combining strategic thinking, design and management to transform complex problems into real solutions.",
@@ -639,7 +639,7 @@ const translations = {
       },
       vanessa: {
         ariaLabel: "View Vanessa Tovar profile",
-        bio: "Industrial Designer with a Master Degree in Customer Experience (CX), with experience in UX/UI, digital strategy and experience design for platforms such as Colombia Stock Exchange and Metrocuadrado.",
+        bio: "Industrial Designer with a Master's in Customer Experience (CX), with experience in UX/UI, digital strategy and experience design at the Colombia Stock Exchange and Metrocuadrado.",
         tags: ["UX / UI", "Strategy", "Research"],
         modalTags: ["UX | UI", "Strategy", "Research"],
         p1: "I am an Industrial Designer with a Master Degree in Customer Experience (CX), with experience in UX/UI, digital strategy and experience design for financial, real estate, educational and digital service sectors.",
@@ -651,7 +651,7 @@ const translations = {
       },
       juandavid: {
         ariaLabel: "View Juan David Aristizabal profile",
-        bio: "Creative director at Meta-Carbon with experience in 2D/3D animation, motion graphics, video games and digital experiences developed in WebGL. Has worked on audiovisual and research-creation projects.",
+        bio: "Creative director at Meta-Carbon, where he led the Action Beat Club collection published on Crypto.com. He has done modeling, rigging and VFX for a Wonka campaign and animated Caída Libre, a Co-Crea winning short film.",
         tags: ["Animation", "Video Games", "3D"],
         modalTags: ["Animation", "Video Games", "WebGL"],
         p1: "I am a professional in Advertising and Graphic Design with a focus on 2D and 3D animation, and hold a Master Degree in 3D Animation for the Entertainment Industry.",
@@ -664,7 +664,7 @@ const translations = {
       },
       ximena: {
         ariaLabel: "View Ximena Tovar profile",
-        bio: "Communication Designer and Sr. UX Designer at Mercado Libre, with over 3 years building scalable digital experiences for millions of users across Latin America. Volunteer at +Voces en UX LATAM.",
+        bio: "Communication Designer and Sr. UX Designer at Mercado Libre, where she has spent 3.5 years building scalable digital experiences for millions of users across Latin America. Volunteer at +Voces en UX LATAM.",
         tags: ["UX / UI", "Product", "Community"],
         modalTags: ["UX | UI", "Product", "Community"],
         p1: "I am a Communication Designer and currently Sr. UX Designer at Mercado Libre, where I have spent 3 and a half years building human-centered digital experiences. In my day-to-day, I design products that balance user needs with business goals, and I contribute to the growth of the design community through collaborative and learning spaces.",
@@ -676,7 +676,7 @@ const translations = {
       },
       carlos: {
         ariaLabel: "View Carlos Almeyda profile",
-        bio: "Industrial Designer and 3D Artist with over 10 years of experience in design, digital fabrication and product development, integrating 3D modeling, 3D printing and new technologies.",
+        bio: "Industrial Designer and 3D Artist with over 10 years of experience. Design and Technology Director at CEOP S.A.S and consultant at Almeroart; at Sodapasta (Buenos Aires) he worked on projects for Volkswagen and Nike.",
         tags: ["3D Design", "Digital fabrication", "Innovation"],
         modalTags: ["3D Design", "Digital fabrication", "Innovation"],
         p1: "I am an Industrial Designer, 3D Artist and University Professor with over 10 years of experience in design, digital fabrication and product development. My work connects technical precision with artistic exploration and new technologies, especially in 3D modeling, 3D printing and digital experience creation.",
@@ -689,7 +689,7 @@ const translations = {
       },
       dayana: {
         ariaLabel: "View Dayana González profile",
-        bio: "Film Director, Screenwriter and Industrial Designer with experience in audiovisual direction and production, creative writing, cultural project management and audiovisual narrative teaching.",
+        bio: "Film Director and Screenwriter at La Cachaca Films, General Director of the PULSOS International University Film Festival and audiovisual narrative lecturer at UNINPAHU. She is also an Industrial Designer.",
         tags: ["Audiovisual", "Screenwriting", "Direction"],
         modalTags: ["Audiovisual", "Screenwriting", "Direction"],
         p1: "I am a Film Director, Screenwriter, Writer, Industrial Designer and Professor, with experience in audiovisual direction and production, creative writing, cultural project management and academic training. My career combines design, audiovisual narrative and cultural management, developing projects in both the film and educational fields.",
@@ -702,7 +702,7 @@ const translations = {
       },
       john: {
         ariaLabel: "View John Lamprea profile",
-        bio: "Product Designer with experience leading end-to-end digital projects for startups, technology companies, e-commerce and international organizations.",
+        bio: "Product Designer, currently LATAM User Experience Analyst at Medtronic. He led Colsubsidio's new Online Store, which raised conversion by 12%, and designed over 20 financial products at Tul.",
         tags: ["UX / UI", "Product", "Research"],
         modalTags: ["UX / UI", "Product", "Research"],
         p1: "I am a Product Designer with experience leading end-to-end digital projects for startups, technology companies, e-commerce and international organizations. I specialize in turning complex problems into clear, scalable, user-centered products.",
@@ -728,7 +728,7 @@ const translations = {
       },
       pilar: {
         ariaLabel: "View Pilar Camargo profile",
-        bio: "Multimedia Engineer specialized in UX, UI and Front-End development, with experience creating and optimizing digital products for technology, fintech and education companies.",
+        bio: "Multimedia Engineer specialized in UX, UI and Front-End development. She has created and optimized digital products at fintech Kushki, at CUN (CUN 360) and as a Front-End developer at LQN.",
         tags: ["UX / UI", "Front-End", "Product"],
         modalTags: ["UX / UI", "Front-End", "Product"],
         p1: "I am a Multimedia Engineer specialized in user experience (UX), interface design (UI) and Front-End development. I have experience creating and optimizing digital products for technology, fintech and education companies, combining design and development knowledge to build functional, people-centered digital experiences.",
@@ -741,7 +741,7 @@ const translations = {
       },
       rusbel: {
         ariaLabel: "View Rusbel Castillo profile",
-        bio: "Industrial Designer, Photographer and Audiovisual Director, university lecturer with experience in content creation, video production and audiovisual direction.",
+        bio: "Industrial Designer, Photographer and Audiovisual Director, lecturer in Communication Design and Digital Creation at Universidad El Bosque, with experience in content creation, video production and audiovisual direction.",
         tags: ["Photography", "Audiovisual production", "Audiovisual direction"],
         modalTags: ["Photography", "Audiovisual production", "Audiovisual direction"],
         p1: "I am an Industrial Designer, Photographer, Audiovisual Director and University Lecturer, with experience in content creation, photography, video production and editing, and audiovisual direction. My career has developed around building visual content and narratives for different audiences, projects and platforms. I have worked on projects for restaurants, artists, and educational and cultural institutions, as well as developing photography proposals for events, natural spaces and different settings.",
@@ -754,7 +754,7 @@ const translations = {
       },
       julian: {
         ariaLabel: "View Julián Bejarano profile",
-        bio: "Visual and Plastic Artist with over 17 years of experience in photography, multimedia production and arts education, exploring the relationship between art, science and technology.",
+        bio: "Visual and Plastic Artist with over 17 years in photography, multimedia production and arts education. He has worked at IDARTES (Programa Crea) and the Kino Colombia International Collective Film Lab.",
         tags: ["Photography", "Multimedia production", "Arts education"],
         modalTags: ["Photography", "Multimedia production", "Arts education"],
         p1: "I am a Visual and Plastic Artist, graduated from Universidad Nacional de Colombia, with studies in programming and Mechatronics Engineering and a Master's degree in Information Technologies Applied to Education. I have over 17 years of experience in photography, multimedia production and arts education processes, exploring the relationship between art, science and technology.",
@@ -767,7 +767,7 @@ const translations = {
       },
       jaime: {
         ariaLabel: "View Jaime Velásquez profile",
-        bio: "Industrial Designer and Digital Creator, university lecturer with experience in product development, 3D modeling, digital fabrication and immersive experiences.",
+        bio: "Industrial Designer and Digital Creator. He works at DISEIM 3D on 3D scanning and printing and at Plan A on virtual reality for surgery, and has built Unreal Engine experiences for the German company Sportstech.",
         tags: ["3D modeling", "Digital fabrication", "Immersive experiences"],
         modalTags: ["3D modeling", "Digital fabrication", "Immersive experiences"],
         p1: "I am an Industrial Designer, Digital Creator and University Lecturer, with experience in product development, 3D modeling and visualization, digital fabrication, 3D scanning and creating immersive experiences.",
