@@ -7,6 +7,17 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Agregado — HTML legible para bots de IA y buscadores (prerender por ruta)
+
+- Los rastreadores de IA que no ejecutan JavaScript (GPTBot, ClaudeBot, PerplexityBot) recibían `<div id="root"></div>` vacío. Ahora `scripts/prerender.ts` corre después de `vite build` y escribe un `index.html` por ruta (home, /blog, 6 posts, /proyectos, 5 proyectos) con su `<head>` propio (título, descripción, canonical, OG/Twitter, JSON-LD) y el contenido en HTML semántico dentro de `#root`. React no hidrata: `createRoot` lo reemplaza al cargar, la app se ve igual.
+- Genera también `sitemap.xml`, `robots.txt` y `llms.txt` desde los datos (se eliminan los de `public/`, que eran a mano) y `404.html`.
+- `_redirects`: `/* /404.html 404` (las rutas reales ya tienen su archivo; las inexistentes devuelven 404 real con la app).
+- Dominio oficial (canonical, sitemap, JSON-LD, OG) = `https://creaciondigital-ueb.netlify.app` por ahora, en una sola constante: `src/seo/site.ts`.
+- Títulos/descripciones/JSON-LD por ruta centralizados en `src/seo/pages.ts` (los usan las páginas y el script). La home gana JSON-LD `EducationalOccupationalProgram`; los proyectos, `CreativeWork`.
+- Descripción del sitio actualizada (ya no dice "No vinimos a dictar clase").
+- Plan: `docs/plans/2026-11-06-html-para-bots-ia.md`.
+- Archivos: `scripts/prerender.ts`, `scripts/prerender.vite.config.ts`, `src/seo/site.ts`, `src/seo/pages.ts`, `src/hooks/useSeo.ts`, páginas en `src/pages/`, `index.html`, `package.json`, `public/_redirects`, `src/styles/global.css`, `.gitignore`.
+
 ### Corregido — Netlify: /blog, /proyectos y sus páginas daban 404 al entrar directo
 
 - Netlify Analytics mostraba 404 en `/blog`, `/blog/:slug` y `/proyectos/:slug`: el sitio es una SPA y, al entrar directo (enlace compartido, Google, recarga), Netlify buscaba un archivo con esa ruta. El servidor anterior (nginx en DO) tenía el fallback; Netlify no.

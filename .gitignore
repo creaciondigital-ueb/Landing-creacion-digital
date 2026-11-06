@@ -1,5 +1,6 @@
 # build output
 dist/
+.prerender/
 dist_prev_*/
 *.lock.old*
 *.new_tmp*

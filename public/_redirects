@@ -1,4 +1,5 @@
-# Netlify: las rutas de la app (/blog, /proyectos, /blog/:slug…) no son
-# archivos; si no existe un archivo con esa ruta, se sirve index.html y
-# React Router resuelve la página. Los archivos reales siguen sirviéndose igual.
-/*    /index.html   200
+# Netlify. Las rutas reales (/, /blog, /blog/:id, /proyectos, /proyectos/:id)
+# tienen su propio index.html generado por scripts/prerender.ts, que Netlify
+# sirve antes que esta regla. Cualquier otra ruta recibe la app sin contenido
+# (404.html) con código 404; React muestra la página "no encontrada".
+/*    /404.html   404

@@ -4,12 +4,9 @@ import { PROYECTOS, type Proyecto } from '../data/proyectos';
 import { BLOG_POSTS } from '../data/blog';
 import { useLang } from '../i18n/LanguageContext';
 import { useSeo } from '../hooks/useSeo';
+import { homeSeo } from '../seo/pages';
 import '../styles/programa.css';
 
-const HOME_DESCRIPTION = {
-  es: 'Pregrado en Creación Digital. No vinimos a dictar clase: vinimos a crear. Universidad El Bosque, Bogotá.',
-  en: "Digital Creation undergraduate program. We didn't come to teach a class — we came to create. Universidad El Bosque, Bogotá.",
-};
 
 const IMG = '/programa/img';
 const VIDEO = '/programa/video';
@@ -702,11 +699,7 @@ function colorizeWords(text: string, words: string[]) {
 export default function ProgramaCreacionDigital() {
   const { lang, setLang, t } = useLang();
 
-  useSeo({
-    title: 'Creación Digital · Universidad El Bosque',
-    description: HOME_DESCRIPTION[lang],
-    path: '/',
-  });
+  useSeo(homeSeo(lang));
 
   // Modal de docente activo
   const [activeDocente, setActiveDocente] = useState<string | null>(null);

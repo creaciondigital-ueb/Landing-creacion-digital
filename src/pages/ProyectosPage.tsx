@@ -3,16 +3,13 @@ import { Link } from 'react-router-dom';
 import { PROYECTOS } from '../data/proyectos';
 import { useLang } from '../i18n/LanguageContext';
 import { useSeo } from '../hooks/useSeo';
+import { proyectosListSeo } from '../seo/pages';
 import '../styles/programa.css';
 
 const IMG = '/programa/img';
 const APLICA_URL = 'https://www.unbosque.edu.co/inscripciones/pregrado';
 const PAGE_SIZE = 9;
 
-const PROYECTOS_DESCRIPTION = {
-  es: 'Descubre los proyectos creados por estudiantes del programa de Creación Digital de la Universidad El Bosque: investigación, identidad de marca, UX y más.',
-  en: 'Discover the projects built by Digital Creation students at Universidad El Bosque: research, brand identity, UX and more.',
-};
 
 type FilterKind = 'year' | 'subject';
 interface Chip { kind: FilterKind; value: string; }
@@ -25,13 +22,7 @@ export default function ProyectosPage() {
   const { lang, setLang, t } = useLang();
   const tp = t.proyectosPage;
 
-  useSeo({
-    title: lang === 'en'
-      ? 'Student Projects · Digital Creation · Universidad El Bosque'
-      : 'Proyectos de estudiantes · Creación Digital · Universidad El Bosque',
-    description: PROYECTOS_DESCRIPTION[lang],
-    path: '/proyectos',
-  });
+  useSeo(proyectosListSeo(lang));
 
   const [menuOpen, setMenuOpen] = useState(false);
 

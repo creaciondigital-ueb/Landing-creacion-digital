@@ -9,9 +9,9 @@ import { useEffect } from 'react';
  * API nativa del DOM.
  */
 
-export const SITE_URL = 'https://creaciondigital.online';
-export const SITE_NAME = 'Creación Digital · Universidad El Bosque';
-export const DEFAULT_OG_IMAGE = `${SITE_URL}/programa/img/Label_UEB_CreacionDigital_Horizontal.png`;
+import { SITE_URL, SITE_NAME, resolveImageUrl } from '../seo/site';
+
+export { SITE_URL, SITE_NAME, DEFAULT_OG_IMAGE, resolveImageUrl } from '../seo/site';
 
 interface SeoOptions {
   /** <title> y og:title / twitter:title. */
@@ -35,11 +35,6 @@ function setMeta(attr: 'name' | 'property', key: string, content: string) {
     document.head.appendChild(el);
   }
   el.setAttribute('content', content);
-}
-
-export function resolveImageUrl(image?: string): string {
-  if (!image) return DEFAULT_OG_IMAGE;
-  return image.startsWith('http') ? image : `${SITE_URL}${image}`;
 }
 
 const JSONLD_ID = 'pcd-jsonld-route';

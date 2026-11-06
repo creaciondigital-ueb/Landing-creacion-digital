@@ -3,16 +3,13 @@ import { Link } from 'react-router-dom';
 import { BLOG_POSTS } from '../data/blog';
 import { useLang } from '../i18n/LanguageContext';
 import { useSeo } from '../hooks/useSeo';
+import { blogListSeo } from '../seo/pages';
 import '../styles/programa.css';
 
 const IMG = '/programa/img';
 const APLICA_URL = 'https://www.unbosque.edu.co/inscripciones/pregrado';
 const PAGE_SIZE = 9;
 
-const BLOG_DESCRIPTION = {
-  es: 'Noticias, logros y eventos del programa de Creación Digital de la Universidad El Bosque.',
-  en: 'News, achievements and events from the Digital Creation program at Universidad El Bosque.',
-};
 // Mismo ciclo de colores de marca que las cards del blog en el home
 // (ver BLOG_CARD_COLORS en ProgramaCreacionDigital.tsx).
 const BLOG_CARD_COLORS = ['cobalt', 'acid', 'tomato', 'ink'] as const;
@@ -29,13 +26,7 @@ export default function BlogPage() {
   const { lang, setLang, t } = useLang();
   const tb = t.blogPage;
 
-  useSeo({
-    title: lang === 'en'
-      ? 'Blog · Digital Creation · Universidad El Bosque'
-      : 'Blog · Creación Digital · Universidad El Bosque',
-    description: BLOG_DESCRIPTION[lang],
-    path: '/blog',
-  });
+  useSeo(blogListSeo(lang));
 
   // BLOG_POSTS está en orden cronológico ascendente (el más antiguo primero,
   // mismo criterio que se usa al agregar posts nuevos al final/donde

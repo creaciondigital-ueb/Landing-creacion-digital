@@ -7,7 +7,8 @@ import { BLOG_POSTS } from '../data/blog';
 // cover con número fantasma cuando una publicación todavía no tiene foto.
 const MORE_CARD_COLORS = ['cobalt', 'acid', 'tomato', 'ink'] as const;
 import { useLang } from '../i18n/LanguageContext';
-import { useSeo, resolveImageUrl, SITE_URL } from '../hooks/useSeo';
+import { useSeo } from '../hooks/useSeo';
+import { blogPostSeo } from '../seo/pages';
 import '../styles/programa.css';
 import '../styles/proyecto-detalle.css';
 
@@ -42,38 +43,8 @@ export default function BlogPostPage() {
 
   // useSeo va ANTES del return condicional de abajo — los hooks de React
   // deben llamarse siempre en el mismo orden, así que no puede depender
-  // de si `post` existe. Arma su propio título/descripción "seguros" en
-  // vez de reusar las constantes que se calculan más abajo.
-  const seoTitle = post
-    ? `${lang === 'en' ? (post.titleEn ?? post.title) : post.title} · Blog Creación Digital`
-    : 'Creación Digital · Universidad El Bosque';
-  const seoDescription = post ? (lang === 'en' ? (post.excerptEn ?? post.excerpt) : post.excerpt) : '';
-  const seoImage = post?.image || undefined;
-  const seoUrl = `${SITE_URL}/blog/${id ?? ''}`;
-
-  useSeo({
-    title: seoTitle,
-    description: seoDescription,
-    path: `/blog/${id ?? ''}`,
-    image: seoImage,
-    type: 'article',
-    jsonLd: post
-      ? {
-          '@context': 'https://schema.org',
-          '@type': 'BlogPosting',
-          headline: seoTitle.replace(' · Blog Creación Digital', ''),
-          description: seoDescription,
-          image: resolveImageUrl(seoImage),
-          author: { '@type': 'Organization', name: 'Creación Digital · Universidad El Bosque' },
-          publisher: {
-            '@type': 'Organization',
-            name: 'Universidad El Bosque',
-            logo: { '@type': 'ImageObject', url: resolveImageUrl(undefined) },
-          },
-          mainEntityOfPage: seoUrl,
-        }
-      : undefined,
-  });
+  // de si `post` existe.
+  useSeo(blogPostSeo(post, id ?? '', lang));
 
   if (!post || !post.detail) return <Navigate to="/blog" replace />;
 
