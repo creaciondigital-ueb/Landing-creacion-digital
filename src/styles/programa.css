@@ -544,6 +544,17 @@
    "encaje" en huecos del texto — eso es SOLO para desktop, nunca tocarlo.
    La de móvil es el texto corrido, sin esos huecos. */
 .pcd-hero__quienes-body-mobile { display: none; }
+/* Palabras en color dentro de "¿quiénes somos?". El verde ácido no se
+   lee como texto sobre el papel, así que va como resaltado detrás. */
+.pcd-hero__word { font-weight: 600; }
+.pcd-hero__word--cobalt { color: var(--pcd-cobalt); }
+.pcd-hero__word--tomato { color: var(--pcd-tomato); }
+.pcd-hero__word--acid {
+  color: var(--pcd-ink);
+  background: var(--pcd-acid);
+  padding: 0 4px;
+  border-radius: 3px;
+}
 
 /* Overrides exclusivos para versión EN — no afectan el español */
 .pcd-hero--en .pcd-hero__quienes-label { left: 642px; }
@@ -839,7 +850,12 @@
   letter-spacing: -0.07em;
   position: relative;
   z-index: 2;
+  /* Crece con el scroll (ver useEffect en el TSX) desde su lado alineado
+     y hacia arriba, para no montarse sobre la bajada que tiene debajo. */
+  transform-origin: left bottom;
 }
+.pcd-axis--mundo .pcd-axis__word,
+.pcd-axis--producto .pcd-axis__word { transform-origin: right bottom; }
 .pcd-axis__caption {
   position: absolute;
   bottom: 60px;
@@ -1163,6 +1179,7 @@
   }
   .pcd-axis__right { padding: 56px 24px; }
   .pcd-axis__word { font-size: 56px; }
+  .pcd-axis .pcd-axis__word { transform-origin: center bottom; }
   .pcd-axis__word-desktop { display: none; }
   .pcd-axis__word-mobile { display: inline; white-space: nowrap; }
   /* "negocios digitales" no cabe en una línea en teléfonos angostos (<375px) */

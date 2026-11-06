@@ -7,6 +7,13 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Cambiado — Home: títulos de los ejes con mayúscula y agrandado con el scroll; palabras en color en "¿quiénes somos?"
+
+- Títulos de los ejes con mayúscula inicial: "Mundo 3D", "Contenido", "Negocios digitales" (EN: "3D world", "Content", "Digital business").
+- Los tres títulos crecen levemente (hasta +10%) a medida que su sección sube por la pantalla: `useEffect` con scroll + `requestAnimationFrame` que ajusta la propiedad `scale` (no pisa los `transform` existentes). Crecen desde su lado alineado y hacia arriba (`transform-origin` abajo), centrados en móvil. Desactivado con `prefers-reduced-motion`.
+- "¿quiénes somos?": "código" en azul, "contenido" en verde (resaltado detrás: el verde ácido no se lee como letra sobre el papel) y "negocio" en rojo, en negrita. Lista en `t.hero.quienesColored`; helper `colorizeWords` en el TSX.
+- Archivos: `src/i18n/translations.ts`, `src/pages/ProgramaCreacionDigital.tsx`, `src/styles/programa.css`.
+
 ### Cambiado — Home: texto de "¿quiénes somos?", mayúscula en el título y botón de charla titilando
 
 - "¿quiénes somos?" (ES): "En la economía digital la rompe quien sabe orquestar código, contenido, narrativa y negocio. Ese profesional se forma en Creación Digital, con profesores de la industria tech y la inteligencia artificial como herramienta diaria." (EN traducido).

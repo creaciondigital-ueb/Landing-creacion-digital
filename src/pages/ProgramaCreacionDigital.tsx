@@ -686,6 +686,19 @@ function BlogCarousel() {
   );
 }
 
+/** Pinta las palabras indicadas del párrafo "¿quiénes somos?" en azul,
+ *  verde y rojo (en ese orden), envolviéndolas en <span>. */
+const QUIENES_COLORS = ['cobalt', 'acid', 'tomato'];
+function colorizeWords(text: string, words: string[]) {
+  const re = new RegExp(`(${words.join('|')})`, 'g');
+  return text.split(re).map((part, i) => {
+    const idx = words.indexOf(part);
+    return idx === -1
+      ? part
+      : <span key={i} className={`pcd-hero__word pcd-hero__word--${QUIENES_COLORS[idx]}`}>{part}</span>;
+  });
+}
+
 export default function ProgramaCreacionDigital() {
   const { lang, setLang, t } = useLang();
 
@@ -773,6 +786,36 @@ export default function ProgramaCreacionDigital() {
     );
     els.forEach((el) => observer.observe(el));
     return () => observer.disconnect();
+  }, []);
+
+  // Títulos de los ejes (Mundo 3D, Contenido, Negocios digitales): se
+  // agrandan levemente (hasta +10%) a medida que su sección sube por la
+  // pantalla. Usa la propiedad `scale` para no pisar los `transform` que
+  // ya tienen (corrimientos y la animación de entrada .pcd-reveal).
+  useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const words = Array.from(document.querySelectorAll<HTMLElement>('.pcd-axis__word'));
+    if (!words.length) return;
+    let frame = 0;
+    const update = () => {
+      frame = 0;
+      const vh = window.innerHeight;
+      words.forEach((el) => {
+        const r = el.getBoundingClientRect();
+        // 0 cuando el título asoma por abajo, 1 cuando llega arriba.
+        const p = Math.min(1, Math.max(0, (vh - r.top) / (vh + r.height)));
+        el.style.scale = String(1 + 0.1 * p);
+      });
+    };
+    const onScroll = () => { if (!frame) frame = requestAnimationFrame(update); };
+    update();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+      if (frame) cancelAnimationFrame(frame);
+    };
   }, []);
 
   // Carrusel de docentes: drag-to-pan + loop infinito (el set de cards se
@@ -972,10 +1015,10 @@ export default function ProgramaCreacionDigital() {
             </span>
           </div>
           <p className="pcd-hero__quienes-body pcd-hero__quienes-body-desktop">
-            {t.hero.quienesBody}
+            {colorizeWords(t.hero.quienesBody, t.hero.quienesColored)}
           </p>
           <p className="pcd-hero__quienes-body pcd-hero__quienes-body-mobile">
-            {t.hero.quienesBody}
+            {colorizeWords(t.hero.quienesBody, t.hero.quienesColored)}
           </p>
 
           <div className="pcd-hero__logos-row">
