@@ -7,6 +7,19 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Cambiado — Home: nueva ilustración del header (chica con portátil), también en móvil
+
+- La ilustración del hero pasa a ser la chica sentada con el portátil (`public/programa/img/chica-laptop.png`): recortada, con el exterior transparente y el interior relleno del color del papel para que las frases largas del título no se vean a través.
+- Escritorio: sentada sobre la línea "piso", a la derecha del título; la línea ahora es un solo segmento continuo (se oculta `.pcd-hero__floor-line--right`).
+- El párrafo "¿quiénes somos?" de escritorio pasa a ser texto corrido (`t.hero.quienesBody`): los huecos con nbsp eran para las piernas de la ilustración anterior.
+- Móvil: antes la ilustración se ocultaba; ahora aparece centrada bajo el título, sentada sobre la línea (`order` dentro de `.pcd-hero__bottom` en flex).
+- Archivos: `src/pages/ProgramaCreacionDigital.tsx`, `src/styles/programa.css`, `public/programa/img/chica-laptop.png`.
+
+### Cambiado — Botón "Agenda tu charla informativa" arriba a la derecha
+
+- Pasa de abajo a la derecha a arriba a la derecha, justo debajo del header fijo (68px). Mismo verde ácido.
+- Archivos: `src/styles/programa.css`, `src/App.tsx` (comentario).
+
 ### Agregado — Botón flotante "Agenda tu charla informativa"
 
 - Botón fijo abajo a la derecha, en todas las rutas (home, proyectos, blog, 404), que abre el formulario de Microsoft Forms de charlas informativas en otra pestaña.

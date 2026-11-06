@@ -133,9 +133,10 @@
    z-index bajo el header (100) y los modales, para que el menú móvil y los
    diálogos lo tapen. */
 .pcd-charla-fab {
+  /* Arriba a la derecha, justo debajo del header fijo (68px). */
   position: fixed;
   right: 24px;
-  bottom: 24px;
+  top: calc(68px + 16px);
   z-index: 90;
   display: inline-flex;
   align-items: center;
@@ -158,7 +159,7 @@
 }
 .pcd-charla-fab:hover { background: var(--pcd-ink); color: var(--pcd-acid); transform: translateY(-2px); }
 @media (max-width: 600px) {
-  .pcd-charla-fab { right: 16px; bottom: 16px; font-size: 11px; padding: 12px 18px; }
+  .pcd-charla-fab { right: 16px; top: calc(68px + 12px); font-size: 11px; padding: 12px 18px; }
 }
 
 /* Hamburguer — oculto en desktop, visible en móvil */
@@ -488,14 +489,12 @@
   height: 55px;
   width: auto;
   object-fit: contain;
-}/* Línea "piso" partida en 2 segmentos con un hueco fijo donde la silueta
-   real de la chica la cruza — así se hizo en el diseño original (Group
-   33.svg). Posición final ajustada a mano por el usuario. */
+}/* Línea "piso" continua: la chica se sienta encima, ya no la cruza. */
 .pcd-hero__floor-line {
   position: absolute;
   left: 611px;
   top: 26px;
-  width: 488px;
+  width: 875px;
   height: 3px;
   background: var(--pcd-ink);
 }
@@ -506,6 +505,7 @@
   width: 280px;
   height: 3px;
   background: var(--pcd-ink);
+  display: none;
 }
 /* Wrapper de "¿quiénes somos?" + CTA móvil — en desktop no debe alterar
    el posicionamiento absoluto existente de sus hijos (display:contents lo
@@ -536,8 +536,8 @@
 /* Overrides exclusivos para versión EN — no afectan el español */
 .pcd-hero--en .pcd-hero__quienes-label { left: 642px; }
 .pcd-hero--en .pcd-hero__quienes-body  { left: 729px; }
-.pcd-hero--en .pcd-hero__photo         { left: 872px; }
-.pcd-hero--en .pcd-hero__floor-line    { left: 642px; }
+.pcd-hero--en .pcd-hero__photo         { left: 1150px; }
+.pcd-hero--en .pcd-hero__floor-line    { left: 642px; width: 844px; }
 .pcd-hero--en .pcd-hero__floor-line--right { left: 1117px; }
 .pcd-hero__quienes-body {
   position: absolute;
@@ -555,15 +555,16 @@
 
 .pcd-hero__photo {
   position: absolute;
-  left: 882px;
-  top: -580px;
-  width: 664px;
-  height: 848px;
-  /* Versión con el interior relleno del color del papel: la original solo
-     tiene trazos y las frases del título se veían a través del cuerpo. */
-  background-image: url('/programa/img/proyecto-1-relleno.png');
+  /* Chica sentada con el portátil, apoyada sobre la línea "piso" (top 26px).
+     El interior viene relleno del color del papel para tapar las frases
+     largas del título que pasan por detrás. */
+  left: 1150px;
+  top: -332px;
+  width: 333px;
+  height: 360px;
+  background-image: url('/programa/img/chica-laptop.png');
   background-size: contain;
-  background-position: right bottom;
+  background-position: center bottom;
   background-repeat: no-repeat;
   background-color: transparent;
   border: 0;
@@ -605,8 +606,19 @@
   .pcd-hero__cta-mobile:hover { background: var(--pcd-cobalt); }
   /* En escritorio todo el bloque usa position:absolute (ver arriba); en
      móvil se resetea a flujo normal apilado: línea → quiénes somos → texto → logo. */
-  .pcd-hero__bottom { width: auto; min-height: auto; transform: none; margin-top: 40px; }
-  .pcd-hero__photo { display: none; }
+  .pcd-hero__bottom { width: auto; min-height: auto; transform: none; margin-top: 32px;
+    display: flex; flex-direction: column; }
+  /* La chica va primero, centrada y sentada sobre la línea. */
+  .pcd-hero__photo {
+    position: static;
+    order: -2;
+    align-self: center;
+    width: min(56vw, 240px);
+    height: auto;
+    aspect-ratio: 606 / 656;
+    margin-bottom: -4px;
+  }
+  .pcd-hero__floor-line { order: -1; }
   .pcd-hero__brand {
     position: static;
     width: auto;
@@ -619,7 +631,6 @@
     width: 100%;
     height: 3px;
   }
-  .pcd-hero__floor-line--right { display: none; } /* sin foto en móvil, no hace falta el 2do segmento */
   /* "¿quiénes somos?" centrado */
   .pcd-hero__quienes-row {
     display: flex;

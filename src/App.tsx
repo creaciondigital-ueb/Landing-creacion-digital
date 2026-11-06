@@ -31,7 +31,7 @@ function ScrollToTop() {
 const CHARLA_URL = 'https://forms.cloud.microsoft/r/rx1NFDC8v9?origin=lprLink';
 
 /**
- * Botón flotante "Agenda tu charla informativa": fijo abajo a la derecha
+ * Botón flotante "Agenda tu charla informativa": fijo arriba a la derecha (bajo el header)
  * en todas las rutas, para que acompañe la navegación. Estilos en
  * programa.css (.pcd-charla-fab), que cargan todas las páginas.
  */

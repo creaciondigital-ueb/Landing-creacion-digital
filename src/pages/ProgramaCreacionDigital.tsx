@@ -972,7 +972,7 @@ export default function ProgramaCreacionDigital() {
             </span>
           </div>
           <p className="pcd-hero__quienes-body pcd-hero__quienes-body-desktop">
-            {lang === 'es' ? <>Estamos construyendo nuestro propio{' '.repeat(34)} mundo, literal. Con código, imágenes, sonido e ideas que{' '.repeat(28)} nadie más tuvo. Somos libres para explorar, equivocarnos y{' '.repeat(24)} empezar de nuevo, y somos felices haciéndolo. Hacemos videojuegos, animamos personajes, armamos mundos inmersivos, marketing digital y luego, convertimos todo eso en un negocio digital.</> : <>We're building our own world, literally.{' '.repeat(30)} With code, images, sound and ideas no one else had. We're free{' '.repeat(17)} to explore, make mistakes and start over, and we're happy{' '.repeat(21)} doing it. We make video games, animate characters, build immersive worlds, do digital marketing, and then turn all of that into a digital business.</>}
+            {t.hero.quienesBody}
           </p>
           <p className="pcd-hero__quienes-body pcd-hero__quienes-body-mobile">
             {t.hero.quienesBody}
