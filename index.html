@@ -56,8 +56,12 @@
 
   <!-- ============================================================
        Google Analytics 4 (gtag.js) — G-EMK9RDJD0G
-       Guard: solo se carga en producción (creaciondigital.online y www.).
-       Migración de dominio 2026-06-09: ceopacademia.org → creaciondigital.online.
+       Guard: solo se carga en producción (creaciondigital.online, www. y
+       el sitio de Netlify creaciondigital-ueb.netlify.app, que es donde vive
+       hoy). Migración de dominio 2026-06-09: ceopacademia.org → creaciondigital.online.
+       Eventos propios: clic en "Agenda tu charla informativa" (agenda_charla)
+       y en "Aplica ahora" (aplica_ahora), en cualquier página; en GA4 se
+       pueden marcar como eventos clave.
        En localhost / dev no se inyecta para no inflar métricas con
        la navegación de desarrollo. El snippet de Google queda
        envuelto pero sin modificaciones a su lógica interna.
@@ -65,7 +69,8 @@
   <script>
     (function () {
       var host = window.location.hostname;
-      var isProd = host === 'creaciondigital.online' || host === 'www.creaciondigital.online';
+      var isProd = host === 'creaciondigital.online' || host === 'www.creaciondigital.online'
+        || host === 'creaciondigital-ueb.netlify.app';
       if (!isProd) return;
 
       // Cargar gtag.js de forma async
@@ -80,6 +85,18 @@
       window.gtag = gtag;
       gtag('js', new Date());
       gtag('config', 'G-EMK9RDJD0G');
+
+      // Clics en los dos llamados a la acción, por URL de destino (así cubre
+      // todos los botones del sitio sin tocar cada componente).
+      document.addEventListener('click', function (e) {
+        var a = e.target && e.target.closest ? e.target.closest('a[href]') : null;
+        if (!a) return;
+        var href = a.getAttribute('href') || '';
+        var name = href.indexOf('forms.cloud.microsoft') !== -1 ? 'agenda_charla'
+          : href.indexOf('unbosque.edu.co/inscripciones') !== -1 ? 'aplica_ahora'
+          : null;
+        if (name) gtag('event', name, { page_path: location.pathname, link_text: (a.textContent || '').trim().slice(0, 60) });
+      }, true);
     })();
   </script>
 </head>

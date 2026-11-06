@@ -7,6 +7,13 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Agregado — Google Analytics activo en Netlify + eventos de los llamados a la acción
+
+- GA4 (`G-EMK9RDJD0G`) solo cargaba en `creaciondigital.online`; ahora también en `creaciondigital-ueb.netlify.app`, donde vive el sitio. Sigue apagado en localhost.
+- Eventos propios por URL de destino, en todas las páginas: `agenda_charla` (formulario de Microsoft Forms) y `aplica_ahora` (inscripciones U. El Bosque), con `page_path` y `link_text`. Se pueden marcar como eventos clave en GA4.
+- Pendiente fuera del código: acceso a la cuenta de GA y aviso de privacidad/cookies (Ley 1581 de 2012).
+- Archivos: `index.html`.
+
 ### Agregado — HTML legible para bots de IA y buscadores (prerender por ruta)
 
 - Los rastreadores de IA que no ejecutan JavaScript (GPTBot, ClaudeBot, PerplexityBot) recibían `<div id="root"></div>` vacío. Ahora `scripts/prerender.ts` corre después de `vite build` y escribe un `.html` por ruta (`dist/blog.html`, `dist/blog/<id>.html`…, para que Netlify los sirva sin redirigir a la versión con `/` final) (home, /blog, 6 posts, /proyectos, 5 proyectos) con su `<head>` propio (título, descripción, canonical, OG/Twitter, JSON-LD) y el contenido en HTML semántico dentro de `#root`. React no hidrata: `createRoot` lo reemplaza al cargar, la app se ve igual.
