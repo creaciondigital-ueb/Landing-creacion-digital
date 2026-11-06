@@ -55,7 +55,10 @@
   </script>
 
   <!-- ============================================================
-       Google Analytics 4 (gtag.js) — G-EMK9RDJD0G
+       Google Analytics 4 (gtag.js) — dos propiedades:
+         G-EMK9RDJD0G  cuenta original (administrada por quien hizo el sitio antes; sin acceso hoy)
+         G-WQEPLNPF0Y  cuenta de Fabian Herrera (desde 2026-11-06)
+       Cada visita y cada evento se envían a las dos.
        Guard: solo se carga en producción (creaciondigital.online, www. y
        el sitio de Netlify creaciondigital-ueb.netlify.app, que es donde vive
        hoy). Migración de dominio 2026-06-09: ceopacademia.org → creaciondigital.online.
@@ -85,6 +88,7 @@
       window.gtag = gtag;
       gtag('js', new Date());
       gtag('config', 'G-EMK9RDJD0G');
+      gtag('config', 'G-WQEPLNPF0Y');
 
       // Clics en los dos llamados a la acción, por URL de destino (así cubre
       // todos los botones del sitio sin tocar cada componente).

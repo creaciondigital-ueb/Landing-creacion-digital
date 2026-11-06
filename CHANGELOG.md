@@ -7,6 +7,11 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Agregado — Segunda propiedad de Google Analytics (G-WQEPLNPF0Y)
+
+- Nadie tiene hoy acceso a `G-EMK9RDJD0G`; se agrega la propiedad de Fabian Herrera, `G-WQEPLNPF0Y`. Cada visita y los eventos `agenda_charla` / `aplica_ahora` se envían a las dos.
+- Archivos: `index.html`.
+
 ### Agregado — Google Analytics activo en Netlify + eventos de los llamados a la acción
 
 - GA4 (`G-EMK9RDJD0G`) solo cargaba en `creaciondigital.online`; ahora también en `creaciondigital-ueb.netlify.app`, donde vive el sitio. Sigue apagado en localhost.
