@@ -2,7 +2,7 @@
  * Genera HTML legible para bots que no ejecutan JavaScript (rastreadores de
  * IA como GPTBot, ClaudeBot, PerplexityBot) — corre DESPUÉS de `vite build`.
  *
- * Por cada ruta escribe dist/<ruta>/index.html a partir de dist/index.html:
+ * Por cada ruta escribe dist/<ruta>.html (la home, dist/index.html) a partir de dist/index.html:
  *   - <head> de esa ruta (título, descripción, canonical, OG/Twitter, JSON-LD),
  *     con los MISMOS valores que pone useSeo en el navegador (src/seo/pages.ts).
  *   - Dentro de <div id="root">, el contenido de la página en HTML semántico,
@@ -228,7 +228,10 @@ function write(path: string, seo: PageSeo, body: string) {
     '<div id="root"></div>',
     `<div id="root"><div class="pcd-prerender">\n${body}\n</div></div>`,
   );
-  const file = path === '/' ? join(DIST, 'index.html') : join(DIST, path, 'index.html');
+  // /blog → dist/blog.html (no dist/blog/index.html): Netlify sirve
+  // blog.html en /blog con 200; con una carpeta /blog/index.html redirige
+  // a /blog/ (301) y el canonical sin barra apuntaría a una redirección.
+  const file = path === '/' ? join(DIST, 'index.html') : join(DIST, `${path}.html`);
   mkdirSync(dirname(file), { recursive: true });
   writeFileSync(file, html);
 }
