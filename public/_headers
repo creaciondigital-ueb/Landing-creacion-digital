@@ -1,0 +1,5 @@
+# Netlify. La redirección de /programa/* al CDN (ver _redirects) se guarda un
+# año en el navegador: una página vieja que siga pidiendo esas rutas (por
+# ejemplo las portadas que rotan cada 5 s) no vuelve a preguntarle a Netlify.
+/programa/*
+  Cache-Control: public, max-age=31536000, immutable

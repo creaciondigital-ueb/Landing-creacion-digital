@@ -7,6 +7,13 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Corregido — Redirecciones 301 que seguían gastando peticiones en Netlify
+
+- Dos horas después del deploy de imágenes seguían llegando ~10.500 peticiones por hora a Netlify, casi todas 301 de las portadas que rotan cada 5 s. Causa: las rutas se reescribían al CDN después de que Vite calculara el hash de cada archivo, así que `proyectos-C9apLyG8.js` conservó el nombre con contenido distinto y algún caché (probablemente la precarga de TikTok) seguía sirviendo la versión vieja. Además, la 301 de Netlify llegaba con `max-age=0` y se repetía en cada rotación.
+- Ahora un plugin de Vite (`assets-to-cdn` en `vite.config.ts`, solo en build) reescribe `/programa/...` en el código y el CSS antes del hash: los archivos salen con nombres nuevos. `scripts/prerender.ts` sigue reescribiendo solo el HTML.
+- `public/_headers`: la 301 de `/programa/*` se guarda un año en el navegador.
+- Archivos: `vite.config.ts`, `public/_headers`.
+
 ### Mejorado — Imágenes fuera de Netlify y carga diferida (pauta en TikTok)
 
 - Problema: con la pauta de TikTok se gastaron 896 de 1.000 créditos de Netlify en 2 días. Cada visita descargaba 10,6 MB y 73 archivos sin hacer scroll (8,7 MB eran las fotos de docentes, de hasta 2.900 px), y las portadas que rotan cada 5 s se volvían a pedir al servidor en cada cambio (`max-age=0`).
