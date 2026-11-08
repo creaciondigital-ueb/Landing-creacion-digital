@@ -7,6 +7,16 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Mejorado — Imágenes fuera de Netlify y carga diferida (pauta en TikTok)
+
+- Problema: con la pauta de TikTok se gastaron 896 de 1.000 créditos de Netlify en 2 días. Cada visita descargaba 10,6 MB y 73 archivos sin hacer scroll (8,7 MB eran las fotos de docentes, de hasta 2.900 px), y las portadas que rotan cada 5 s se volvían a pedir al servidor en cada cambio (`max-age=0`).
+- Imágenes reducidas en su lugar, mismos nombres: docentes a 700 px, resto a máx. 1.600 px, íconos del dock a 96 px, WebP calidad 75. Total de 18,5 MB a 6,8 MB.
+- `src/hooks/useLazyMedia.ts`: fondos CSS (`data-bg`, `data-init`/`data-end` de docentes) y el video del equipo (`data-src`) se cargan solo al acercarse a la pantalla. Las cards del carrusel cargan también las dos siguientes.
+- Imágenes y PDF se sirven desde Cloudflare Pages (`ASSET_CDN`, proyecto `creaciondigital-ueb-img`, caché de un año `immutable`, carpeta `v1`); el video desde jsDelivr (`VIDEO_CDN`, fijado a un commit) porque Cloudflare Pages no responde por rangos y Safari en iPhone los necesita. El código sigue usando `/programa/...`; `scripts/prerender.ts` reescribe las rutas en el build y quita `dist/programa`. `_redirects` manda al CDN cualquier `/programa/*` que quede.
+- Resultado medido a 390 px: primera carga de 10,6 MB a ~0,4 MB de imágenes (18 peticiones en total); página completa ~2,8 MB. A Netlify llegan ~8 peticiones por visita (HTML, JS, CSS).
+- Para cambiar una imagen: subirla con `npx wrangler pages deploy` bajo `v2` y cambiar `ASSET_CDN`.
+- Archivos: `public/programa/img/**`, `src/hooks/useLazyMedia.ts`, `src/pages/ProgramaCreacionDigital.tsx`, `src/seo/site.ts`, `scripts/prerender.ts`, `public/_redirects`.
+
 ### Agregado — Segunda propiedad de Google Analytics (G-WQEPLNPF0Y)
 
 - Nadie tiene hoy acceso a `G-EMK9RDJD0G`; se agrega la propiedad de Fabian Herrera, `G-WQEPLNPF0Y`. Cada visita y los eventos `agenda_charla` / `aplica_ahora` se envían a las dos.

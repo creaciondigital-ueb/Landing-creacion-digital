@@ -1,9 +1,10 @@
-import { useEffect, useState, useRef, type ReactNode, type CSSProperties } from 'react';
+import { useEffect, useState, useRef, type ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import { PROYECTOS, type Proyecto } from '../data/proyectos';
 import { BLOG_POSTS } from '../data/blog';
 import { useLang } from '../i18n/LanguageContext';
 import { useSeo } from '../hooks/useSeo';
+import { useLazyMedia } from '../hooks/useLazyMedia';
 import { homeSeo } from '../seo/pages';
 import '../styles/programa.css';
 
@@ -700,6 +701,7 @@ export default function ProgramaCreacionDigital() {
   const { lang, setLang, t } = useLang();
 
   useSeo(homeSeo(lang));
+  useLazyMedia();
 
   // Modal de docente activo
   const [activeDocente, setActiveDocente] = useState<string | null>(null);
@@ -1071,7 +1073,7 @@ export default function ProgramaCreacionDigital() {
             <span className="pcd-axis__word-mobile">{t.axis02.wordFull}</span>
           </h2>
           <p className="pcd-axis__caption pcd-reveal">{t.axis02.caption}</p>
-          <div className="pcd-axis__image pcd-reveal" style={{ backgroundImage: `url('${IMG}/proyecto-5.webp')` }} aria-hidden="true" />
+          <div className="pcd-axis__image pcd-reveal" data-bg={`${IMG}/proyecto-5.webp`} aria-hidden="true" />
         </div>
         <div className="pcd-axis__right">
           {axis02Mode === 'definicion' ? (
@@ -1109,7 +1111,7 @@ export default function ProgramaCreacionDigital() {
                 <div className="pcd-content-dock__row">
                   {MUNDO_DOCK.map((tool) => (
                     <div className="pcd-content-dock__item" key={tool.name} title={tool.name}>
-                      <div className="pcd-content-dock__icon" style={{ backgroundImage: `url('${tool.icon}')` }} aria-hidden="true" />
+                      <div className="pcd-content-dock__icon" data-bg={tool.icon} aria-hidden="true" />
                       <span className="pcd-content-dock__name">{tool.name}</span>
                     </div>
                   ))}
@@ -1139,7 +1141,7 @@ export default function ProgramaCreacionDigital() {
             <span className="pcd-axis__word-mobile">{t.axis01.wordFull}</span>
           </h2>
           <p className="pcd-axis__caption pcd-reveal">{t.axis01.caption}</p>
-          <div className="pcd-axis__image pcd-reveal" style={{ backgroundImage: `url('${IMG}/proyecto-3.webp')` }} aria-hidden="true" />
+          <div className="pcd-axis__image pcd-reveal" data-bg={`${IMG}/proyecto-3.webp`} aria-hidden="true" />
         </div>
         <div className="pcd-axis__right">
           {axis01Mode === 'definicion' ? (
@@ -1177,7 +1179,7 @@ export default function ProgramaCreacionDigital() {
                 <div className="pcd-content-dock__row">
                   {CONTENIDO_DOCK.map((tool) => (
                     <div className="pcd-content-dock__item" key={tool.name} title={tool.name}>
-                      <div className="pcd-content-dock__icon" style={{ backgroundImage: `url('${tool.icon}')` }} aria-hidden="true" />
+                      <div className="pcd-content-dock__icon" data-bg={tool.icon} aria-hidden="true" />
                       <span className="pcd-content-dock__name">{tool.name}</span>
                     </div>
                   ))}
@@ -1207,7 +1209,7 @@ export default function ProgramaCreacionDigital() {
             <span className="pcd-axis__word-mobile">{t.axis03.wordFull}</span>
           </h2>
           <p className="pcd-axis__caption pcd-reveal">{t.axis03.caption}</p>
-          <div className="pcd-axis__image pcd-reveal" style={{ backgroundImage: `url('${IMG}/proyecto-6.webp')` }} aria-hidden="true" />
+          <div className="pcd-axis__image pcd-reveal" data-bg={`${IMG}/proyecto-6.webp`} aria-hidden="true" />
         </div>
         <div className="pcd-axis__right">
           {axis03Mode === 'definicion' ? (
@@ -1245,7 +1247,7 @@ export default function ProgramaCreacionDigital() {
                 <div className="pcd-content-dock__row">
                   {PRODUCTO_DOCK.map((tool) => (
                     <div className="pcd-content-dock__item" key={tool.name} title={tool.name}>
-                      <div className="pcd-content-dock__icon" style={{ backgroundImage: `url('${tool.icon}')` }} aria-hidden="true" />
+                      <div className="pcd-content-dock__icon" data-bg={tool.icon} aria-hidden="true" />
                       <span className="pcd-content-dock__name">{tool.name}</span>
                     </div>
                   ))}
@@ -1301,7 +1303,7 @@ export default function ProgramaCreacionDigital() {
             aria-label={t.docentes.fabian.ariaLabel}
             onClick={() => onDocenteCardClick('fabian')}
             onKeyDown={(e) => onCardKey(e, 'fabian')}
-            style={{ '--docente-init': `url('${IMG}/Fabian_Init.webp')`, '--docente-end': `url('${IMG}/Fabian_End.webp')` } as CSSProperties}
+            data-init={`${IMG}/Fabian_Init.webp`} data-end={`${IMG}/Fabian_End.webp`}
           >
             <div className="pcd-docente__blob" aria-hidden="true" />
             <img loading="lazy" className="pcd-sticker pcd-sticker--like" src={`${IMG}/Like.webp`} alt="" aria-hidden="true" />
@@ -1318,7 +1320,7 @@ export default function ProgramaCreacionDigital() {
             aria-label={t.docentes.paula.ariaLabel}
             onClick={() => onDocenteCardClick('paula')}
             onKeyDown={(e) => onCardKey(e, 'paula')}
-            style={{ '--docente-init': `url('${IMG}/Paula_Init.webp')`, '--docente-end': `url('${IMG}/Paula_End.webp')` } as CSSProperties}
+            data-init={`${IMG}/Paula_Init.webp`} data-end={`${IMG}/Paula_End.webp`}
           >
             <div className="pcd-docente__blob" aria-hidden="true" />
             <img loading="lazy" className="pcd-sticker pcd-sticker--idea" src={`${IMG}/Idea.webp`} alt="" aria-hidden="true" />
@@ -1335,7 +1337,7 @@ export default function ProgramaCreacionDigital() {
             aria-label={t.docentes.sofia.ariaLabel}
             onClick={() => onDocenteCardClick('sofia')}
             onKeyDown={(e) => onCardKey(e, 'sofia')}
-            style={{ '--docente-init': `url('${IMG}/Sofia_Init.webp')`, '--docente-end': `url('${IMG}/Sofia_End.webp')` } as CSSProperties}
+            data-init={`${IMG}/Sofia_Init.webp`} data-end={`${IMG}/Sofia_End.webp`}
           >
             <div className="pcd-docente__blob" aria-hidden="true" />
             <img loading="lazy" className="pcd-sticker pcd-sticker--love" src={`${IMG}/Love.webp`} alt="" aria-hidden="true" />
@@ -1352,7 +1354,7 @@ export default function ProgramaCreacionDigital() {
             aria-label={t.docentes.nicolas.ariaLabel}
             onClick={() => onDocenteCardClick('nicolas')}
             onKeyDown={(e) => onCardKey(e, 'nicolas')}
-            style={{ '--docente-init': `url('${IMG}/Nicolas_Init.webp')`, '--docente-end': `url('${IMG}/Nicolas_End.webp')` } as CSSProperties}
+            data-init={`${IMG}/Nicolas_Init.webp`} data-end={`${IMG}/Nicolas_End.webp`}
           >
             <div className="pcd-docente__blob" aria-hidden="true" />
             <img loading="lazy" className="pcd-sticker pcd-sticker--star" src={`${IMG}/Star.webp`} alt="" aria-hidden="true" />
@@ -1369,7 +1371,7 @@ export default function ProgramaCreacionDigital() {
             aria-label={t.docentes.ximena.ariaLabel}
             onClick={() => onDocenteCardClick('ximena')}
             onKeyDown={(e) => onCardKey(e, 'ximena')}
-            style={{ '--docente-init': `url('${IMG}/Ximena_Init.webp')`, '--docente-end': `url('${IMG}/Ximena_End.webp')` } as CSSProperties}
+            data-init={`${IMG}/Ximena_Init.webp`} data-end={`${IMG}/Ximena_End.webp`}
           >
             <div className="pcd-docente__blob" aria-hidden="true" />
             <img loading="lazy" className="pcd-sticker pcd-sticker--computer" src={`${IMG}/Computer.webp`} alt="" aria-hidden="true" />
@@ -1386,7 +1388,7 @@ export default function ProgramaCreacionDigital() {
             aria-label={t.docentes.camilo.ariaLabel}
             onClick={() => onDocenteCardClick('camilo')}
             onKeyDown={(e) => onCardKey(e, 'camilo')}
-            style={{ '--docente-init': `url('${IMG}/Camilo_Init.webp')`, '--docente-end': `url('${IMG}/Camilo_End.webp')` } as CSSProperties}
+            data-init={`${IMG}/Camilo_Init.webp`} data-end={`${IMG}/Camilo_End.webp`}
           >
             <div className="pcd-docente__blob" aria-hidden="true" />
             <img loading="lazy" className="pcd-sticker pcd-sticker--controller" src={`${IMG}/Controller.webp`} alt="" aria-hidden="true" />
@@ -1403,7 +1405,7 @@ export default function ProgramaCreacionDigital() {
             aria-label={t.docentes.daniela.ariaLabel}
             onClick={() => onDocenteCardClick('daniela')}
             onKeyDown={(e) => onCardKey(e, 'daniela')}
-            style={{ '--docente-init': `url('${IMG}/Daniela_Init.webp')`, '--docente-end': `url('${IMG}/Daniela_End.webp')` } as CSSProperties}
+            data-init={`${IMG}/Daniela_Init.webp`} data-end={`${IMG}/Daniela_End.webp`}
           >
             <div className="pcd-docente__blob" aria-hidden="true" />
             <img loading="lazy" className="pcd-sticker pcd-sticker--camera" src={`${IMG}/Camera.webp`} alt="" aria-hidden="true" />
@@ -1420,7 +1422,7 @@ export default function ProgramaCreacionDigital() {
             aria-label={t.docentes.juandavid.ariaLabel}
             onClick={() => onDocenteCardClick('juandavid')}
             onKeyDown={(e) => onCardKey(e, 'juandavid')}
-            style={{ '--docente-init': `url('${IMG}/JuanDavid_Init.webp')`, '--docente-end': `url('${IMG}/JuanDavid_End.webp')` } as CSSProperties}
+            data-init={`${IMG}/JuanDavid_Init.webp`} data-end={`${IMG}/JuanDavid_End.webp`}
           >
             <div className="pcd-docente__blob" aria-hidden="true" />
             <img loading="lazy" className="pcd-sticker pcd-sticker--phone" src={`${IMG}/Phone.webp`} alt="" aria-hidden="true" />
@@ -1437,7 +1439,7 @@ export default function ProgramaCreacionDigital() {
             aria-label={t.docentes.vanessa.ariaLabel}
             onClick={() => onDocenteCardClick('vanessa')}
             onKeyDown={(e) => onCardKey(e, 'vanessa')}
-            style={{ '--docente-init': `url('${IMG}/Vanessa_Init.webp')`, '--docente-end': `url('${IMG}/Vanessa_End.webp')` } as CSSProperties}
+            data-init={`${IMG}/Vanessa_Init.webp`} data-end={`${IMG}/Vanessa_End.webp`}
           >
             <div className="pcd-docente__blob" aria-hidden="true" />
             <img loading="lazy" className="pcd-sticker pcd-sticker--love" src={`${IMG}/Love.webp`} alt="" aria-hidden="true" />
@@ -1454,7 +1456,7 @@ export default function ProgramaCreacionDigital() {
             aria-label={t.docentes.rusbel.ariaLabel}
             onClick={() => onDocenteCardClick('rusbel')}
             onKeyDown={(e) => onCardKey(e, 'rusbel')}
-            style={{ '--docente-init': `url('${IMG}/Rusbel_Init.webp')`, '--docente-end': `url('${IMG}/Rusbel_End.webp')` } as CSSProperties}
+            data-init={`${IMG}/Rusbel_Init.webp`} data-end={`${IMG}/Rusbel_End.webp`}
           >
             <div className="pcd-docente__blob" aria-hidden="true" />
             <img loading="lazy" className="pcd-sticker pcd-sticker--like" src={`${IMG}/Like.webp`} alt="" aria-hidden="true" />
@@ -1471,7 +1473,7 @@ export default function ProgramaCreacionDigital() {
             aria-label={t.docentes.carlos.ariaLabel}
             onClick={() => onDocenteCardClick('carlos')}
             onKeyDown={(e) => onCardKey(e, 'carlos')}
-            style={{ '--docente-init': `url('${IMG}/Carlos_Init.webp')`, '--docente-end': `url('${IMG}/Carlos_End.webp')` } as CSSProperties}
+            data-init={`${IMG}/Carlos_Init.webp`} data-end={`${IMG}/Carlos_End.webp`}
           >
             <div className="pcd-docente__blob" aria-hidden="true" />
             <img loading="lazy" className="pcd-sticker pcd-sticker--idea" src={`${IMG}/Idea.webp`} alt="" aria-hidden="true" />
@@ -1488,7 +1490,7 @@ export default function ProgramaCreacionDigital() {
             aria-label={t.docentes.dayana.ariaLabel}
             onClick={() => onDocenteCardClick('dayana')}
             onKeyDown={(e) => onCardKey(e, 'dayana')}
-            style={{ '--docente-init': `url('${IMG}/Dayana_Init.webp')`, '--docente-end': `url('${IMG}/Dayana_End.webp')` } as CSSProperties}
+            data-init={`${IMG}/Dayana_Init.webp`} data-end={`${IMG}/Dayana_End.webp`}
           >
             <div className="pcd-docente__blob" aria-hidden="true" />
             <img loading="lazy" className="pcd-sticker pcd-sticker--controller" src={`${IMG}/Controller.webp`} alt="" aria-hidden="true" />
@@ -1505,7 +1507,7 @@ export default function ProgramaCreacionDigital() {
             aria-label={t.docentes.julian.ariaLabel}
             onClick={() => onDocenteCardClick('julian')}
             onKeyDown={(e) => onCardKey(e, 'julian')}
-            style={{ '--docente-init': `url('${IMG}/Julian_Init.webp')`, '--docente-end': `url('${IMG}/Julian_End.webp')` } as CSSProperties}
+            data-init={`${IMG}/Julian_Init.webp`} data-end={`${IMG}/Julian_End.webp`}
           >
             <div className="pcd-docente__blob" aria-hidden="true" />
             <img loading="lazy" className="pcd-sticker pcd-sticker--star" src={`${IMG}/Star.webp`} alt="" aria-hidden="true" />
@@ -1522,7 +1524,7 @@ export default function ProgramaCreacionDigital() {
             aria-label={t.docentes.john.ariaLabel}
             onClick={() => onDocenteCardClick('john')}
             onKeyDown={(e) => onCardKey(e, 'john')}
-            style={{ '--docente-init': `url('${IMG}/John_Init.webp')`, '--docente-end': `url('${IMG}/John_End.webp')` } as CSSProperties}
+            data-init={`${IMG}/John_Init.webp`} data-end={`${IMG}/John_End.webp`}
           >
             <div className="pcd-docente__blob" aria-hidden="true" />
             <img loading="lazy" className="pcd-sticker pcd-sticker--computer" src={`${IMG}/Computer.webp`} alt="" aria-hidden="true" />
@@ -1539,7 +1541,7 @@ export default function ProgramaCreacionDigital() {
             aria-label={t.docentes.tatiana.ariaLabel}
             onClick={() => onDocenteCardClick('tatiana')}
             onKeyDown={(e) => onCardKey(e, 'tatiana')}
-            style={{ '--docente-init': `url('${IMG}/Tatiana_Init.webp')`, '--docente-end': `url('${IMG}/Tatiana_End.webp')` } as CSSProperties}
+            data-init={`${IMG}/Tatiana_Init.webp`} data-end={`${IMG}/Tatiana_End.webp`}
           >
             <div className="pcd-docente__blob" aria-hidden="true" />
             <img loading="lazy" className="pcd-sticker pcd-sticker--love" src={`${IMG}/Love.webp`} alt="" aria-hidden="true" />
@@ -1556,7 +1558,7 @@ export default function ProgramaCreacionDigital() {
             aria-label={t.docentes.pilar.ariaLabel}
             onClick={() => onDocenteCardClick('pilar')}
             onKeyDown={(e) => onCardKey(e, 'pilar')}
-            style={{ '--docente-init': `url('${IMG}/Pilar_Init.webp')`, '--docente-end': `url('${IMG}/Pilar_End.webp')` } as CSSProperties}
+            data-init={`${IMG}/Pilar_Init.webp`} data-end={`${IMG}/Pilar_End.webp`}
           >
             <div className="pcd-docente__blob" aria-hidden="true" />
             <img loading="lazy" className="pcd-sticker pcd-sticker--camera" src={`${IMG}/Camera.webp`} alt="" aria-hidden="true" />
@@ -1573,7 +1575,7 @@ export default function ProgramaCreacionDigital() {
             aria-label={t.docentes.jaime.ariaLabel}
             onClick={() => onDocenteCardClick('jaime')}
             onKeyDown={(e) => onCardKey(e, 'jaime')}
-            style={{ '--docente-init': `url('${IMG}/Jaime_Init.webp')`, '--docente-end': `url('${IMG}/Jaime_End.webp')` } as CSSProperties}
+            data-init={`${IMG}/Jaime_Init.webp`} data-end={`${IMG}/Jaime_End.webp`}
           >
             <div className="pcd-docente__blob" aria-hidden="true" />
             <img loading="lazy" className="pcd-sticker pcd-sticker--phone" src={`${IMG}/Phone.webp`} alt="" aria-hidden="true" />
@@ -1593,7 +1595,7 @@ export default function ProgramaCreacionDigital() {
             aria-label={t.docentes.fabian.ariaLabel}
             onClick={() => onDocenteCardClick('fabian')}
             onKeyDown={(e) => onCardKey(e, 'fabian')}
-            style={{ '--docente-init': `url('${IMG}/Fabian_Init.webp')`, '--docente-end': `url('${IMG}/Fabian_End.webp')` } as CSSProperties}
+            data-init={`${IMG}/Fabian_Init.webp`} data-end={`${IMG}/Fabian_End.webp`}
           >
             <div className="pcd-docente__blob" aria-hidden="true" />
             <img loading="lazy" className="pcd-sticker pcd-sticker--like" src={`${IMG}/Like.webp`} alt="" aria-hidden="true" />
@@ -1610,7 +1612,7 @@ export default function ProgramaCreacionDigital() {
             aria-label={t.docentes.paula.ariaLabel}
             onClick={() => onDocenteCardClick('paula')}
             onKeyDown={(e) => onCardKey(e, 'paula')}
-            style={{ '--docente-init': `url('${IMG}/Paula_Init.webp')`, '--docente-end': `url('${IMG}/Paula_End.webp')` } as CSSProperties}
+            data-init={`${IMG}/Paula_Init.webp`} data-end={`${IMG}/Paula_End.webp`}
           >
             <div className="pcd-docente__blob" aria-hidden="true" />
             <img loading="lazy" className="pcd-sticker pcd-sticker--idea" src={`${IMG}/Idea.webp`} alt="" aria-hidden="true" />
@@ -1627,7 +1629,7 @@ export default function ProgramaCreacionDigital() {
             aria-label={t.docentes.sofia.ariaLabel}
             onClick={() => onDocenteCardClick('sofia')}
             onKeyDown={(e) => onCardKey(e, 'sofia')}
-            style={{ '--docente-init': `url('${IMG}/Sofia_Init.webp')`, '--docente-end': `url('${IMG}/Sofia_End.webp')` } as CSSProperties}
+            data-init={`${IMG}/Sofia_Init.webp`} data-end={`${IMG}/Sofia_End.webp`}
           >
             <div className="pcd-docente__blob" aria-hidden="true" />
             <img loading="lazy" className="pcd-sticker pcd-sticker--love" src={`${IMG}/Love.webp`} alt="" aria-hidden="true" />
@@ -1644,7 +1646,7 @@ export default function ProgramaCreacionDigital() {
             aria-label={t.docentes.nicolas.ariaLabel}
             onClick={() => onDocenteCardClick('nicolas')}
             onKeyDown={(e) => onCardKey(e, 'nicolas')}
-            style={{ '--docente-init': `url('${IMG}/Nicolas_Init.webp')`, '--docente-end': `url('${IMG}/Nicolas_End.webp')` } as CSSProperties}
+            data-init={`${IMG}/Nicolas_Init.webp`} data-end={`${IMG}/Nicolas_End.webp`}
           >
             <div className="pcd-docente__blob" aria-hidden="true" />
             <img loading="lazy" className="pcd-sticker pcd-sticker--star" src={`${IMG}/Star.webp`} alt="" aria-hidden="true" />
@@ -1661,7 +1663,7 @@ export default function ProgramaCreacionDigital() {
             aria-label={t.docentes.ximena.ariaLabel}
             onClick={() => onDocenteCardClick('ximena')}
             onKeyDown={(e) => onCardKey(e, 'ximena')}
-            style={{ '--docente-init': `url('${IMG}/Ximena_Init.webp')`, '--docente-end': `url('${IMG}/Ximena_End.webp')` } as CSSProperties}
+            data-init={`${IMG}/Ximena_Init.webp`} data-end={`${IMG}/Ximena_End.webp`}
           >
             <div className="pcd-docente__blob" aria-hidden="true" />
             <img loading="lazy" className="pcd-sticker pcd-sticker--computer" src={`${IMG}/Computer.webp`} alt="" aria-hidden="true" />
@@ -1678,7 +1680,7 @@ export default function ProgramaCreacionDigital() {
             aria-label={t.docentes.camilo.ariaLabel}
             onClick={() => onDocenteCardClick('camilo')}
             onKeyDown={(e) => onCardKey(e, 'camilo')}
-            style={{ '--docente-init': `url('${IMG}/Camilo_Init.webp')`, '--docente-end': `url('${IMG}/Camilo_End.webp')` } as CSSProperties}
+            data-init={`${IMG}/Camilo_Init.webp`} data-end={`${IMG}/Camilo_End.webp`}
           >
             <div className="pcd-docente__blob" aria-hidden="true" />
             <img loading="lazy" className="pcd-sticker pcd-sticker--controller" src={`${IMG}/Controller.webp`} alt="" aria-hidden="true" />
@@ -1695,7 +1697,7 @@ export default function ProgramaCreacionDigital() {
             aria-label={t.docentes.daniela.ariaLabel}
             onClick={() => onDocenteCardClick('daniela')}
             onKeyDown={(e) => onCardKey(e, 'daniela')}
-            style={{ '--docente-init': `url('${IMG}/Daniela_Init.webp')`, '--docente-end': `url('${IMG}/Daniela_End.webp')` } as CSSProperties}
+            data-init={`${IMG}/Daniela_Init.webp`} data-end={`${IMG}/Daniela_End.webp`}
           >
             <div className="pcd-docente__blob" aria-hidden="true" />
             <img loading="lazy" className="pcd-sticker pcd-sticker--camera" src={`${IMG}/Camera.webp`} alt="" aria-hidden="true" />
@@ -1712,7 +1714,7 @@ export default function ProgramaCreacionDigital() {
             aria-label={t.docentes.juandavid.ariaLabel}
             onClick={() => onDocenteCardClick('juandavid')}
             onKeyDown={(e) => onCardKey(e, 'juandavid')}
-            style={{ '--docente-init': `url('${IMG}/JuanDavid_Init.webp')`, '--docente-end': `url('${IMG}/JuanDavid_End.webp')` } as CSSProperties}
+            data-init={`${IMG}/JuanDavid_Init.webp`} data-end={`${IMG}/JuanDavid_End.webp`}
           >
             <div className="pcd-docente__blob" aria-hidden="true" />
             <img loading="lazy" className="pcd-sticker pcd-sticker--phone" src={`${IMG}/Phone.webp`} alt="" aria-hidden="true" />
@@ -1729,7 +1731,7 @@ export default function ProgramaCreacionDigital() {
             aria-label={t.docentes.vanessa.ariaLabel}
             onClick={() => onDocenteCardClick('vanessa')}
             onKeyDown={(e) => onCardKey(e, 'vanessa')}
-            style={{ '--docente-init': `url('${IMG}/Vanessa_Init.webp')`, '--docente-end': `url('${IMG}/Vanessa_End.webp')` } as CSSProperties}
+            data-init={`${IMG}/Vanessa_Init.webp`} data-end={`${IMG}/Vanessa_End.webp`}
           >
             <div className="pcd-docente__blob" aria-hidden="true" />
             <img loading="lazy" className="pcd-sticker pcd-sticker--love" src={`${IMG}/Love.webp`} alt="" aria-hidden="true" />
@@ -1746,7 +1748,7 @@ export default function ProgramaCreacionDigital() {
             aria-label={t.docentes.rusbel.ariaLabel}
             onClick={() => onDocenteCardClick('rusbel')}
             onKeyDown={(e) => onCardKey(e, 'rusbel')}
-            style={{ '--docente-init': `url('${IMG}/Rusbel_Init.webp')`, '--docente-end': `url('${IMG}/Rusbel_End.webp')` } as CSSProperties}
+            data-init={`${IMG}/Rusbel_Init.webp`} data-end={`${IMG}/Rusbel_End.webp`}
           >
             <div className="pcd-docente__blob" aria-hidden="true" />
             <img loading="lazy" className="pcd-sticker pcd-sticker--like" src={`${IMG}/Like.webp`} alt="" aria-hidden="true" />
@@ -1763,7 +1765,7 @@ export default function ProgramaCreacionDigital() {
             aria-label={t.docentes.carlos.ariaLabel}
             onClick={() => onDocenteCardClick('carlos')}
             onKeyDown={(e) => onCardKey(e, 'carlos')}
-            style={{ '--docente-init': `url('${IMG}/Carlos_Init.webp')`, '--docente-end': `url('${IMG}/Carlos_End.webp')` } as CSSProperties}
+            data-init={`${IMG}/Carlos_Init.webp`} data-end={`${IMG}/Carlos_End.webp`}
           >
             <div className="pcd-docente__blob" aria-hidden="true" />
             <img loading="lazy" className="pcd-sticker pcd-sticker--idea" src={`${IMG}/Idea.webp`} alt="" aria-hidden="true" />
@@ -1780,7 +1782,7 @@ export default function ProgramaCreacionDigital() {
             aria-label={t.docentes.dayana.ariaLabel}
             onClick={() => onDocenteCardClick('dayana')}
             onKeyDown={(e) => onCardKey(e, 'dayana')}
-            style={{ '--docente-init': `url('${IMG}/Dayana_Init.webp')`, '--docente-end': `url('${IMG}/Dayana_End.webp')` } as CSSProperties}
+            data-init={`${IMG}/Dayana_Init.webp`} data-end={`${IMG}/Dayana_End.webp`}
           >
             <div className="pcd-docente__blob" aria-hidden="true" />
             <img loading="lazy" className="pcd-sticker pcd-sticker--controller" src={`${IMG}/Controller.webp`} alt="" aria-hidden="true" />
@@ -1797,7 +1799,7 @@ export default function ProgramaCreacionDigital() {
             aria-label={t.docentes.julian.ariaLabel}
             onClick={() => onDocenteCardClick('julian')}
             onKeyDown={(e) => onCardKey(e, 'julian')}
-            style={{ '--docente-init': `url('${IMG}/Julian_Init.webp')`, '--docente-end': `url('${IMG}/Julian_End.webp')` } as CSSProperties}
+            data-init={`${IMG}/Julian_Init.webp`} data-end={`${IMG}/Julian_End.webp`}
           >
             <div className="pcd-docente__blob" aria-hidden="true" />
             <img loading="lazy" className="pcd-sticker pcd-sticker--star" src={`${IMG}/Star.webp`} alt="" aria-hidden="true" />
@@ -1814,7 +1816,7 @@ export default function ProgramaCreacionDigital() {
             aria-label={t.docentes.john.ariaLabel}
             onClick={() => onDocenteCardClick('john')}
             onKeyDown={(e) => onCardKey(e, 'john')}
-            style={{ '--docente-init': `url('${IMG}/John_Init.webp')`, '--docente-end': `url('${IMG}/John_End.webp')` } as CSSProperties}
+            data-init={`${IMG}/John_Init.webp`} data-end={`${IMG}/John_End.webp`}
           >
             <div className="pcd-docente__blob" aria-hidden="true" />
             <img loading="lazy" className="pcd-sticker pcd-sticker--computer" src={`${IMG}/Computer.webp`} alt="" aria-hidden="true" />
@@ -1831,7 +1833,7 @@ export default function ProgramaCreacionDigital() {
             aria-label={t.docentes.tatiana.ariaLabel}
             onClick={() => onDocenteCardClick('tatiana')}
             onKeyDown={(e) => onCardKey(e, 'tatiana')}
-            style={{ '--docente-init': `url('${IMG}/Tatiana_Init.webp')`, '--docente-end': `url('${IMG}/Tatiana_End.webp')` } as CSSProperties}
+            data-init={`${IMG}/Tatiana_Init.webp`} data-end={`${IMG}/Tatiana_End.webp`}
           >
             <div className="pcd-docente__blob" aria-hidden="true" />
             <img loading="lazy" className="pcd-sticker pcd-sticker--love" src={`${IMG}/Love.webp`} alt="" aria-hidden="true" />
@@ -1848,7 +1850,7 @@ export default function ProgramaCreacionDigital() {
             aria-label={t.docentes.pilar.ariaLabel}
             onClick={() => onDocenteCardClick('pilar')}
             onKeyDown={(e) => onCardKey(e, 'pilar')}
-            style={{ '--docente-init': `url('${IMG}/Pilar_Init.webp')`, '--docente-end': `url('${IMG}/Pilar_End.webp')` } as CSSProperties}
+            data-init={`${IMG}/Pilar_Init.webp`} data-end={`${IMG}/Pilar_End.webp`}
           >
             <div className="pcd-docente__blob" aria-hidden="true" />
             <img loading="lazy" className="pcd-sticker pcd-sticker--camera" src={`${IMG}/Camera.webp`} alt="" aria-hidden="true" />
@@ -1865,7 +1867,7 @@ export default function ProgramaCreacionDigital() {
             aria-label={t.docentes.jaime.ariaLabel}
             onClick={() => onDocenteCardClick('jaime')}
             onKeyDown={(e) => onCardKey(e, 'jaime')}
-            style={{ '--docente-init': `url('${IMG}/Jaime_Init.webp')`, '--docente-end': `url('${IMG}/Jaime_End.webp')` } as CSSProperties}
+            data-init={`${IMG}/Jaime_Init.webp`} data-end={`${IMG}/Jaime_End.webp`}
           >
             <div className="pcd-docente__blob" aria-hidden="true" />
             <img loading="lazy" className="pcd-sticker pcd-sticker--phone" src={`${IMG}/Phone.webp`} alt="" aria-hidden="true" />
@@ -2273,7 +2275,8 @@ export default function ProgramaCreacionDigital() {
           <div className="pcd-team__stage">
             <video
               className="pcd-team__video"
-              src={`${VIDEO}/equipo.mp4`}
+              data-src={`${VIDEO}/equipo.mp4`}
+              preload="none"
               poster={`${IMG}/equipo/equipo-poster.webp`}
               autoPlay
               loop

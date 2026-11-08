@@ -16,12 +16,12 @@
  * Se compila con Vite (modo SSR) y se ejecuta con Node: ver "build" en
  * package.json.
  */
-import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync, readdirSync, rmSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import translations from '../src/i18n/translations';
 import { BLOG_POSTS, type BlogPost } from '../src/data/blog';
 import { PROYECTOS, type Proyecto } from '../src/data/proyectos';
-import { SITE_URL, SITE_NAME, APLICA_URL, CHARLA_URL, resolveImageUrl } from '../src/seo/site';
+import { SITE_URL, SITE_NAME, ASSET_CDN, VIDEO_CDN, APLICA_URL, CHARLA_URL, resolveImageUrl } from '../src/seo/site';
 import { homeSeo, blogListSeo, proyectosListSeo, blogPostSeo, proyectoSeo, type PageSeo } from '../src/seo/pages';
 
 const DIST = join(process.cwd(), 'dist');
@@ -300,4 +300,28 @@ const md = [
 ];
 writeFileSync(join(DIST, 'llms.txt'), md.join('\n'));
 
+// Imágenes, video y PDF a Cloudflare (ver ASSET_CDN en src/seo/site.ts):
+// toda ruta /programa/... en JS, CSS y HTML pasa a la URL del CDN, y la
+// carpeta se quita de dist para que Netlify no la publique. Si algo quedara
+// apuntando a /programa/, _redirects lo manda al CDN.
+const toCdn = (text: string) =>
+  text
+    .replaceAll(`${SITE_URL}/programa/`, `${ASSET_CDN}/programa/`)
+    .replace(/(["'`(=\s])\/programa\//g, `$1${ASSET_CDN}/programa/`)
+    .replaceAll(`${ASSET_CDN}/programa/video`, VIDEO_CDN);
+let rewritten = 0;
+const rewrite = (dir: string) => {
+  for (const entry of readdirSync(dir, { withFileTypes: true })) {
+    const file = join(dir, entry.name);
+    if (entry.isDirectory()) { if (entry.name !== 'programa') rewrite(file); continue; }
+    if (!/\.(js|css|html|txt|xml)$/.test(entry.name)) continue;
+    const src = readFileSync(file, 'utf8');
+    const out = toCdn(src);
+    if (out !== src) { writeFileSync(file, out); rewritten++; }
+  }
+};
+rewrite(DIST);
+rmSync(join(DIST, 'programa'), { recursive: true, force: true });
+
 console.log(`prerender: ${routes.length} rutas, 404.html, sitemap.xml, robots.txt, llms.txt → ${SITE_URL}`);
+console.log(`prerender: ${rewritten} archivos con /programa/ → ${ASSET_CDN}`);

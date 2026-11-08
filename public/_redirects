@@ -1,5 +1,10 @@
-# Netlify. Las rutas reales (/, /blog, /blog/:id, /proyectos, /proyectos/:id)
-# tienen su propio index.html generado por scripts/prerender.ts, que Netlify
+# Netlify. Imágenes, video y PDF viven en Cloudflare (ASSET_CDN en
+# src/seo/site.ts); el build ya reescribe las rutas, esto cubre enlaces viejos.
+/programa/video/*   https://cdn.jsdelivr.net/gh/creaciondigital-ueb/Landing-creacion-digital@f5540de/public/programa/video/:splat   301!
+/programa/*   https://creaciondigital-ueb-img.pages.dev/v1/programa/:splat   301!
+
+# Las rutas reales (/, /blog, /blog/:id, /proyectos, /proyectos/:id)
+# tienen su propio .html generado por scripts/prerender.ts, que Netlify
 # sirve antes que esta regla. Cualquier otra ruta recibe la app sin contenido
 # (404.html) con código 404; React muestra la página "no encontrada".
 /*    /404.html   404
