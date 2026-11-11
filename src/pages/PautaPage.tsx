@@ -91,12 +91,11 @@ function trackWhatsapp(v: string) {
 }
 
 /** Mensajes prellenados de WhatsApp: cada botón dice desde dónde escribe la persona. */
-type Motivo = 'info' | 'papa' | 'workshop';
+type Motivo = 'info' | 'workshop';
 function waUrl(v: string, motivo: Motivo = 'info') {
   const anuncio = `vi el anuncio de Creación Digital (${v})`;
   const msg = {
     info: `Hola, ${anuncio} y quiero saber más.`,
-    papa: `Hola, soy mamá/papá de un aspirante y ${anuncio}. Quiero hablar con la dirección.`,
     workshop: `Hola, ${anuncio} y quiero asistir al workshop de creación con IA.`,
   }[motivo];
   return `https://wa.me/${PAUTA.whatsapp}?text=${encodeURIComponent(msg)}`;
@@ -304,30 +303,11 @@ export default function PautaPage() {
           </div>
         </section>
 
-        {/* 7 · Para mamás y papás */}
-        <section className="pt-sec pt-papas">
-          <div className="pt-wrap">
-            <Label>05 · Para mamás y papás</Label>
-            <h2>Así se cuida a tu hijo <em>desde el primer semestre</em>.</h2>
-            <div className="pt-red">
-              <span className="pt-mono">Primer semestre con red</span>
-              <p>Si en su primer semestre siente que Creación Digital no es lo suyo, la dirección del programa lo acompaña a decidir su siguiente paso. Lo que haya aprobado se estudia para reconocerlo en otra carrera de El Bosque, como lo dice el Reglamento Estudiantil (art. 40).</p>
-            </div>
-            <div className="pt-care">
-              <div><b>Club de padres</b><span>Encuentros mensuales y cápsulas por WhatsApp. Hoy participan 900 familias.</span></div>
-              <div><b>Salud desde el primer día</b><span>Medicina y psicología gratis, y el programa SaludableMente.</span></div>
-              <div><b>Expedición UEB</b><span>Una inducción premiada por el Ministerio de Educación, con 95 estudiantes que acompañan a los nuevos.</span></div>
-              <div><b>Si viene de otra ciudad</b><span>El proyecto Awala lo acompaña a adaptarse a la universidad y a Bogotá.</span></div>
-            </div>
-            <BotonWa v={v} motivo="papa" className="pt-pill pt-pill--ink">Quiero hablar con la dirección</BotonWa>
-          </div>
-        </section>
-
         {/* 8 · Valor y siguiente paso */}
-        <section className="pt-sec">
+        <section className="pt-sec pt-sec--tight">
           <div className="pt-wrap pt-split">
             <div>
-              <Label>06 · Valor y siguiente paso</Label>
+              <Label>05 · Valor y siguiente paso</Label>
               <h2>Qué pasa cuando <em>nos escribes</em>.</h2>
             </div>
             <div>
@@ -346,7 +326,7 @@ export default function PautaPage() {
         {/* 9 · Preguntas */}
         <section className="pt-sec pt-sec--tight">
           <div className="pt-wrap">
-            <Label>07 · Preguntas</Label>
+            <Label>06 · Preguntas</Label>
             <h2>Lo que <em>todos preguntan</em>.</h2>
             <div className="pt-faq">
               {faqs.map(([q, a]) => (
@@ -359,7 +339,7 @@ export default function PautaPage() {
         {/* 10 · Cierre: lleva a la página principal del programa */}
         <section className="pt-sec pt-close">
           <div className="pt-wrap">
-            <Label>08 · Conoce más</Label>
+            <Label>07 · Conoce más</Label>
             <h2>Visita <em>nuestra página</em>.</h2>
             <a className="pt-pill pt-pill--ink" href="https://creaciondigital-ueb.netlify.app/">Visita nuestra página</a>
           </div>

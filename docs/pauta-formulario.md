@@ -8,13 +8,13 @@ La página `/pauta` es la que reciben los anuncios de TikTok, Facebook e Instagr
 
 ## 1. Sin formulario: todo va a WhatsApp
 
-La página no tiene formulario. «Inscríbete», en la barra superior, va a https://www.unbosque.edu.co/inscripciones/pregrado (GA4: `aplica_ahora`). «Agenda una charla con el director», en el hero, abre el formulario de charlas del sitio. «Síguenos en Instagram» y «Síguenos en TikTok» van a @creaciondigital.ueb. La última sección, «Visita nuestra página», lleva a https://creaciondigital-ueb.netlify.app/. «Visítanos en un open day» abre el formulario de inscripción al open day. «Asiste a nuestro workshop de creación con IA», «Quiero hablar con la dirección» y el botón rojo fijo «Escríbenos» abren WhatsApp con un mensaje prellenado que incluye la variante (`v`) del anuncio. El de mamás y papás y el del workshop llevan su propio mensaje.
+La página no tiene formulario. «Inscríbete», en la barra superior, va a https://www.unbosque.edu.co/inscripciones/pregrado (GA4: `aplica_ahora`). «Agenda una charla con el director», en el hero, abre el formulario de charlas del sitio. «Síguenos en Instagram» y «Síguenos en TikTok» van a @creaciondigital.ueb. La última sección, «Visita nuestra página», lleva a https://creaciondigital-ueb.netlify.app/. «Visítanos en un open day» abre el formulario de inscripción al open day. «Asiste a nuestro workshop de creación con IA» y el botón rojo fijo «Escríbenos» abren WhatsApp con un mensaje prellenado que incluye la variante (`v`) del anuncio; el del workshop lleva su propio mensaje.
 
 ## 2. Datos pendientes (sección 12 del spec)
 
 | Dato en `src/data/pauta.ts` | Qué pasa mientras esté vacío |
 |---|---|
-| `whatsapp` | No aparece ningún botón de WhatsApp (ni el del hero, ni el de papás, ni el verde fijo). **Es lo único indispensable para pautar.** |
+| `whatsapp` | No aparece ningún botón de WhatsApp (ni el del workshop ni el rojo fijo). **Es lo único indispensable para pautar.** |
 | `horasRespuesta` | No aparece el paso 1 («Te escribimos por WhatsApp en menos de…»). |
 | `politicaDatosUrl`, `terminosUrl` | No aparecen los enlaces del pie. |
 | `video` | No aparece el video del hero. |
