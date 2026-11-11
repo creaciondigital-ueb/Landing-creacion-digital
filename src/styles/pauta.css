@@ -8,7 +8,7 @@
   --pt-ink: #0d0d0d; --pt-muted: #5a5550;
   --pt-cobalt: #2c08ff; --pt-acid: #d1ff22; --pt-tomato: #ff103e;
   --pt-serif: 'DM Serif Text', Georgia, serif;
-  --pt-sans: 'Zalando Sans', system-ui, -apple-system, sans-serif;
+  --pt-sans: 'Jost', system-ui, -apple-system, sans-serif;
   --pt-mono-f: 'JetBrains Mono', ui-monospace, monospace;
   background: var(--pt-paper);
   color: var(--pt-ink);
