@@ -21,8 +21,9 @@ type Soy = 'Aspirante' | 'Mamá o papá de un aspirante';
 
 const HEROS: Record<Variante, { linea1: ReactNode; linea2: string; apoyo: ReactNode; largo?: boolean }> = {
   casilla: {
-    linea1: <>Diseño <s>o</s> código <s>o</s> negocio</>,
-    linea2: 'Todo en una carrera',
+    linea1: 'Diseño, software, contenido y negocios.',
+    linea2: 'En una sola carrera',
+    largo: true,
     apoyo: <>Diseño, ingeniería, mercadeo o comunicación: a los 17 te piden escoger una. En Creación Digital juntas las cuatro en el mismo proyecto y te gradúas con un título que dice lo que eres: <strong>Creador digital</strong>.</>,
   },
   juego: {
