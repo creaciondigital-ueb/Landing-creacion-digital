@@ -358,17 +358,14 @@ export default function PautaPage() {
           </div>
         </section>
 
-        {/* 10 · Cierre: sale solo si hay algo que decir o a dónde escribir */}
-        {(PAUTA.fechaCierre || PAUTA.whatsapp) && (
-          <section className="pt-sec pt-close">
-            <div className="pt-wrap">
-              <Label>08 · Inscripciones 2027-1</Label>
-              {PAUTA.fechaCierre && <h2>Las inscripciones cierran el <em>{PAUTA.fechaCierre}</em>.</h2>}
-              {PAUTA.fechaPuertasAbiertas && <p className="pt-lead">Escríbenos hoy y alcanzas a venir al día de puertas abiertas antes del cierre.</p>}
-              <BotonWa v={v} className="pt-pill pt-pill--ink">Escríbenos por WhatsApp</BotonWa>
-            </div>
-          </section>
-        )}
+        {/* 10 · Cierre: lleva a la página principal del programa */}
+        <section className="pt-sec pt-close">
+          <div className="pt-wrap">
+            <Label>08 · Conoce más</Label>
+            <h2>Visita <em>nuestra página</em>.</h2>
+            <a className="pt-pill pt-pill--ink" href="https://creaciondigital-ueb.netlify.app/">Visita nuestra página</a>
+          </div>
+        </section>
       </main>
 
       {/* 11 · Pie */}

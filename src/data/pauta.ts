@@ -11,7 +11,7 @@ export interface PautaDatos {
   /**
    * Celular con indicativo y sin signos, ej. '573001234567'. La página no tiene
    * formulario: todos los botones abren WhatsApp. Sin este número no aparece
-   * ninguno (ni la sección de cierre, salvo que haya fecha de cierre).
+   * ninguno.
    */
   whatsapp: string | null;
   /** En cuánto tiempo se responde, tal como se lee en la frase: "Te escribimos por WhatsApp en menos de ___." Ej. '24 horas'. */
@@ -38,10 +38,6 @@ export interface PautaDatos {
 
   /** Valor del semestre 2027-1, ya aprobado para publicar. Ej. '$ 9.850.000'. */
   valorSemestre: string | null;
-  /** Fecha de cierre de inscripciones 2027-1, ej. '15 de enero'. */
-  fechaCierre: string | null;
-  /** Fecha del próximo día de puertas abiertas. Mientras no esté, no se muestra la frase que lo menciona. */
-  fechaPuertasAbiertas: string | null;
 
   /** Respuestas de las dos últimas preguntas frecuentes. */
   requisitosAdmision: string | null;
@@ -70,8 +66,6 @@ export const PAUTA: PautaDatos = {
   globalHackAnio: null,
 
   valorSemestre: null,
-  fechaCierre: null,
-  fechaPuertasAbiertas: null,
 
   requisitosAdmision: null,
   financiacion: null,
