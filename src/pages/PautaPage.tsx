@@ -288,8 +288,7 @@ export default function PautaPage() {
             <h2>Llevamos 2 años <em>al aire</em>.</h2>
             <div className="pt-stats">
               <div className="pt-stat"><b>5</b><span>cohortes desde 2024-2</span></div>
-              <div className="pt-stat"><b>20</b><span>grupos en el Global Hack que ganaron</span></div>
-              <div className="pt-stat"><b>2030</b><span>registro calificado vigente</span></div>
+              <div className="pt-stat"><b>2030</b><span>registro calificado vigente por el Ministerio de Educación Nacional</span></div>
             </div>
             {PAUTA.fotos.length > 0 && (
               <div className="pt-gallery">
@@ -301,12 +300,6 @@ export default function PautaPage() {
                 <p className="pt-quote">“Siento que somos los pioneros.”</p>
                 <span className="pt-mono pt-quote__by">Estudiante de Creación Digital</span>
               </>
-            )}
-            {PAUTA.globalHackAutorizado && (
-              <div className="pt-hack">
-                <strong>Ganadores del Global Hack{PAUTA.globalHackAnio ? ` ${PAUTA.globalHackAnio}` : ''}</strong>
-                Estudiantes de Creación Digital ganaron una competencia de productos digitales frente a 20 grupos de varias universidades del país.
-              </div>
             )}
           </div>
         </section>

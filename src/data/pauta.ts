@@ -32,9 +32,6 @@ export interface PautaDatos {
 
   /** Autorizaciones de la sección "Quiénes ya la estudian". */
   citaAutorizada: boolean;
-  globalHackAutorizado: boolean;
-  /** Año del premio, si se quiere mostrar. Ej. '2025'. */
-  globalHackAnio: string | null;
 
   /** Valor del semestre 2027-1, ya aprobado para publicar. Ej. '$ 9.850.000'. */
   valorSemestre: string | null;
@@ -62,8 +59,6 @@ export const PAUTA: PautaDatos = {
   bonoMapa: null,
 
   citaAutorizada: false,
-  globalHackAutorizado: false,
-  globalHackAnio: null,
 
   valorSemestre: null,
 

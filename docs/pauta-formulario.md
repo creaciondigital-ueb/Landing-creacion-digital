@@ -20,7 +20,7 @@ La página no tiene formulario. «Inscríbete», en la barra superior, va a http
 | `video` | No aparece el video del hero. |
 | `fotos` | No aparece la galería. Para publicarlas, súbelas a Cloudflare (ver CHANGELOG, «Imágenes fuera de Netlify»). |
 | `bonoSabado`, `bonoPioneros`, `bonoMapa` | El bono no aparece. Si los tres están vacíos, no aparece la fila de bonos. |
-| `citaAutorizada`, `globalHackAutorizado`, `globalHackAnio` | No aparecen la cita ni el bloque del Global Hack. |
+| `citaAutorizada` | No aparece la cita de estudiante. |
 | `valorSemestre` | No aparece la caja del precio. |
 | `requisitosAdmision`, `financiacion` | Esas dos preguntas no aparecen. |
 | `metaPixelId`, `tiktokPixelId` | No se cargan los píxeles. El evento de GA4 `whatsapp_click` sí funciona desde ya. |
