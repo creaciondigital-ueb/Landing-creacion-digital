@@ -183,8 +183,8 @@ export default function PautaPage() {
   const faqs: [string, string][] = [
     ['¿Es una carrera nueva?', 'Recibe estudiantes desde 2024-2 y va en su quinta cohorte. Tiene registro calificado del Ministerio de Educación vigente hasta 2030 (Resolución 022151 de 2023).'],
     ['¿En qué voy a trabajar?', 'En desarrollo de software y diseño de experiencia de usuario (UX), en creación de contenido para marketing digital, en videojuegos y experiencias interactivas, y en desarrollo de software con IA. En todos esos campos usas la IA generativa en tus procesos de creación. También puedes lanzar tu propio emprendimiento de base tecnológica. Y lo haces en sectores como educación, banca, salud, sector público e industria tech.'],
-    ['¿Para qué 8 semestres si hay tutoriales?', 'Los tutoriales enseñan herramientas. La carrera te enseña a juntarlas en un proyecto completo, con criterio, profesores de la industria, prácticas y un título profesional.'],
-    ['¿Y si en primer semestre no es lo mío?', 'La dirección del programa te acompaña a decidir tu siguiente paso, y lo que hayas aprobado se estudia para reconocerlo en otra carrera de El Bosque (Reglamento Estudiantil, art. 40).'],
+    ['¿Para qué 8 semestres si hay cursos online?', 'Porque ser un creador digital profesional implica mucho más que ver videos. Haces prácticas en la industria, tienes una red de profesores expertos, presentas proyectos en vivo y trabajas en equipo con otros colegas. Desarrollas habilidades interpersonales e interactúas con personas de manera presencial. Y tienes acceso a herramientas, escenarios y actividades que van más allá de lo que te puede ofrecer tu cuarto.'],
+    ['¿Y si en primer semestre no es lo mío?', 'La dirección del programa te acompaña a decidir tu siguiente paso, y lo que hayas aprobado se estudia para reconocerlo en otra carrera de El Bosque.'],
   ];
   if (PAUTA.requisitosAdmision) faqs.push(['¿Qué necesito para entrar?', PAUTA.requisitosAdmision]);
   if (PAUTA.financiacion) faqs.push(['¿Hay opciones de financiación?', PAUTA.financiacion]);
@@ -332,7 +332,7 @@ export default function PautaPage() {
         <section className="pt-sec pt-sec--tight">
           <div className="pt-wrap">
             <Label>06 · Preguntas</Label>
-            <h2>Lo que <em>todos preguntan</em>.</h2>
+            <h2>Lo que <em>nos preguntan</em>.</h2>
             <div className="pt-faq">
               {faqs.map(([q, a]) => (
                 <details key={q}><summary>{q}</summary><p>{a}</p></details>
