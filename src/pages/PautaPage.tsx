@@ -17,6 +17,8 @@ import '../styles/pauta.css';
  */
 
 const IMG = '/programa/img';
+/** Formulario de inscripción al open day. */
+const OPEN_DAY_URL = 'https://forms.cloud.microsoft/pages/responsepage.aspx?id=UMLAdHccXUCbHprB9Qir46Y7lCPhW7lJkki-ENr8U1pUOFMxSlNCSEJYMEdHQ0hWQ0VFS1o1NjZCUS4u&origin=lprLink&route=shorturl';
 type Variante = 'casilla' | 'juego' | 'puedes';
 
 const HEROS: Record<Variante, { linea1: ReactNode; linea2: string; apoyo: ReactNode; largo?: boolean }> = {
@@ -89,13 +91,12 @@ function trackWhatsapp(v: string) {
 }
 
 /** Mensajes prellenados de WhatsApp: cada botón dice desde dónde escribe la persona. */
-type Motivo = 'info' | 'papa' | 'openday' | 'workshop';
+type Motivo = 'info' | 'papa' | 'workshop';
 function waUrl(v: string, motivo: Motivo = 'info') {
   const anuncio = `vi el anuncio de Creación Digital (${v})`;
   const msg = {
     info: `Hola, ${anuncio} y quiero saber más.`,
     papa: `Hola, soy mamá/papá de un aspirante y ${anuncio}. Quiero hablar con la dirección.`,
-    openday: `Hola, ${anuncio} y quiero visitarlos en un open day.`,
     workshop: `Hola, ${anuncio} y quiero asistir al workshop de creación con IA.`,
   }[motivo];
   return `https://wa.me/${PAUTA.whatsapp}?text=${encodeURIComponent(msg)}`;
@@ -230,7 +231,7 @@ export default function PautaPage() {
             <p className="pt-respuesta">
               <strong>Aquí no escoges.</strong> En Creación Digital formamos creadores que diseñan, programan, cuentan historias y las llevan a negocio, todo en una sola carrera.
             </p>
-            <BotonWa v={v} motivo="openday" className="pt-pill pt-pill--acid pt-pill--titila pt-sec__cta">Visítanos en un open day</BotonWa>
+            <a className="pt-pill pt-pill--acid pt-pill--titila pt-sec__cta" href={OPEN_DAY_URL} target="_blank" rel="noopener">Visítanos en un open day</a>
           </div>
         </section>
 
