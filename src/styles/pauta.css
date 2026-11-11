@@ -117,8 +117,8 @@
 .pt-box--on i::after { content: ""; position: absolute; left: 5px; top: 1px; width: 6px; height: 11px; border: solid #fff; border-width: 0 2px 2px 0; transform: rotate(45deg); }
 .pt-box--off { opacity: .45; }
 .pt-box--off span { text-decoration: line-through; }
-.pt-scenes { display: grid; gap: 14px; max-width: 720px; }
-.pt-scenes p { font-size: 20px; line-height: 1.35; padding-left: 18px; border-left: 3px solid var(--pt-tomato); }
+.pt-respuesta { max-width: 720px; font-size: 20px; line-height: 1.4; padding-left: 18px; border-left: 3px solid var(--pt-tomato); }
+.pt-respuesta strong { display: block; font-family: var(--pt-serif); font-weight: 400; font-size: 32px; line-height: 1.05; color: var(--pt-cobalt); margin-bottom: 8px; }
 
 /* ── 3 · Lo de siempre ── */
 .pt-cards3 { display: grid; gap: 14px; }

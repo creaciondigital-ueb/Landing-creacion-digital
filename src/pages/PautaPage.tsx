@@ -333,11 +333,9 @@ export default function PautaPage() {
                 <div className="pt-box pt-box--off" key={c}><i /><span>{c}</span></div>
               ))}
             </div>
-            <div className="pt-scenes">
-              <p>El formulario de inscripción tiene cuatro casillas y te deja marcar una.</p>
-              <p>Te gusta editar video, pero también programar y vender lo que haces.</p>
-              <p>Y si escoges diseño, te van a preguntar: ¿diseño de qué?</p>
-            </div>
+            <p className="pt-respuesta">
+              <strong>Aquí no escoges.</strong> En Creación Digital formamos creadores que diseñan, programan, cuentan historias y las llevan a negocio, todo en una sola carrera.
+            </p>
           </div>
         </section>
 
