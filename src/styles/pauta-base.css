@@ -1,0 +1,11 @@
+/* Base mínima de /pauta cuando se sirve sola (pauta.html), en lugar de
+   global.css, que es del resto del sitio y pesa diez veces más. */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body {
+  background: #f6f8fb;
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  scroll-behavior: smooth;
+}

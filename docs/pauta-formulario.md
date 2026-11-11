@@ -3,6 +3,7 @@
 La página `/pauta` es la que reciben los anuncios de TikTok, Facebook e Instagram. Es oculta: no aparece en Google, no está en el sitemap y ninguna página del sitio la enlaza.
 
 - Código: `src/pages/PautaPage.tsx`. Estilos: `src/styles/pauta.css`.
+- Es una entrada propia de Vite (`pauta.html` → `src/pauta-main.tsx`), sin el resto del sitio. `scripts/prerender.ts` la deja dibujada en el HTML y el navegador solo la hidrata. Si cambia el bloque de GA4 de `index.html`, hay que cambiarlo también en `pauta.html`.
 - Datos que llena la dirección del programa: `src/data/pauta.ts`. Mientras un dato esté vacío (`null`), el bloque que lo necesita no se muestra.
 - Variantes del titular: `/pauta?v=casilla` (por defecto), `/pauta?v=juego`, `/pauta?v=puedes`.
 

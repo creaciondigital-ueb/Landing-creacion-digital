@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, type ReactNode } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import { useSeo } from '../hooks/useSeo';
 import { PAUTA } from '../data/pauta';
 import { pautaSeo } from '../seo/pages';
@@ -166,11 +166,17 @@ export default function PautaPage() {
     return () => { m.remove(); };
   }, []);
 
-  const v = useMemo(() => {
+  // La variante (?v=) se lee después de montar: así el HTML prerenderizado y
+  // el primer render del navegador son idénticos (hidratación sin choques).
+  // Los tres titulares van en el HTML y el CSS muestra el de <html data-v>,
+  // que pauta.html fija con un script mínimo antes de pintar.
+  const [v, setV] = useState<Variante>('casilla');
+  useEffect(() => {
     const raw = new URLSearchParams(window.location.search).get('v') ?? '';
-    return raw in HEROS ? raw : 'casilla';
+    const actual = (Object.prototype.hasOwnProperty.call(HEROS, raw) ? raw : 'casilla') as Variante;
+    document.documentElement.dataset.v = actual;
+    setV(actual);
   }, []);
-  const hero = HEROS[v as Variante];
 
   const bonos = [
     PAUTA.bonoSabado && { t: 'Sábado de creación', d: `Un día de taller antes de matricularte. Sales con una pieza hecha con IA. ${PAUTA.bonoSabado}` },
@@ -201,14 +207,20 @@ export default function PautaPage() {
           <div className="pt-wrap">
             <div className="pt-hero__meta pt-mono"><span>Pregrado · 8 semestres</span><span>Presencial · Bogotá</span></div>
             <div className="pt-hero__titulo">
-              <h1 className={hero.largo ? 'pt-h1--largo' : undefined}>
-                {hero.linea1}
-                <Tecleo texto={hero.linea2} />
-              </h1>
+              {(Object.keys(HEROS) as Variante[]).map((k) => (
+                <div className={`pt-v pt-v--${k}`} key={k}>
+                  <h1 className={HEROS[k].largo ? 'pt-h1--largo' : undefined}>
+                    {HEROS[k].linea1}
+                    <Tecleo texto={HEROS[k].linea2} />
+                  </h1>
+                </div>
+              ))}
               {/* La misma ilustración del hero de la página principal (CDN de Cloudflare). */}
               <img className="pt-hero__chica" src={`${IMG}/chica-laptop.png`} alt="" aria-hidden="true" width="606" height="656" decoding="async" />
             </div>
-            <p className="pt-hero__sub">{hero.apoyo}</p>
+            {(Object.keys(HEROS) as Variante[]).map((k) => (
+              <p className={`pt-hero__sub pt-v pt-v--${k}`} key={k}>{HEROS[k].apoyo}</p>
+            ))}
             <div className="pt-hero__valor">
               <span className="pt-hero__valor-label">Inversión semestral</span>
               <strong>$ 10.947.000 COP.</strong>

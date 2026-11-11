@@ -87,6 +87,11 @@
   animation: pt-caret 1s steps(1) infinite;
 }
 @keyframes pt-caret { 50% { opacity: 0; } }
+/* Variantes del titular (?v=): van las tres en el HTML y se ve solo la de
+   <html data-v>. Sin data-v (sin JavaScript), la de casilla. */
+.pt-v { display: none; }
+html[data-v="casilla"] .pt-v--casilla, html[data-v="juego"] .pt-v--juego,
+html[data-v="puedes"] .pt-v--puedes, html:not([data-v]) .pt-v--casilla { display: block; }
 .pt-hero__sub { margin: 18px 0 20px; font-size: 18px; line-height: 1.45; max-width: 560px; }
 /* Cajita del valor del semestre: misma letra que el párrafo del hero. */
 .pt-hero__valor {

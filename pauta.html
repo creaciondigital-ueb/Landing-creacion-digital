@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- /pauta: la página de los anuncios. Oculta (noindex, fuera del sitemap).
+       Es una entrada propia de Vite: no carga el resto del sitio. El título y
+       las etiquetas sociales las completa scripts/prerender.ts (pautaSeo). -->
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="description" content="" />
+  <link rel="canonical" href="https://creaciondigital-ueb.netlify.app/pauta" />
+  <title>Creación Digital</title>
+
+  <!-- Variante del titular (?v=casilla|juego|puedes): se fija antes de pintar
+       para que no haya parpadeo. pauta.css muestra solo la de data-v. -->
+  <script>
+    (function () {
+      var v = new URLSearchParams(location.search).get('v');
+      document.documentElement.setAttribute('data-v', v === 'juego' || v === 'puedes' ? v : 'casilla');
+    })();
+  </script>
+
+  <link rel="icon" href="/favicon.ico" sizes="any" />
+  <link rel="icon" type="image/png" href="/favicon.png" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+  <link rel="preconnect" href="https://creaciondigital-ueb-img.pages.dev" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <!-- Solo las tres letras de /pauta, con los pesos que usa. -->
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Text:ital@0;1&family=JetBrains+Mono:wght@400&family=Jost:wght@400;600&display=swap" rel="stylesheet" />
+
+  <!-- Google Analytics 4: el mismo bloque de index.html (dos propiedades, solo
+       en producción, y los eventos agenda_charla / aplica_ahora por URL de
+       destino). Si cambia allá, cambiarlo aquí también. -->
+  <script>
+    (function () {
+      var host = window.location.hostname;
+      var isProd = host === 'creaciondigital.online' || host === 'www.creaciondigital.online'
+        || host === 'creaciondigital-ueb.netlify.app';
+      if (!isProd) return;
+
+      var s = document.createElement('script');
+      s.async = true;
+      s.src = 'https://www.googletagmanager.com/gtag/js?id=G-EMK9RDJD0G';
+      document.head.appendChild(s);
+
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){ dataLayer.push(arguments); }
+      window.gtag = gtag;
+      gtag('js', new Date());
+      gtag('config', 'G-EMK9RDJD0G');
+      gtag('config', 'G-WQEPLNPF0Y');
+
+      document.addEventListener('click', function (e) {
+        var a = e.target && e.target.closest ? e.target.closest('a[href]') : null;
+        if (!a) return;
+        var href = a.getAttribute('href') || '';
+        var name = href.indexOf('forms.cloud.microsoft') !== -1 ? 'agenda_charla'
+          : href.indexOf('unbosque.edu.co/inscripciones') !== -1 ? 'aplica_ahora'
+          : null;
+        if (name) gtag('event', name, { page_path: location.pathname, link_text: (a.textContent || '').trim().slice(0, 60) });
+      }, true);
+    })();
+  </script>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="module" src="/src/pauta-main.tsx"></script>
+</body>
+</html>

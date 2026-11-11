@@ -17,6 +17,9 @@
  * package.json.
  */
 import { readFileSync, writeFileSync, mkdirSync, readdirSync, rmSync } from 'node:fs';
+import { createElement } from 'react';
+import { renderToString } from 'react-dom/server';
+import PautaPage from '../src/pages/PautaPage';
 import { dirname, join } from 'node:path';
 import translations from '../src/i18n/translations';
 import { BLOG_POSTS, type BlogPost } from '../src/data/blog';
@@ -248,14 +251,16 @@ for (const p of proyectosConDetalle()) add(`/proyectos/${p.id}`, proyectoSeo(p, 
 add('/blog', blogListSeo('es'), blogListBody());
 for (const p of postsConDetalle()) add(`/blog/${p.id}`, blogPostSeo(p, p.id, 'es'), blogPostBody(p));
 
-// /pauta: página de los anuncios. Se escribe dist/pauta.html para que Netlify
-// la sirva con 200 (sin ella caería en 404.html), pero con noindex y sin
-// entrar a `routes`, así que no aparece en el sitemap ni en llms.txt. Sin
-// contenido previo: React la pinta con su propio estilo al cargar.
-writeFileSync(
-  join(DIST, 'pauta.html'),
-  setHead(template, pautaSeo()).replace('<head>', '<head>\n  <meta name="robots" content="noindex, nofollow" />'),
-);
+// /pauta: página de los anuncios, con entrada propia (pauta.html → dist/pauta.html,
+// que Netlify sirve en /pauta con 200). Aquí se le pone el <head> de pautaSeo y,
+// dentro de #root, la página ya renderizada con React: así se ve completa antes
+// de que llegue el JavaScript, que solo la hidrata (src/pauta-main.tsx). No
+// entra a `routes`, así que no aparece en el sitemap ni en llms.txt.
+{
+  const file = join(DIST, 'pauta.html');
+  const html = setHead(readFileSync(file, 'utf8'), pautaSeo());
+  writeFileSync(file, html.replace('<div id="root"></div>', `<div id="root">${renderToString(createElement(PautaPage))}</div>`));
+}
 
 // sitemap.xml
 writeFileSync(join(DIST, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>
