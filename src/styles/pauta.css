@@ -95,6 +95,7 @@
   font-size: 18px; line-height: 1.45;
 }
 .pt-hero__valor strong { font-weight: 600; }
+.pt-hero__valor-label { font-size: 13px; line-height: 1.35; }
 .pt-hero__valor-nota { color: var(--pt-muted); font-size: 13px; line-height: 1.35; margin-top: 4px; }
 .pt-hero__cta { width: 100%; padding: 0 14px; }
 .pt-video {

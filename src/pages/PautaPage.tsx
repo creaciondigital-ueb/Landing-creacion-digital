@@ -212,7 +212,7 @@ export default function PautaPage() {
             </div>
             <p className="pt-hero__sub">{hero.apoyo}</p>
             <div className="pt-hero__valor">
-              <span>Inversión semestral</span>
+              <span className="pt-hero__valor-label">Inversión semestral</span>
               <strong>$ 10.947.000 COP.</strong>
               <span className="pt-hero__valor-nota">Valor sujeto a incremento para el año 2027</span>
             </div>
