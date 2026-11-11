@@ -327,12 +327,11 @@ export default function PautaPage() {
         <section className="pt-sec">
           <div className="pt-wrap">
             <Label>01 · La casilla</Label>
-            <h2>Te piden escoger <em>una sola carrera</em>.</h2>
+            <h2>¿Te piden escoger <em>una sola carrera</em>?</h2>
             <div className="pt-boxes" aria-hidden="true">
-              <div className="pt-box pt-box--on"><i /><span>Diseño</span></div>
-              <div className="pt-box pt-box--off"><i /><span>Ingeniería</span></div>
-              <div className="pt-box pt-box--off"><i /><span>Mercadeo</span></div>
-              <div className="pt-box pt-box--off"><i /><span>Comunicación</span></div>
+              {['Diseño', 'Ingeniería', 'Mercadeo', 'Comunicación', 'Arte'].map((c) => (
+                <div className="pt-box pt-box--off" key={c}><i /><span>{c}</span></div>
+              ))}
             </div>
             <div className="pt-scenes">
               <p>El formulario de inscripción tiene cuatro casillas y te deja marcar una.</p>
