@@ -8,7 +8,7 @@ La página `/pauta` es la que reciben los anuncios de TikTok, Facebook e Instagr
 
 ## 1. Sin formulario: todo va a WhatsApp
 
-La página no tiene formulario. «Agenda una charla con el director», en la barra superior, abre el formulario de charlas del sitio. «Síguenos en Instagram» y «Síguenos en TikTok» van a @creaciondigital.ueb. «Quiero conocer la carrera», «Visítanos en un open day», «Asiste a nuestro workshop de creación con IA», «Quiero hablar con la dirección», «Escríbenos por WhatsApp» y el botón verde fijo abren WhatsApp con un mensaje prellenado que incluye la variante (`v`) del anuncio. El de mamás y papás, el del open day y el del workshop llevan su propio mensaje.
+La página no tiene formulario. «Inscríbete», en la barra superior, va a https://www.unbosque.edu.co/inscripciones/pregrado (GA4: `aplica_ahora`). «Agenda una charla con el director», en el hero, abre el formulario de charlas del sitio. «Síguenos en Instagram» y «Síguenos en TikTok» van a @creaciondigital.ueb. «Visítanos en un open day», «Asiste a nuestro workshop de creación con IA», «Quiero hablar con la dirección», «Escríbenos por WhatsApp» y el botón verde fijo abren WhatsApp con un mensaje prellenado que incluye la variante (`v`) del anuncio. El de mamás y papás, el del open day y el del workshop llevan su propio mensaje.
 
 ## 2. Datos pendientes (sección 12 del spec)
 

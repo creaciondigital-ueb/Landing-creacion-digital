@@ -194,7 +194,7 @@ export default function PautaPage() {
       {/* 0 · Barra superior */}
       <header className="pt-top">
         <img className="pt-top__logo" src={`${IMG}/Label_UEB_CreacionDigital_Horizontal.png`} alt="Universidad El Bosque · Creación Digital" width="180" height="32" />
-        <a className="pt-pill pt-pill--acid pt-pill--small pt-top__cta" href={CHARLA_URL} target="_blank" rel="noopener">Agenda una charla con el director</a>
+        <a className="pt-pill pt-pill--cobalt pt-pill--small" href="https://www.unbosque.edu.co/inscripciones/pregrado" target="_blank" rel="noopener">Inscríbete</a>
       </header>
 
       <main>
@@ -207,7 +207,7 @@ export default function PautaPage() {
               <Tecleo texto={hero.linea2} />
             </h1>
             <p className="pt-hero__sub">{hero.apoyo}</p>
-            <BotonWa v={v} className="pt-pill pt-pill--acid pt-hero__cta">Quiero conocer la carrera</BotonWa>
+            <a className="pt-pill pt-pill--acid pt-hero__cta" href={CHARLA_URL} target="_blank" rel="noopener">Agenda una charla con el director</a>
             {PAUTA.video && (
               <video
                 className="pt-video" src={PAUTA.video.src} poster={PAUTA.video.poster}
