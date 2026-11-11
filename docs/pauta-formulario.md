@@ -46,7 +46,6 @@ Si después cambias el script, hay que publicarlo con **Implementar → Administ
 | `politicaDatosUrl`, `terminosUrl` | No aparecen los enlaces del pie. |
 | `video` | No aparece el video del hero. |
 | `fotos` | No aparece la galería. Para publicarlas, súbelas a Cloudflare (ver CHANGELOG, «Imágenes fuera de Netlify»). |
-| `asignaturasNegocio` | El bloque Negocio sale sin la lista de asignaturas. |
 | `bonoSabado`, `bonoPioneros`, `bonoMapa` | El bono no aparece. Si los tres están vacíos, no aparece la fila de bonos. |
 | `citaAutorizada`, `globalHackAutorizado`, `globalHackAnio` | No aparecen la cita ni el bloque del Global Hack. |
 | `valorSemestre` | No aparece la caja del precio. |

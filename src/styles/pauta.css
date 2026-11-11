@@ -125,23 +125,6 @@
 .pt-card { background: #fff; border: 1.5px solid var(--pt-ink); border-radius: 16px; padding: 22px; }
 .pt-card .pt-mono { display: block; margin-bottom: 10px; color: var(--pt-muted); }
 
-/* ── 4 · Cómo se estudia ── */
-.pt-dark { background: var(--pt-ink); color: var(--pt-paper); }
-.pt-dark .pt-label { color: #a9a9a9; }
-.pt-dark h2 em { color: var(--pt-acid); }
-.pt-worlds { display: grid; gap: 14px; margin-top: 28px; }
-.pt-world { border-radius: 16px; padding: 24px; min-height: 200px; display: flex; flex-direction: column; justify-content: space-between; }
-.pt-world h3 { font-family: var(--pt-serif); font-style: italic; font-weight: 400; font-size: 40px; line-height: 1; }
-.pt-world p { font-size: 16px; margin-top: 20px; }
-.pt-world--cont { background: var(--pt-cobalt); color: #fff; }
-.pt-world--3d { background: var(--pt-acid); color: var(--pt-ink); }
-.pt-world--prod { background: var(--pt-tomato); color: #fff; }
-.pt-world--prod p { font-weight: 600; }
-.pt-world--neg { background: var(--pt-paper); color: var(--pt-ink); }
-.pt-ia { margin-top: 28px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
-.pt-ia .pt-mono { color: #a9a9a9; margin-right: 4px; }
-.pt-chip { border: 1px solid #777; border-radius: 999px; padding: 6px 12px; font-family: var(--pt-mono-f); font-size: 11px; }
-
 /* ── 5 · Qué recibes ── */
 .pt-list { list-style: none; border-top: 1.5px solid var(--pt-ink); }
 .pt-list li { display: grid; gap: 4px; padding: 18px 0; border-bottom: 1px solid rgba(13,13,13,.18); }
@@ -222,7 +205,6 @@
   .pt-hero__cta { display: none; }
   .pt-video { height: auto; width: 100%; max-width: 520px; aspect-ratio: 4 / 5; margin: 0; }
   .pt-cards3 { grid-template-columns: repeat(3, 1fr); }
-  .pt-worlds { grid-template-columns: repeat(4, 1fr); }
   .pt-split { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: start; }
   .pt-bonos { grid-template-columns: repeat(3, 1fr); }
   .pt-gallery { grid-template-columns: repeat(4, 1fr); }

@@ -352,27 +352,11 @@ export default function PautaPage() {
           </div>
         </section>
 
-        {/* 4 · Cómo se estudia */}
-        <section className="pt-sec pt-dark">
-          <div className="pt-wrap">
-            <Label>03 · Cómo se estudia</Label>
-            <h2>Aprendes a <em>orquestar</em> lo digital.</h2>
-            <p className="pt-lead">Un mismo proyecto pasa por todas las áreas. Lo programas, le das forma, cuentas su historia y lo llevas a negocio.</p>
-            <div className="pt-worlds">
-              <div className="pt-world pt-world--cont"><h3>Contenido</h3><p>Fotografía, producción audiovisual, guion, redes, métricas y pauta digital.</p></div>
-              <div className="pt-world pt-world--3d"><h3>Mundo 3D</h3><p>Personajes, modelado, animación y videojuegos completos.</p></div>
-              <div className="pt-world pt-world--prod"><h3>Producto</h3><p>Aplicaciones y páginas web con JavaScript, Figma y prototipos.</p></div>
-              <div className="pt-world pt-world--neg"><h3>Negocio</h3><p>Cómo convertir lo que creas en un producto que se vende.{PAUTA.asignaturasNegocio ? ` ${PAUTA.asignaturasNegocio}` : ''}</p></div>
-            </div>
-            <div className="pt-ia"><span className="pt-mono">Con IA en cada paso:</span><span className="pt-chip">Claude Code</span><span className="pt-chip">Codex</span><span className="pt-chip">Higgsfield</span></div>
-          </div>
-        </section>
-
         {/* 5 · Qué recibes */}
         <section className="pt-sec">
           <div className="pt-wrap pt-split">
             <div>
-              <Label>04 · Qué recibes</Label>
+              <Label>03 · Qué recibes</Label>
               <h2>Una carrera <em>de verdad</em>.</h2>
             </div>
             <ul className="pt-list">
@@ -395,7 +379,7 @@ export default function PautaPage() {
         {/* 6 · Quiénes ya la estudian */}
         <section className="pt-sec pt-sec--tight">
           <div className="pt-wrap">
-            <Label>05 · Quiénes ya la estudian</Label>
+            <Label>04 · Quiénes ya la estudian</Label>
             <h2>Ya va en su <em>quinta cohorte</em>.</h2>
             <div className="pt-stats">
               <div className="pt-stat"><b>5</b><span>cohortes desde 2024-2</span></div>
@@ -425,7 +409,7 @@ export default function PautaPage() {
         {/* 7 · Para mamás y papás */}
         <section className="pt-sec pt-papas">
           <div className="pt-wrap">
-            <Label>06 · Para mamás y papás</Label>
+            <Label>05 · Para mamás y papás</Label>
             <h2>Así se cuida a tu hijo <em>desde el primer semestre</em>.</h2>
             <div className="pt-red">
               <span className="pt-mono">Primer semestre con red</span>
@@ -445,7 +429,7 @@ export default function PautaPage() {
         <section className="pt-sec">
           <div className="pt-wrap pt-split">
             <div>
-              <Label>07 · Valor y siguiente paso</Label>
+              <Label>06 · Valor y siguiente paso</Label>
               <h2>Qué pasa cuando <em>nos escribes</em>.</h2>
             </div>
             <div>
@@ -464,7 +448,7 @@ export default function PautaPage() {
         {/* 9 · Preguntas */}
         <section className="pt-sec pt-sec--tight">
           <div className="pt-wrap">
-            <Label>08 · Preguntas</Label>
+            <Label>07 · Preguntas</Label>
             <h2>Lo que <em>todos preguntan</em>.</h2>
             <div className="pt-faq">
               {faqs.map(([q, a]) => (
@@ -478,7 +462,7 @@ export default function PautaPage() {
         <section className="pt-sec pt-close">
           <div className="pt-wrap pt-split">
             <div>
-              <Label>09 · Inscripciones 2027-1</Label>
+              <Label>08 · Inscripciones 2027-1</Label>
               {PAUTA.fechaCierre && <h2>Las inscripciones cierran el <em>{PAUTA.fechaCierre}</em>.</h2>}
               {PAUTA.fechaPuertasAbiertas && <p className="pt-lead">Escríbenos hoy y alcanzas a venir al día de puertas abiertas antes del cierre.</p>}
             </div>

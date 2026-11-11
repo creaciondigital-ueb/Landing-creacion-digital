@@ -29,8 +29,6 @@ export interface PautaDatos {
   /** Cuatro fotos reales 4:5 (estudio, laboratorio, proyecto 3D, proyecto web), con autorización de imagen. */
   fotos: { src: string; alt: string }[];
 
-  /** Asignaturas del mundo Negocio. Se agregan al final del texto del bloque. */
-  asignaturasNegocio: string | null;
   /** Bonos: cada uno sale solo si está confirmado. El texto se agrega al detalle (fecha y cupo, etc.). */
   bonoSabado: string | null;
   bonoPioneros: string | null;
@@ -69,7 +67,6 @@ export const PAUTA: PautaDatos = {
   video: null,
   fotos: [],
 
-  asignaturasNegocio: null,
   bonoSabado: null,
   bonoPioneros: null,
   bonoMapa: null,
