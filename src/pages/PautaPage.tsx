@@ -201,6 +201,45 @@ function Formulario({ id, variante, v, utm, soy, setSoy }: FormProps) {
   );
 }
 
+/**
+ * Segunda línea del titular escrita letra por letra, con cursor. Las letras
+ * que faltan ya ocupan su lugar (invisibles), así que el titular no salta ni
+ * empuja el botón mientras se escribe. Los lectores de pantalla leen la frase
+ * completa, y con "reducir movimiento" aparece entera de una vez.
+ */
+function Tecleo({ texto }: { texto: string }) {
+  const completo = `${texto}.`;
+  const [n, setN] = useState(0);
+  const [cursor, setCursor] = useState(true);
+  useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      setN(completo.length); setCursor(false); return;
+    }
+    let i = 0;
+    let timer = 0;
+    const paso = () => {
+      i += 1; setN(i);
+      timer = i < completo.length
+        ? window.setTimeout(paso, 75)
+        : window.setTimeout(() => setCursor(false), 2400);
+    };
+    timer = window.setTimeout(paso, 450);
+    return () => clearTimeout(timer);
+  }, [completo]);
+
+  const escrito = completo.slice(0, n);
+  const conPunto = n === completo.length;
+  return (
+    <em aria-label={completo}>
+      <span aria-hidden="true">
+        {conPunto ? <>{texto}<span className="pt-dot">.</span></> : escrito}
+        {cursor && <span className="pt-caret" />}
+        <span className="pt-pendiente">{completo.slice(n)}</span>
+      </span>
+    </em>
+  );
+}
+
 // ── página ────────────────────────────────────────────────────────────────
 function Label({ children }: { children: string }) {
   return <span className="pt-label pt-mono">{children}</span>;
@@ -266,7 +305,7 @@ export default function PautaPage() {
             <div className="pt-hero__meta pt-mono"><span>Pregrado · 8 semestres</span><span>Presencial · Bogotá</span></div>
             <h1 className={hero.largo ? 'pt-h1--largo' : undefined}>
               {hero.linea1}
-              <em>{hero.linea2}<span className="pt-dot">.</span></em>
+              <Tecleo texto={hero.linea2} />
             </h1>
             <div className="pt-hero__grid">
               <div>
