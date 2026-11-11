@@ -11,6 +11,8 @@ const ProyectoDetallePage = lazy(() => import('./pages/ProyectoDetallePage'));
 const BlogPage = lazy(() => import('./pages/BlogPage'));
 const BlogPostPage = lazy(() => import('./pages/BlogPostPage'));
 const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
+// Página de pauta: oculta, sin enlaces desde el sitio (ver PautaPage.tsx).
+const PautaPage = lazy(() => import('./pages/PautaPage'));
 
 /**
  * React Router no resetea el scroll al navegar entre rutas (a diferencia de
@@ -45,10 +47,12 @@ function CharlaButton() {
 }
 
 export default function App() {
+  // En /pauta no va el botón de charla: esa página no tiene salidas.
+  const { pathname } = useLocation();
   return (
     <>
       <ScrollToTop />
-      <CharlaButton />
+      {pathname !== '/pauta' && <CharlaButton />}
       <Routes>
         <Route
           path="/"
@@ -87,6 +91,14 @@ export default function App() {
           element={
             <Suspense fallback={<div className="pcd-loading">Cargando…</div>}>
               <BlogPostPage />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/pauta"
+          element={
+            <Suspense fallback={null}>
+              <PautaPage />
             </Suspense>
           }
         />

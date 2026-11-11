@@ -22,7 +22,7 @@ import translations from '../src/i18n/translations';
 import { BLOG_POSTS, type BlogPost } from '../src/data/blog';
 import { PROYECTOS, type Proyecto } from '../src/data/proyectos';
 import { SITE_URL, SITE_NAME, ASSET_CDN, VIDEO_CDN, APLICA_URL, CHARLA_URL, resolveImageUrl } from '../src/seo/site';
-import { homeSeo, blogListSeo, proyectosListSeo, blogPostSeo, proyectoSeo, type PageSeo } from '../src/seo/pages';
+import { homeSeo, blogListSeo, proyectosListSeo, blogPostSeo, proyectoSeo, pautaSeo, type PageSeo } from '../src/seo/pages';
 
 const DIST = join(process.cwd(), 'dist');
 const t = translations.es;
@@ -247,6 +247,15 @@ add('/proyectos', proyectosListSeo('es'), proyectosListBody());
 for (const p of proyectosConDetalle()) add(`/proyectos/${p.id}`, proyectoSeo(p, p.id, 'es'), proyectoBody(p));
 add('/blog', blogListSeo('es'), blogListBody());
 for (const p of postsConDetalle()) add(`/blog/${p.id}`, blogPostSeo(p, p.id, 'es'), blogPostBody(p));
+
+// /pauta: página de los anuncios. Se escribe dist/pauta.html para que Netlify
+// la sirva con 200 (sin ella caería en 404.html), pero con noindex y sin
+// entrar a `routes`, así que no aparece en el sitemap ni en llms.txt. Sin
+// contenido previo: React la pinta con su propio estilo al cargar.
+writeFileSync(
+  join(DIST, 'pauta.html'),
+  setHead(template, pautaSeo()).replace('<head>', '<head>\n  <meta name="robots" content="noindex, nofollow" />'),
+);
 
 // sitemap.xml
 writeFileSync(join(DIST, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>

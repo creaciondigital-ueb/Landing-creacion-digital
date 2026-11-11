@@ -54,6 +54,19 @@ export function homeSeo(lang: Lang): PageSeo {
   };
 }
 
+/**
+ * Página de pauta (/pauta): oculta (noindex, fuera del sitemap). Solo se llega
+ * por el enlace de los anuncios. La descripción sirve para la vista previa
+ * del enlace cuando se comparte.
+ */
+export function pautaSeo(): PageSeo {
+  return {
+    title: 'Creación Digital · Inscripciones 2027-1',
+    description: 'Diseño, código o negocio: en Creación Digital de la Universidad El Bosque juntas las cuatro en el mismo proyecto y te gradúas como Creador digital. Pregrado presencial en Bogotá.',
+    path: '/pauta',
+  };
+}
+
 export function blogListSeo(lang: Lang): PageSeo {
   return {
     title: lang === 'en' ? 'Blog · Digital Creation · Universidad El Bosque' : 'Blog · Creación Digital · Universidad El Bosque',

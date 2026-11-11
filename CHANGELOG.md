@@ -7,6 +7,16 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Agregado — Página oculta de pauta (/pauta)
+
+- Página de una columna para los clics de los anuncios de TikTok y Meta, según `CDCopyMastery/landing-pauta-spec.md`. Tiene 11 secciones con el texto del spec tal cual, un formulario corto (nombre, WhatsApp, «Soy» y autorización) en el hero y en el cierre, y un botón fijo de WhatsApp.
+- Tres titulares según el anuncio: `?v=casilla` (por defecto), `?v=juego` y `?v=puedes`. El formulario envía también `utm_source`, `utm_campaign`, `utm_content` y `v`.
+- La página es oculta: tiene `noindex`, no está en el sitemap ni en `llms.txt`, y no tiene enlaces desde el sitio. Tampoco lleva menú ni el botón flotante de charla. `scripts/prerender.ts` genera `dist/pauta.html` para que Netlify la sirva con 200.
+- Los datos que faltan (WhatsApp, destino del formulario, fechas, precio, bonos, fotos, video, autorizaciones y píxeles) están en `src/data/pauta.ts`. Mientras falten, su bloque no se muestra, así que nunca queda un hueco visible.
+- El formulario envía a una hoja de Google mediante Apps Script; los pasos están en `docs/pauta-formulario.md`.
+- Medición: `generate_lead` y `whatsapp_click` en GA4; `Lead`/`Contact` en Meta y `SubmitForm`/`Contact` en TikTok, cuando haya ID de píxel.
+- Archivos: `src/pages/PautaPage.tsx`, `src/styles/pauta.css`, `src/data/pauta.ts`, `src/App.tsx`, `src/seo/pages.ts`, `scripts/prerender.ts`, `docs/pauta-formulario.md`.
+
 ### Corregido — Redirecciones 301 que seguían gastando peticiones en Netlify
 
 - Dos horas después del deploy de imágenes seguían llegando ~10.500 peticiones por hora a Netlify, casi todas 301 de las portadas que rotan cada 5 s. Causa: las rutas se reescribían al CDN después de que Vite calculara el hash de cada archivo, así que `proyectos-C9apLyG8.js` conservó el nombre con contenido distinto y algún caché (probablemente la precarga de TikTok) seguía sirviendo la versión vieja. Además, la 301 de Netlify llegaba con `max-age=0` y se repetía en cada rotación.

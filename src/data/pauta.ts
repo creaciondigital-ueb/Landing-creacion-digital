@@ -1,0 +1,90 @@
+/**
+ * Datos de la página de pauta (/pauta) que llena la dirección del programa.
+ * Spec: CDCopyMastery/landing-pauta-spec.md (sección 12, "Pendientes").
+ *
+ * Regla: la página nunca muestra un hueco. Mientras un dato esté en `null`
+ * (o `false`, o la lista vacía), el bloque que lo necesita no aparece. Al
+ * llenarlo, aparece solo. Todo lo demás del texto está en PautaPage.tsx,
+ * copiado tal cual del spec.
+ */
+export interface PautaDatos {
+  /** Celular con indicativo y sin signos, ej. '573001234567'. Sin él no aparece ningún botón de WhatsApp. */
+  whatsapp: string | null;
+  /** En cuánto tiempo se responde, tal como se lee en la frase: "Te escribimos por WhatsApp en menos de ___." Ej. '24 horas'. */
+  horasRespuesta: string | null;
+  /**
+   * URL de la aplicación web de Google Apps Script que guarda cada envío en
+   * la hoja de cálculo (ver docs/pauta-formulario.md). Sin ella el formulario
+   * se ve, pero al enviar avisa que no se pudo y ofrece el WhatsApp.
+   */
+  formEndpoint: string | null;
+  /** Texto de autorización de datos aprobado por jurídica (válido para menores). Sin él se usa el texto genérico del preview. */
+  autorizacionTexto: string | null;
+  /** Enlaces del pie. Sin URL, el enlace no aparece. */
+  politicaDatosUrl: string | null;
+  terminosUrl: string | null;
+
+  /** Video del hero: MP4 H.264 de menos de 3 MB y su imagen de portada. */
+  video: { src: string; poster: string; descripcion: string } | null;
+  /** Cuatro fotos reales 4:5 (estudio, laboratorio, proyecto 3D, proyecto web), con autorización de imagen. */
+  fotos: { src: string; alt: string }[];
+
+  /** Asignaturas del mundo Negocio. Se agregan al final del texto del bloque. */
+  asignaturasNegocio: string | null;
+  /** Bonos: cada uno sale solo si está confirmado. El texto se agrega al detalle (fecha y cupo, etc.). */
+  bonoSabado: string | null;
+  bonoPioneros: string | null;
+  bonoMapa: string | null;
+
+  /** Autorizaciones de la sección "Quiénes ya la estudian". */
+  citaAutorizada: boolean;
+  globalHackAutorizado: boolean;
+  /** Año del premio, si se quiere mostrar. Ej. '2025'. */
+  globalHackAnio: string | null;
+
+  /** Valor del semestre 2027-1, ya aprobado para publicar. Ej. '$ 9.850.000'. */
+  valorSemestre: string | null;
+  /** Fecha de cierre de inscripciones 2027-1, ej. '15 de enero'. */
+  fechaCierre: string | null;
+  /** Fecha del próximo día de puertas abiertas. Mientras no esté, no se muestra la frase que lo menciona. */
+  fechaPuertasAbiertas: string | null;
+
+  /** Respuestas de las dos últimas preguntas frecuentes. */
+  requisitosAdmision: string | null;
+  financiacion: string | null;
+
+  /** Píxeles de medición. Sin ID, no se cargan. */
+  metaPixelId: string | null;
+  tiktokPixelId: string | null;
+}
+
+export const PAUTA: PautaDatos = {
+  whatsapp: null,
+  horasRespuesta: null,
+  formEndpoint: null,
+  autorizacionTexto: null,
+  politicaDatosUrl: null,
+  terminosUrl: null,
+
+  video: null,
+  fotos: [],
+
+  asignaturasNegocio: null,
+  bonoSabado: null,
+  bonoPioneros: null,
+  bonoMapa: null,
+
+  citaAutorizada: false,
+  globalHackAutorizado: false,
+  globalHackAnio: null,
+
+  valorSemestre: null,
+  fechaCierre: null,
+  fechaPuertasAbiertas: null,
+
+  requisitosAdmision: null,
+  financiacion: null,
+
+  metaPixelId: null,
+  tiktokPixelId: null,
+};
