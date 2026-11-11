@@ -211,6 +211,11 @@ export default function PautaPage() {
               <img className="pt-hero__chica" src={`${IMG}/chica-laptop.png`} alt="" aria-hidden="true" width="606" height="656" decoding="async" />
             </div>
             <p className="pt-hero__sub">{hero.apoyo}</p>
+            <div className="pt-hero__valor">
+              <span>Inversión semestral</span>
+              <strong>$ 10.947.000 COP.</strong>
+              <span className="pt-hero__valor-nota">Valor sujeto a incremento para el año 2027</span>
+            </div>
             <a className="pt-pill pt-pill--acid pt-pill--titila pt-hero__cta" href={CHARLA_URL} target="_blank" rel="noopener">Agenda una charla con el director</a>
             {PAUTA.video && (
               <video

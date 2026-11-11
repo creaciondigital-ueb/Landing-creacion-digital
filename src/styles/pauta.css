@@ -88,6 +88,14 @@
 }
 @keyframes pt-caret { 50% { opacity: 0; } }
 .pt-hero__sub { margin: 18px 0 20px; font-size: 18px; line-height: 1.45; max-width: 560px; }
+/* Cajita del valor del semestre: misma letra que el párrafo del hero. */
+.pt-hero__valor {
+  display: grid; gap: 2px; max-width: 560px; margin: 0 0 20px; padding: 14px 18px;
+  border: 1.5px solid var(--pt-ink); border-radius: 14px; background: #fff;
+  font-size: 18px; line-height: 1.45;
+}
+.pt-hero__valor strong { font-weight: 600; }
+.pt-hero__valor-nota { color: var(--pt-muted); }
 .pt-hero__cta { width: 100%; padding: 0 14px; }
 .pt-video {
   display: block; width: auto; max-width: 100%; height: 420px; aspect-ratio: 9 / 16;
