@@ -52,6 +52,12 @@
 .pt-pill:focus-visible { outline: 3px solid var(--pt-cobalt); outline-offset: 3px; }
 .pt-pill--acid { background: var(--pt-acid); color: var(--pt-ink); }
 .pt-pill--ink { background: var(--pt-ink); color: var(--pt-paper); }
+/* Botones que titilan (charla, open day, workshop): un halo lima que late. */
+.pt-pill--titila { animation: pt-titila 1.6s ease-in-out infinite; }
+@keyframes pt-titila {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(209, 255, 34, .9); filter: brightness(1); }
+  50% { box-shadow: 0 0 0 10px rgba(209, 255, 34, 0); filter: brightness(1.12); }
+}
 .pt-pill--cobalt { background: var(--pt-cobalt); color: #fff; border-color: var(--pt-cobalt); }
 .pt-pill--small { min-height: 38px; padding: 0 16px; font-size: 10px; flex: none; }
 .pt-pill:disabled { opacity: .6; cursor: wait; transform: none; }
@@ -163,10 +169,10 @@
 .pt-wa {
   position: fixed; right: 16px; bottom: calc(16px + env(safe-area-inset-bottom, 0px)); z-index: 30;
   display: flex; align-items: center; gap: 8px; height: 54px; padding: 0 20px 0 16px; border-radius: 999px;
-  background: var(--pt-acid); color: var(--pt-ink) !important; border: 1.5px solid var(--pt-ink); font-weight: 600; font-size: 15px; box-shadow: 0 6px 18px rgba(0,0,0,.2);
+  background: var(--pt-tomato); color: #fff !important; font-weight: 600; font-size: 15px; box-shadow: 0 6px 18px rgba(0,0,0,.2);
 }
-.pt-wa i { width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--pt-ink); position: relative; }
-.pt-wa i::after { content: ""; position: absolute; left: -3px; bottom: -4px; border-top: 7px solid var(--pt-ink); border-right: 6px solid transparent; }
+.pt-wa i { width: 22px; height: 22px; border-radius: 50%; border: 2px solid #fff; position: relative; }
+.pt-wa i::after { content: ""; position: absolute; left: -3px; bottom: -4px; border-top: 7px solid #fff; border-right: 6px solid transparent; }
 
 @media (min-width: 860px) {
   .pt-wrap { padding: 0 48px; }
@@ -188,4 +194,5 @@
 @media (prefers-reduced-motion: reduce) {
   .pt-pill { transition: none; }
   .pt-pill:hover { transform: none; }
+  .pt-pill--titila { animation: none; }
 }

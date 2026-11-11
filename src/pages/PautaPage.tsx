@@ -207,7 +207,7 @@ export default function PautaPage() {
               <Tecleo texto={hero.linea2} />
             </h1>
             <p className="pt-hero__sub">{hero.apoyo}</p>
-            <a className="pt-pill pt-pill--acid pt-hero__cta" href={CHARLA_URL} target="_blank" rel="noopener">Agenda una charla con el director</a>
+            <a className="pt-pill pt-pill--acid pt-pill--titila pt-hero__cta" href={CHARLA_URL} target="_blank" rel="noopener">Agenda una charla con el director</a>
             {PAUTA.video && (
               <video
                 className="pt-video" src={PAUTA.video.src} poster={PAUTA.video.poster}
@@ -230,7 +230,7 @@ export default function PautaPage() {
             <p className="pt-respuesta">
               <strong>Aquí no escoges.</strong> En Creación Digital formamos creadores que diseñan, programan, cuentan historias y las llevan a negocio, todo en una sola carrera.
             </p>
-            <BotonWa v={v} motivo="openday" className="pt-pill pt-pill--ink pt-sec__cta">Visítanos en un open day</BotonWa>
+            <BotonWa v={v} motivo="openday" className="pt-pill pt-pill--acid pt-pill--titila pt-sec__cta">Visítanos en un open day</BotonWa>
           </div>
         </section>
 
@@ -244,7 +244,7 @@ export default function PautaPage() {
               <div className="pt-card"><span className="pt-mono">Un curso corto</span><p>Un curso te enseña una habilidad. En la carrera haces tu parche: compañeros con los que creas proyectos, profesores de la industria que te abren puertas y una red de contactos que te acompaña cuando empiezas a trabajar.</p></div>
               <div className="pt-card"><span className="pt-mono">Los tutoriales</span><p>YouTube te enseña mucho, pero te toca buscar entre miles de videos qué funciona. Aquí te ahorras ese tiempo: aprendes lo que sirve con expertos que te guían, haces prácticas profesionales en empresas reales y puedes hacer intercambio con universidades de otros países.</p></div>
             </div>
-            <BotonWa v={v} motivo="workshop" className="pt-pill pt-pill--ink pt-sec__cta">Asiste a nuestro workshop de creación con IA</BotonWa>
+            <BotonWa v={v} motivo="workshop" className="pt-pill pt-pill--acid pt-pill--titila pt-sec__cta">Asiste a nuestro workshop de creación con IA</BotonWa>
           </div>
         </section>
 
