@@ -24,7 +24,7 @@ const HEROS: Record<Variante, { linea1: ReactNode; linea2: string; apoyo: ReactN
     linea1: 'Diseño, software, contenido y negocios.',
     linea2: 'En una sola carrera',
     largo: true,
-    apoyo: 'Creas tu marca, programas una app, modelas un personaje en 3D y conviertes tus ideas en negocio. Aprendes con profesores de la industria tech y con inteligencia artificial, en ocho semestres presenciales en Bogotá.',
+    apoyo: 'Creas tu marca, programas una app, modelas un personaje en 3D y conviertes tus ideas en negocio. Aprendes con profes que vienen de la industria y con las herramientas más avanzadas.',
   },
   juego: {
     linea1: 'Tu personaje merece',
