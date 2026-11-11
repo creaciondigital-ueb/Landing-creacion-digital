@@ -8,13 +8,13 @@ La página `/pauta` es la que reciben los anuncios de TikTok, Facebook e Instagr
 
 ## 1. Sin formulario: todo va a WhatsApp
 
-La página no tiene formulario. «Saber más», «Quiero conocer la carrera», «Quiero hablar con la dirección», «Escríbenos por WhatsApp» y el botón verde fijo abren WhatsApp con un mensaje prellenado que incluye la variante (`v`) del anuncio. El de mamás y papás usa su propio mensaje.
+La página no tiene formulario. «Inscríbete», en la barra superior, va a https://www.unbosque.edu.co/inscripciones/pregrado y siempre se ve (GA4 lo cuenta como `aplica_ahora`). «Quiero conocer la carrera», «Quiero hablar con la dirección», «Escríbenos por WhatsApp» y el botón verde fijo abren WhatsApp con un mensaje prellenado que incluye la variante (`v`) del anuncio. El de mamás y papás usa su propio mensaje.
 
 ## 2. Datos pendientes (sección 12 del spec)
 
 | Dato en `src/data/pauta.ts` | Qué pasa mientras esté vacío |
 |---|---|
-| `whatsapp` | No aparece ningún botón (ni el de la barra, ni el del hero, ni el de papás, ni el verde fijo). Si tampoco hay `fechaCierre`, no aparece la sección de cierre. **Es lo único indispensable para pautar.** |
+| `whatsapp` | No aparece ningún botón de WhatsApp (ni el del hero, ni el de papás, ni el verde fijo). Si tampoco hay `fechaCierre`, no aparece la sección de cierre. **Es lo único indispensable para pautar.** |
 | `horasRespuesta` | No aparece el paso 1 («Te escribimos por WhatsApp en menos de…»). |
 | `politicaDatosUrl`, `terminosUrl` | No aparecen los enlaces del pie. |
 | `video` | No aparece el video del hero. |

@@ -187,7 +187,7 @@ export default function PautaPage() {
       {/* 0 · Barra superior */}
       <header className="pt-top">
         <img className="pt-top__logo" src={`${IMG}/Label_UEB_CreacionDigital_Horizontal.png`} alt="Universidad El Bosque · Creación Digital" width="180" height="32" />
-        <BotonWa v={v} className="pt-pill pt-pill--acid pt-pill--small">Saber más</BotonWa>
+        <a className="pt-pill pt-pill--acid pt-pill--small" href="https://www.unbosque.edu.co/inscripciones/pregrado" target="_blank" rel="noopener">Inscríbete</a>
       </header>
 
       <main>
