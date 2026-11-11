@@ -254,7 +254,7 @@ export default function PautaPage() {
         </section>
 
         {/* 5 · Qué recibes */}
-        <section className="pt-sec">
+        <section className="pt-sec pt-sec--tight">
           <div className="pt-wrap pt-split">
             <div>
               <Label>03 · Qué recibes</Label>
