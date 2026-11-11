@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState, type ReactNode } from 'react';
 import { useSeo } from '../hooks/useSeo';
 import { PAUTA } from '../data/pauta';
 import { pautaSeo } from '../seo/pages';
+import { CHARLA_URL } from '../seo/site';
 import '../styles/pauta.css';
 
 /**
@@ -87,18 +88,24 @@ function trackWhatsapp(v: string) {
   (window.ttq as any)?.track?.('Contact');
 }
 
-function waUrl(v: string, papa = false) {
-  const msg = papa
-    ? `Hola, soy mamá/papá de un aspirante y vi el anuncio de Creación Digital (${v}). Quiero hablar con la dirección.`
-    : `Hola, vi el anuncio de Creación Digital (${v}) y quiero saber más.`;
+/** Mensajes prellenados de WhatsApp: cada botón dice desde dónde escribe la persona. */
+type Motivo = 'info' | 'papa' | 'openday' | 'workshop';
+function waUrl(v: string, motivo: Motivo = 'info') {
+  const anuncio = `vi el anuncio de Creación Digital (${v})`;
+  const msg = {
+    info: `Hola, ${anuncio} y quiero saber más.`,
+    papa: `Hola, soy mamá/papá de un aspirante y ${anuncio}. Quiero hablar con la dirección.`,
+    openday: `Hola, ${anuncio} y quiero visitarlos en un open day.`,
+    workshop: `Hola, ${anuncio} y quiero asistir al workshop de creación con IA.`,
+  }[motivo];
   return `https://wa.me/${PAUTA.whatsapp}?text=${encodeURIComponent(msg)}`;
 }
 
 /** Botón que abre WhatsApp. Mientras no haya número en src/data/pauta.ts, no aparece. */
-function BotonWa({ v, papa, className, children }: { v: string; papa?: boolean; className: string; children: ReactNode }) {
+function BotonWa({ v, motivo, className, children }: { v: string; motivo?: Motivo; className: string; children: ReactNode }) {
   if (!PAUTA.whatsapp) return null;
   return (
-    <a className={className} href={waUrl(v, papa)} target="_blank" rel="noopener" onClick={() => trackWhatsapp(v)}>
+    <a className={className} href={waUrl(v, motivo)} target="_blank" rel="noopener" onClick={() => trackWhatsapp(v)}>
       {children}
     </a>
   );
@@ -187,7 +194,7 @@ export default function PautaPage() {
       {/* 0 · Barra superior */}
       <header className="pt-top">
         <img className="pt-top__logo" src={`${IMG}/Label_UEB_CreacionDigital_Horizontal.png`} alt="Universidad El Bosque · Creación Digital" width="180" height="32" />
-        <a className="pt-pill pt-pill--acid pt-pill--small" href="https://www.unbosque.edu.co/inscripciones/pregrado" target="_blank" rel="noopener">Inscríbete</a>
+        <a className="pt-pill pt-pill--acid pt-pill--small pt-top__cta" href={CHARLA_URL} target="_blank" rel="noopener">Agenda una charla con el director</a>
       </header>
 
       <main>
@@ -223,6 +230,7 @@ export default function PautaPage() {
             <p className="pt-respuesta">
               <strong>Aquí no escoges.</strong> En Creación Digital formamos creadores que diseñan, programan, cuentan historias y las llevan a negocio, todo en una sola carrera.
             </p>
+            <BotonWa v={v} motivo="openday" className="pt-pill pt-pill--ink pt-sec__cta">Visítanos en un open day</BotonWa>
           </div>
         </section>
 
@@ -236,6 +244,7 @@ export default function PautaPage() {
               <div className="pt-card"><span className="pt-mono">Un curso corto</span><p>Un curso te enseña una habilidad. En la carrera haces tu parche: compañeros con los que creas proyectos, profesores de la industria que te abren puertas y una red de contactos que te acompaña cuando empiezas a trabajar.</p></div>
               <div className="pt-card"><span className="pt-mono">Los tutoriales</span><p>YouTube te enseña mucho, pero te toca buscar entre miles de videos qué funciona. Aquí te ahorras ese tiempo: aprendes lo que sirve con expertos que te guían, haces prácticas profesionales en empresas reales y puedes hacer intercambio con universidades de otros países.</p></div>
             </div>
+            <BotonWa v={v} motivo="workshop" className="pt-pill pt-pill--ink pt-sec__cta">Asiste a nuestro workshop de creación con IA</BotonWa>
           </div>
         </section>
 
@@ -261,6 +270,10 @@ export default function PautaPage() {
               </div>
             </div>
           )}
+          <div className="pt-wrap pt-redes">
+            <a className="pt-pill pt-pill--ink" href="https://www.instagram.com/creaciondigital.ueb/" target="_blank" rel="noopener">Síguenos en Instagram</a>
+            <a className="pt-pill pt-pill--ink" href="https://www.tiktok.com/@creaciondigital.ueb" target="_blank" rel="noopener">Síguenos en TikTok</a>
+          </div>
         </section>
 
         {/* 6 · Quiénes ya la estudian */}
@@ -308,7 +321,7 @@ export default function PautaPage() {
               <div><b>Expedición UEB</b><span>Una inducción premiada por el Ministerio de Educación, con 95 estudiantes que acompañan a los nuevos.</span></div>
               <div><b>Si viene de otra ciudad</b><span>El proyecto Awala lo acompaña a adaptarse a la universidad y a Bogotá.</span></div>
             </div>
-            <BotonWa v={v} papa className="pt-pill pt-pill--ink">Quiero hablar con la dirección</BotonWa>
+            <BotonWa v={v} motivo="papa" className="pt-pill pt-pill--ink">Quiero hablar con la dirección</BotonWa>
           </div>
         </section>
 

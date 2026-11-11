@@ -53,7 +53,7 @@ export interface PautaDatos {
 }
 
 export const PAUTA: PautaDatos = {
-  whatsapp: null,
+  whatsapp: '573232527585',
   horasRespuesta: null,
   politicaDatosUrl: null,
   terminosUrl: null,

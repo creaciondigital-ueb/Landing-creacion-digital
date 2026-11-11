@@ -54,6 +54,11 @@
 .pt-pill--ink { background: var(--pt-ink); color: var(--pt-paper); }
 .pt-pill--small { min-height: 38px; padding: 0 16px; font-size: 10px; flex: none; }
 .pt-pill:disabled { opacity: .6; cursor: wait; transform: none; }
+/* Botón del header: texto largo, en celular puede ir en dos líneas. */
+.pt-top__cta { max-width: 168px; line-height: 1.25; padding: 6px 14px; letter-spacing: .08em; }
+/* Botones al final de una sección. */
+.pt-sec__cta { margin-top: 28px; }
+.pt-redes { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 36px; }
 
 /* ── 1 · Hero ── */
 .pt-hero { padding: 24px 0 64px; }
@@ -159,10 +164,10 @@
 .pt-wa {
   position: fixed; right: 16px; bottom: calc(16px + env(safe-area-inset-bottom, 0px)); z-index: 30;
   display: flex; align-items: center; gap: 8px; height: 54px; padding: 0 20px 0 16px; border-radius: 999px;
-  background: #1fae55; color: #fff !important; font-weight: 600; font-size: 15px; box-shadow: 0 6px 18px rgba(0,0,0,.2);
+  background: var(--pt-acid); color: var(--pt-ink) !important; border: 1.5px solid var(--pt-ink); font-weight: 600; font-size: 15px; box-shadow: 0 6px 18px rgba(0,0,0,.2);
 }
-.pt-wa i { width: 22px; height: 22px; border-radius: 50%; border: 2px solid #fff; position: relative; }
-.pt-wa i::after { content: ""; position: absolute; left: -3px; bottom: -4px; border-top: 7px solid #fff; border-right: 6px solid transparent; }
+.pt-wa i { width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--pt-ink); position: relative; }
+.pt-wa i::after { content: ""; position: absolute; left: -3px; bottom: -4px; border-top: 7px solid var(--pt-ink); border-right: 6px solid transparent; }
 
 @media (min-width: 860px) {
   .pt-wrap { padding: 0 48px; }
