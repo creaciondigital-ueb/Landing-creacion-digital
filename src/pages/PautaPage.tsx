@@ -182,7 +182,7 @@ export default function PautaPage() {
 
   const faqs: [string, string][] = [
     ['¿Es una carrera nueva?', 'Recibe estudiantes desde 2024-2 y va en su quinta cohorte. Tiene registro calificado del Ministerio de Educación vigente hasta 2030 (Resolución 022151 de 2023).'],
-    ['¿En qué voy a trabajar?', 'En el escenario digital de sectores como educación, banca, salud, sector público, transformación digital e industria tech, o en tu propio emprendimiento.'],
+    ['¿En qué voy a trabajar?', 'En desarrollo de software y diseño de experiencia de usuario (UX), en creación de contenido para marketing digital, en videojuegos y experiencias interactivas, y en desarrollo de software con IA. En todos esos campos usas la IA generativa en tus procesos de creación. También puedes lanzar tu propio emprendimiento de base tecnológica. Y lo haces en sectores como educación, banca, salud, sector público e industria tech.'],
     ['¿Para qué 8 semestres si hay tutoriales?', 'Los tutoriales enseñan herramientas. La carrera te enseña a juntarlas en un proyecto completo, con criterio, profesores de la industria, prácticas y un título profesional.'],
     ['¿Y si en primer semestre no es lo mío?', 'La dirección del programa te acompaña a decidir tu siguiente paso, y lo que hayas aprobado se estudia para reconocerlo en otra carrera de El Bosque (Reglamento Estudiantil, art. 40).'],
   ];
