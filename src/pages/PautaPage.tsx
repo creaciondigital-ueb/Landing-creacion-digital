@@ -249,7 +249,7 @@ export default function PautaPage() {
             <Label>02 · Lo de siempre</Label>
             <h2>Lo de siempre <em>se queda corto</em>.</h2>
             <div className="pt-cards3">
-              <div className="pt-card"><span className="pt-mono">Una carrera de una casilla</span><p>Aquí tienes un perfil amplio: diseñas, programas, creas contenido y entiendes el negocio. Así te mueves entre industrias y te adaptas a lo que venga.</p></div>
+              <div className="pt-card"><span className="pt-mono">Una carrera de una casilla</span><p>Un creador digital va de los videojuegos al contenido para marketing digital. Somos la carrera de la era de la inteligencia artificial.</p></div>
               <div className="pt-card"><span className="pt-mono">Un curso corto</span><p>Un curso te enseña una habilidad. La carrera te da tu parche: compañeros, profes de la industria y contactos que te abren puertas.</p></div>
               <div className="pt-card"><span className="pt-mono">Los tutoriales</span><p>YouTube te enseña mucho, pero te toca buscar qué sirve. Aquí aprendes con expertos que te guían, haces prácticas en empresas reales y puedes irte de intercambio.</p></div>
             </div>
