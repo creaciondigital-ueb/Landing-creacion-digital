@@ -321,7 +321,7 @@ export default function PautaPage() {
               )}
               <ol className="pt-steps">
                 {PAUTA.horasRespuesta && <li>Te escribimos por WhatsApp en menos de {PAUTA.horasRespuesta}.</li>}
-                <li>Te invitamos al día de puertas abiertas o al Sábado de creación.</li>
+                <li>Te invitamos al día de puertas abiertas o a un workshop gratuito para crear marcas digitales.</li>
                 <li>Si te convence, haces tu inscripción. Si no, quedas con toda la información.</li>
               </ol>
             </div>
