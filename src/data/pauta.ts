@@ -8,18 +8,14 @@
  * copiado tal cual del spec.
  */
 export interface PautaDatos {
-  /** Celular con indicativo y sin signos, ej. '573001234567'. Sin él no aparece ningún botón de WhatsApp. */
+  /**
+   * Celular con indicativo y sin signos, ej. '573001234567'. La página no tiene
+   * formulario: todos los botones abren WhatsApp. Sin este número no aparece
+   * ninguno (ni la sección de cierre, salvo que haya fecha de cierre).
+   */
   whatsapp: string | null;
   /** En cuánto tiempo se responde, tal como se lee en la frase: "Te escribimos por WhatsApp en menos de ___." Ej. '24 horas'. */
   horasRespuesta: string | null;
-  /**
-   * URL de la aplicación web de Google Apps Script que guarda cada envío en
-   * la hoja de cálculo (ver docs/pauta-formulario.md). Sin ella el formulario
-   * se ve, pero al enviar avisa que no se pudo y ofrece el WhatsApp.
-   */
-  formEndpoint: string | null;
-  /** Texto de autorización de datos aprobado por jurídica (válido para menores). Sin él se usa el texto genérico del preview. */
-  autorizacionTexto: string | null;
   /** Enlaces del pie. Sin URL, el enlace no aparece. */
   politicaDatosUrl: string | null;
   terminosUrl: string | null;
@@ -59,8 +55,6 @@ export interface PautaDatos {
 export const PAUTA: PautaDatos = {
   whatsapp: null,
   horasRespuesta: null,
-  formEndpoint: null,
-  autorizacionTexto: null,
   politicaDatosUrl: null,
   terminosUrl: null,
 

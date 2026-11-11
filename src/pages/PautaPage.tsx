@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, type FormEvent, type ReactNode } from 'react';
+import { useEffect, useMemo, useState, type ReactNode } from 'react';
 import { useSeo } from '../hooks/useSeo';
 import { PAUTA } from '../data/pauta';
 import { pautaSeo } from '../seo/pages';
@@ -17,7 +17,6 @@ import '../styles/pauta.css';
 
 const IMG = '/programa/img';
 type Variante = 'casilla' | 'juego' | 'puedes';
-type Soy = 'Aspirante' | 'Mamá o papá de un aspirante';
 
 const HEROS: Record<Variante, { linea1: ReactNode; linea2: string; apoyo: ReactNode; largo?: boolean }> = {
   casilla: {
@@ -82,122 +81,26 @@ function usePixels() {
   }, []);
 }
 
-function track(kind: 'lead' | 'whatsapp', v: string) {
-  if (kind === 'lead') {
-    window.gtag?.('event', 'generate_lead', { v });
-    window.fbq?.('track', 'Lead');
-    (window.ttq as any)?.track?.('SubmitForm');
-  } else {
-    window.gtag?.('event', 'whatsapp_click', { v });
-    window.fbq?.('track', 'Contact');
-    (window.ttq as any)?.track?.('Contact');
-  }
+function trackWhatsapp(v: string) {
+  window.gtag?.('event', 'whatsapp_click', { v });
+  window.fbq?.('track', 'Contact');
+  (window.ttq as any)?.track?.('Contact');
 }
 
-function waUrl(v: string) {
-  const msg = `Hola, vi el anuncio de Creación Digital (${v}) y quiero saber más.`;
+function waUrl(v: string, papa = false) {
+  const msg = papa
+    ? `Hola, soy mamá/papá de un aspirante y vi el anuncio de Creación Digital (${v}). Quiero hablar con la dirección.`
+    : `Hola, vi el anuncio de Creación Digital (${v}) y quiero saber más.`;
   return `https://wa.me/${PAUTA.whatsapp}?text=${encodeURIComponent(msg)}`;
 }
 
-/** Celular colombiano: 10 dígitos que empiezan en 3. Acepta espacios, guiones y el +57. */
-function normalizarCelular(raw: string): string | null {
-  let d = raw.replace(/\D/g, '');
-  if (d.length === 12 && d.startsWith('57')) d = d.slice(2);
-  return /^3\d{9}$/.test(d) ? d : null;
-}
-
-// ── formulario ────────────────────────────────────────────────────────────
-interface FormProps {
-  id?: string;
-  variante: 'hero' | 'cierre';
-  v: string;
-  utm: Record<string, string>;
-  soy: Soy;
-  setSoy: (s: Soy) => void;
-}
-
-function Formulario({ id, variante, v, utm, soy, setSoy }: FormProps) {
-  const [estado, setEstado] = useState<'listo' | 'enviando' | 'enviado' | 'error'>('listo');
-  const [errorCel, setErrorCel] = useState(false);
-  const uid = variante;
-
-  async function onSubmit(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    const fd = new FormData(e.currentTarget);
-    const cel = normalizarCelular(String(fd.get('whatsapp') ?? ''));
-    if (!cel) { setErrorCel(true); return; }
-    setErrorCel(false);
-    if (!PAUTA.formEndpoint) { setEstado('error'); return; }
-    setEstado('enviando');
-    const datos = new URLSearchParams({
-      nombre: String(fd.get('nombre') ?? '').trim(),
-      whatsapp: cel,
-      soy,
-      ...utm,
-      v,
-      formulario: variante,
-      pagina: window.location.href,
-    });
-    try {
-      // Apps Script no devuelve CORS: el envío va en modo no-cors y la
-      // respuesta es opaca. Si la red no falla, el dato llegó.
-      await fetch(PAUTA.formEndpoint, { method: 'POST', mode: 'no-cors', body: datos });
-      setEstado('enviado');
-      track('lead', v);
-    } catch {
-      setEstado('error');
-    }
-  }
-
-  if (estado === 'enviado') {
-    return (
-      <div className={`pt-form pt-form--${variante} pt-form--ok`} id={id} role="status">
-        <h3>Listo.</h3>
-        <p className="pt-form__ok">
-          {PAUTA.horasRespuesta
-            ? `Te escribimos por WhatsApp en menos de ${PAUTA.horasRespuesta}.`
-            : 'Te escribimos por WhatsApp.'}
-        </p>
-        {PAUTA.whatsapp && (
-          <a className="pt-pill pt-pill--acid" href={waUrl(v)} target="_blank" rel="noopener" onClick={() => track('whatsapp', v)}>
-            Abrir WhatsApp
-          </a>
-        )}
-      </div>
-    );
-  }
-
+/** Botón que abre WhatsApp. Mientras no haya número en src/data/pauta.ts, no aparece. */
+function BotonWa({ v, papa, className, children }: { v: string; papa?: boolean; className: string; children: ReactNode }) {
+  if (!PAUTA.whatsapp) return null;
   return (
-    <form className={`pt-form pt-form--${variante}`} id={id} onSubmit={onSubmit}>
-      <h3>Conoce la carrera</h3>
-      <p>Déjanos tu WhatsApp y te contamos todo, sin compromiso.</p>
-      <label htmlFor={`nombre-${uid}`}><span className="pt-mono">Tu nombre</span></label>
-      <input id={`nombre-${uid}`} name="nombre" type="text" autoComplete="name" required />
-      <label htmlFor={`cel-${uid}`}><span className="pt-mono">Tu WhatsApp</span></label>
-      <input
-        id={`cel-${uid}`} name="whatsapp" type="tel" inputMode="tel" autoComplete="tel" required
-        aria-invalid={errorCel} aria-describedby={errorCel ? `cel-err-${uid}` : undefined}
-        onChange={() => errorCel && setErrorCel(false)}
-      />
-      {errorCel && <span className="pt-form__err" id={`cel-err-${uid}`}>Escribe un celular de 10 dígitos, por ejemplo 300 123 4567.</span>}
-      <label htmlFor={`soy-${uid}`}><span className="pt-mono">Soy</span></label>
-      <select id={`soy-${uid}`} name="soy" value={soy} onChange={(e) => setSoy(e.target.value as Soy)} required>
-        <option>Aspirante</option>
-        <option>Mamá o papá de un aspirante</option>
-      </select>
-      <label className="pt-check">
-        <input type="checkbox" name="autorizacion" required />
-        <span>{PAUTA.autorizacionTexto ?? 'Autorizo el tratamiento de mis datos según la política de la Universidad El Bosque.'}</span>
-      </label>
-      <button className="pt-pill pt-pill--ink" type="submit" disabled={estado === 'enviando'}>
-        {estado === 'enviando' ? 'Enviando…' : 'Quiero que me cuenten'}
-      </button>
-      {estado === 'error' && (
-        <p className="pt-form__err" role="alert">
-          No pudimos enviar tus datos.{PAUTA.whatsapp ? ' Escríbenos por WhatsApp con el botón verde.' : ' Intenta de nuevo en un momento.'}
-        </p>
-      )}
-    </form>
+    <a className={className} href={waUrl(v, papa)} target="_blank" rel="noopener" onClick={() => trackWhatsapp(v)}>
+      {children}
+    </a>
   );
 }
 
@@ -258,22 +161,11 @@ export default function PautaPage() {
     return () => { m.remove(); };
   }, []);
 
-  const { v, utm } = useMemo(() => {
-    const q = new URLSearchParams(window.location.search);
-    const raw = q.get('v') ?? '';
-    const utm: Record<string, string> = {};
-    for (const k of ['utm_source', 'utm_campaign', 'utm_content']) utm[k] = q.get(k) ?? '';
-    return { v: raw in HEROS ? raw : 'casilla', utm };
+  const v = useMemo(() => {
+    const raw = new URLSearchParams(window.location.search).get('v') ?? '';
+    return raw in HEROS ? raw : 'casilla';
   }, []);
   const hero = HEROS[v as Variante];
-  const [soy, setSoy] = useState<Soy>('Aspirante');
-  const formProps = { v, utm, soy, setSoy };
-
-  const irAlFormulario = (e: React.MouseEvent, preseleccion?: Soy) => {
-    e.preventDefault();
-    if (preseleccion) setSoy(preseleccion);
-    document.getElementById('contacto')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  };
 
   const bonos = [
     PAUTA.bonoSabado && { t: 'Sábado de creación', d: `Un día de taller antes de matricularte. Sales con una pieza hecha con IA. ${PAUTA.bonoSabado}` },
@@ -295,7 +187,7 @@ export default function PautaPage() {
       {/* 0 · Barra superior */}
       <header className="pt-top">
         <img className="pt-top__logo" src={`${IMG}/Label_UEB_CreacionDigital_Horizontal.png`} alt="Universidad El Bosque · Creación Digital" width="180" height="32" />
-        <a className="pt-pill pt-pill--acid pt-pill--small" href="#contacto" onClick={(e) => irAlFormulario(e)}>Saber más</a>
+        <BotonWa v={v} className="pt-pill pt-pill--acid pt-pill--small">Saber más</BotonWa>
       </header>
 
       <main>
@@ -307,19 +199,14 @@ export default function PautaPage() {
               {hero.linea1}
               <Tecleo texto={hero.linea2} />
             </h1>
-            <div className="pt-hero__grid">
-              <div>
-                <p className="pt-hero__sub">{hero.apoyo}</p>
-                <a className="pt-pill pt-pill--acid pt-hero__cta" href="#contacto" onClick={(e) => irAlFormulario(e)}>Quiero conocer la carrera</a>
-                {PAUTA.video && (
-                  <video
-                    className="pt-video" src={PAUTA.video.src} poster={PAUTA.video.poster}
-                    muted playsInline autoPlay loop preload="metadata" aria-label={PAUTA.video.descripcion}
-                  />
-                )}
-              </div>
-              <Formulario id="contacto" variante="hero" {...formProps} />
-            </div>
+            <p className="pt-hero__sub">{hero.apoyo}</p>
+            <BotonWa v={v} className="pt-pill pt-pill--acid pt-hero__cta">Quiero conocer la carrera</BotonWa>
+            {PAUTA.video && (
+              <video
+                className="pt-video" src={PAUTA.video.src} poster={PAUTA.video.poster}
+                muted playsInline autoPlay loop preload="metadata" aria-label={PAUTA.video.descripcion}
+              />
+            )}
           </div>
         </section>
 
@@ -421,7 +308,7 @@ export default function PautaPage() {
               <div><b>Expedición UEB</b><span>Una inducción premiada por el Ministerio de Educación, con 95 estudiantes que acompañan a los nuevos.</span></div>
               <div><b>Si viene de otra ciudad</b><span>El proyecto Awala lo acompaña a adaptarse a la universidad y a Bogotá.</span></div>
             </div>
-            <a className="pt-pill pt-pill--ink" href="#contacto" onClick={(e) => irAlFormulario(e, 'Mamá o papá de un aspirante')}>Quiero hablar con la dirección</a>
+            <BotonWa v={v} papa className="pt-pill pt-pill--ink">Quiero hablar con la dirección</BotonWa>
           </div>
         </section>
 
@@ -458,17 +345,17 @@ export default function PautaPage() {
           </div>
         </section>
 
-        {/* 10 · Cierre */}
-        <section className="pt-sec pt-close">
-          <div className="pt-wrap pt-split">
-            <div>
+        {/* 10 · Cierre: sale solo si hay algo que decir o a dónde escribir */}
+        {(PAUTA.fechaCierre || PAUTA.whatsapp) && (
+          <section className="pt-sec pt-close">
+            <div className="pt-wrap">
               <Label>08 · Inscripciones 2027-1</Label>
               {PAUTA.fechaCierre && <h2>Las inscripciones cierran el <em>{PAUTA.fechaCierre}</em>.</h2>}
               {PAUTA.fechaPuertasAbiertas && <p className="pt-lead">Escríbenos hoy y alcanzas a venir al día de puertas abiertas antes del cierre.</p>}
+              <BotonWa v={v} className="pt-pill pt-pill--ink">Escríbenos por WhatsApp</BotonWa>
             </div>
-            <Formulario variante="cierre" {...formProps} />
-          </div>
-        </section>
+          </section>
+        )}
       </main>
 
       {/* 11 · Pie */}
@@ -485,11 +372,7 @@ export default function PautaPage() {
         </div>
       </footer>
 
-      {PAUTA.whatsapp && (
-        <a className="pt-wa" href={waUrl(v)} target="_blank" rel="noopener" onClick={() => track('whatsapp', v)}>
-          <i aria-hidden="true" />Escríbenos
-        </a>
-      )}
+      <BotonWa v={v} className="pt-wa"><i aria-hidden="true" />Escríbenos</BotonWa>
     </div>
   );
 }

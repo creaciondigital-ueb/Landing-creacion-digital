@@ -74,40 +74,10 @@
 @keyframes pt-caret { 50% { opacity: 0; } }
 .pt-hero__sub { margin: 18px 0 20px; font-size: 18px; line-height: 1.45; max-width: 560px; }
 .pt-hero__cta { width: 100%; margin-bottom: 24px; }
-.pt-hero__grid { display: grid; gap: 28px; }
 .pt-video {
   display: block; width: auto; max-width: 100%; height: 420px; aspect-ratio: 9 / 16;
   margin: 0 auto; border-radius: 18px; object-fit: cover; background: var(--pt-paper-2);
 }
-
-/* ── Formulario ── */
-.pt-form {
-  background: #fff; border: 1.5px solid var(--pt-ink); border-radius: 16px; padding: 24px;
-  box-shadow: 6px 6px 0 var(--pt-ink); scroll-margin-top: 76px;
-}
-.pt-form--cierre { box-shadow: 6px 6px 0 var(--pt-cobalt); }
-.pt-form h3 { font-family: var(--pt-serif); font-weight: 400; font-size: 30px; line-height: 1; margin-bottom: 6px; }
-.pt-form > p { font-size: 14px; color: var(--pt-muted); margin-bottom: 18px; }
-.pt-form label { display: block; }
-.pt-form label .pt-mono { display: block; margin: 12px 0 6px; }
-.pt-form input[type="text"], .pt-form input[type="tel"], .pt-form select {
-  width: 100%; height: 48px; border: 1.5px solid var(--pt-ink); border-radius: 10px;
-  padding: 0 14px; font: inherit; font-size: 16px; color: var(--pt-ink); background: var(--pt-paper);
-  -webkit-appearance: none; appearance: none;
-}
-.pt-form select {
-  background-image: linear-gradient(45deg, transparent 50%, var(--pt-ink) 50%), linear-gradient(135deg, var(--pt-ink) 50%, transparent 50%);
-  background-position: calc(100% - 20px) 21px, calc(100% - 15px) 21px;
-  background-size: 5px 5px; background-repeat: no-repeat; padding-right: 36px;
-}
-.pt-form input:focus-visible, .pt-form select:focus-visible { outline: 3px solid var(--pt-cobalt); outline-offset: 1px; }
-.pt-form input[aria-invalid="true"] { border-color: var(--pt-tomato); }
-.pt-check { display: flex !important; gap: 10px; align-items: flex-start; font-size: 12px; line-height: 1.4; color: var(--pt-muted); margin: 16px 0 18px; }
-.pt-check input { width: 20px; height: 20px; flex: none; margin-top: 1px; accent-color: var(--pt-cobalt); }
-.pt-form .pt-pill { width: 100%; }
-.pt-form__err { display: block; margin-top: 8px; font-size: 13px; color: #c4002a; }
-.pt-form--ok h3 { font-size: 40px; }
-.pt-form__ok { font-size: 17px; margin: 8px 0 20px; }
 
 /* ── 2 · La casilla ── */
 .pt-boxes { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 8px 0 34px; max-width: 520px; }
@@ -201,8 +171,7 @@
   .pt-sec--tight { padding-top: 0; }
   .pt-hero { padding: 40px 0 96px; }
   .pt-hero__meta { font-size: 11px; }
-  .pt-hero__grid { grid-template-columns: 1.25fr 1fr; gap: 48px; align-items: start; margin-top: 12px; }
-  .pt-hero__cta { display: none; }
+  .pt-hero__cta { width: auto; padding-left: 36px; padding-right: 36px; }
   .pt-video { height: auto; width: 100%; max-width: 520px; aspect-ratio: 4 / 5; margin: 0; }
   .pt-cards3 { grid-template-columns: repeat(3, 1fr); }
   .pt-split { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: start; }
