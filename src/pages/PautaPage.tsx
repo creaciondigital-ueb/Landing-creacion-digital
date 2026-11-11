@@ -345,9 +345,9 @@ export default function PautaPage() {
             <Label>02 · Lo de siempre</Label>
             <h2>Lo de siempre <em>se queda corto</em>.</h2>
             <div className="pt-cards3">
-              <div className="pt-card"><span className="pt-mono">Una carrera de una casilla</span><p>Te enseña una parte del proyecto. El resto lo aprendes solo, después de graduarte.</p></div>
-              <div className="pt-card"><span className="pt-mono">Los tutoriales</span><p>Te enseñan a usar una herramienta. Juntar el código con la historia y el negocio queda por tu cuenta.</p></div>
-              <div className="pt-card"><span className="pt-mono">Un curso corto</span><p>Te da una habilidad. Ocho semestres te dan criterio, una red y un título profesional.</p></div>
+              <div className="pt-card"><span className="pt-mono">Una carrera de una casilla</span><p>Aquí tienes un perfil amplio: diseñas, programas, creas contenido y entiendes el negocio. Eso te deja moverte entre industrias, cambiar de rumbo cuando el mercado cambie y adaptarte a lo que venga. Sales como creador, con todas las casillas a tu favor.</p></div>
+              <div className="pt-card"><span className="pt-mono">Un curso corto</span><p>Un curso te enseña una habilidad. En la carrera haces tu parche: compañeros con los que creas proyectos, profesores de la industria que te abren puertas y una red de contactos que te acompaña cuando empiezas a trabajar.</p></div>
+              <div className="pt-card"><span className="pt-mono">Los tutoriales</span><p>YouTube te enseña mucho, pero te toca buscar entre miles de videos qué funciona. Aquí te ahorras ese tiempo: aprendes lo que sirve con expertos que te guían, haces prácticas profesionales en empresas reales y puedes hacer intercambio con universidades de otros países.</p></div>
             </div>
           </div>
         </section>
