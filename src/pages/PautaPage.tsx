@@ -285,7 +285,7 @@ export default function PautaPage() {
         <section className="pt-sec pt-sec--tight">
           <div className="pt-wrap">
             <Label>04 · Quiénes ya la estudian</Label>
-            <h2>Ya va en su <em>quinta cohorte</em>.</h2>
+            <h2>Llevamos 2 años <em>al aire</em>.</h2>
             <div className="pt-stats">
               <div className="pt-stat"><b>5</b><span>cohortes desde 2024-2</span></div>
               <div className="pt-stat"><b>20</b><span>grupos en el Global Hack que ganaron</span></div>
