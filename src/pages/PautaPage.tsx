@@ -327,7 +327,7 @@ export default function PautaPage() {
         <section className="pt-sec">
           <div className="pt-wrap">
             <Label>01 · La casilla</Label>
-            <h2>Te piden escoger <em>una sola</em>.</h2>
+            <h2>Te piden escoger <em>una sola carrera</em>.</h2>
             <div className="pt-boxes" aria-hidden="true">
               <div className="pt-box pt-box--on"><i /><span>Diseño</span></div>
               <div className="pt-box pt-box--off"><i /><span>Ingeniería</span></div>
