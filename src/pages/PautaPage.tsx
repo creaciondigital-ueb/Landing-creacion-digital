@@ -18,6 +18,8 @@ import '../styles/pauta.css';
 const IMG = '/programa/img';
 /** Formulario para agendar la charla con el director (solo en /pauta). */
 const CHARLA_DIRECTOR_URL = 'https://forms.cloud.microsoft/pages/responsepage.aspx?id=UMLAdHccXUCbHprB9Qir46Y7lCPhW7lJkki-ENr8U1pURVJTRTQ0VTZHUzY0RFlXU0MwUlFaUTVRQi4u&origin=lprLink&route=shorturl';
+/** Formulario de inscripción al taller de marca (workshop de creación con IA). */
+const WORKSHOP_URL = 'https://forms.cloud.microsoft/pages/responsepage.aspx?id=UMLAdHccXUCbHprB9Qir46Y7lCPhW7lJkki-ENr8U1pUN0xJQTRLUDk1SkE5TVVNMVNPSUROVUpIUi4u&origin=lprLink&route=shorturl';
 /** Formulario de inscripción al open day. */
 const OPEN_DAY_URL = 'https://forms.cloud.microsoft/pages/responsepage.aspx?id=UMLAdHccXUCbHprB9Qir46Y7lCPhW7lJkki-ENr8U1pUOFMxSlNCSEJYMEdHQ0hWQ0VFS1o1NjZCUS4u&origin=lprLink&route=shorturl';
 type Variante = 'casilla' | 'juego' | 'puedes';
@@ -91,22 +93,17 @@ function trackWhatsapp(v: string) {
   (window.ttq as any)?.track?.('Contact');
 }
 
-/** Mensajes prellenados de WhatsApp: cada botón dice desde dónde escribe la persona. */
-type Motivo = 'info' | 'workshop';
-function waUrl(v: string, motivo: Motivo = 'info') {
-  const anuncio = `vi el anuncio de Creación Digital (${v})`;
-  const msg = {
-    info: `Hola, ${anuncio} y quiero saber más.`,
-    workshop: `Hola, ${anuncio} y quiero asistir al workshop de creación con IA.`,
-  }[motivo];
+/** Mensaje prellenado de WhatsApp: dice de qué anuncio (v) viene la persona. */
+function waUrl(v: string) {
+  const msg = `Hola, vi el anuncio de Creación Digital (${v}) y quiero saber más.`;
   return `https://wa.me/${PAUTA.whatsapp}?text=${encodeURIComponent(msg)}`;
 }
 
 /** Botón que abre WhatsApp. Mientras no haya número en src/data/pauta.ts, no aparece. */
-function BotonWa({ v, motivo, className, children }: { v: string; motivo?: Motivo; className: string; children: ReactNode }) {
+function BotonWa({ v, className, children }: { v: string; className: string; children: ReactNode }) {
   if (!PAUTA.whatsapp) return null;
   return (
-    <a className={className} href={waUrl(v, motivo)} target="_blank" rel="noopener" onClick={() => trackWhatsapp(v)}>
+    <a className={className} href={waUrl(v)} target="_blank" rel="noopener" onClick={() => trackWhatsapp(v)}>
       {children}
     </a>
   );
@@ -254,7 +251,7 @@ export default function PautaPage() {
               <div className="pt-card"><span className="pt-mono">Un curso corto</span><p>Un curso te enseña una habilidad. La carrera te da tu parche: compañeros, profes de la industria y contactos que te abren puertas.</p></div>
               <div className="pt-card"><span className="pt-mono">Los tutoriales</span><p>YouTube te enseña mucho, pero te toca buscar qué sirve. Aquí aprendes con expertos que te guían, haces prácticas en empresas reales y puedes irte de intercambio.</p></div>
             </div>
-            <BotonWa v={v} motivo="workshop" className="pt-pill pt-pill--acid pt-pill--titila pt-sec__cta">Asiste a nuestro workshop de creación con IA</BotonWa>
+            <a className="pt-pill pt-pill--acid pt-pill--titila pt-sec__cta" href={WORKSHOP_URL} target="_blank" rel="noopener">Asiste a nuestro workshop de creación con IA</a>
           </div>
         </section>
 
