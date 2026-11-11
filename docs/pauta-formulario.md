@@ -8,7 +8,7 @@ La página `/pauta` es la que reciben los anuncios de TikTok, Facebook e Instagr
 
 ## 1. Sin formulario: todo va a WhatsApp
 
-La página no tiene formulario. «Inscríbete», en la barra superior, va a https://www.unbosque.edu.co/inscripciones/pregrado (GA4: `aplica_ahora`). «Agenda una charla con el director», en el hero, abre el formulario de charlas del sitio. «Síguenos en Instagram» y «Síguenos en TikTok» van a @creaciondigital.ueb. La última sección, «Visita nuestra página», lleva a https://creaciondigital-ueb.netlify.app/. «Visítanos en un open day» abre el formulario de inscripción al open day. «Asiste a nuestro workshop de creación con IA» y el botón rojo fijo «Escríbenos» abren WhatsApp con un mensaje prellenado que incluye la variante (`v`) del anuncio; el del workshop lleva su propio mensaje.
+La página no tiene formulario. «Inscríbete», en la barra superior, va a https://www.unbosque.edu.co/inscripciones/pregrado (GA4: `aplica_ahora`). «Agenda una charla con el director», en el hero, abre el formulario de Microsoft Forms para agendar la charla con el director. «Síguenos en Instagram» y «Síguenos en TikTok» van a @creaciondigital.ueb. La última sección, «Visita nuestra página», lleva a https://creaciondigital-ueb.netlify.app/. «Visítanos en un open day» abre el formulario de inscripción al open day. «Asiste a nuestro workshop de creación con IA» y el botón rojo fijo «Escríbenos» abren WhatsApp con un mensaje prellenado que incluye la variante (`v`) del anuncio; el del workshop lleva su propio mensaje.
 
 ## 2. Datos pendientes (sección 12 del spec)
 

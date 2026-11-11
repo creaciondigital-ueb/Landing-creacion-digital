@@ -2,7 +2,6 @@ import { useEffect, useMemo, useState, type ReactNode } from 'react';
 import { useSeo } from '../hooks/useSeo';
 import { PAUTA } from '../data/pauta';
 import { pautaSeo } from '../seo/pages';
-import { CHARLA_URL } from '../seo/site';
 import '../styles/pauta.css';
 
 /**
@@ -17,6 +16,8 @@ import '../styles/pauta.css';
  */
 
 const IMG = '/programa/img';
+/** Formulario para agendar la charla con el director (solo en /pauta). */
+const CHARLA_DIRECTOR_URL = 'https://forms.cloud.microsoft/pages/responsepage.aspx?id=UMLAdHccXUCbHprB9Qir46Y7lCPhW7lJkki-ENr8U1pURVJTRTQ0VTZHUzY0RFlXU0MwUlFaUTVRQi4u&origin=lprLink&route=shorturl';
 /** Formulario de inscripción al open day. */
 const OPEN_DAY_URL = 'https://forms.cloud.microsoft/pages/responsepage.aspx?id=UMLAdHccXUCbHprB9Qir46Y7lCPhW7lJkki-ENr8U1pUOFMxSlNCSEJYMEdHQ0hWQ0VFS1o1NjZCUS4u&origin=lprLink&route=shorturl';
 type Variante = 'casilla' | 'juego' | 'puedes';
@@ -216,7 +217,7 @@ export default function PautaPage() {
               <strong>$ 10.947.000 COP.</strong>
               <span className="pt-hero__valor-nota">Valor sujeto a incremento para el año 2027</span>
             </div>
-            <a className="pt-pill pt-pill--acid pt-pill--titila pt-hero__cta" href={CHARLA_URL} target="_blank" rel="noopener">Agenda una charla con el director</a>
+            <a className="pt-pill pt-pill--acid pt-pill--titila pt-hero__cta" href={CHARLA_DIRECTOR_URL} target="_blank" rel="noopener">Agenda una charla con el director</a>
             {PAUTA.video && (
               <video
                 className="pt-video" src={PAUTA.video.src} poster={PAUTA.video.poster}
