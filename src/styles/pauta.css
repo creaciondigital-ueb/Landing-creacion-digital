@@ -72,6 +72,9 @@
 .pt-hero h1.pt-h1--largo { font-size: clamp(44px, 11vw, 112px); }
 .pt-hero h1 s { text-decoration-thickness: 4px; color: var(--pt-muted); font-style: italic; }
 .pt-hero h1 em { display: block; }
+/* Ilustración pequeña a la derecha de la última línea del titular. */
+.pt-hero__titulo { position: relative; }
+.pt-hero__chica { position: absolute; right: 0; bottom: 0; width: clamp(84px, 24vw, 220px); height: auto; pointer-events: none; }
 .pt-dot { color: var(--pt-acid); -webkit-text-stroke: 1.5px var(--pt-ink); }
 /* Tecleo de la segunda línea: lo que falta por escribir ocupa su lugar sin verse. */
 .pt-pendiente { visibility: hidden; }
@@ -181,6 +184,8 @@
   .pt-sec--tight { padding-top: 0; }
   .pt-hero { padding: 40px 0 96px; }
   .pt-hero__meta { font-size: 11px; }
+  /* En escritorio el titular deja libre la columna de la ilustración. */
+  .pt-hero__titulo { padding-right: 250px; }
   .pt-hero__cta { width: auto; padding-left: 36px; padding-right: 36px; }
   .pt-video { height: auto; width: 100%; max-width: 520px; aspect-ratio: 4 / 5; margin: 0; }
   .pt-cards3 { grid-template-columns: repeat(3, 1fr); }

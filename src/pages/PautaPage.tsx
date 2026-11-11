@@ -203,10 +203,14 @@ export default function PautaPage() {
         <section className="pt-hero">
           <div className="pt-wrap">
             <div className="pt-hero__meta pt-mono"><span>Pregrado · 8 semestres</span><span>Presencial · Bogotá</span></div>
-            <h1 className={hero.largo ? 'pt-h1--largo' : undefined}>
-              {hero.linea1}
-              <Tecleo texto={hero.linea2} />
-            </h1>
+            <div className="pt-hero__titulo">
+              <h1 className={hero.largo ? 'pt-h1--largo' : undefined}>
+                {hero.linea1}
+                <Tecleo texto={hero.linea2} />
+              </h1>
+              {/* La misma ilustración del hero de la página principal (CDN de Cloudflare). */}
+              <img className="pt-hero__chica" src={`${IMG}/chica-laptop.png`} alt="" aria-hidden="true" width="606" height="656" decoding="async" />
+            </div>
             <p className="pt-hero__sub">{hero.apoyo}</p>
             <a className="pt-pill pt-pill--acid pt-pill--titila pt-hero__cta" href={CHARLA_URL} target="_blank" rel="noopener">Agenda una charla con el director</a>
             {PAUTA.video && (
