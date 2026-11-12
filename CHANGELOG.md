@@ -7,6 +7,12 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased]
 
+### Agregado — /pauta mide en su propia propiedad de GA4 y carga Tag Manager
+
+- `pauta.html` envía también a `G-58RRFCR9P3` ("Creación Digital · Pauta"), una propiedad solo para esta página. Sigue enviando a las dos de siempre. Los eventos `agenda_charla`, `aplica_ahora` y `whatsapp_click` llegan a las tres.
+- Instalado el contenedor de Google Tag Manager `GTM-M76TQS7X` (snippet oficial, solo en producción) para manejar los píxeles de Meta, TikTok o Ads sin tocar código. GA4 no se configura dentro de GTM porque se contaría doble.
+- El home no cambia.
+
 ### Mejorado — /pauta carga más rápido y pesa menos
 
 - Problema: el HTML de /pauta llegaba vacío. La persona veía blanco hasta que bajaban y corrían, una tras otra, el JavaScript de todo el sitio (102 KB comprimidos: React, el enrutador y la app entera) y luego el de la página. Además se descargaban el CSS de todo el sitio y Zalando Sans, que /pauta no usa.

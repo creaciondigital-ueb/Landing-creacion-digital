@@ -30,15 +30,25 @@
   <!-- Solo las tres letras de /pauta, con los pesos que usa. -->
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Text:ital@0;1&family=JetBrains+Mono:wght@400&family=Jost:wght@400;600&display=swap" rel="stylesheet" />
 
-  <!-- Google Analytics 4: el mismo bloque de index.html (dos propiedades, solo
-       en producción, y los eventos agenda_charla / aplica_ahora por URL de
-       destino). Si cambia allá, cambiarlo aquí también. -->
+  <!-- Google Analytics 4: el mismo bloque de index.html (solo en producción, y
+       los eventos agenda_charla / aplica_ahora por URL de destino), más:
+         G-58RRFCR9P3  propiedad "Creación Digital · Pauta", solo de esta página.
+         GTM-M76TQS7X  contenedor de Tag Manager, para píxeles (Meta, TikTok,
+                       Ads) sin tocar código. GA4 NO se configura dentro de
+                       GTM: ya va aquí y se contaría doble.
+       Si cambia el bloque de index.html, cambiarlo aquí también. -->
   <script>
     (function () {
       var host = window.location.hostname;
       var isProd = host === 'creaciondigital.online' || host === 'www.creaciondigital.online'
         || host === 'creaciondigital-ueb.netlify.app';
       if (!isProd) return;
+
+      // Google Tag Manager (snippet oficial).
+      (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});
+        var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';
+        j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+      })(window,document,'script','dataLayer','GTM-M76TQS7X');
 
       var s = document.createElement('script');
       s.async = true;
@@ -51,6 +61,7 @@
       gtag('js', new Date());
       gtag('config', 'G-EMK9RDJD0G');
       gtag('config', 'G-WQEPLNPF0Y');
+      gtag('config', 'G-58RRFCR9P3');
 
       document.addEventListener('click', function (e) {
         var a = e.target && e.target.closest ? e.target.closest('a[href]') : null;
